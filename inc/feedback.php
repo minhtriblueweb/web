@@ -1,0 +1,34 @@
+<?php
+$show_danhgia = $danhgia->show_danhgia("hienthi");
+if ($show_danhgia && $show_danhgia->num_rows > 0): // Kiểm tra nếu có dữ liệu 
+?>
+<div class="wrap-feedback">
+  <div class="wrap-content">
+    <div class="title-main">
+      <h2>ĐÁNH GIÁ KHÁCH HÀNG</h2>
+    </div>
+    <div class="slick-feedback slick-d-none">
+      <?php while ($result_danhgia = $show_danhgia->fetch_assoc()): ?>
+      <div>
+        <div class="item-feedback">
+          <p class="text-split">
+            <?= $result_danhgia['desc'] ?>
+          </p>
+          <div class="content">
+            <a class="scale-img hover-glass text-decoration-none" title="<?= $result_danhgia['name'] ?>"
+              style="width: 100px; height: 100px;">
+              <img class="circle-img" src="<?= BASE_ADMIN . UPLOADS . $result_danhgia['file'] ?>"
+                alt="<?= $result_danhgia['name'] ?>" />
+            </a>
+            <div class="title">
+              <h3 class="text-split"><?= $result_danhgia['name'] ?></h3>
+              <span class="text-split"><?= $result_danhgia['address'] ?></span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <?php endwhile; ?>
+    </div>
+  </div>
+</div>
+<?php endif; ?>

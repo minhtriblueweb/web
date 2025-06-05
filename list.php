@@ -1,0 +1,148 @@
+<?php
+include_once 'lib/autoload.php';
+include_once 'lib/router.php';
+?>
+<?php
+$slug = isset($_GET['slug']) ? $_GET['slug'] : '';
+
+if ($slug) {
+  $get_danhmuc = $danhmuc->get_danhmuc($slug);
+  if ($get_danhmuc !== false) {
+    $kg_danhmuc = $get_danhmuc->fetch_assoc();
+    if ($kg_danhmuc) {
+      $id_list = $kg_danhmuc['id'];
+      $get_danhmuc_c2 = $danhmuc->show_danhmuc_c2_index($id_list);
+      $get_sp = $sanpham->show_sanpham_cap_1($id_list);
+      $get_count_sp = $sanpham->count_sanpham_cap_1($id_list);
+    } else {
+      header('Location: ' . BASE . '404.php');
+      exit();
+    }
+  } else {
+    header('Location: ' . BASE . '404.php');
+    exit();
+  }
+} else {
+  header('Location: ' . BASE . '404.php');
+  exit();
+}
+
+$seo = array_merge($seo, array(
+  'title' => $kg_danhmuc['titlevi'],
+  'keywords' => $kg_danhmuc['keywordsvi'],
+  'description' => $kg_danhmuc['descriptionvi'],
+  'url' => BASE . 'danh-muc/' . $kg_danhmuc['slugvi'],
+  'image' => isset($kg_danhmuc['file_name']) ? BASE_ADMIN . UPLOADS . $kg_danhmuc['file_name'] : '',
+));
+?>
+<?php
+include 'inc/header.php';
+include 'inc/menu.php';
+?>
+<div class="wrap-main wrap-home w-clear">
+  <div class="breadCrumbs">
+    <div class="wrap-content">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+          <a class="text-decoration-none" href="<?= BASE ?>"><span>Trang chủ</span></a>
+        </li>
+        <li class="breadcrumb-item">
+          <a class="text-decoration-none" href=""><span>Danh mục</span></a>
+        </li>
+        <li class="breadcrumb-item active">
+          <a class="text-decoration-none"
+            href="danh-muc/<?= $kg_danhmuc['slugvi'] ?>"><span><?= $kg_danhmuc['namevi'] ?></span></a>
+        </li>
+      </ol>
+    </div>
+  </div>
+
+  <div class="wrap-product-list">
+    <div class="wrap-content" style="background: unset;">
+      <?php if ($get_danhmuc_c2 && $get_danhmuc_c2->num_rows > 0) : ?>
+        <div class="grid-list">
+          <?php while ($result_danhmuc_c2 = $get_danhmuc_c2->fetch_assoc()) : ?>
+            <div class="item-list-noindex">
+              <h3>
+                <a class="text-split"
+                  href="cate/<?= $result_danhmuc_c2['slugvi'] ?>"><?= $result_danhmuc_c2['namevi'] ?></a>
+              </h3>
+            </div>
+          <?php endwhile; ?>
+        </div>
+      <?php endif; ?>
+    </div>
+  </div>
+  <div class="title-list-hot">
+    <h2><?= $kg_danhmuc['namevi'] ?></h2>
+    (<?= $get_count_sp ?> sản phẩm)
+  </div>
+  <div class="wrap-main wrap-template w-clear" style="margin: 0 auto !important;">
+    <div class="content-main">
+      <?php if ($get_sp && $get_sp->num_rows > 0) : ?>
+        <div class="grid-product .paging-product-loadmore .paging-product-loadmore-1" data-perpage="25" data-list="1"
+          data-cat="" data-item="" data-brand="" data-curpage="2" data-total="124">
+          <?php while ($result_sp = $get_sp->fetch_assoc()) : ?>
+            <div class="item-product">
+              <a href="san-pham/<?= $result_sp['slugvi'] ?>">
+                <div class="images">
+                  <img src="<?= BASE_ADMIN . UPLOADS . $result_sp['file'] ?>" alt="<?= $result_sp['namevi'] ?>"
+                    title="<?= $result_sp['namevi'] ?>" class="w-100" />
+                </div>
+                <div class="content">
+                  <div class="title">
+                    <h3><?= $result_sp['namevi'] ?></h3>
+                    <p class="price-product">
+                      <?php
+                      if (!empty($result_sp['sale_price']) && !empty($result_sp['regular_price'])) {
+                        echo '<span class="price-new">' . $result_sp['sale_price'] . '₫</span>';
+                        echo '<span class="price-old">' . $result_sp['regular_price'] . '₫</span>';
+                      } elseif (!empty($result_sp['regular_price'])) {
+                        echo '<span class="price-new">' . $result_sp['regular_price'] . '₫</span>';
+                      } else {
+                        echo '<span class="price-new">Liên hệ</span>';
+                      }
+                      ?>
+                    </p>
+                    </p>
+                    <div class="info-product">
+                      <p><i class="fa-solid fa-eye"></i><?= $result_sp['views'] ?> lượt xem</p>
+                      <p><span>Chi tiết</span></p>
+                    </div>
+                  </div>
+                </div>
+              </a>
+            </div>
+          <?php endwhile; ?>
+        </div>
+        <div class="text-center mt-4">
+          <span class="loadmore-product loadmore-product-1" data-list="1">Xem thêm sản phẩm
+            <i class="fa-solid fa-chevron-down"></i></span>
+        </div>
+      <?php else : ?>
+        <div class="alert alert-warning w-100" role="alert">
+          <strong>Không tìm thấy kết quả</strong>
+        </div>
+      <?php endif ?>
+      <?php if (!empty($kg_danhmuc['contentvi'])): ?>
+        <div class="desc-list mt-4">
+          <div class="noidung_anhien">
+            <div class="wrap-toc">
+              <div class="meta-toc2">
+                <a class="mucluc-dropdown-list_button">Mục Lục</a>
+                <div class="box-readmore">
+                  <ul class="toc-list" data-toc="article" data-toc-headings="h1, h2, h3"></ul>
+                </div>
+              </div>
+            </div>
+            <div class="content-main content-ck pro_tpl" id="toc-content">
+              <?= $kg_danhmuc['contentvi'] ?>
+            </div>
+            <p class="anhien xemthemnd">Xem thêm nội dung</p>
+            <p class="anhien anbot">Ẩn bớt nội dung</p>
+          </div>
+        </div><?php endif; ?>
+    </div>
+  </div>
+</div>
+<?php include 'inc/footer.php'; ?>

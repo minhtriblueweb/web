@@ -1,0 +1,46 @@
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "NewsArticle",
+      "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "https://google.com/article"
+      },
+      "headline": "Xây dựng Vạn Phát",
+      "image": ["https://nhathepbinhduong.com/upload/photo/logo-3295.png"],
+      "datePublished": "2020-12-30",
+      "dateModified": "2025-05-22",
+      "author": {
+        "@type": "Person",
+        "name": "Xây dựng Vạn Phát"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "Google",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://nhathepbinhduong.com/upload/photo/logo-3295.png"
+        }
+      },
+      "description": "Vạn Phát là đối tác tin cậy trong xây dựng nhà xưởng và dự án kết cấu lớn. Chúng tôi cung cấp giải pháp trọn gói cho thiết kế, xây dựng, sản xuất và lắp dựng nhà xưởng chất lượng cao. "
+    },
+    {
+      "@type": "Product",
+      "name": "Xây dựng Vạn Phát ",
+      "image": "https://nhathepbinhduong.com/upload/photo/logo-3295.png",
+      "description": "Vạn Phát là đối tác tin cậy trong xây dựng nhà xưởng và dự án kết cấu lớn. Chúng tôi cung cấp giải pháp trọn gói cho thiết kế, xây dựng, sản xuất và lắp dựng nhà xưởng chất lượng cao. ",
+      "brand": {
+        "@type": "Organization",
+        "name": "Xây dựng Vạn Phát"
+      },
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "5",
+        "bestRating": "5",
+        "worstRating": "1",
+        "ratingCount": "150"
+      }
+    }
+  ]
+}

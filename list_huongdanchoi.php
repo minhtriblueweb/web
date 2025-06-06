@@ -38,7 +38,7 @@ include 'inc/menu.php';
         <?php $show_huongdanchoi = $news->show_news_by_type('huongdanchoi', 'hienthi'); ?>
         <?php if ($show_huongdanchoi): ?>
         <?php while ($resule_huongdanchoi = $show_huongdanchoi->fetch_assoc()) : ?>
-        <div class="col-4">
+        <div class="col-6 col-sm-4">
           <div class="item-service">
             <div class="images">
               <a class="scale-img hover-glass text-decoration-none" href="<?= $resule_huongdanchoi['slugvi'] ?>"

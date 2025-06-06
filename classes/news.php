@@ -76,12 +76,11 @@ class news
     }
 
 
-    public function tintuc_lienquan($id, $id_cat, $records_per_page, $current_page)
+    public function relatedNews($id, $type)
     {
         $id = mysqli_real_escape_string($this->db->link, $id);
-        $id_cat = mysqli_real_escape_string($this->db->link, $id_cat);
-        $offset = ((int)$current_page - 1) * (int)$records_per_page;
-        $query = "SELECT * FROM tbl_news WHERE id_cat = '$id_cat' AND id != '$id' AND hienthi='hienthi' ORDER BY numb ASC LIMIT $records_per_page OFFSET $offset";
+        $type = mysqli_real_escape_string($this->db->link, $type);
+        $query = "SELECT * FROM tbl_news WHERE type = '$type' AND id != '$id' AND hienthi='hienthi' ORDER BY numb ASC";
         $result = $this->db->select($query);
         return $result;
     }

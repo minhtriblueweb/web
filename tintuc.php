@@ -10,7 +10,8 @@ if ($slug) {
   if ($get_tintuc !== false) {
     $kg_tintuc = $get_tintuc->fetch_assoc();
     if ($kg_tintuc) {
-      $id_list = $kg_tintuc['id'];
+      $id = $kg_tintuc['id'];
+      $relatedNews =  $news->relatedNews($id,'tintuc');
     } else {
       header('Location: ' . BASE . '404.php');
       exit();
@@ -36,7 +37,7 @@ $seo = array_merge($seo, array(
 include 'inc/header.php';
 include 'inc/menu.php';
 ?>
-<div class="wrap-main wrap-home w-clear" style="background:#fff">
+<div class="wrap-main wrap-home w-clear">
   <div class="breadCrumbs">
     <div class="wrap-content">
       <ol class="breadcrumb">
@@ -53,14 +54,45 @@ include 'inc/menu.php';
       </ol>
     </div>
   </div>
+  <div class="wrap-content padding-top-bottom-detail">
+    <div class="row">
+      <div class="col-lg-9 mb-3">
+        <div class="title-list-hot">
+          <h2><?= $kg_tintuc['namevi'] ?></h2>
+        </div>
+        <div class="wrap-main wrap-template w-clear" style="margin: 0 auto !important;">
+          <div class="content-main">
+            <?= $kg_tintuc['contentvi'] ?>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-3">
+        <div class="share othernews mb-3">
+          <b>Tin liên quan:</b>
+          <div class="fix__row__news">
+            <div class="row">
+              <?php if ($relatedNews && $relatedNews->num_rows > 0): ?>
+              <?php while ($kg_relatedNews = $relatedNews->fetch_assoc()) : ?>
+              <div class="col-lg-12 col-md-6 col-12">
+                <a class="scale-img text-decoration-none pic-news-other" href="<?= $kg_relatedNews['slugvi'] ?>"
+                  title="<?= $kg_relatedNews["titlevi"] ?>">
+                  <div class="news-other d-flex flex-wrap">
 
-  <div class="title-list-hot mt-5">
-    <h2><?= $kg_tintuc['namevi'] ?></h2>
-    <div class="animate-border bg-danger mt-1"></div>
-  </div>
-  <div class="wrap-main wrap-template w-clear" style="margin: 0 auto !important;">
-    <div class="content-main">
-      <?= $kg_tintuc['contentvi'] ?>
+                    <img class="w-100" alt="<?= $kg_relatedNews["titlevi"] ?>" title="<?= $kg_relatedNews["titlevi"] ?>"
+                      src="<?= BASE_ADMIN . UPLOADS . $kg_relatedNews['file'] ?>">
+
+                    <div class="info-news-other">
+                      <?= $kg_relatedNews["titlevi"] ?>
+                    </div>
+                  </div>
+                </a>
+              </div>
+              <?php endwhile; ?>
+              <?php endif; ?>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>

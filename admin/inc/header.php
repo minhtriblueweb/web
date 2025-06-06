@@ -39,7 +39,7 @@ function ActiveClass($requestUri)
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link href="./assets/img/favicon-blu-6810.png" rel="shortcut icon" type="image/x-icon" />
+  <link href="./assets/img/logo2-3962.png" rel="shortcut icon" type="image/x-icon" />
   <title>Administrator</title>
 
   <!-- Css all -->

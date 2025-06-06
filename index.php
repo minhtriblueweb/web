@@ -6,25 +6,25 @@
   <?php
   $sanpham_banchay = $sanpham->sanpham_banchay();
   if ($sanpham_banchay && $sanpham_banchay->num_rows > 0): ?>
-  <div class="wrap-product-hot">
-    <div class="wrap-content">
-      <div class="title-product-hot">
-        <h2>SẢN PHẨM BÁN CHẠY</h2>
-      </div>
-      <div class="slick-product slick-d-none">
-        <?php while ($resule_banchay = $sanpham_banchay->fetch_assoc()) : ?>
-        <div>
-          <div class="item-product">
-            <a href="san-pham/<?= $resule_banchay['slugvi'] ?>">
-              <div class="images">
-                <img class="w-100" src="<?= BASE_ADMIN . UPLOADS . $resule_banchay['file'] ?>"
-                  alt="<?= $resule_banchay['namevi'] ?>" />
-              </div>
-              <div class="content">
-                <div class="title">
-                  <h3><?= $resule_banchay['namevi'] ?></h3>
-                  <p class="price-product">
-                    <?php
+    <div class="wrap-product-hot">
+      <div class="wrap-content">
+        <div class="title-product-hot">
+          <h2>SẢN PHẨM BÁN CHẠY</h2>
+        </div>
+        <div class="slick-product slick-d-none">
+          <?php while ($resule_banchay = $sanpham_banchay->fetch_assoc()) : ?>
+            <div>
+              <div class="item-product">
+                <a href="san-pham/<?= $resule_banchay['slugvi'] ?>">
+                  <div class="images">
+                    <img class="w-100" src="<?= BASE_ADMIN . UPLOADS . $resule_banchay['file'] ?>"
+                      alt="<?= $resule_banchay['namevi'] ?>" />
+                  </div>
+                  <div class="content">
+                    <div class="title">
+                      <h3><?= $resule_banchay['namevi'] ?></h3>
+                      <p class="price-product">
+                        <?php
                         if (!empty($resule_banchay['sale_price']) && !empty($resule_banchay['regular_price'])) {
                           echo '<span class="price-new">' . $resule_banchay['sale_price'] . '₫</span>';
                           echo '<span class="price-old">' . $resule_banchay['regular_price'] . '₫</span>';
@@ -34,20 +34,20 @@
                           echo '<span class="price-new">Liên hệ</span>';
                         }
                         ?>
-                  </p>
-                  <div class="info-product">
-                    <p><i class="fa-solid fa-eye"></i> <?= $resule_banchay['views'] ?> lượt xem</p>
-                    <p><span>Chi tiết</span></p>
+                      </p>
+                      <div class="info-product">
+                        <p><i class="fa-solid fa-eye"></i> <?= $resule_banchay['views'] ?> lượt xem</p>
+                        <p><span>Chi tiết</span></p>
+                      </div>
+                    </div>
                   </div>
-                </div>
+                </a>
               </div>
-            </a>
-          </div>
+            </div>
+          <?php endwhile; ?>
         </div>
-        <?php endwhile; ?>
       </div>
     </div>
-  </div>
   <?php endif; ?>
   <div class="wrap-product-list">
     <div class="wrap-content">
@@ -55,22 +55,27 @@
         <h2>DANH MỤC BẠN QUAN TÂM</h2>
       </div>
       <div class="grid-list">
-        <?php
-        $show_danhmuc = $danhmuc->show_danhmuc_c2();
-        if ($show_danhmuc) {
-          while ($result_danhmuc = $show_danhmuc->fetch_assoc()) {
-        ?>
-        <div class="item-list">
-          <a class="scale-img" href="cate/<?= $result_danhmuc['slugvi'] ?>" title="<?= $result_danhmuc['namevi'] ?>">
-            <img src="<?= BASE_ADMIN . UPLOADS . $result_danhmuc['file'] ?>" alt="<?= $result_danhmuc['namevi'] ?>" />
-          </a>
-          <h3>
-            <a class="text-split" href="cate/<?= $result_danhmuc['slugvi'] ?>"><?= $result_danhmuc['namevi'] ?></a>
-          </h3>
-        </div>
-        <?php }
-        } ?>
+        <?php if ($show_danhmuc = $danhmuc->show_danhmuc_c2()): ?>
+          <?php while ($dm = $show_danhmuc->fetch_assoc()): ?>
+            <?php
+            $slug = $dm['slugvi'];
+            $name = $dm['namevi'];
+            $imgSrc = !empty($dm['file'])
+              ? BASE_ADMIN . UPLOADS . $dm['file']
+              : BASE_ADMIN . "assets/img/noimage.png";
+            ?>
+            <div class="item-list">
+              <a class="scale-img" href="cate/<?= $slug ?>" title="<?= $name ?>">
+                <img src="<?= $imgSrc ?>" alt="<?= $name ?>" />
+              </a>
+              <h3>
+                <a class="text-split" href="cate/<?= $slug ?>"><?= $name ?></a>
+              </h3>
+            </div>
+          <?php endwhile; ?>
+        <?php endif; ?>
       </div>
+
       <div class="slick-banner slick-d-none"></div>
     </div>
   </div>
@@ -78,67 +83,72 @@
   <div class="wrap-content">
     <?php $show_danhmuc = $danhmuc->show_danhmuc_noibat('hienthi', 'noibat'); ?>
     <?php if ($show_danhmuc): ?>
-    <?php while ($resule_danhmuc = $show_danhmuc->fetch_assoc()) : ?>
-    <?php
+      <?php while ($resule_danhmuc = $show_danhmuc->fetch_assoc()) : ?>
+        <?php
         $id_list = $resule_danhmuc['id'];
         $show_sanpham = $sanpham->show_sanpham_tc($id_list);
         if ($show_sanpham && $show_sanpham->num_rows > 0):
         ?>
-    <div class="box-list">
-      <div class="title-list">
-        <h2><span class="text-split"><?= $resule_danhmuc['namevi'] ?></span></h2>
-        <div class="box-tab-cat">
-          <ul class="tab-cat">
-            <?php $show_danhmuc_c2 = $danhmuc->show_danhmuc_c2_index($id_list); ?>
-            <?php if ($show_danhmuc_c2): ?>
-            <?php while ($resule_danhmuc_c2 = $show_danhmuc_c2->fetch_assoc()) : ?>
-            <li><a href="cate/<?= $resule_danhmuc_c2['slugvi'] ?>"><?= $resule_danhmuc_c2['namevi'] ?></a></li>
-            <?php endwhile; ?>
-            <?php endif; ?>
-          </ul>
-          <a class="viewlist" href="danh-muc/<?= $resule_danhmuc['slugvi'] ?>">Xem tất cả</a>
-        </div>
-      </div>
-      <div class="paging-product-list paging-product-list-1" data-list="1">
-        <div class="grid-product">
-          <?php while ($resule_sanpham = $show_sanpham->fetch_assoc()) : ?>
-          <div class="item-product">
-            <a href="san-pham/<?= $resule_sanpham['slugvi'] ?>">
-              <div class="images">
-                <img
-                  src="<?php echo empty($resule_sanpham['file']) ? $config['baseAdmin'] . "assets/img/noimage.png" : BASE_ADMIN . UPLOADS . $resule_sanpham['file']; ?>"
-                  alt="<?= $resule_sanpham['namevi'] ?>" title="<?= $resule_sanpham['namevi'] ?>" class="w-100" />
+          <div class="box-list">
+            <div class="title-list">
+              <h2><span class="text-split"><?= $resule_danhmuc['namevi'] ?></span></h2>
+              <div class="box-tab-cat">
+                <ul class="tab-cat">
+                  <?php $show_danhmuc_c2 = $danhmuc->show_danhmuc_c2_index($id_list); ?>
+                  <?php if ($show_danhmuc_c2): ?>
+                    <?php while ($resule_danhmuc_c2 = $show_danhmuc_c2->fetch_assoc()) : ?>
+                      <li><a href="cate/<?= $resule_danhmuc_c2['slugvi'] ?>"><?= $resule_danhmuc_c2['namevi'] ?></a></li>
+                    <?php endwhile; ?>
+                  <?php endif; ?>
+                </ul>
+                <a class="viewlist" href="danh-muc/<?= $resule_danhmuc['slugvi'] ?>">Xem tất cả</a>
               </div>
-              <div class="content">
-                <div class="title">
-                  <h3><?= $resule_sanpham['namevi'] ?></h3>
-                  <p class="price-product">
-                    <?php
-                            if (!empty($resule_sanpham['sale_price']) && !empty($resule_sanpham['regular_price'])) {
-                              echo '<span class="price-new">' . $resule_sanpham['sale_price'] . '₫</span>';
-                              echo '<span class="price-old">' . $resule_sanpham['regular_price'] . '₫</span>';
-                            } elseif (!empty($resule_sanpham['regular_price'])) {
-                              echo '<span class="price-new">' . $resule_sanpham['regular_price'] . '₫</span>';
-                            } else {
-                              echo '<span class="price-new">Liên hệ</span>';
-                            }
-                            ?>
-                  </p>
-                  </p>
-                  <div class="info-product">
-                    <p><i class="fa-solid fa-eye"></i> <?= $resule_sanpham['views'] ?> lượt xem</p>
-                    <p><span>Chi tiết</span></p>
+            </div>
+            <div class="paging-product-list paging-product-list-1" data-list="1">
+              <div class="grid-product">
+                <?php while ($sp = $show_sanpham->fetch_assoc()) : ?>
+                  <?php
+                  $slug = $sp['slugvi'];
+                  $name = htmlspecialchars($sp['namevi']);
+                  $img = !empty($sp['file'])
+                    ? BASE_ADMIN . UPLOADS . $sp['file']
+                    : $config['baseAdmin'] . "assets/img/noimage.png";
+                  $sale = $sp['sale_price'] ?? '';
+                  $regular = $sp['regular_price'] ?? '';
+                  $views = $sp['views'] ?? 0;
+                  ?>
+                  <div class="item-product">
+                    <a href="san-pham/<?= $slug ?>">
+                      <div class="images">
+                        <img src="<?= $img ?>" alt="<?= $name ?>" title="<?= $name ?>" class="w-100" />
+                      </div>
+                      <div class="content">
+                        <div class="title">
+                          <h3><?= $name ?></h3>
+                          <p class="price-product">
+                            <?php if (!empty($sale) && !empty($regular)): ?>
+                              <span class="price-new"><?= $sale ?>₫</span>
+                              <span class="price-old"><?= $regular ?>₫</span>
+                            <?php elseif (!empty($regular)): ?>
+                              <span class="price-new"><?= $regular ?>₫</span>
+                            <?php else: ?>
+                              <span class="price-new">Liên hệ</span>
+                            <?php endif; ?>
+                          </p>
+                          <div class="info-product">
+                            <p><i class="fa-solid fa-eye"></i> <?= $views ?> lượt xem</p>
+                            <p><span>Chi tiết</span></p>
+                          </div>
+                        </div>
+                      </div>
+                    </a>
                   </div>
-                </div>
+                <?php endwhile; ?>
               </div>
-            </a>
+            </div>
           </div>
-          <?php endwhile; ?>
-        </div>
-      </div>
-    </div>
-    <?php endif; ?>
-    <?php endwhile; ?>
+        <?php endif; ?>
+      <?php endwhile; ?>
     <?php endif; ?>
   </div>
   <!-- <div class="wrap-brand">

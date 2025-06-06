@@ -31,7 +31,7 @@ class news
         if (!empty($conditions)) {
             $query .= " WHERE " . implode(" AND ", $conditions);
         }
-        $query .= " ORDER BY numb ASC";
+        $query .= " ORDER BY numb,id DESC";
 
         return $this->db->select($query);
     }

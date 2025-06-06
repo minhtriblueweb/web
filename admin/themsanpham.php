@@ -70,10 +70,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add'])) {
                       <?php
                       if (isset($insert)) {
                       ?>
-                        <p class="alert-slugvi text-danger mt-2 mb-0" id="alert-slug-dangervi">
-                          <i class="fas fa-exclamation-triangle mr-1"></i>
-                          <span><?php echo $insert; ?></span>
-                        </p>
+                      <p class="alert-slugvi text-danger mt-2 mb-0" id="alert-slug-dangervi">
+                        <i class="fas fa-exclamation-triangle mr-1"></i>
+                        <span><?php echo $insert; ?></span>
+                      </p>
                       <?php } ?>
                       <p class="alert-slugvi text-success d-none mt-2 mb-0" id="alert-slug-successvi">
                         <i class="fas fa-check-circle mr-1"></i>
@@ -146,11 +146,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add'])) {
                   data-child="id_cat" class="form-control select2 select-category">
                   <option value="0">Chọn danh mục</option>
                   <?php if ($show_danhmuc): ?>
-                    <?php while ($resule_danhmuc = $show_danhmuc->fetch_assoc()): ?>
-                      <option value="<?= $resule_danhmuc['id'] ?>">
-                        <?= $resule_danhmuc['namevi'] ?>
-                      </option>
-                    <?php endwhile; ?>
+                  <?php while ($resule_danhmuc = $show_danhmuc->fetch_assoc()): ?>
+                  <option value="<?= $resule_danhmuc['id'] ?>">
+                    <?= $resule_danhmuc['namevi'] ?>
+                  </option>
+                  <?php endwhile; ?>
                   <?php endif; ?>
                 </select>
               </div>

@@ -41,6 +41,52 @@ class sanpham
         return $result;
     }
 
+    public function upload_gallery($data, $files, $id, $result_id_parent)
+    {
+        $hienthi = mysqli_real_escape_string($this->db->link, $data['hienthi']);
+        $numb = mysqli_real_escape_string($this->db->link, $data['numb']);
+        $result_id = mysqli_real_escape_string($this->db->link, $data['result_id']);
+        $unique_image = '';
+        $upload_success = false;
+        if (!empty($files['file']['name'])) {
+            $file_ext = strtolower(pathinfo($files['file']['name'], PATHINFO_EXTENSION));
+            $unique_image = substr(md5(time()), 0, 10) . '.' . $file_ext;
+            $upload_path = "uploads/" . $unique_image;
+            if (move_uploaded_file($files['file']['tmp_name'], $upload_path)) {
+                $upload_success = true;
+            } else {
+                return "Lỗi upload file!";
+            }
+        }
+        if ($upload_success) {
+            $del_file_query = "SELECT photo FROM tbl_gallery WHERE id='$id'";
+            $old_file = $this->db->select($del_file_query);
+            if ($old_file && $old_file->num_rows > 0) {
+                $rowData = $old_file->fetch_assoc();
+                $old_file_path = "uploads/" . $rowData['photo'];
+                if (file_exists($old_file_path) && !empty($rowData['photo'])) {
+                    unlink($old_file_path);
+                }
+            }
+        }
+        $query = "UPDATE tbl_gallery SET 
+                hienthi = '$hienthi',
+                numb = '$numb'";
+        if (!empty($unique_image)) {
+            $query .= ", photo = '$unique_image'";
+        }
+        $query .= " WHERE id = '$id'";
+        $result = $this->db->update($query);
+        if ($result) {
+            header('Location: transfer.php?stt=success&url=gallery&id=' . $result_id_parent);
+            exit();
+        } else {
+            return "Lỗi thao tác!";
+        }
+    }
+
+
+
     public function xoanhieu_gallery($listid)
     {
         $id_array = explode(',', $listid);
@@ -112,6 +158,14 @@ class sanpham
         } else {
             return "Không tìm thấy ảnh để xoá!";
         }
+    }
+
+    public function get_img_gallery($id)
+    {
+        $id = mysqli_real_escape_string($this->db->link, $id);
+        $query = "SELECT * FROM tbl_gallery WHERE id = '$id' LIMIT 1";
+        $result = $this->db->select($query);
+        return $result;
     }
 
 
@@ -305,7 +359,7 @@ class sanpham
     public function show_sanpham($records_per_page, $current_page, $hienthi = '')
     {
         if (!empty($hienthi)) {
-            $query = "SELECT * FROM tbl_sanpham WHERE hienthi = '$hienthi' ORDER BY numb ASC";
+            $query = "SELECT * FROM tbl_sanpham WHERE hienthi = '$hienthi' ORDER BY numb,id ASC";
             $result = $this->db->select($query);
             return $result;
         } else {
@@ -325,14 +379,14 @@ class sanpham
 
     public function show_sanpham_tc($id_list = '')
     {
-        $query = "SELECT * FROM tbl_sanpham WHERE id_list = '$id_list' AND hienthi = 'hienthi' ORDER BY numb ASC LIMIT 10";
+        $query = "SELECT * FROM tbl_sanpham WHERE id_list = '$id_list' AND hienthi = 'hienthi' ORDER BY numb,id DESC LIMIT 10";
         $result = $this->db->select($query);
         return $result;
     }
 
     public function show_sanpham_cap_1($id_list = '')
     {
-        $query = "SELECT * FROM tbl_sanpham WHERE id_list = '$id_list' AND hienthi = 'hienthi' ORDER BY numb DESC";
+        $query = "SELECT * FROM tbl_sanpham WHERE id_list = '$id_list' AND hienthi = 'hienthi' ORDER BY numb,id DESC";
         $result = $this->db->select($query);
         return $result;
     }
@@ -351,7 +405,7 @@ class sanpham
 
     public function show_sanpham_c2_tc($id_cat = '')
     {
-        $query = "SELECT * FROM tbl_sanpham WHERE id_cat = '$id_cat' AND hienthi = 'hienthi' ORDER BY numb ASC";
+        $query = "SELECT * FROM tbl_sanpham WHERE id_cat = '$id_cat' AND hienthi = 'hienthi' ORDER BY numb,id DESC";
         $result = $this->db->select($query);
         return $result;
     }

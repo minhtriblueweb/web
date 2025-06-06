@@ -244,7 +244,7 @@ function createSortFiler() {
 function destroySortFiler() {
   try {
     var destroy = sortable.destroy();
-  } catch (e) {}
+  } catch (e) { }
 }
 
 /* Refresh filer when complete action */
@@ -1250,8 +1250,8 @@ $(document).ready(function () {
     $("#order_date").on("apply.daterangepicker", function (ev, picker) {
       $(this).val(
         picker.startDate.format("DD/MM/YYYY") +
-          " - " +
-          picker.endDate.format("DD/MM/YYYY")
+        " - " +
+        picker.endDate.format("DD/MM/YYYY")
       );
     });
 
@@ -1515,8 +1515,8 @@ $(document).ready(function () {
             } else {
               $(".result-database").html(
                 '<div class="col-12"><span class="text-danger">' +
-                  LANG["xulythatbaivuilongthulaisau"] +
-                  "</span></div>"
+                LANG["xulythatbaivuilongthulaisau"] +
+                "</span></div>"
               );
             }
 
@@ -2065,7 +2065,7 @@ $(document).ready(function () {
             " {{fi-maxSize}} MB.",
           filesSizeAll:
             LANG[
-              "nhunghinhanhbanchoncokichthuocqualonvuilongchonnhunghinhanhcokichthuoctoida"
+            "nhunghinhanhbanchoncokichthuocqualonvuilongchonnhunghinhanhcokichthuoctoida"
             ] + " {{fi-maxSize}} MB.",
         },
       },
@@ -2148,7 +2148,7 @@ $(document).ready(function () {
           holdonClose();
         },
         statusCode: {},
-        onProgress: function () {},
+        onProgress: function () { },
       },
       templates: {
         box: '<ul class="jFiler-items-list jFiler-items-grid row scroll-bar"></ul>',
@@ -2271,7 +2271,7 @@ $(document).ready(function () {
             " {{fi-maxSize}} MB.",
           filesSizeAll:
             LANG[
-              "nhunghinhanhbanchoncokichthuocqualonvuilongchonnhunghinhanhcokichthuoctoida"
+            "nhunghinhanhbanchoncokichthuocqualonvuilongchonnhunghinhanhcokichthuoctoida"
             ] + " {{fi-maxSize}} MB.",
         },
       },

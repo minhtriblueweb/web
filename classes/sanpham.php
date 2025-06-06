@@ -384,6 +384,13 @@ class sanpham
         return $result;
     }
 
+    public function show_sanpham_tc_c2($id_c2)
+    {
+        $query = "SELECT * FROM tbl_sanpham WHERE id_cat = '$id_c2' AND hienthi = 'hienthi' ORDER BY numb,id DESC LIMIT 10";
+        $result = $this->db->select($query);
+        return $result;
+    }
+
     public function show_sanpham_cap_1($id_list = '')
     {
         $query = "SELECT * FROM tbl_sanpham WHERE id_list = '$id_list' AND hienthi = 'hienthi' ORDER BY numb,id DESC";

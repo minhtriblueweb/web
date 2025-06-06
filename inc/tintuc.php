@@ -1,4 +1,4 @@
-<div class="wrap-service">
+<div class="wrap-service" data-aos="fade-up" data-aos-duration="1000">
   <div class="wrap-content">
     <div class="title-main">
       <h2>TIN TỨC MỚI NHẤT</h2>
@@ -13,7 +13,7 @@
                 <a class="scale-img hover-glass text-decoration-none" href="<?= $resule_tintuc['slugvi'] ?>"
                   title="<?= $resule_tintuc['namevi'] ?>">
                   <img class="w-100"
-                    src="<?php echo empty($resule_tintuc['file']) ? $config['baseAdmin'] . "assets/img/noimage.png" : BASE_ADMIN . UPLOADS . $resule_tintuc['file']; ?>"
+                    src="<?php echo empty($resule_tintuc['file']) ? BASE_ADMIN . "assets/img/noimage.png" : BASE_ADMIN . UPLOADS . $resule_tintuc['file']; ?>"
                     alt="<?= $resule_tintuc['namevi'] ?>" />
                 </a>
               </div>

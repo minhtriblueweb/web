@@ -3,7 +3,7 @@ validateForm("validation-newsletter");
 validateForm("validation-cart");
 validateForm("validation-user");
 validateForm("validation-contact");
-
+AOS.init();
 NN_FRAMEWORK.Common = function () {
   $(".content-ck iframe,.content-ck embed").each(function (e, n) {
     $(this).wrap("<div class='video-container'></div>");
@@ -14,20 +14,39 @@ NN_FRAMEWORK.Common = function () {
 };
 
 $(document).ready(function () {
-    let path = window.location.pathname;
-    if (path === '/' || path.endsWith('/')) {
-      path = 'index';
-    } else {
-      let fileName = path.substring(path.lastIndexOf('/') + 1);
-      path = fileName.replace('.php', '');
-    }
-    $('.menu-bar a').each(function () {
-      let href = $(this).attr('href').replace('./', '').replace('.php', '');
-      if ((path === 'index' && (href === '' || href === 'index')) || path === href) {
-        $(this).addClass('active');
-      }
-    });
+  $('.tab-cat-link').on('click', function (e) {
+    e.preventDefault();
+    var $this = $(this);
+    var tabId = $this.data('tab');
+    var $boxList = $this.closest('.box-list');
+    $boxList.find('.tab-cat-link').removeClass('active');
+    $this.addClass('active');
+    $boxList.find('.tabcontent').removeClass('show-fade').hide();
+    var $currentTab = $boxList.find('#' + tabId);
+    $currentTab.show();
+    setTimeout(function () {
+      $currentTab.addClass('show-fade');
+    }, 20);
   });
+});
+
+
+
+$(document).ready(function () {
+  let path = window.location.pathname;
+  if (path === '/' || path.endsWith('/')) {
+    path = 'index';
+  } else {
+    let fileName = path.substring(path.lastIndexOf('/') + 1);
+    path = fileName.replace('.php', '');
+  }
+  $('.menu-bar a').each(function () {
+    let href = $(this).attr('href').replace('./', '').replace('.php', '');
+    if ((path === 'index' && (href === '' || href === 'index')) || path === href) {
+      $(this).addClass('active');
+    }
+  });
+});
 /* Lazys */
 NN_FRAMEWORK.Lazys = function () {
   if (isExist($(".lazy"))) {
@@ -363,18 +382,18 @@ NN_FRAMEWORK.DomChange = function () {
         ".js-facebook-messenger-box, .js-facebook-messenger-container"
       ).toggleClass("open"),
         $(".js-facebook-messenger-tooltip").length &&
-          $(".js-facebook-messenger-tooltip").toggle();
+        $(".js-facebook-messenger-tooltip").toggle();
     }),
       $(".js-facebook-messenger-box").hasClass("cfm") &&
-        setTimeout(function () {
-          $(".js-facebook-messenger-box").addClass("rubberBand animated");
-        }, 3500),
+      setTimeout(function () {
+        $(".js-facebook-messenger-box").addClass("rubberBand animated");
+      }, 3500),
       $(".js-facebook-messenger-tooltip").length &&
-        ($(".js-facebook-messenger-tooltip").hasClass("fixed")
-          ? $(".js-facebook-messenger-tooltip").show()
-          : $(".js-facebook-messenger-box").on("hover", function () {
-              $(".js-facebook-messenger-tooltip").show();
-            }),
+      ($(".js-facebook-messenger-tooltip").hasClass("fixed")
+        ? $(".js-facebook-messenger-tooltip").show()
+        : $(".js-facebook-messenger-box").on("hover", function () {
+          $(".js-facebook-messenger-tooltip").show();
+        }),
         $(".js-facebook-messenger-close-tooltip").on("click", function () {
           $(".js-facebook-messenger-tooltip").addClass("closed");
         }));

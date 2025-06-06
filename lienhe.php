@@ -41,8 +41,8 @@ include 'inc/menu.php';
     <div class="wrap-content" style="background: unset;">
       <div class="content-main">
         <div class="contact-article row">
-          <div class="contact-text col-lg-6 mb-3"><?= $result_lienhe['contentvi'] ?></div>
-          <form class="contact-form validation-contact col-lg-6 mb-3" novalidate="" method="post" action=""
+          <div class="contact-text col-lg-6 mb-3" data-aos="fade-right" data-aos-duration="1000"><?= $result_lienhe['contentvi'] ?></div>
+          <form data-aos="fade-left" data-aos-duration="1000" class="contact-form validation-contact col-lg-6 mb-3" novalidate="" method="post" action=""
             enctype="multipart/form-data">
             <div class="social">
               <p>ĐĂNG KÝ NHẬN TƯ VẤN</p>

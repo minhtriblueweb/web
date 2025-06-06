@@ -117,7 +117,7 @@ include 'inc/menu.php';
             $regular = $sp['regular_price'] ?? '';
             $views = $sp['views'] ?? 0;
             ?>
-            <div class="item-product">
+            <div class="item-product" data-aos="fade-up" data-aos-duration="1000">
               <a href="san-pham/<?= $slug ?>">
                 <div class="images">
                   <img src="<?= $img ?>" alt="<?= $name ?>" title="<?= $name ?>" class="w-100" loading="lazy" />
@@ -144,7 +144,6 @@ include 'inc/menu.php';
               </a>
             </div>
           <?php endwhile; ?>
-
         </div>
       <?php else : ?>
         <div class="alert alert-warning w-100" role="alert">

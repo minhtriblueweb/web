@@ -189,7 +189,7 @@ class news
         return $result;
     }
 
-    public function delete_multiple_news($listid = [], $type)
+    public function delete_multiple_news($listid, $type)
     {
         if (empty($listid)) {
             return "Không có bản ghi nào được chọn.";

@@ -1,8 +1,8 @@
 <?php
 $show_danhgia = $danhgia->show_danhgia("hienthi");
-if ($show_danhgia && $show_danhgia->num_rows > 0): // Kiểm tra nếu có dữ liệu 
+if ($show_danhgia && $show_danhgia->num_rows > 0):
 ?>
-<div class="wrap-feedback">
+<div class="wrap-feedback" data-aos="fade-up" data-aos-duration="1000">
   <div class="wrap-content">
     <div class="title-main">
       <h2>ĐÁNH GIÁ KHÁCH HÀNG</h2>

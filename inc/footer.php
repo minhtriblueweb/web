@@ -81,7 +81,7 @@
               hấp dẫn
             </p>
             <form class="FormNewsletter validation-newsletter" novalidate method="post" action=""
-              enctype="multipart/form-data">
+              enctype="multipart/form-data" data-aos="fade-left" data-aos-duration="500">
               <div class="newsletter-input">
                 <input type="email" class="form-control text-sm" id="email-newsletter" name="dataNewsletter[email]"
                   placeholder="Nhập vào email của bạn" required />

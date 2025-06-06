@@ -38,13 +38,13 @@ include 'inc/menu.php';
         <?php $show_huongdanchoi = $news->show_news_by_type('huongdanchoi', 'hienthi'); ?>
         <?php if ($show_huongdanchoi): ?>
         <?php while ($resule_huongdanchoi = $show_huongdanchoi->fetch_assoc()) : ?>
-        <div class="col-6 col-sm-4">
+        <div class="col-6 col-sm-4" data-aos="fade-up" data-aos-duration="1000">
           <div class="item-service">
             <div class="images">
               <a class="scale-img hover-glass text-decoration-none" href="<?= $resule_huongdanchoi['slugvi'] ?>"
                 title="<?= $resule_huongdanchoi['namevi'] ?>">
                 <img class="w-100"
-                  src="<?php echo empty($resule_huongdanchoi['file']) ? $config['baseAdmin'] . "assets/img/noimage.png" : BASE_ADMIN . UPLOADS . $resule_huongdanchoi['file']; ?>"
+                  src="<?php echo empty($resule_huongdanchoi['file']) ? BASE_ADMIN . "assets/img/noimage.png" : BASE_ADMIN . UPLOADS . $resule_huongdanchoi['file']; ?>"
                   alt="<?= $resule_huongdanchoi['namevi'] ?>" />
               </a>
             </div>

@@ -69,18 +69,18 @@ include 'inc/menu.php';
           </a>
         </li>
         <?php if (isset($danhmuc_slugvi) && isset($danhmuc_name)): ?>
-        <li class="breadcrumb-item">
-          <a class="text-decoration-none" href="<?= BASE . 'danh-muc/' . $danhmuc_slugvi ?>">
-            <span><?= $danhmuc_name ?></span>
-          </a>
-        </li>
+          <li class="breadcrumb-item">
+            <a class="text-decoration-none" href="<?= BASE . 'danh-muc/' . $danhmuc_slugvi ?>">
+              <span><?= $danhmuc_name ?></span>
+            </a>
+          </li>
         <?php endif; ?>
         <?php if (isset($danhmuc_c2_slugvi) && isset($danhmuc_c2_name)): ?>
-        <li class="breadcrumb-item">
-          <a class="text-decoration-none" href="<?= BASE . 'cate/' . $danhmuc_c2_slugvi ?>">
-            <span><?= $danhmuc_c2_name ?></span>
-          </a>
-        </li>
+          <li class="breadcrumb-item">
+            <a class="text-decoration-none" href="<?= BASE . 'cate/' . $danhmuc_c2_slugvi ?>">
+              <span><?= $danhmuc_c2_name ?></span>
+            </a>
+          </li>
         <?php endif; ?>
 
         <li class="breadcrumb-item active">
@@ -108,38 +108,38 @@ include 'inc/menu.php';
         </div>
 
         <?php if ($get_gallery && $get_gallery->num_rows > 0): ?>
-        <div class="gallery-thumb-pro">
-          <div class="owl-page owl-carousel owl-theme owl-pro-detail" data-items="screen:0|items:4|margin:10"
-            data-nav="1" data-navcontainer=".control-pro-detail">
-            <div>
-              <a class="thumb-pro-detail" data-zoom-id="Zoom-1"
-                href="<?= empty($kg_sanpham['file']) ? BASE_ADMIN . "assets/img/noimage.png" : BASE_ADMIN . UPLOADS . $kg_sanpham['file']; ?>">
-                <img class="w-100"
-                  src="<?= empty($kg_sanpham['file']) ? BASE_ADMIN . "assets/img/noimage.png" : BASE_ADMIN . UPLOADS . $kg_sanpham['file']; ?>" />
-              </a>
+          <div class="gallery-thumb-pro">
+            <div class="owl-page owl-carousel owl-theme owl-pro-detail" data-items="screen:0|items:4|margin:10"
+              data-nav="1" data-navcontainer=".control-pro-detail">
+              <div>
+                <a class="thumb-pro-detail" data-zoom-id="Zoom-1"
+                  href="<?= empty($kg_sanpham['file']) ? BASE_ADMIN . "assets/img/noimage.png" : BASE_ADMIN . UPLOADS . $kg_sanpham['file']; ?>">
+                  <img class="w-100"
+                    src="<?= empty($kg_sanpham['file']) ? BASE_ADMIN . "assets/img/noimage.png" : BASE_ADMIN . UPLOADS . $kg_sanpham['file']; ?>" />
+                </a>
+              </div>
+              <?php while ($resule_gallery = $get_gallery->fetch_assoc()) : ?>
+                <div>
+                  <a class="thumb-pro-detail" data-zoom-id="Zoom-1"
+                    href="<?= empty($resule_gallery['photo']) ? BASE_ADMIN . "assets/img/noimage.png" : BASE_ADMIN . UPLOADS . $resule_gallery['photo']; ?>">
+                    <img class="w-100"
+                      src="<?= empty($resule_gallery['photo']) ? BASE_ADMIN . "assets/img/noimage.png" : BASE_ADMIN . UPLOADS . $resule_gallery['photo']; ?>" />
+                  </a>
+                </div>
+              <?php endwhile; ?>
             </div>
-            <?php while ($resule_gallery = $get_gallery->fetch_assoc()) : ?>
-            <div>
-              <a class="thumb-pro-detail" data-zoom-id="Zoom-1"
-                href="<?= empty($resule_gallery['photo']) ? BASE_ADMIN . "assets/img/noimage.png" : BASE_ADMIN . UPLOADS . $resule_gallery['photo']; ?>">
-                <img class="w-100"
-                  src="<?= empty($resule_gallery['photo']) ? BASE_ADMIN . "assets/img/noimage.png" : BASE_ADMIN . UPLOADS . $resule_gallery['photo']; ?>" />
-              </a>
-            </div>
-            <?php endwhile; ?>
+            <div class="control-pro-detail control-owl transition"></div>
           </div>
-          <div class="control-pro-detail control-owl transition"></div>
-        </div>
         <?php endif; ?>
       </div>
       <div class="right-pro-detail">
         <p class="title-pro-detail mb-3"><?= $kg_sanpham['namevi'] ?></p>
         <ul class="attr-pro-detail">
           <?php if (!empty($kg_sanpham['code'])): ?>
-          <li>
-            <label class="attr-label-pro-detail">Mã sản phẩm:</label>
-            <div class="attr-content-pro-detail"><?= $kg_sanpham['code'] ?></div>
-          </li>
+            <li>
+              <label class="attr-label-pro-detail">Mã sản phẩm:</label>
+              <div class="attr-content-pro-detail"><?= $kg_sanpham['code'] ?></div>
+            </li>
           <?php endif; ?>
           <li>
             <label class="attr-label-pro-detail">Lượt xem:</label>
@@ -149,14 +149,14 @@ include 'inc/menu.php';
             <label class="attr-label-pro-detail">Giá:</label>
             <div class="attr-content-pro-detail">
               <?php if (!empty($kg_sanpham['sale_price']) && !empty($kg_sanpham['regular_price'])): ?>
-              <span class="price-new-pro-detail"><?= $kg_sanpham['sale_price'] ?> ₫</span>
-              <span class="price-old-pro-detail"><?= $kg_sanpham['regular_price'] ?> ₫</span>
+                <span class="price-new-pro-detail"><?= $kg_sanpham['sale_price'] ?> ₫</span>
+                <span class="price-old-pro-detail"><?= $kg_sanpham['regular_price'] ?> ₫</span>
               <?php elseif (!empty($kg_sanpham['sale_price'])): ?>
-              <span class="price-new-pro-detail"><?= $kg_sanpham['sale_price'] ?> ₫</span>
+                <span class="price-new-pro-detail"><?= $kg_sanpham['sale_price'] ?> ₫</span>
               <?php elseif (!empty($kg_sanpham['regular_price'])): ?>
-              <span class="price-new-pro-detail"><?= $kg_sanpham['regular_price'] ?> ₫</span>
+                <span class="price-new-pro-detail"><?= $kg_sanpham['regular_price'] ?> ₫</span>
               <?php else: ?>
-              <span class="price-new-pro-detail">Liên hệ</span>
+                <span class="price-new-pro-detail">Liên hệ</span>
               <?php endif; ?>
             </div>
           </li>
@@ -172,20 +172,20 @@ include 'inc/menu.php';
       <div class="policy-detail">
         <?php $show_tieuchi = $tieuchi->show_tieuchi("hienthi");
         if ($show_tieuchi): ?>
-        <?php while ($result_tieuchi = $show_tieuchi->fetch_assoc()): ?>
-        <div class="list-policy">
-          <div class="i-policy">
-            <a class="scale-img hover-glass text-decoration-none" href="" title="<?= $result_tieuchi['name'] ?>">
-              <img
-                src="<?= empty($result_tieuchi['file']) ? BASE_ADMIN . "assets/img/noimage.png" : BASE_ADMIN . UPLOADS . $result_tieuchi['file']; ?>"
-                alt="<?= $result_tieuchi['name'] ?>" width="40" height="40">
-            </a>
-            <div class="content">
-              <h3 class="text-split" title="<?= $result_tieuchi['name'] ?>"><?= $result_tieuchi['name'] ?></h3>
+          <?php while ($result_tieuchi = $show_tieuchi->fetch_assoc()): ?>
+            <div class="list-policy">
+              <div class="i-policy">
+                <a class="scale-img hover-glass text-decoration-none" href="" title="<?= $result_tieuchi['name'] ?>">
+                  <img
+                    src="<?= empty($result_tieuchi['file']) ? BASE_ADMIN . "assets/img/noimage.png" : BASE_ADMIN . UPLOADS . $result_tieuchi['file']; ?>"
+                    alt="<?= $result_tieuchi['name'] ?>" width="40" height="40">
+                </a>
+                <div class="content">
+                  <h3 class="text-split" title="<?= $result_tieuchi['name'] ?>"><?= $result_tieuchi['name'] ?></h3>
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
-        <?php endwhile; ?>
+          <?php endwhile; ?>
         <?php endif; ?>
       </div>
     </div>
@@ -203,12 +203,8 @@ include 'inc/menu.php';
       </ul>
       <div class="tab-content" id="tabsProDetailContent">
         <div class="tab-pane fade show active" id="info-pro-detail" role="tabpanel">
-          <div class="noidung_anhien">
-            <div class="content-main content-ck" id="toc-content">
-              <?= $kg_sanpham['contentvi'] ?>
-            </div>
-            <p class="anhien xemthemnd">Xem thêm nội dung</p>
-            <p class="anhien anbot">Ẩn bớt nội dung</p>
+          <div class="content-main content-ck" id="toc-content">
+            <?= $kg_sanpham['contentvi'] ?>
           </div>
         </div>
         <div class="tab-pane fade" id="commentfb-pro-detail" role="tabpanel">
@@ -216,12 +212,12 @@ include 'inc/menu.php';
       </div>
     </div>
     <?php if ($sanpham_lienquan && $sanpham_lienquan->num_rows > 0): ?>
-    <div class="title-main mt-4" data-aos="fade-up" data-aos-duration="1000">
-      <h2>Sản phẩm cùng loại</h2>
-    </div>
-    <div class="grid-product" data-aos="fade-up" data-aos-duration="1000">
-      <?php while ($kg_sanpham_lienquan = $sanpham_lienquan->fetch_assoc()) : ?>
-      <?php
+      <div class="title-main mt-4" data-aos="fade-up" data-aos-duration="1000">
+        <h2>Sản phẩm cùng loại</h2>
+      </div>
+      <div class="grid-product" data-aos="fade-up" data-aos-duration="1000">
+        <?php while ($kg_sanpham_lienquan = $sanpham_lienquan->fetch_assoc()) : ?>
+          <?php
           $slug = $kg_sanpham_lienquan['slugvi'];
           $name = $kg_sanpham_lienquan['namevi'];
           $img_src = empty($kg_sanpham_lienquan['file'])
@@ -231,39 +227,39 @@ include 'inc/menu.php';
           $sale_price = $kg_sanpham_lienquan['sale_price'];
           $regular_price = $kg_sanpham_lienquan['regular_price'];
           ?>
-      <div class="item-product">
-        <a class="text-decoration-none" href="san-pham/<?= $slug ?>" title="<?= htmlspecialchars($name) ?>">
-          <div class="images">
-            <img class="w-100" src="<?= $img_src ?>" alt="<?= htmlspecialchars($name) ?>">
-          </div>
-          <div class="content">
-            <div class="title">
-              <h3><?= htmlspecialchars($name) ?></h3>
-              <p class="price-product">
-                <?php if (!empty($sale_price) && !empty($regular_price)): ?>
-                <span class="price-new"><?= $sale_price ?> ₫</span>
-                <span class="price-old"><?= $regular_price ?> ₫</span>
-                <?php elseif (!empty($regular_price)): ?>
-                <span class="price-new"><?= $regular_price ?> ₫</span>
-                <?php else: ?>
-                <span class="price-new">Liên hệ</span>
-                <?php endif; ?>
-              </p>
-              <div class="info-product">
-                <p><i class="fa-solid fa-eye"></i> <?= $views ?> lượt xem</p>
-                <p><span>Chi tiết</span></p>
+          <div class="item-product">
+            <a class="text-decoration-none" href="san-pham/<?= $slug ?>" title="<?= htmlspecialchars($name) ?>">
+              <div class="images">
+                <img class="w-100" src="<?= $img_src ?>" alt="<?= htmlspecialchars($name) ?>">
               </div>
-            </div>
+              <div class="content">
+                <div class="title">
+                  <h3><?= htmlspecialchars($name) ?></h3>
+                  <p class="price-product">
+                    <?php if (!empty($sale_price) && !empty($regular_price)): ?>
+                      <span class="price-new"><?= $sale_price ?> ₫</span>
+                      <span class="price-old"><?= $regular_price ?> ₫</span>
+                    <?php elseif (!empty($regular_price)): ?>
+                      <span class="price-new"><?= $regular_price ?> ₫</span>
+                    <?php else: ?>
+                      <span class="price-new">Liên hệ</span>
+                    <?php endif; ?>
+                  </p>
+                  <div class="info-product">
+                    <p><i class="fa-solid fa-eye"></i> <?= $views ?> lượt xem</p>
+                    <p><span>Chi tiết</span></p>
+                  </div>
+                </div>
+              </div>
+            </a>
           </div>
-        </a>
+        <?php endwhile; ?>
       </div>
-      <?php endwhile; ?>
-    </div>
 
-    <div class="pagination-home w-100">
-      <?php // echo $pagination_html = $functions->renderPagination_index($current_page, $total_pages, $slug); 
+      <div class="pagination-home w-100">
+        <?php // echo $pagination_html = $functions->renderPagination_index($current_page, $total_pages, $slug); 
         ?>
-    </div>
+      </div>
     <?php endif; ?>
   </div>
 </div>

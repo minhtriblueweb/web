@@ -90,31 +90,24 @@ include_once 'lib/router.php';
 <body>
   <div class="wrap-container">
     <ul class="h-card hidden">
-      <li class="h-fn fn">
-        <?= $web_name ?></li>
-      <li class="h-org org">
-        <?= $web_name ?></li>
-      <li class="h-tel tel"><?= $hotline ?>
-      </li>
+      <li class="h-fn fn"><?= $web_name ?></li>
+      <li class="h-org org"><?= $web_name ?></li>
+      <li class="h-tel tel"><?= $hotline ?></li>
       <li><a class="u-url ul" href="<?= $config['base'] ?>"><?= $config['base'] ?></a></li>
     </ul>
-    <h1 class="hidden-seoh">
-      <?= $web_name ?>
-    </h1>
+    <h1 class="hidden-seoh"><?= $web_name ?></h1>
     <div class="header">
       <div class="header-slogan">
         <div class="wrap-content d-flex flex-wrap justify-content-between align-items-center">
-          <marquee>
-            <?= $introduction ?>
-          </marquee>
+          <marquee><?= $introduction ?></marquee>
           <div class="box-social">
             <a class="pay" href="">Phương thức thanh toán</a>
             <div class="social-header">
               <p>Kết nối :</p>
               <?php $show_social = $social->show_social("hienthi"); ?>
               <?php if ($show_social): ?>
-                <?php while ($result_social = $show_social->fetch_assoc()): ?>
-                  <a href="<?= $result_social['link'] ?>" class="lazy hvr-icon-rotate" class="me-2">
+                <?php while ($result_social = $show_social->fetch_assoc()): ?><a href="<?= $result_social['link'] ?>"
+                    class="lazy hvr-icon-rotate" class="me-2">
                     <img width="20" height="20"
                       src="<?= empty($result_social['file']) ? BASE_ADMIN . "assets/img/noimage.png" : BASE_ADMIN . UPLOADS . $result_social['file']; ?>"
                       alt="<?= $result_social['name'] ?>" />

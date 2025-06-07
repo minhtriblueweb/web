@@ -22,8 +22,8 @@ include 'inc/menu.php';
         <li class="breadcrumb-item">
           <a class="text-decoration-none" href="<?= BASE ?>"><span>Trang chủ</span></a>
         </li>
-        <li class="breadcrumb-item">
-          <a class="text-decoration-none" href=""><span>Hướng dẫn chơi</span></a>
+        <li class="breadcrumb-item active">
+          <a class="text-decoration-none" href="huong-dan-choi"><span>Hướng dẫn chơi</span></a>
         </li>
       </ol>
     </div>

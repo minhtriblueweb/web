@@ -5697,7 +5697,7 @@ coccocgrammar {
 
   .wrap-product-list .wrap-content,
   .wrap-brand .wrap-content {
-    padding: 30px 20px;
+    padding: 15px;
   }
 
   .title-product-hot h2 {
@@ -5914,6 +5914,10 @@ coccocgrammar {
 
   .title-list-hot {
     margin-bottom: 10px;
+  }
+
+  .item-feedback {
+    padding: 10px;
   }
 
   .grid-list {

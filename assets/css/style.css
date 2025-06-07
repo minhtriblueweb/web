@@ -1486,7 +1486,7 @@ img:not([src]) {
   padding: 0px 15px;
 }
 
-#hamburger {
+#toggle_menu {
   display: block;
   width: 30px;
   height: 23px;
@@ -1494,9 +1494,9 @@ img:not([src]) {
   margin-left: 10px;
 }
 
-#hamburger:before,
-#hamburger:after,
-#hamburger span {
+#toggle_menu:before,
+#toggle_menu:after,
+#toggle_menu span {
   background: var(--main-color);
   content: "";
   display: block;
@@ -1506,42 +1506,42 @@ img:not([src]) {
   left: 0px;
 }
 
-#hamburger:before {
+#toggle_menu:before {
   top: 0px;
 }
 
-#hamburger span {
+#toggle_menu span {
   top: 10px;
 }
 
-#hamburger:after {
+#toggle_menu:after {
   top: 20px;
 }
 
-#hamburger:before,
-#hamburger:after,
-#hamburger span {
+#toggle_menu:before,
+#toggle_menu:after,
+#toggle_menu span {
   -webkit-transition: none 0.5s ease 0.5s;
   transition: none 0.5s ease 0.5s;
   -webkit-transition-property: transform, top, bottom, left, opacity;
   transition-property: transform, top, bottom, left, opacity;
 }
 
-.menu-mobile-opened #hamburger:before,
-.menu-mobile-opened #hamburger:after {
+.menu-mobile-opened #toggle_menu:before,
+.menu-mobile-opened #toggle_menu:after {
   top: 10px;
 }
 
-.menu-mobile-opened #hamburger span {
+.menu-mobile-opened #toggle_menu span {
   left: -50px;
   opacity: 0;
 }
 
-.menu-mobile-opened #hamburger:before {
+.menu-mobile-opened #toggle_menu:before {
   transform: rotate(45deg);
 }
 
-.menu-mobile-opened #hamburger:after {
+.menu-mobile-opened #toggle_menu:after {
   transform: rotate(-45deg);
 }
 
@@ -2946,7 +2946,8 @@ img:not([src]) {
 }
 
 .grid-product .alert {
-  grid-column: 1 / -1; /* chiếm toàn bộ cột */
+  grid-column: 1 / -1;
+  /* chiếm toàn bộ cột */
   width: 100%;
   text-align: center;
   padding: 20px;
@@ -3246,10 +3247,23 @@ img:not([src]) {
   overflow: hidden;
 }
 
+.left-pro-detail .MagicZoom img {
+  object-fit: cover;
+  display: block;
+  margin: 0 auto;
+  height: 300px;
+}
+
 .gallery-thumb-pro {
   position: relative;
   margin-top: 10px;
   padding: 0 30px;
+}
+
+.gallery-thumb-pro .thumb-pro-detail img {
+  width: 100%;
+  height: 50px;
+  object-fit: cover;
 }
 
 .owl-pro-detail {
@@ -5533,8 +5547,6 @@ coccocgrammar {
   .grid-news {
     grid-gap: 10px;
   }
-
-  .header {}
 
   .menu-mobile {
     display: block;

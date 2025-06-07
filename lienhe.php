@@ -11,7 +11,7 @@ $seo = array_merge($seo, array(
   'title' => $result_lienhe['titlevi'],
   'keywords' => $result_lienhe['keywordsvi'],
   'description' => $result_lienhe['descriptionvi'],
-  'url' => BASE . 'tin-tuc/' . $result_lienhe['slugvi'],
+  'url' => BASE . $result_lienhe['slugvi'],
   'image' => isset($result_lienhe['file_name']) ? BASE_ADMIN . UPLOADS . $kg_tintuc['file_name'] : '',
 ));
 ?>
@@ -41,9 +41,10 @@ include 'inc/menu.php';
     <div class="wrap-content" style="background: unset;">
       <div class="content-main">
         <div class="contact-article row">
-          <div class="contact-text col-lg-6 mb-3" data-aos="fade-right" data-aos-duration="1000"><?= $result_lienhe['contentvi'] ?></div>
-          <form data-aos="fade-left" data-aos-duration="1000" class="contact-form validation-contact col-lg-6 mb-3" novalidate="" method="post" action=""
-            enctype="multipart/form-data">
+          <div class="contact-text col-lg-6 mb-3" data-aos="fade-right" data-aos-duration="1000">
+            <?= $result_lienhe['contentvi'] ?></div>
+          <form data-aos="fade-left" data-aos-duration="1000" class="contact-form validation-contact col-lg-6 mb-3"
+            novalidate="" method="post" action="" enctype="multipart/form-data">
             <div class="social">
               <p>ĐĂNG KÝ NHẬN TƯ VẤN</p>
             </div>

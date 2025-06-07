@@ -4,17 +4,15 @@
       <div class="footer-banner">
         <div class="logo-footer">
           <a href="./">
-            <img src="<?= isset($result_setting['logo']) ? BASE_ADMIN . UPLOADS . $result_setting['logo'] : ''; ?>"
-              alt="logo" title="logo" style="width: 250px;" />
+            <img src="<?= $logo ?>" alt="<?= $web_name ?>" title="<?= $web_name ?>" style="width: 250px;" />
           </a>
         </div>
         <p class="footer-company">
-          <?= isset($result_setting['web_name']) ? htmlspecialchars($result_setting['web_name']) : ''; ?>
+          <?= $web_name ?>
         </p>
         <div class="footer-info content-ck">
           <p>
-            <span
-              style="font-size: 14px"><?= isset($result_setting['descvi']) ? htmlspecialchars($result_setting['descvi']) : ''; ?></span>
+            <span><?= $descvi ?></span>
           </p>
         </div>
         <div class="social">
@@ -23,7 +21,8 @@
           <?php if ($show_social): ?>
           <?php while ($result_social = $show_social->fetch_assoc()): ?>
           <a class="hvr-icon-rotate" href="<?= $result_social['link'] ?>" target="_blank" class="me-2">
-            <img width="50" class="hvr-icon" src="<?= BASE_ADMIN . UPLOADS . $result_social['file'] ?>"
+            <img width="50" class="hvr-icon"
+              src="<?= empty($result_social['file']) ? BASE_ADMIN . "assets/img/noimage.png" : BASE_ADMIN . UPLOADS . $result_social['file']; ?>"
               alt="<?= $result_social['name'] ?>" title="<?= $result_social['name'] ?>" />
           </a>
           <?php endwhile; ?>
@@ -53,7 +52,8 @@
               <?php if ($show_phuongthuctt): ?>
               <?php while ($result_phuongthuctt = $show_phuongthuctt->fetch_assoc()): ?>
               <span class="ibank scale-img">
-                <img src="<?= BASE_ADMIN . UPLOADS . $result_phuongthuctt['file'] ?>"
+                <img
+                  src="<?= empty($result_phuongthuctt['file']) ? BASE_ADMIN . "assets/img/noimage.png" : BASE_ADMIN . UPLOADS . $result_phuongthuctt['file']; ?>"
                   alt="<?= $result_phuongthuctt['name'] ?>" title="<?= $result_phuongthuctt['name'] ?>" />
               </span>
               <?php endwhile; ?>
@@ -64,14 +64,14 @@
         <div class="box-policy">
           <div class="footer-policy">
             <p class="footer-title">HỖ TRỢ KHÁCH HÀNG</p>
-            <?= isset($result_setting['client_support']) ? $result_setting['client_support'] : ''; ?>
+            <?= $client_support ?>
           </div>
         </div>
         <div class="box-policy">
           <div class="footer-policy">
             <p class="footer-title">HỖ TRỢ 24/7</p>
             <div class="footer-info content-ck">
-              <?= isset($result_setting['support']) ? $result_setting['support'] : ''; ?>
+              <?= $support ?>
             </div>
           </div>
           <div class="footer-newsletter">
@@ -103,14 +103,8 @@
   <div class="footer-powered">
     <div class="wrap-content d-flex flex-wrap justify-content-between align-items-center">
       <div class="footer-copyright">
-        <?php
-        function current_year()
-        {
-          return date('Y');
-        }
-        ?>
         Copyright © <?= current_year(); ?>
-        <span><?= isset($result_setting['copyright']) ? $result_setting['copyright'] : ''; ?></span>.
+        <span><?= $copyright ?></span>.
       </div>
       <?php include 'counter.php'; ?>
     </div>
@@ -149,7 +143,7 @@
     dinhdanghinhanhkhonghople: "Định dạng hình ảnh không hợp lệ",
     huy: "Hủy",
   };
-  var logo_img = "<?= isset($result_setting['logo']) ? BASE_ADMIN . UPLOADS . $result_setting['logo'] : ''; ?>";
+  var logo_img = "<?= $logo ?>";
   var IDLIST = "";
   var TOTALPAGE = "";
   </script>
@@ -203,7 +197,7 @@
   </script>
 
   <!-- Js Body -->
-  <?= isset($result_setting['bodyjs']) ? $result_setting['bodyjs'] : ''; ?>
+  <?= $bodyjs ?>
 </div>
 </body>
 

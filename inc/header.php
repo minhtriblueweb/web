@@ -41,7 +41,7 @@ include_once 'lib/router.php';
   <meta property="og:image:height" content="810" />
 
   <!-- Canonical -->
-<link rel="canonical" href="<?= BASE ?>" />
+  <link rel="canonical" href="<?= BASE ?>" />
   <!-- Twitter -->
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:site" content="<?= $seo['email'] ?>" />
@@ -82,30 +82,30 @@ include_once 'lib/router.php';
   <link href="<?= BASE ?>assets/css/style.css" rel="stylesheet" />
 
   <!-- Js Google Analytic -->
-  <?= isset($result_setting['analytics']) ? $result_setting['analytics'] : ''; ?>
+  <?= $analytics ?>
   <!-- Js Head -->
-  <?= isset($result_setting['headjs']) ? $result_setting['headjs'] : ''; ?>
+  <?= $headjs ?>
 </head>
 
 <body>
   <div class="wrap-container">
     <ul class="h-card hidden">
       <li class="h-fn fn">
-        <?= isset($result_setting['web_name']) ? htmlspecialchars($result_setting['web_name']) : ''; ?></li>
+        <?= $web_name ?></li>
       <li class="h-org org">
-        <?= isset($result_setting['web_name']) ? htmlspecialchars($result_setting['web_name']) : ''; ?></li>
-      <li class="h-tel tel"><?= isset($result_setting['phone']) ? htmlspecialchars($result_setting['phone']) : ''; ?>
+        <?= $web_name ?></li>
+      <li class="h-tel tel"><?= $hotline ?>
       </li>
       <li><a class="u-url ul" href="<?= $config['base'] ?>"><?= $config['base'] ?></a></li>
     </ul>
     <h1 class="hidden-seoh">
-      <?= isset($result_setting['web_name']) ? htmlspecialchars($result_setting['web_name']) : ''; ?>
+      <?= $web_name ?>
     </h1>
     <div class="header">
       <div class="header-slogan">
         <div class="wrap-content d-flex flex-wrap justify-content-between align-items-center">
           <marquee>
-            <?= isset($result_setting['introduction']) ? htmlspecialchars($result_setting['introduction']) : ''; ?>
+            <?= $introduction ?>
           </marquee>
           <div class="box-social">
             <a class="pay" href="">Phương thức thanh toán</a>
@@ -115,7 +115,9 @@ include_once 'lib/router.php';
               <?php if ($show_social): ?>
                 <?php while ($result_social = $show_social->fetch_assoc()): ?>
                   <a href="<?= $result_social['link'] ?>" class="lazy hvr-icon-rotate" class="me-2">
-                    <img width="20" height="20" src="<?= BASE_ADMIN . UPLOADS . $result_social['file'] ?>" alt="<?= $result_social['name'] ?>" />
+                    <img width="20" height="20"
+                      src="<?= empty($result_social['file']) ? BASE_ADMIN . "assets/img/noimage.png" : BASE_ADMIN . UPLOADS . $result_social['file']; ?>"
+                      alt="<?= $result_social['name'] ?>" />
                   </a>
                 <?php endwhile; ?>
               <?php endif; ?>
@@ -128,10 +130,7 @@ include_once 'lib/router.php';
           <div class="banner-header">
             <div class="logo">
               <a href="./">
-                <img width="300" height="auto"
-                  src="<?= isset($result_setting['logo']) ? BASE_ADMIN . UPLOADS . $result_setting['logo'] : ''; ?>"
-                  alt="<?= isset($result_setting['web_name']) ? htmlspecialchars($result_setting['web_name']) : ''; ?>"
-                  title="<?= isset($result_setting['web_name']) ? htmlspecialchars($result_setting['web_name']) : ''; ?>" />
+                <img width="300" height="auto" src="<?= $logo ?>" alt="<?= $web_name ?>" title="<?= $web_name ?>" />
               </a>
             </div>
           </div>
@@ -147,11 +146,11 @@ include_once 'lib/router.php';
             <div class="hotline">
               Hotline tư vấn:
               <p>
-                <?= isset($result_setting['hotline']) ? htmlspecialchars($result_setting['hotline']) : ''; ?></p>
+                <?= $hotline ?></p>
             </div>
             <div class="hotline">
               Giờ làm việc:
-              <p><?= isset($result_setting['worktime']) ? htmlspecialchars($result_setting['worktime']) : ''; ?></p>
+              <p><?= $worktime ?></p>
             </div>
           </div>
         </div>

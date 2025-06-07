@@ -7,8 +7,12 @@ error_reporting(E_ALL);
 include 'lib/session.php';
 Session::init();
 ob_start();
-?>
-<?php
+
+function current_year()
+{
+  return date('Y');
+}
+
 include_once 'lib/database.php';
 include_once 'lib/validation.php';
 include_once 'helpers/format.php';

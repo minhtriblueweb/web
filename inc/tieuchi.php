@@ -8,7 +8,8 @@
         <div class="item-criterion hvr-icon-rotate">
           <div class="images">
             <a class="hvr-icon" title="<?= $result_tieuchi['name'] ?>">
-              <img src="<?= BASE_ADMIN . UPLOADS . $result_tieuchi['file'] ?>" alt="<?= $result_tieuchi['name'] ?>"
+              <img
+                src="<?= empty($result_tieuchi['file']) ? BASE_ADMIN . "assets/img/noimage.png" : BASE_ADMIN . UPLOADS . $result_tieuchi['file']; ?>"
                 width="40" height="40" />
             </a>
             <h3>

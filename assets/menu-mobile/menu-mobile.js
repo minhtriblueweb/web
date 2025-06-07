@@ -14,12 +14,12 @@ function addClassesToUl($ul, level) {
             if (!$a.next().hasClass('btn-menu-next')) {
                 $a.after('<span class="btn-menu-next"><i class="fas fa-chevron-right"></i></span>');
             }
-            
+
             addClassesToUl($childUl, level + 1);
         }
     });
 }
-function menuMobile(options){
+function menuMobile(options) {
     var search = false;
     var lang = false;
     if (typeof options === 'object') {
@@ -34,7 +34,7 @@ function menuMobile(options){
 
     $("#menu >ul").addClass("scroll-menu-mobile");
 
-    if(search == true){
+    if (search == true) {
         $("#menu > ul").prepend(
             `<li>
                 <div class="box-menu-mobile-search">
@@ -46,7 +46,7 @@ function menuMobile(options){
             </li>`
         );
     }
-    if(lang == true){
+    if (lang == true) {
         $("#menu > ul").append(
             `<li class="menu-mobile-lang">
                 <a href="ngon-ngu/vi/"><img onerror="this.src='thumbs/35x25x1/assets/images/noimage.png';" alt="Tiếng Việt" src="assets/images/vi.jpg"></a>
@@ -54,59 +54,59 @@ function menuMobile(options){
             </li>`
         );
     }
-    
-    $(document).on( "click", "#hamburger", function() {
+
+    $(document).on("click", "#toggle_menu", function () {
         $("body").addClass('menu-mobile-opened');
         $("body").append('<div class="menu-mobile-slide-out"></div>');
         return false;
     });
 
-    $(document).on( "click", ".menu-mobile-slide-out", function() {
+    $(document).on("click", ".menu-mobile-slide-out", function () {
         $("body").removeClass('menu-mobile-opened');
         $('.menu-mobile-slide-out').remove();
         return false;
     });
     addClassesToUl($('#menu > ul'), 1);
-    
-    $(document).on( "click", ".btn-menu-next", function() {
+
+    $(document).on("click", ".btn-menu-next", function () {
         var prev = $(this).parent().attr('class');
         var level = $(this).parent().attr('data-level');
         var title = $(this).parent().children('a').attr('title');
-        if(title == undefined){
+        if (title == undefined) {
             title = $(this).attr('title');
         }
         $("#menu").addClass('opened-parent');
         $(this).parent().addClass('opened-child');
         $('.scroll-menu-mobile').removeClass('scroll-menu-mobile');
         $(this).parent().children('ul').addClass('scroll-menu-mobile');
-        if(level == 1){
-            $(".btn-menu-prev").attr({"data-prev": prev,"data-level": level,"data-title": "Menu"});
-        }else{
+        if (level == 1) {
+            $(".btn-menu-prev").attr({ "data-prev": prev, "data-level": level, "data-title": "Menu" });
+        } else {
             var level_prev = level - 1;
             var title_prev = $('.opened-child.menu-child-' + level_prev).children('a').attr('title');
-            $(".btn-menu-prev").attr({"data-prev": prev,"data-level": level,"data-title": title_prev});
+            $(".btn-menu-prev").attr({ "data-prev": prev, "data-level": level, "data-title": title_prev });
         }
         $(".menu-mobile-title span").text(title);
     });
-    $(document).on( "click", ".btn-menu-prev", function() {
+    $(document).on("click", ".btn-menu-prev", function () {
         var prev = $(this).attr('data-prev');
         var level = $(this).attr('data-level') - 1;
         var level_next = level + 1;
         var title = $(this).attr('data-title');
         $('.scroll-menu-mobile').removeClass('scroll-menu-mobile');
-        $('.menu-child-'+level_next).parent().addClass('scroll-menu-mobile');
+        $('.menu-child-' + level_next).parent().addClass('scroll-menu-mobile');
         $(".menu-mobile-title span").text(title);
         $('.' + prev).removeClass('opened-child');
-        if(level == 0){
+        if (level == 0) {
             $("#menu").removeClass('opened-parent');
-            $(this).attr({"data-title": "Menu"});
-        }else{
+            $(this).attr({ "data-title": "Menu" });
+        } else {
             var level_prev = level - 1;
             var title_prev = $('.opened-child.menu-child-' + level_prev).children('a').attr('title');
-            $(this).attr({"data-prev": 'menu-child-'+level,"data-level": level,"data-title": title_prev});
+            $(this).attr({ "data-prev": 'menu-child-' + level, "data-level": level, "data-title": title_prev });
         }
-        if(level == 1){
-            $(this).attr({"data-title": "Menu"});
+        if (level == 1) {
+            $(this).attr({ "data-title": "Menu" });
         }
     });
 }

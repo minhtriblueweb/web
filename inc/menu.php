@@ -18,7 +18,8 @@
               <li>
                 <a title="<?= $result_danhmuc['namevi'] ?>" href="danh-muc/<?= $result_danhmuc['slugvi'] ?>">
                   <span class="scale-img">
-                    <img width="25" src="<?= empty($result_danhmuc['file_name']) ? BASE_ADMIN . "assets/img/noimage.png" : BASE_ADMIN . UPLOADS . $result_danhmuc['file_name']; ?>"
+                    <img width="25"
+                      src="<?= empty($result_danhmuc['file_name']) ? BASE_ADMIN . "assets/img/noimage.png" : BASE_ADMIN . UPLOADS . $result_danhmuc['file_name']; ?>"
                       alt="<?= $result_danhmuc['namevi'] ?>" title="<?= $result_danhmuc['namevi'] ?>" />
                   </span>
                   <?= $result_danhmuc['namevi'] ?>
@@ -72,9 +73,7 @@
     <div class="box-banner">
       <div class="logo-mobile">
         <a href="./">
-          <img src="<?= isset($result_setting['logo']) ? BASE_ADMIN . UPLOADS . $result_setting['logo'] : ''; ?>"
-            alt="<?= isset($result_setting['web_name']) ? htmlspecialchars($result_setting['web_name']) : ''; ?>"
-            title="<?= isset($result_setting['web_name']) ? htmlspecialchars($result_setting['web_name']) : ''; ?>" />
+          <img src="<?= $logo ?>" alt="<?= $web_name ?>" title="<?= $web_name ?>" />
         </a>
       </div>
     </div>
@@ -86,7 +85,7 @@
           <i class="fa-solid fa-magnifying-glass"></i>
         </p>
       </div>
-      <a id="hamburger" href="#menu" title="Menu"><span></span></a>
+      <a id="toggle_menu" href="" title="Menu"><span></span></a>
     </div>
   </div>
 </div>

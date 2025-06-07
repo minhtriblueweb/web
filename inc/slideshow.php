@@ -12,15 +12,16 @@
         if ($show_slideshow) {
           while ($result_slideshow = $show_slideshow->fetch_assoc()) {
         ?>
-            <div class="slideshow-item" owl-item-animation>
-              <a class="slideshow-image" href="<?php echo $result_slideshow['link'] ?>" target="_blank"
-                title="<?php echo $result_slideshow['name'] ?>">
-                <picture>
-                  <img class="w-100" src="<?= BASE_ADMIN . UPLOADS . $result_slideshow['file'] ?>"
-                    alt="<?php echo $result_slideshow['name'] ?>" title="<?php echo $result_slideshow['name'] ?>" />
-                </picture>
-              </a>
-            </div>
+        <div class="slideshow-item" owl-item-animation>
+          <a class="slideshow-image" href="<?php echo $result_slideshow['link'] ?>" target="_blank"
+            title="<?php echo $result_slideshow['name'] ?>">
+            <picture>
+              <img class="w-100"
+                src="<?= empty($result_slideshow['file']) ? BASE_ADMIN . "assets/img/noimage.png" : BASE_ADMIN . UPLOADS . $result_slideshow['file']; ?>"
+                alt="<?php echo $result_slideshow['name'] ?>" title="<?php echo $result_slideshow['name'] ?>" />
+            </picture>
+          </a>
+        </div>
         <?php }
         } ?>
       </div>

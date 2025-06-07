@@ -28,7 +28,7 @@ $seo = array_merge($seo, array(
   'title' => $kg_huongdan['titlevi'],
   'keywords' => $kg_huongdan['keywordsvi'],
   'description' => $kg_huongdan['descriptionvi'],
-  'url' => BASE . 'tin-tuc/' . $kg_huongdan['slugvi'],
+  'url' => BASE . $kg_huongdan['slugvi'],
   'image' => isset($kg_huongdan['file_name']) ? BASE_ADMIN . UPLOADS . $kg_huongdan['file_name'] : '',
 ));
 ?>

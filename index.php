@@ -127,7 +127,8 @@
                 <a class="viewlist" href="danh-muc/<?= $resule_danhmuc['slugvi'] ?>">Xem tất cả</a>
               </div>
             </div>
-            <div class="paging-product-list paging-product-list-1 tabcontent show-fade" id="tab-all-<?= $id_list ?>" style="display: block;">
+            <div class="paging-product-list paging-product-list-1 tabcontent show-fade" id="tab-all-<?= $id_list ?>"
+              style="display: block;">
               <div class="grid-product">
                 <?php while ($sp = $show_sanpham->fetch_assoc()) : ?>
                   <?php

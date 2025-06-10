@@ -67,6 +67,9 @@ class setting
             $set_fields .= ", watermark = '$unique_image'";
         }
 
+        // Tăng wm_version
+        $set_fields .= ", wm_version = wm_version + 1";
+
         $query = "UPDATE tbl_setting SET $set_fields WHERE id = 1";
         $result = $this->db->update($query);
 

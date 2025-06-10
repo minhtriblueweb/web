@@ -4,7 +4,6 @@ Session::checkSession();
 if (isset($_GET['action']) && $_GET['action'] == 'logout') {
   Session::destroy();
 }
-
 ob_start();
 require_once '../lib/database.php';
 require_once '../helpers/format.php';
@@ -17,20 +16,10 @@ $classes = ['functions', 'danhmuc', 'sanpham', 'slideshow', 'tieuchi', 'danhgia'
 foreach ($classes as $class) {
   $$class = new $class();
 }
-?>
-<?php
-function ActiveClass($requestUri)
-{
-  $current_path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
-  if ($current_path == '/' || $current_path == '') {
-    $current_file_name = 'index'; // Coi như là index
-  } else {
-    $current_file_name = basename($current_path, ".php");
-  }
-  if ($current_file_name == $requestUri) {
-    echo 'active';
-  }
-}
+define('UPLOADS', 'uploads/');
+define('BASE_ADMIN', $config['baseAdmin']);
+define('BASE', $config['base']);
+define('NO_IMG', $config['baseAdmin'] . "assets/img/noimage.png");
 ?>
 <!DOCTYPE html>
 <html lang="vi">

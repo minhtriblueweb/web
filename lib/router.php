@@ -2,6 +2,7 @@
 define('UPLOADS', 'uploads/');
 define('BASE_ADMIN', $config['baseAdmin']);
 define('BASE', $config['base']);
+define('NO_IMG', $config['baseAdmin'] . "assets/img/noimage.png");
 $get_setting = $setting->get_setting();
 if ($get_setting) {
   $result_setting = $get_setting->fetch_assoc();

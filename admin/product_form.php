@@ -1,19 +1,27 @@
-<?php include 'inc/header.php'; ?>
-<?php include 'inc/sidebar.php'; ?>
+<?php
+include  'inc/header.php';
+include  'inc/sidebar.php';
+?>
 <?php
 $show_danhmuc = $danhmuc->show_danhmuc();
 if (isset($_GET['id']) && $_GET['id'] != NULL) {
   $id = $_GET['id'];
+  $get_id = $sanpham->get_id_sanpham($id);
+  if ($get_id) {
+    $result = $get_id->fetch_assoc();
+    $get_id_cap1 = $result['id_list'];
+    $show_danhmuc_c2 = $danhmuc->show_danhmuc_c2($get_id_cap1);
+  }
+  if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['edit'])) {
+    $update = $sanpham->update_sanpham($_POST, $_FILES, $id);
+  }
 }
-$get_id = $sanpham->get_id_sanpham($id);
-$get_gallery = $sanpham->get_gallery($id);
-if ($get_id) {
-  $result = $get_id->fetch_assoc();
-  $get_id_cap1 = $result['id_list'];
-  $show_danhmuc_c2 = $danhmuc->show_danhmuc_c2($get_id_cap1);
-}
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['edit'])) {
-  $update = $sanpham->update_sanpham($_POST, $_FILES, $id);
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add'])) {
+  $data = array($_POST);
+  // echo "<pre>";
+  // print_r($data);
+  // echo "</pre>";
+  $insert = $sanpham->them_sanpham($_POST, $_FILES);
 }
 ?>
 <!-- Main content -->
@@ -22,24 +30,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['edit'])) {
     <div class="row">
       <ol class="breadcrumb float-sm-left">
         <li class="breadcrumb-item"><a href="index.php" title="Bảng điều khiển">Bảng điều khiển</a></li>
-        <li class="breadcrumb-item"><a href="sanpham.php" title="Sản phẩm">Sản phẩm</a></li>
-        <li class="breadcrumb-item active">Cập nhật Sản phẩm</li>
+        <li class="breadcrumb-item active"><?= !empty($id) ? "Cập nhật" : "Thêm mới"; ?> Sản phẩm</li>
       </ol>
     </div>
   </div>
 </section>
+
+<!-- Main content -->
 <section class="content">
   <form class="validation-form" novalidate method="post" action="" enctype="multipart/form-data">
     <div class="card-footer text-sm sticky-top">
-      <button name="edit" type="submit" class="btn btn-sm bg-gradient-primary submit-check" disabled><i
-          class="far fa-save mr-2"></i>Lưu</button>
-      <button type="submit" class="btn btn-sm bg-gradient-success submit-check" name="save-here" disabled><i
-          class="far fa-save mr-2"></i>Lưu tại trang</button>
+      <button name="<?= !empty($id) ? "edit" : "add"; ?>" type="submit"
+        class="btn btn-sm bg-gradient-primary submit-check" disabled><i class="far fa-save mr-2"></i>Lưu</button>
       <button type="reset" class="btn btn-sm bg-gradient-secondary"><i class="fas fa-redo mr-2"></i>Làm lại</button>
-      <a class="btn btn-sm bg-gradient-danger" href="sanpham.php" title="Thoát"><i
+      <a class="btn btn-sm bg-gradient-danger" href="product_list.php" title="Thoát"><i
           class="fas fa-sign-out-alt mr-2"></i>Thoát</a>
     </div>
-
     <div class="row">
       <div class="col-xl-8">
         <div class="card card-primary card-outline text-sm">
@@ -48,15 +54,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['edit'])) {
             <span class="pl-2 text-danger">(Vui lòng không nhập trùng tiêu đề)</span>
           </div>
           <div class="card-body card-slug">
-            <div class="form-group mb-2">
-              <label for="slugchange" class="d-inline-block align-middle text-info mb-0 mr-2">Thay đổi đường dẫn theo
-                tiêu đề mới:</label>
-              <div class="custom-control custom-checkbox d-inline-block align-middle">
-                <input type="checkbox" class="custom-control-input" name="slugchange" id="slugchange">
-                <label for="slugchange" class="custom-control-label"></label>
-              </div>
-            </div>
-
+            <input type="hidden" class="slug-id" value="">
+            <input type="hidden" class="slug-copy" value="0">
             <div class="card card-primary card-outline card-outline-tabs">
               <div class="card-header p-0 border-bottom-0">
                 <ul class="nav nav-tabs" id="custom-tabs-three-tab-lang" role="tablist">
@@ -72,19 +71,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['edit'])) {
                     aria-labelledby="tabs-lang">
                     <div class="form-gourp mb-0">
                       <label class="d-block">Đường dẫn mẫu (vi):<span class="pl-2 font-weight-normal"
-                          id="slugurlpreviewvi"><?= $config['base'] ?><strong
-                            class="text-info"><?= $result['slugvi']; ?></strong></span></label>
-                      <!-- Slug -->
+                          id="slugurlpreviewvi"><?= $config['base'] ?>
+                          <?php if (!empty($id)): ?>
+                          <strong class="text-info"><?= $result['slugvi']; ?></strong>
+                          <?php endif; ?>
+                        </span></label>
                       <input type="text" class="form-control slug-input no-validate text-sm" name="slugvi" id="slugvi"
-                        placeholder="Đường dẫn (vi)" required value="<?= $result['slugvi']; ?>" />
-                      <input type="hidden" id="slug-defaultvi" value="" />
+                        placeholder="Đường dẫn (vi)" value="<?= $result['slugvi'] ?? ""; ?>" required>
+                      <input type="hidden" id="slug-defaultvi" value="">
                       <?php
-                      if (isset($update)) {
+                      if (isset($insert)) {
                       ?>
-                        <p class="alert-slugvi text-danger mt-2 mb-0" id="alert-slug-dangervi">
-                          <i class="fas fa-exclamation-triangle mr-1"></i>
-                          <span><?= $update; ?></span>
-                        </p>
+                      <p class="alert-slugvi text-danger mt-2 mb-0" id="alert-slug-dangervi">
+                        <i class="fas fa-exclamation-triangle mr-1"></i>
+                        <span><?= $insert; ?></span>
+                      </p>
                       <?php } ?>
                       <p class="alert-slugvi text-success d-none mt-2 mb-0" id="alert-slug-successvi">
                         <i class="fas fa-check-circle mr-1"></i>
@@ -121,17 +122,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['edit'])) {
                     <div class="form-group">
                       <label for="namevi">Tiêu đề (vi):</label>
                       <input type="text" class="form-control for-seo text-sm" name="namevi" id="namevi"
-                        placeholder="Tiêu đề (vi)" value="<?= $result['namevi']; ?>" required>
+                        placeholder="Tiêu đề (vi)" value="<?= $result['namevi'] ?? ""; ?>" required>
                     </div>
                     <div class="form-group">
                       <label for="descvi">Mô tả (vi):</label>
                       <textarea class="form-control for-seo text-sm form-control-ckeditor" name="descvi" id="descvi"
-                        rows="5" placeholder="Mô tả (vi)"><?= $result['descvi']; ?></textarea>
+                        rows="5" placeholder="Mô tả (vi)"><?= $result['descvi'] ?? ""; ?></textarea>
                     </div>
                     <div class="form-group">
                       <label for="contentvi">Nội dung (vi):</label>
                       <textarea class="form-control for-seo text-sm form-control-ckeditor" name="contentvi"
-                        id="contentvi" placeholder="Nội dung (vi)"><?= $result['contentvi']; ?></textarea>
+                        id="contentvi" placeholder="Nội dung (vi)"><?= $result['contentvi'] ?? ""; ?></textarea>
                     </div>
                   </div>
                 </div>
@@ -157,12 +158,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['edit'])) {
                   data-child="id_cat" class="form-control select2 select-category">
                   <option value="0">Chọn danh mục</option>
                   <?php if ($show_danhmuc): ?>
-                    <?php while ($resule_danhmuc = $show_danhmuc->fetch_assoc()) : ?>
-                      <option value="<?= $resule_danhmuc['id'] ?>"
-                        <?= ($resule_danhmuc['id'] == $result['id_list']) ? "selected" : ''; ?>>
-                        <?= $resule_danhmuc['namevi'] ?>
-                      </option>
-                    <?php endwhile; ?>
+                  <?php while ($resule_danhmuc = $show_danhmuc->fetch_assoc()): ?>
+                  <option value="<?= $resule_danhmuc['id'] ?>"
+                    <?= (!empty($id) && $resule_danhmuc['id'] == $result['id_list']) ? "selected" : ''; ?>>
+                    <?= $resule_danhmuc['namevi'] ?>
+                  </option>
+                  <?php endwhile; ?>
                   <?php endif; ?>
                 </select>
               </div>
@@ -171,16 +172,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['edit'])) {
                 <select id="id_cat" name="id_cat" data-level="1" data-type="san-pham" data-table="" data-child="id_item"
                   class="form-control select2 select-category">
                   <option value="0">Chọn danh mục</option>
-                  <?php if ($show_danhmuc_c2): ?>
-                    <?php while ($get_c2 = $show_danhmuc_c2->fetch_assoc()): ?>
-                      <option value="<?= $get_c2['id'] ?>" <?= ($get_c2['id'] == $result['id_cat']) ? "selected" : ''; ?>>
-                        <?= $get_c2['namevi'] ?>
-                      </option>
-                    <?php endwhile; ?>
+                  <?php if (!empty($id) && $show_danhmuc_c2): ?>
+                  <?php while ($get_c2 = $show_danhmuc_c2->fetch_assoc()): ?>
+                  <option value="<?= $get_c2['id'] ?>" <?= ($get_c2['id'] == $result['id_cat']) ? "selected" : ''; ?>>
+                    <?= $get_c2['namevi'] ?>
+                  </option>
+                  <?php endwhile; ?>
                   <?php endif; ?>
                 </select>
               </div>
             </div>
+
           </div>
         </div>
         <div class="card card-primary card-outline text-sm">
@@ -197,7 +199,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['edit'])) {
                 <label class="d-block" for="regular_price">Giá:</label>
                 <div class="input-group">
                   <input type="text" class="form-control format-price regular_price text-sm" name="regular_price"
-                    id="regular_price" placeholder="Giá" value="<?= $result['regular_price']; ?>">
+                    id="regular_price" placeholder="Giá" value="<?= $result['regular_price'] ?? ""; ?>">
                   <div class="input-group-append">
                     <div class="input-group-text"><strong>VNĐ</strong></div>
                   </div>
@@ -207,7 +209,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['edit'])) {
                 <label class="d-block" for="sale_price">Giá mới:</label>
                 <div class="input-group">
                   <input type="text" class="form-control format-price sale_price text-sm" name="sale_price"
-                    id="sale_price" placeholder="Giá mới" value="<?= $result['sale_price']; ?>">
+                    id="sale_price" placeholder="Giá mới" value="<?= $result['sale_price'] ?? ""; ?>">
                   <div class="input-group-append">
                     <div class="input-group-text"><strong>VNĐ</strong></div>
                   </div>
@@ -217,7 +219,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['edit'])) {
                 <label class="d-block" for="discount">Chiếc khấu:</label>
                 <div class="input-group">
                   <input type="text" class="form-control discount text-sm" name="discount" id="discount"
-                    placeholder="Chiếc khấu" value="<?= $result['discount']; ?>" maxlength="3" readonly>
+                    placeholder="Chiếc khấu" value="<?= $result['discount'] ?? ""; ?>" maxlength="3" readonly>
                   <div class="input-group-append">
                     <div class="input-group-text"><strong>%</strong></div>
                   </div>
@@ -226,7 +228,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['edit'])) {
               <div class="form-group col-md-8">
                 <label class="d-block" for="code">Mã sản phẩm:</label>
                 <input type="text" class="form-control text-sm" name="code" id="code" placeholder="Mã sản phẩm"
-                  value="<?= $result['code']; ?>">
+                  value="<?= $result['code'] ?? ""; ?>">
               </div>
             </div>
             <div class="form-group">
@@ -234,7 +236,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['edit'])) {
                 <label for="hienthi-checkbox" class="d-inline-block align-middle mb-0 mr-2">Hiển thị:</label>
                 <div class="custom-control custom-checkbox d-inline-block align-middle">
                   <input type="checkbox" class="custom-control-input hienthi-checkbox" name="hienthi"
-                    id="hienthi-checkbox" value="hienthi" <?= ($result['hienthi'] == 'hienthi') ? 'checked' : '' ?>>
+                    id="hienthi-checkbox" value="hienthi"
+                    <?= (!empty($id) ? ((isset($result['hienthi']) && $result['hienthi'] == 'hienthi') ? 'checked' : '') : 'checked'); ?>>
                   <label for="hienthi-checkbox" class="custom-control-label"></label>
                 </div>
               </div>
@@ -242,7 +245,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['edit'])) {
                 <label for="banchay-checkbox" class="d-inline-block align-middle mb-0 mr-2">Bán chạy:</label>
                 <div class="custom-control custom-checkbox d-inline-block align-middle">
                   <input type="checkbox" class="custom-control-input banchay-checkbox" name="banchay"
-                    id="banchay-checkbox" value="banchay" <?= ($result['banchay'] == 'banchay') ? 'checked' : '' ?>>
+                    id="banchay-checkbox" <?php echo $result['banchay'] ?? "checked"; ?> value="banchay"
+                    <?= (!empty($id) ? ((isset($result['banchay']) && $result['banchay'] == 'banchay') ? 'checked' : '') : 'checked'); ?>>
                   <label for="banchay-checkbox" class="custom-control-label"></label>
                 </div>
               </div>
@@ -251,9 +255,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['edit'])) {
               <label for="numb" class="d-inline-block align-middle mb-0 mr-2">Số thứ tự:</label>
               <input type="number"
                 class="form-control form-control-mini w-25 text-left d-inline-block align-middle text-sm" min="0"
-                name="numb" id="numb" placeholder="Số thứ tự" value="<?= $result['numb']; ?>">
+                name="numb" id="numb" placeholder="Số thứ tự" value="<?= !empty($id) ? $result['numb'] : '1' ?>">
             </div>
-
           </div>
         </div>
         <div class="card card-primary card-outline text-sm">
@@ -267,9 +270,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['edit'])) {
           <div class="card-body">
             <div class="photoUpload-zone">
               <div class="photoUpload-detail" id="photoUpload-preview">
-                <img src="<?php
-                          echo empty($result['file']) ? $config['baseAdmin'] . "assets/img/noimage.png" : $config['baseAdmin'] . "uploads/" . $result['file'];
-                          ?>" class="rounded" />
+                <img src="<?= empty($result['file']) ? NO_IMG : BASE_ADMIN . UPLOADS . $result['file']; ?>"
+                  alt='Alt Photo' class='rounded' />
               </div>
               <label class="photoUpload-file" id="photo-zone" for="file-zone">
                 <input type="file" name="file" id="file-zone">
@@ -285,29 +287,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['edit'])) {
         </div>
       </div>
     </div>
-    <div class="card card-primary card-outline text-sm">
-      <div class="card-header">
-        <h3 class="card-title">Bộ sưu tập Sản phẩm</h3>
-        <div class="card-tools">
-          <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
-        </div>
-      </div>
-      <div class="card-body">
-        <div class="form-group">
-          <label for="filer-gallery" class="label-filer-gallery mb-3">Album:
-            (.jpg|.gif|.png|.jpeg|.gif|.webp|.WEBP)</label>
-          <input type="file" name="files[]" id=".filer-gallery" multiple="multiple">
-          <input type="hidden" class="col-filer" value="col-xl-2 col-lg-3 col-md-3 col-sm-4 col-6">
-          <input type="hidden" class="act-filer" value="man">
-          <input type="hidden" class="folder-filer" value="product">
-        </div>
-      </div>
-    </div>
+
     <div class="card card-primary card-outline text-sm">
       <div class="card-header">
         <h3 class="card-title">Nội dung SEO</h3>
-        <a class="btn btn-sm bg-gradient-success d-inline-block text-white float-right create-seo" title="Tạo SEO">
-          Tạo SEO</a>
+        <a class="btn btn-sm bg-gradient-success d-inline-block text-white float-right create-seo" title="Tạo SEO">Tạo
+          SEO</a>
       </div>
       <div class="card-body">
         <!-- SEO -->
@@ -330,7 +315,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['edit'])) {
                       <strong class="count-seo"><span>0</span>/70 ký tự</strong>
                     </div>
                     <input type="text" class="form-control check-seo title-seo text-sm" name="titlevi" id="titlevi"
-                      placeholder="SEO Title (vi)" value="<?= $result['titlevi']; ?>" />
+                      placeholder="SEO Title (vi)" value="<?= $result['titlevi'] ?? ""; ?>">
                   </div>
                   <div class="form-group">
                     <div class="label-seo">
@@ -338,7 +323,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['edit'])) {
                       <strong class="count-seo"><span>0</span>/70 ký tự</strong>
                     </div>
                     <input type="text" class="form-control check-seo keywords-seo text-sm" name="keywordsvi"
-                      id="keywordsvi" placeholder="SEO Keywords (vi)" value="<?= $result['keywordsvi']; ?>" />
+                      id="keywordsvi" placeholder="SEO Keywords (vi)" value="<?= $result['keywordsvi'] ?? ""; ?>">
                   </div>
                   <div class="form-group">
                     <div class="label-seo">
@@ -347,12 +332,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['edit'])) {
                     </div>
                     <textarea class="form-control check-seo description-seo text-sm" name="descriptionvi"
                       id="descriptionvi" rows="5"
-                      placeholder="SEO Description (vi)"><?= $result['descriptionvi']; ?></textarea>
+                      placeholder="SEO Description (vi)"><?= $result['descriptionvi'] ?? ""; ?></textarea>
                   </div>
                 </div>
               </div>
             </div>
-            <input type="hidden" id="seo-create" value="vi" />
+            <input type="hidden" id="seo-create" value="vi">
           </div>
         </div>
       </div>

@@ -2100,7 +2100,7 @@ img:not([src]) {
 }
 
 .item-list:hover .item-list-name h3 {
-color: var(--main-color);
+  color: var(--main-color);
 }
 
 .item-list h3 {
@@ -2691,7 +2691,8 @@ color: var(--main-color);
 
 /* Icon cố định size */
 .slick-arr-product_list i {
-  font-size: 12px; /* bạn có thể chỉnh 12px, 14px tùy ý */
+  font-size: 12px;
+  /* bạn có thể chỉnh 12px, 14px tùy ý */
   transition: transform 0.3s ease;
 }
 
@@ -2706,7 +2707,8 @@ color: var(--main-color);
   opacity: 0.3;
   pointer-events: none;
   cursor: default;
-  transform: translateY(-50%) scale(1) !important; /* không scale khi disabled */
+  transform: translateY(-50%) scale(1) !important;
+  /* không scale khi disabled */
   box-shadow: none !important;
 }
 
@@ -4364,56 +4366,56 @@ color: var(--main-color);
 
 /* Paging */
 .pagination-container {
-    font-family: Arial, sans-serif;
-    font-size: 14px;
+  font-family: Arial, sans-serif;
+  font-size: 14px;
 }
 
 .pagination {
-    display: flex;
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    gap: 5px;
+  display: flex;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  gap: 5px;
 }
 
 .page-item .page-link {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    padding: 6px 12px;
-    border-radius: 6px;
-    border: 1px solid #ddd;
-    color: #333;
-    background-color: #fff;
-    text-decoration: none;
-    transition: all 0.2s ease-in-out;
-    min-width: 36px;
-    height: 36px;
-    font-size: 14px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 12px;
+  border-radius: 6px;
+  border: 1px solid #ddd;
+  color: #333;
+  background-color: #fff;
+  text-decoration: none;
+  transition: all 0.2s ease-in-out;
+  min-width: 36px;
+  height: 36px;
+  font-size: 14px;
 }
 
 .page-item .page-link i {
-    font-size: 16px;
+  font-size: 16px;
 }
 
 .page-item .page-link:hover {
-    border-color: #bd110f;
-    color: #bd110f;
+  border-color: #bd110f;
+  color: #bd110f;
 }
 
 .page-item.active .page-link {
-    background-color: #bd110f;
-    border-color: #bd110f;
-    color: #fff;
-    cursor: default;
+  background-color: #bd110f;
+  border-color: #bd110f;
+  color: #fff;
+  cursor: default;
 }
 
 .page-item.disabled .page-link {
-    background-color: #f5f5f5;
-    border-color: #ddd;
-    color: #aaa;
-    pointer-events: none;
-    cursor: not-allowed;
+  background-color: #f5f5f5;
+  border-color: #ddd;
+  color: #aaa;
+  pointer-events: none;
+  cursor: not-allowed;
 }
 
 /* Paging Ajax */
@@ -5630,8 +5632,8 @@ coccocgrammar {
     height: auto !important;
   }
 
-  .menu-res {
-    display: block;
+  .menu {
+    display: none;
   }
 
   .toolbar {
@@ -5974,15 +5976,19 @@ coccocgrammar {
 
 @media (max-width: 450px) {
 
-.item-list .item-list-img {
-  padding: 2px;
-}
-.item-list h3 {
- font-size: 12px;
-        line-height: 1.5;
-}.item-list .item-list-name {
-  height: 40px;
-}
+  .item-list .item-list-img {
+    padding: 2px;
+  }
+
+  .item-list h3 {
+    font-size: 12px;
+    line-height: 1.5;
+  }
+
+  .item-list .item-list-name {
+    height: 40px;
+  }
+
   .item-product .info-product p {
     display: none;
   }

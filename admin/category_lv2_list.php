@@ -24,7 +24,7 @@ if (isset($_GET['del'])) {
 if (isset($_GET['listid'])) {
   $listid = $_GET['listid'];
   // print_r($listid);
-  $xoanhieu = $danhmuc->xoanhieu_danhmuc_c2($listid);
+  $xoanhieu = $danhmuc->deleteMultipleCategories($listid, 'tbl_danhmuc_c2', 'file', 'category_lv2_list');
 }
 ?>
 <section class="content-header text-sm">
@@ -40,7 +40,7 @@ if (isset($_GET['listid'])) {
 </section>
 <section class="content">
   <div class="card-footer text-sm sticky-top">
-    <a class="btn btn-sm bg-gradient-primary text-white" href="themdanhmuccap2.php" title="Thêm mới"><i
+    <a class="btn btn-sm bg-gradient-primary text-white" href="category_lv2_form.php" title="Thêm mới"><i
         class="fas fa-plus mr-2"></i>Thêm mới</a>
     <a class="btn btn-sm bg-gradient-danger text-white" id="delete-all" data-url="?xoa=1" title="Xóa tất cả"><i
         class="far fa-trash-alt mr-2"></i>Xóa tất cả</a>
@@ -120,7 +120,7 @@ if (isset($_GET['listid'])) {
                       data-table="tbl_danhmuc_c2" />
                   </td>
                   <td class="align-middle">
-                    <a href="suadanhmuccap2.php?id=<?php echo $resule_c2['id']; ?>"
+                    <a href="category_lv2_form.php?id=<?php echo $resule_c2['id']; ?>"
                       title="<?php echo $resule_c2['namevi']; ?>">
                       <img
                         src="<?= !empty($resule_c2['file']) ? $config['baseAdmin'] . "uploads/" . $resule_c2['file'] : $config['baseAdmin'] . "assets/img/noimage.png"; ?>"
@@ -128,7 +128,7 @@ if (isset($_GET['listid'])) {
                     </a>
                   </td>
                   <td class="align-middle">
-                    <a class="text-dark text-break" href="suadanhmuccap2.php?id=<?php echo $resule_c2['id']; ?>"
+                    <a class="text-dark text-break" href="category_lv2_form.php?id=<?php echo $resule_c2['id']; ?>"
                       title="<?php echo $resule_c2['namevi']; ?>"><?= $resule_c2['namevi']; ?></a>
                   </td>
                   <td class="align-middle text-center">
@@ -144,7 +144,7 @@ if (isset($_GET['listid'])) {
                     </div>
                   </td>
                   <td class="align-middle text-center text-md text-nowrap">
-                    <a class="text-primary mr-2" href="suadanhmuccap2.php?id=<?php echo $resule_c2['id']; ?>"
+                    <a class="text-primary mr-2" href="category_lv2_form.php?id=<?php echo $resule_c2['id']; ?>"
                       title="Chỉnh sửa"><i class="fas fa-edit"></i></a>
                     <a class="text-danger" id="delete-item" data-url="?del=<?php echo $resule_c2['id']; ?>" title="Xóa"><i
                         class="fas fa-trash-alt"></i></a>

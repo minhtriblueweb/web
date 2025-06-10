@@ -17,6 +17,46 @@ class sanpham
     $this->fn = new functions();
   }
 
+  public function show_sanpham_pagination($records_per_page, $current_page, $hienthi = '', $id_list = '', $id_cat = '', $limit = 0)
+  {
+    // Escape các giá trị truyền vào
+    $hienthi = mysqli_real_escape_string($this->db->link, $hienthi);
+    $id_list = mysqli_real_escape_string($this->db->link, $id_list);
+    $id_cat = mysqli_real_escape_string($this->db->link, $id_cat);
+
+    // Bắt đầu query
+    $query = "SELECT * FROM tbl_sanpham WHERE 1";
+
+    // Thêm điều kiện nếu có
+    if ($hienthi !== '') {
+      $query .= " AND hienthi = '$hienthi'";
+    }
+
+    if ($id_list !== '') {
+      $query .= " AND id_list = '$id_list'";
+    }
+
+    if ($id_cat !== '') {
+      $query .= " AND id_cat = '$id_cat'";
+    }
+
+    // Thứ tự sắp xếp
+    $query .= " ORDER BY numb, id DESC";
+
+    // Xử lý phân trang hoặc limit
+    if ($limit > 0) {
+      $query .= " LIMIT $limit";
+    } else {
+      $offset = ((int)$current_page - 1) * (int)$records_per_page;
+      $query .= " LIMIT $records_per_page OFFSET $offset";
+    }
+
+    $result = $this->db->select($query);
+    return $result;
+  }
+
+
+
   public function total_pages_sanpham_lienquan($id, $id_cat, $limit)
   {
     $id_cat = mysqli_real_escape_string($this->db->link, $id_cat);
@@ -216,74 +256,6 @@ class sanpham
     return $result;
   }
 
-  public function update_sanpham($data, $files, $id)
-  {
-    $fields = ['slugvi', 'namevi', 'id_list', 'id_cat', 'regular_price', 'sale_price', 'discount', 'code', 'titlevi', 'keywordsvi', 'descriptionvi', 'hienthi', 'banchay', 'numb'];
-    foreach ($fields as $field) {
-      $$field = mysqli_real_escape_string($this->db->link, $data[$field]);
-    }
-    $descvi = $data['descvi'];
-    $contentvi = $data['contentvi'];
-    $file_name = $_FILES["file"]["name"];
-    $unique_image = '';
-    if (!empty($file_name)) {
-      $file_ext = strtolower(pathinfo($file_name, PATHINFO_EXTENSION));
-      $unique_image = substr(md5(time()), 0, 10) . '.' . $file_ext;
-      move_uploaded_file($_FILES["file"]["tmp_name"], "uploads/" . $unique_image);
-      $del_file_query = "SELECT file FROM tbl_sanpham WHERE id='$id'";
-      $old_file = $this->db->select($del_file_query);
-      if ($old_file && $old_file->num_rows > 0) {
-        $rowData = $old_file->fetch_assoc();
-        $old_file_path = "uploads/" . $rowData['file'];
-        if (file_exists($old_file_path)) {
-          unlink($old_file_path);
-        }
-      }
-    }
-    $check_slug = "SELECT slugvi FROM tbl_sanpham WHERE slugvi = '$slugvi' AND id != '$id'";
-    $result_check_slug = $this->db->select($check_slug);
-    if ($result_check_slug && $result_check_slug->num_rows > 0) {
-      return "Đường dẫn đã tồn tại. Đường dẫn truy cập mục này có thể bị trùng lặp";
-    }
-    $query = "UPDATE tbl_sanpham SET 
-                slugvi = '$slugvi',
-                namevi = '$namevi',
-                descvi = '$descvi',
-                contentvi = '$contentvi',
-                file = '" . ($unique_image ?: $this->db->select("SELECT file FROM tbl_sanpham WHERE id='$id'")->fetch_assoc()['file']) . "',
-                id_list = '$id_list',
-                id_cat = '$id_cat',
-                regular_price = '$regular_price',
-                sale_price = '$sale_price',
-                discount = '$discount',
-                code = '$code',
-                titlevi = '$titlevi',
-                keywordsvi = '$keywordsvi',
-                descriptionvi = '$descriptionvi',
-                hienthi = '$hienthi',
-                banchay = '$banchay',
-                numb = '$numb' 
-                WHERE id = '$id'";
-    $result = $this->db->update($query);
-    if (!empty($files['files']['name'][0])) {
-      foreach ($files['files']['name'] as $key => $file_name) {
-        if ($files['files']['error'][$key] == 0) { // Kiểm tra không có lỗi
-          $file_ext = strtolower(pathinfo($file_name, PATHINFO_EXTENSION));
-          $unique_image = substr(md5(time() . $key), 0, 10) . '.' . $file_ext;
-          move_uploaded_file($files['files']['tmp_name'][$key], "uploads/" . $unique_image);
-          $gallery_query = "INSERT INTO tbl_gallery (id_parent, photo) VALUES ('$id', '$unique_image')";
-          $this->db->insert($gallery_query);
-        }
-      }
-    }
-    if ($result) {
-      header('Location: transfer.php?stt=success&url=sanpham');
-    } else {
-      return "Lỗi thao tác!";
-    }
-  }
-
-
   public function get_id_sanpham($id)
   {
     $id = mysqli_real_escape_string($this->db->link, $id);
@@ -310,7 +282,7 @@ class sanpham
     $query = "DELETE FROM tbl_sanpham WHERE id IN ($listid)";
     $result = $this->db->delete($query);
     if ($result) {
-      header('Location: transfer.php?stt=success&url=sanpham');
+      header('Location: transfer.php?stt=success&url=product_list');
     } else {
       return "Lỗi thao tác!";
     }
@@ -324,11 +296,12 @@ class sanpham
     while ($rowData = $delta->fetch_assoc()) {
       $string .= $rowData['file'];
     }
-
+    $delLink = "uploads/" . $string;
+    unlink("$delLink");
     $query = "DELETE FROM tbl_sanpham WHERE id = '$id'";
     $result = $this->db->delete($query);
     if ($result) {
-      header('Location: transfer.php?stt=success&url=sanpham');
+      header('Location: transfer.php?stt=success&url=product_list');
     } else {
       return "Lỗi thao tác!";
     }
@@ -400,29 +373,25 @@ class sanpham
     return $result;
   }
 
-  public function count_sanpham_cap_1($id_list = '')
+  public function count_sanpham($id_list = '', $id_cat = '')
   {
-    $query = "SELECT COUNT(*) as total FROM tbl_sanpham WHERE id_list = '$id_list' AND hienthi = 'hienthi'";
-    $result = $this->db->select($query);
-
-    if ($result) {
-      $row = $result->fetch_assoc();
-      return $row['total'];
-    }
-    return 0;
-  }
-
-  public function count_all_sanpham()
-  {
+    $id_list = mysqli_real_escape_string($this->db->link, $id_list);
+    $id_cat = mysqli_real_escape_string($this->db->link, $id_cat);
     $query = "SELECT COUNT(*) as total FROM tbl_sanpham WHERE hienthi = 'hienthi'";
+    if ($id_list !== '') {
+      $query .= " AND id_list = '$id_list'";
+    }
+    if ($id_cat !== '') {
+      $query .= " AND id_cat = '$id_cat'";
+    }
     $result = $this->db->select($query);
-
     if ($result) {
       $row = $result->fetch_assoc();
       return $row['total'];
     }
     return 0;
   }
+
 
   public function show_sanpham_c2_tc($id_cat = '')
   {
@@ -431,21 +400,8 @@ class sanpham
     return $result;
   }
 
-  public function count_sanpham_cap_2($id_cat = '')
+  public function update_sanpham($data, $files, $id)
   {
-    $query = "SELECT COUNT(*) as total FROM tbl_sanpham WHERE id_cat = '$id_cat' AND hienthi = 'hienthi'";
-    $result = $this->db->select($query);
-
-    if ($result) {
-      $row = $result->fetch_assoc();
-      return $row['total'];
-    }
-    return 0;
-  }
-
-  public function them_sanpham($data, $files)
-  {
-    // 1️⃣ Danh sách các field
     $fields = [
       'slugvi',
       'namevi',
@@ -464,21 +420,112 @@ class sanpham
       'banchay',
       'numb'
     ];
-
-    // 2️⃣ Lấy giá trị các field (escape)
     $sanpham_data = [];
     foreach ($fields as $field) {
       $sanpham_data[$field] = mysqli_real_escape_string($this->db->link, $data[$field]);
     }
-
-    // 3️⃣ Xử lý hình ảnh
+    $query = "SELECT * FROM tbl_setting WHERE id = '1' LIMIT 1";
+    $result = $this->db->select($query);
+    if ($result) {
+      $setting = $result->fetch_assoc();
+      $position = isset($setting['position']) ? intval($setting['position']) : 5;
+      $opacity = isset($setting['opacity']) ? intval($setting['opacity']) : 50;
+      $offset_x = isset($setting['offset_x']) ? intval($setting['offset_x']) : 0;
+      $offset_y = isset($setting['offset_y']) ? intval($setting['offset_y']) : 0;
+    }
+    $get_old_file = $this->db->select("SELECT file FROM tbl_sanpham WHERE id='$id'");
+    $old_file_name = $get_old_file ? $get_old_file->fetch_assoc()['file'] : '';
+    $old_file_path = "uploads/" . $old_file_name;
     $unique_image = '';
     if (!empty($files["file"]["name"])) {
       $file_ext = strtolower(pathinfo($files["file"]["name"], PATHINFO_EXTENSION));
       $raw_name = substr(md5(time()), 0, 10);
       $original_name = $raw_name . '.' . $file_ext;
       $destination = "uploads/" . $original_name;
+      if (move_uploaded_file($files["file"]["tmp_name"], $destination)) {
+        $this->fn->resizeImage($destination, $destination, 1600);
+        $this->fn->addWatermark($destination, $destination, $position, $opacity, $offset_x, $offset_y);
+        $webp_file = $this->fn->convert_webp_from_path($destination, $original_name);
+        if ($webp_file) {
+          $unique_image = $webp_file;
+          unlink($destination); // Xoá ảnh gốc
+        } else {
+          $unique_image = $original_name;
+        }
+        if (!empty($old_file_name) && file_exists($old_file_path)) {
+          unlink($old_file_path);
+        }
+      }
+    } else if (!empty($old_file_name) && file_exists($old_file_path)) {
+      $file_ext = strtolower(pathinfo($old_file_name, PATHINFO_EXTENSION));
+      $raw_name = substr(md5(time()), 0, 10);
+      $original_name = $raw_name . '.' . $file_ext;
+      $destination = "uploads/" . $original_name;
+      copy($old_file_path, $destination);
+      $this->fn->resizeImage($destination, $destination, 1600);
+      $this->fn->addWatermark($destination, $destination, $position, $opacity, $offset_x, $offset_y);
+      $webp_file = $this->fn->convert_webp_from_path($destination, $original_name);
+      if ($webp_file) {
+        $unique_image = $webp_file;
+        unlink($destination); // Xoá ảnh gốc
+      } else {
+        $unique_image = $original_name;
+      }
+      unlink($old_file_path);
+    } else {
+      $unique_image = '';
+    }
+    $slug = $sanpham_data['slugvi'];
+    $check_slug = "SELECT COUNT(*) as count FROM tbl_sanpham WHERE slugvi = '$slug' AND id != '$id' LIMIT 1";
+    $result_check_slug = $this->db->select($check_slug);
+    if ($result_check_slug && $result_check_slug->fetch_assoc()['count'] > 0) {
+      return "Đường dẫn đã tồn tại. Đường dẫn truy cập mục này có thể bị trùng lặp";
+    }
+    $update_fields = [];
+    foreach ($sanpham_data as $key => $value) {
+      $update_fields[] = "$key = '$value'";
+    }
+    $update_fields[] = "file = '$unique_image'";
+    $update_query = "UPDATE tbl_sanpham SET " . implode(", ", $update_fields) . " WHERE id = '$id'";
+    $result = $this->db->update($update_query);
+    if ($result) {
+      header('Location: transfer.php?stt=success&url=product_list');
+      exit();
+    } else {
+      return "Lỗi thao tác!";
+    }
+  }
 
+  public function them_sanpham($data, $files)
+  {
+    $fields = [
+      'slugvi',
+      'namevi',
+      'id_list',
+      'id_cat',
+      'regular_price',
+      'sale_price',
+      'discount',
+      'code',
+      'descvi',
+      'contentvi',
+      'titlevi',
+      'keywordsvi',
+      'descriptionvi',
+      'hienthi',
+      'banchay',
+      'numb'
+    ];
+    $sanpham_data = [];
+    foreach ($fields as $field) {
+      $sanpham_data[$field] = mysqli_real_escape_string($this->db->link, $data[$field]);
+    }
+    $unique_image = '';
+    if (!empty($files["file"]["name"])) {
+      $file_ext = strtolower(pathinfo($files["file"]["name"], PATHINFO_EXTENSION));
+      $raw_name = substr(md5(time()), 0, 10);
+      $original_name = $raw_name . '.' . $file_ext;
+      $destination = "uploads/" . $original_name;
       if (move_uploaded_file($files["file"]["tmp_name"], $destination)) {
         $this->fn->resizeImage($destination, $destination, 1600);
         $query = "SELECT * FROM tbl_setting WHERE id = '1' LIMIT 1";
@@ -489,48 +536,32 @@ class sanpham
           $opacity = isset($setting['opacity']) ? intval($setting['opacity']) : 50;
           $offset_x = isset($setting['offset_x']) ? intval($setting['offset_x']) : 0;
           $offset_y = isset($setting['offset_y']) ? intval($setting['offset_y']) : 0;
-        } else {
-          $position = 5;
-          $opacity = 50;
-          $offset_x = 0;
-          $offset_y = 0;
         }
-
         $this->fn->addWatermark($destination, $destination, $position, $opacity, $offset_x, $offset_y);
-
-        // Convert WebP
         $webp_file = $this->fn->convert_webp_from_path($destination, $original_name);
         if ($webp_file) {
           $unique_image = $webp_file;
-          unlink($destination); // Xóa file gốc JPG/PNG
+          unlink($destination);
         } else {
           $unique_image = $original_name;
         }
       }
     }
-
-    // 4️⃣ Kiểm tra slug trùng
     $slug = $sanpham_data['slugvi'];
     $check_slug = "SELECT COUNT(*) as count FROM tbl_sanpham WHERE slugvi = '$slug' LIMIT 1";
     $result_check_slug = $this->db->select($check_slug);
     if ($result_check_slug && $result_check_slug->fetch_assoc()['count'] > 0) {
       return "Đường dẫn đã tồn tại. Đường dẫn truy cập mục này có thể bị trùng lặp";
     }
-
-    // 5️⃣ Build câu INSERT
-    $sanpham_data['file'] = $unique_image; // Thêm field 'file' vào dữ liệu
-
+    $sanpham_data['file'] = $unique_image;
     $field_names = array_keys($sanpham_data);
     $field_values = array_map(function ($value) {
       return "'" . $value . "'";
     }, $sanpham_data);
-
     $query = "INSERT INTO tbl_sanpham (" . implode(", ", $field_names) . ") VALUES (" . implode(", ", $field_values) . ")";
-
-    // 6️⃣ Thực thi
     $result = $this->db->insert($query);
     if ($result) {
-      header('Location: transfer.php?stt=success&url=sanpham');
+      header('Location: transfer.php?stt=success&url=product_list');
       exit();
     } else {
       return "Lỗi thao tác!";

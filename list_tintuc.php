@@ -38,25 +38,25 @@ include 'inc/menu.php';
       <div class="row">
         <?php $show_tintuc = $news->show_news_by_type('tintuc', 'hienthi'); ?>
         <?php if ($show_tintuc): ?>
-          <?php while ($resule_tintuc = $show_tintuc->fetch_assoc()) : ?>
-            <div class="col-6 col-sm-4" data-aos="fade-up" data-aos-duration="1000">
-              <div class="item-service">
-                <div class="images">
-                  <a class="scale-img hover-glass text-decoration-none" href="<?= $resule_tintuc['slugvi'] ?>"
-                    title="<?= $resule_tintuc['namevi'] ?>">
-                    <img class="w-100"
-                      src="<?php echo empty($resule_tintuc['file']) ? BASE_ADMIN . "assets/img/noimage.png" : BASE_ADMIN . UPLOADS . $resule_tintuc['file']; ?>"
-                      alt="<?= $resule_tintuc['namevi'] ?>" />
-                  </a>
-                </div>
-                <div class="content">
-                  <h3>
-                    <a class="text-split" href="<?= $resule_tintuc['slugvi'] ?>"><?= $resule_tintuc['namevi'] ?></a>
-                  </h3>
-                </div>
-              </div>
+        <?php while ($resule_tintuc = $show_tintuc->fetch_assoc()) : ?>
+        <div class="col-6 col-sm-4" data-aos="fade-up" data-aos-duration="1000">
+          <div class="item-service">
+            <div class="images">
+              <a class="scale-img hover-glass text-decoration-none" href="<?= $resule_tintuc['slugvi'] ?>"
+                title="<?= $resule_tintuc['namevi'] ?>">
+                <img class="w-100"
+                  src="<?php echo empty($resule_tintuc['file']) ? NO_IMG : BASE_ADMIN . UPLOADS . $resule_tintuc['file']; ?>"
+                  alt="<?= $resule_tintuc['namevi'] ?>" />
+              </a>
             </div>
-          <?php endwhile; ?>
+            <div class="content">
+              <h3>
+                <a class="text-split" href="<?= $resule_tintuc['slugvi'] ?>"><?= $resule_tintuc['namevi'] ?></a>
+              </h3>
+            </div>
+          </div>
+        </div>
+        <?php endwhile; ?>
         <?php endif; ?>
       </div>
     </div>

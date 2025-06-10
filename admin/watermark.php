@@ -49,9 +49,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['upload'])) {
             <p>Upload hình ảnh:</p>
             <label class="upload-file-label mb-2" for="file">
               <div class="upload-file-image rounded mb-3 preview-wrapper">
-                <img
-                  src="<?= $watermark_src ?>"
-                  class="rounded img-upload" width="100">
+                <img src="<?= $watermark_src ?>" class="rounded img-upload" width="100">
               </div>
               <div class="custom-file my-custom-file">
                 <input type="file" class="custom-file-input" name="watermark" id="file" lang="vi">
@@ -70,9 +68,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['upload'])) {
                 for ($i = 1; $i <= 9; $i++):
                 ?>
                   <label class="<?= ($i == $selected_position) ? 'active' : '' ?>">
-                    <input type="radio" name="position" value="<?= $i ?>" <?= ($i == $selected_position) ? 'checked' : '' ?>>
-                    <img class="rounded"
-                      onerror="this.src='<?= $no_img ?>';"
+                    <input type="radio" name="position" value="<?= $i ?>"
+                      <?= ($i == $selected_position) ? 'checked' : '' ?>>
+                    <img class="rounded" onerror="this.src='<?= $no_img ?>';"
                       src="<?= ($i == $selected_position) ? $watermark_src : $no_img ?>"
                       alt="Watermark Position <?= $i ?>">
                   </label>
@@ -84,19 +82,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['upload'])) {
           <div class="col-xl-8 ">
             <div class="form-group col-xl-12 col-sm-4">
               <label>Độ trong suốt :</label>
-              <input type="number" class="form-control" id="opacity" name="opacity" placeholder="0 - 100" min="0" max="100" value="<?= $result['opacity'] ?>" />
+              <input type="number" class="form-control" id="opacity" name="opacity" placeholder="0 - 100" min="0"
+                max="100" value="<?= $result['opacity'] ?>" />
               <p class="text-danger mt-1 small">Độ trong suốt có giá trị từ 0 - 100</p>
             </div>
             <div class="mb-3 col-md-12">
               <label for="offset_x" class="form-label">Độ lệch tương đối tùy chọn của hình ảnh mới trên trục x</label>
-              <input type="text" class="form-control" id="offset_x" name="offset_x" value="<?= $result['offset_x'] ?>" />
+              <input type="text" class="form-control" id="offset_x" name="offset_x"
+                value="<?= $result['offset_x'] ?>" />
             </div>
             <div class="col-md-12">
               <label for="offset_y" class="form-label">Độ lệch tương đối tùy chọn của hình ảnh mới trên trục y</label>
-              <input type="text" class="form-control" id="offset_y" name="offset_y" value="<?= $result['offset_y'] ?>" />
+              <input type="text" class="form-control" id="offset_y" name="offset_y"
+                value="<?= $result['offset_y'] ?>" />
             </div>
             <div class="col-md-12 mt-2">
-              <p class="text-danger mb-0"><strong><i class="ti ti-exclamation-circle ms-1"></i> Lưu ý:</strong> Cần xóa dữ liệu cache khi có sự thay đổi về giá trị của watermark</p>
+              <p class="text-danger mb-0"><strong><i class="ti ti-exclamation-circle ms-1"></i> Lưu ý:</strong> Cần xóa
+                dữ liệu cache khi có sự thay đổi về giá trị của watermark</p>
             </div>
           </div>
         </div>

@@ -44,7 +44,7 @@ include 'inc/menu.php';
               <a class="scale-img hover-glass text-decoration-none" href="<?= $resule_huongdanchoi['slugvi'] ?>"
                 title="<?= $resule_huongdanchoi['namevi'] ?>">
                 <img class="w-100"
-                  src="<?php echo empty($resule_huongdanchoi['file']) ? BASE_ADMIN . "assets/img/noimage.png" : BASE_ADMIN . UPLOADS . $resule_huongdanchoi['file']; ?>"
+                  src="<?php echo empty($resule_huongdanchoi['file']) ? NO_IMG : BASE_ADMIN . UPLOADS . $resule_huongdanchoi['file']; ?>"
                   alt="<?= $resule_huongdanchoi['namevi'] ?>" />
               </a>
             </div>

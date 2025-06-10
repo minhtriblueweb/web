@@ -29,7 +29,7 @@ $show_danhmuc = $danhmuc->show_danhmuc();
 </section>
 <section class="content">
   <div class="card-footer text-sm sticky-top">
-    <a class="btn btn-sm bg-gradient-primary text-white" href="themsanpham.php" title="Thêm mới"><i
+    <a class="btn btn-sm bg-gradient-primary text-white" href="product_form.php" title="Thêm mới"><i
         class="fas fa-plus mr-2"></i>Thêm mới</a>
     <a class="btn btn-sm bg-gradient-danger text-white" id="delete-all" data-url="?xoa=1" title="Xóa tất cả"><i
         class="far fa-trash-alt mr-2"></i>Xóa tất cả</a>
@@ -106,7 +106,7 @@ $show_danhmuc = $danhmuc->show_danhmuc();
                       value="<?= $resule['numb'] ?>" data-id="<?= $resule['id'] ?>" data-table="tbl_sanpham" />
                   </td>
                   <td class="align-middle">
-                    <a href="suasanpham.php?id=<?= $resule['id'] ?>" title="<?= $resule['namevi'] ?>">
+                    <a href="product_form.php?id=<?= $resule['id'] ?>" title="<?= $resule['namevi'] ?>">
                       <img class="rounded img-preview"
                         src="<?= empty($resule['file']) ? $config['baseAdmin'] . "assets/img/noimage.png" : $config['baseAdmin'] . "uploads/" . $resule['file'] ?>"
                         alt="<?= $resule['namevi'] ?>" />
@@ -114,12 +114,12 @@ $show_danhmuc = $danhmuc->show_danhmuc();
 
                   </td>
                   <td class="align-middle">
-                    <a class="text-dark text-break" href="suasanpham.php?id=<?= $resule['id'] ?>"
+                    <a class="text-dark text-break" href="product_form.php?id=<?= $resule['id'] ?>"
                       title="<?= $resule['namevi'] ?>"><?= $resule['namevi'] ?></a>
                     <div class="tool-action mt-2 w-clear">
                       <a class="text-primary mr-3" href="<?= "{$config['base']}san-pham/{$resule['slugvi']}" ?>"
                         target="_blank" title="<?= $resule['namevi'] ?>"><i class="far fa-eye mr-1"></i>View</a>
-                      <a class="text-info mr-3" href="suasanpham.php?id=<?= $resule['id'] ?>"
+                      <a class="text-info mr-3" href="product_form.php?id=<?= $resule['id'] ?>"
                         title="<?= $resule['namevi'] ?>"><i class="far fa-edit mr-1"></i>Edit</a>
                       <a class="text-danger" id="delete-item" data-url="?del=<?= $resule['id'] ?>"
                         title="<?= $resule['namevi'] ?>"><i class="far fa-trash-alt mr-1"></i>Delete</a>
@@ -164,7 +164,7 @@ $show_danhmuc = $danhmuc->show_danhmuc();
                     </div>
                   </td>
                   <td class="align-middle text-center text-md text-nowrap">
-                    <a class="text-primary mr-2" href="suasanpham.php?id=<?= $resule['id'] ?>" title="Chỉnh sửa"><i
+                    <a class="text-primary mr-2" href="product_form.php?id=<?= $resule['id'] ?>" title="Chỉnh sửa"><i
                         class="fas fa-edit"></i></a>
                     <a class="text-danger" id="delete-item" data-url="?del=<?= $resule['id'] ?>" title="Xóa"><i
                         class="fas fa-trash-alt"></i></a>

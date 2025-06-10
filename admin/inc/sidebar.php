@@ -145,6 +145,12 @@
               </a>
             </li>
             <li class="nav-item ">
+              <a class="nav-link <?= ActiveClass("watermark") ?>" href="watermark.php" title="watermark"><i
+                  class="nav-icon text-sm far fa-caret-square-right"></i>
+                <p>watermark</p>
+              </a>
+            </li>
+            <li class="nav-item ">
               <a class="nav-link <?= ActiveClass("favicon") ?>" href="favicon.php" title="Favicon"><i
                   class="nav-icon text-sm far fa-caret-square-right"></i>
                 <p>Favicon</p>

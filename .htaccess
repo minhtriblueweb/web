@@ -5,6 +5,8 @@ RewriteRule ^tin-tuc list_tintuc.php [L]
 RewriteRule ^gioi-thieu gioithieu.php [L]
 RewriteRule ^mua-hang muahang.php [L]
 RewriteRule ^lien-he lienhe.php [L]
+RewriteRule ^san-pham/page-([0-9]+)$ sanpham.php?page=$1 [L,QSA]
+RewriteRule ^san-pham$ sanpham.php [L,QSA]
 
 
 RewriteRule ^gioi-thieu gioithieu.php [L]

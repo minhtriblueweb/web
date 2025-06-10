@@ -962,73 +962,114 @@ function photoZone(eDrag, iDrag, eLoad) {
 }
 
 /* Watermark */
-function toDataURL(url, callback) {
-  var xhr = new XMLHttpRequest();
-  xhr.onload = function () {
-    var reader = new FileReader();
-    reader.onloadend = function () {
-      callback(reader.result);
-    };
-    reader.readAsDataURL(xhr.response);
-  };
-  xhr.open("GET", url);
-  xhr.responseType = "blob";
-  xhr.send();
-}
-function previewWatermark() {
-  $o = $("#form-watermark");
-  var formData = new FormData();
-  formData.append("file", $("#file")[0].files[0]);
-  formData.append("data", $o.serialize());
+// function toDataURL(url, callback) {
+//   var xhr = new XMLHttpRequest();
+//   xhr.onload = function () {
+//     var reader = new FileReader();
+//     reader.onloadend = function () {
+//       callback(reader.result);
+//     };
+//     reader.readAsDataURL(xhr.response);
+//   };
+//   xhr.open("GET", url);
+//   xhr.responseType = "blob";
+//   xhr.send();
+// }
+// function previewWatermark() {
+//   $o = $("#form-watermark");
+//   var formData = new FormData();
+//   formData.append("file", $("#file")[0].files[0]);
+//   formData.append("data", $o.serialize());
 
-  $.ajax({
-    type: "POST",
-    url: "index.php?com=photo&act=save-watermark&type=" + TYPE,
-    data: formData,
-    cache: false,
-    contentType: false,
-    processData: false,
-    dataType: "json",
-    success: function (data) {
-      var url =
-        "index.php?com=photo&act=preview-watermark&type=" +
-        TYPE +
-        "&position=" +
-        data.position +
-        "&img=" +
-        data.image +
-        "&watermark=" +
-        data.path +
-        "&upload=" +
-        data.upload +
-        "&opacity=" +
-        data.data.opacity +
-        "&per=" +
-        data.data.per +
-        "&small_per=" +
-        data.data.small_per +
-        "&min=" +
-        data.data.min +
-        "&max=" +
-        data.data.max +
-        "&t=" +
-        data.time;
-      toDataURL(url, function (dataUrl) {
-        notifyDialog(
-          '<img src="' + dataUrl + '" alt="Preview Watermark">',
-          "Preview Watermark",
-          "fas fa-image",
-          "blue"
-        );
-      });
-    },
-    error: function (data) {
-      console.log("error");
-    },
+//   $.ajax({
+//     type: "POST",
+//     url: "index.php?com=photo&act=save-watermark&type=" + TYPE,
+//     data: formData,
+//     cache: false,
+//     contentType: false,
+//     processData: false,
+//     dataType: "json",
+//     success: function (data) {
+//       var url =
+//         "index.php?com=photo&act=preview-watermark&type=" +
+//         TYPE +
+//         "&position=" +
+//         data.position +
+//         "&img=" +
+//         data.image +
+//         "&watermark=" +
+//         data.path +
+//         "&upload=" +
+//         data.upload +
+//         "&opacity=" +
+//         data.data.opacity +
+//         "&per=" +
+//         data.data.per +
+//         "&small_per=" +
+//         data.data.small_per +
+//         "&min=" +
+//         data.data.min +
+//         "&max=" +
+//         data.data.max +
+//         "&t=" +
+//         data.time;
+//       toDataURL(url, function (dataUrl) {
+//         notifyDialog(
+//           '<img src="' + dataUrl + '" alt="Preview Watermark">',
+//           "Preview Watermark",
+//           "fas fa-image",
+//           "blue"
+//         );
+//       });
+//     },
+//     error: function (data) {
+//       console.log("error");
+//     },
+//   });
+
+//   return false;
+// }
+
+$(document).ready(function () {
+  function updateWatermarkPosition(position) {
+    var $watermark = $('#watermark-preview');
+    $watermark.css({
+      'top': '',
+      'bottom': '',
+      'left': '',
+      'right': '',
+      'transform': ''
+    });
+
+    switch (position) {
+      case '1': $watermark.css({ 'top': '10px', 'left': '10px' }); break;
+      case '2': $watermark.css({ 'top': '10px', 'left': '50%', 'transform': 'translateX(-50%)' }); break;
+      case '3': $watermark.css({ 'top': '10px', 'right': '10px' }); break;
+      case '4': $watermark.css({ 'top': '50%', 'right': '10px', 'transform': 'translateY(-50%)' }); break;
+      case '5': $watermark.css({ 'bottom': '10px', 'right': '10px' }); break;
+      case '6': $watermark.css({ 'bottom': '10px', 'left': '50%', 'transform': 'translateX(-50%)' }); break;
+      case '7': $watermark.css({ 'bottom': '10px', 'left': '10px' }); break;
+      case '8': $watermark.css({ 'top': '50%', 'left': '10px', 'transform': 'translateY(-50%)' }); break;
+      case '9': $watermark.css({ 'top': '50%', 'left': '50%', 'transform': 'translate(-50%, -50%)' }); break;
+    }
+  }
+
+  // Cập nhật opacity cho ảnh đang chọn
+  function highlightSelectedImage() {
+    $(".watermark-position label img").css("opacity", "0.6");
+    $(".watermark-position input[type=radio]:checked").siblings("img").css("opacity", "1");
+  }
+
+  var initialPosition = $('input[name="position"]:checked').val();
+  updateWatermarkPosition(initialPosition);
+  highlightSelectedImage();
+
+  $('input[name="position"]').on('change', function () {
+    updateWatermarkPosition($(this).val());
+    highlightSelectedImage();
   });
+});
 
-  return false;
-}
 
 /* Login */
 

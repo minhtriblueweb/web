@@ -460,7 +460,7 @@ NN_FRAMEWORK.SlickPage = function () {
           breakpoint: 770,
           settings: {
             arrows: false,
-            slidesToShow: 3,
+            slidesToShow: 2,
           },
         },
         {
@@ -474,7 +474,7 @@ NN_FRAMEWORK.SlickPage = function () {
           breakpoint: 325,
           settings: {
             arrows: false,
-            slidesToShow: 1,
+            slidesToShow: 2,
           },
         },
       ],
@@ -512,50 +512,50 @@ NN_FRAMEWORK.SlickPage = function () {
     });
   }
 
-  if (isExist($(".slick-brand"))) {
-    $(".slick-brand").slick({
-      dots: false,
-      arrows: false,
-      autoplay: true,
-      infinite: true,
-      verticalSwiping: false,
-      slidesToShow: 6,
-      slidesToScroll: 1,
-      centerMode: false,
-      vertical: false,
-      swipeToSlide: true,
-      responsive: [
-        {
-          breakpoint: 770,
-          settings: {
-            arrows: false,
-            slidesToShow: 5,
-          },
-        },
-        {
-          breakpoint: 665,
-          settings: {
-            arrows: false,
-            slidesToShow: 4,
-          },
-        },
-        {
-          breakpoint: 585,
-          settings: {
-            arrows: false,
-            slidesToShow: 3,
-          },
-        },
-        {
-          breakpoint: 375,
-          settings: {
-            arrows: false,
-            slidesToShow: 2,
-          },
-        },
-      ],
-    });
-  }
+  // if (isExist($(".slick-brand"))) {
+  //   $(".slick-brand").slick({
+  //     dots: false,
+  //     arrows: false,
+  //     autoplay: true,
+  //     infinite: true,
+  //     verticalSwiping: false,
+  //     slidesToShow: 6,
+  //     slidesToScroll: 1,
+  //     centerMode: false,
+  //     vertical: false,
+  //     swipeToSlide: true,
+  //     responsive: [
+  //       {
+  //         breakpoint: 770,
+  //         settings: {
+  //           arrows: false,
+  //           slidesToShow: 5,
+  //         },
+  //       },
+  //       {
+  //         breakpoint: 665,
+  //         settings: {
+  //           arrows: false,
+  //           slidesToShow: 4,
+  //         },
+  //       },
+  //       {
+  //         breakpoint: 585,
+  //         settings: {
+  //           arrows: false,
+  //           slidesToShow: 3,
+  //         },
+  //       },
+  //       {
+  //         breakpoint: 375,
+  //         settings: {
+  //           arrows: false,
+  //           slidesToShow: 2,
+  //         },
+  //       },
+  //     ],
+  //   });
+  // }
 
   if (isExist($(".slick-service"))) {
     $(".slick-service").slick({
@@ -679,6 +679,68 @@ NN_FRAMEWORK.SlickPage = function () {
           },
         },
       ],
+    });
+  }
+  if (isExist($(".slick_product_list"))) {
+    var $slider = $('.slick_product_list');
+    $slider.slick({
+      dots: false,
+      arrows: true,
+      prevArrow:
+        "<span class='slick-arr-product_list slick-product-prev'><i class='fa-solid fa-chevron-left'></i></span>",
+      nextArrow:
+        "<span class='slick-arr-product_list slick-product-next arr-next'><i class='fa-solid fa-chevron-right'></i></span>",
+      autoplay: false,
+      infinite: false, // để xử lý đầu/cuối giống Shopee
+      slidesToShow: 7,
+      slidesToScroll: 2,
+      rows: 2,
+      responsive: [
+        {
+          breakpoint: 1024,
+          settings: {
+            slidesToShow: 7,
+            slidesToScroll: 3,
+            rows: 2
+          }
+        },
+        {
+          breakpoint: 600,
+          settings: {
+            slidesToShow: 3,
+            slidesToScroll: 2,
+            rows: 2
+          }
+        },
+        {
+          breakpoint: 480,
+          settings: {
+            slidesToShow: 3,
+            slidesToScroll: 1,
+            rows: 2
+          }
+        }
+      ]
+    });
+
+    function updateArrows(currentSlide) {
+      var slickObj = $slider.slick("getSlick");
+      var totalSlides = slickObj.slideCount;
+      var slidesToShow = slickObj.options.slidesToShow;
+      if (currentSlide === 0) {
+        $('.slick-product-prev').addClass('disabled');
+      } else {
+        $('.slick-product-prev').removeClass('disabled');
+      }
+      if (currentSlide >= totalSlides - slidesToShow) {
+        $('.slick-product-next').addClass('disabled');
+      } else {
+        $('.slick-product-next').removeClass('disabled');
+      }
+    }
+    updateArrows(0);
+    $slider.on('afterChange', function (event, slick, currentSlide) {
+      updateArrows(currentSlide);
     });
   }
 };

@@ -3,49 +3,18 @@ include_once 'lib/autoload.php';
 include_once 'lib/router.php';
 ?>
 <?php
-$slug = isset($_GET['slug']) ? $_GET['slug'] : '';
-
-if ($slug) {
-  $get_danhmuc_c2 = $danhmuc->get_danhmuc_c2($slug);
-  if ($get_danhmuc_c2 !== false) {
-    $kg_danhmuc_c2 = $get_danhmuc_c2->fetch_assoc();
-    if ($kg_danhmuc_c2) {
-      $id_list = $kg_danhmuc_c2['id_list'];
-      $get_name_danhmuc = $danhmuc->get_name_danhmuc($id_list);
-      $get_danhmuc_c2 = $danhmuc->show_danhmuc_c2_index($id_list);
-      if ($get_name_danhmuc !== false) {
-        $kg_danhmuc = $get_name_danhmuc->fetch_assoc();
-        if ($kg_danhmuc) {
-          $id_cat = $kg_danhmuc_c2['id'];
-          $get_sp = $sanpham->show_sanpham_c2_tc($id_cat);
-          $get_count_sp = $sanpham->count_sanpham_cap_2($id_cat);
-        } else {
-          header('Location: ' . BASE . '404.php');
-          exit();
-        }
-      } else {
-        header('Location: ' . BASE . '404.php');
-        exit();
-      }
-    } else {
-      header('Location: ' . BASE . '404.php');
-      exit();
-    }
-  } else {
-    header('Location: ' . BASE . '404.php');
-    exit();
-  }
-} else {
-  header('Location: ' . BASE . '404.php');
-  exit();
-}
-
+$records_per_page = 20; // Số bản ghi trên mỗi trang
+$current_page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+$total_records = $functions->phantrang_sp('tbl_sanpham');
+$total_pages = ceil($total_records / $records_per_page);
+$show_sanpham = $sanpham->show_sanpham($records_per_page, $current_page);
+$get_count_sp = $sanpham->count_all_sanpham();
 $seo = array_merge($seo, array(
-  'title' => $kg_danhmuc_c2['titlevi'],
-  'keywords' => $kg_danhmuc_c2['keywordsvi'],
-  'description' => $kg_danhmuc_c2['descriptionvi'],
-  'url' => BASE . 'cate/' . $kg_danhmuc_c2['slugvi'],
-  'image' => isset($kg_danhmuc_c2['file']) ? BASE_ADMIN . UPLOADS . $kg_danhmuc_c2['file'] : '',
+  // 'title' => $kg_danhmuc_c2['titlevi'],
+  // 'keywords' => $kg_danhmuc_c2['keywordsvi'],
+  // 'description' => $kg_danhmuc_c2['descriptionvi'],
+  // 'url' => BASE . 'cate/' . $kg_danhmuc_c2['slugvi'],
+  // 'image' => isset($kg_danhmuc_c2['file']) ? BASE_ADMIN . UPLOADS . $kg_danhmuc_c2['file'] : '',
 ));
 ?>
 <?php
@@ -59,16 +28,10 @@ include 'inc/menu.php';
         <li class="breadcrumb-item">
           <a class="text-decoration-none" href="<?= BASE ?>"><span>Trang chủ</span></a>
         </li>
+        <li class="breadcrumb-item active">
         <li class="breadcrumb-item">
           <a class="text-decoration-none" href="san-pham"><span>Sản phẩm</span></a>
         </li>
-        <li class="breadcrumb-item">
-          <a class="text-decoration-none"
-            href="danh-muc/<?= $kg_danhmuc['slugvi'] ?>"><span><?= $kg_danhmuc['namevi'] ?></span></a>
-        </li>
-        <li class="breadcrumb-item active">
-          <a class="text-decoration-none"
-            href="cate/<?= $kg_danhmuc_c2['slugvi'] ?>"><span><?= $kg_danhmuc_c2['namevi'] ?></span></a>
         </li>
       </ol>
     </div>
@@ -76,26 +39,30 @@ include 'inc/menu.php';
 
   <div class="wrap-product-list">
     <div class="wrap-content" style="background: unset;">
-      <?php if ($get_danhmuc_c2 && $get_danhmuc_c2->num_rows > 0) : ?>
-        <div class="grid-list-no-index">
-          <?php while ($result_danhmuc_c2 = $get_danhmuc_c2->fetch_assoc()) : ?>
+
+      <div class="grid-list-no-index">
+        <?php
+        $show_danhmuc = $danhmuc->show_danhmuc_index('hienthi');
+        if ($show_danhmuc) {
+          while ($result_danhmuc = $show_danhmuc->fetch_assoc()) {
+        ?>
             <div class="item-list-noindex">
-              <a class="" href="cate/<?= $result_danhmuc_c2['slugvi'] ?>">
+              <a title="<?= $result_danhmuc['namevi'] ?>" class="" href="danh-muc/<?= $result_danhmuc['slugvi'] ?>">
                 <h3 class="m-0">
-                  <?= $result_danhmuc_c2['namevi'] ?>
+                  <?= $result_danhmuc['namevi'] ?>
                 </h3>
               </a>
             </div>
-          <?php endwhile; ?>
-        </div>
-      <?php endif; ?>
+        <?php }
+        } ?>
+      </div>
     </div>
   </div>
 
   <div class="wrap-product-list">
     <div class="wrap-content" style="background: unset;">
       <div class="title-list-hot text-center">
-        <h2><?= $kg_danhmuc_c2['namevi'] ?></h2>
+        <h2>Sản Phẩm</h2>
         (<?= $get_count_sp ?> sản phẩm)
       </div>
     </div>
@@ -103,10 +70,10 @@ include 'inc/menu.php';
 
   <div class="wrap-main wrap-template w-clear" style="margin: 0 auto !important;">
     <div class="content-main">
-      <?php if ($get_sp && $get_sp->num_rows > 0) : ?>
+      <?php if ($show_sanpham && $show_sanpham->num_rows > 0) : ?>
         <div class="grid-product .paging-product-loadmore .paging-product-loadmore-1" data-perpage="25" data-list="1"
           data-cat="" data-item="" data-brand="" data-curpage="2" data-total="124">
-          <?php while ($sp = $get_sp->fetch_assoc()) : ?>
+          <?php while ($sp = $show_sanpham->fetch_assoc()) : ?>
             <?php
             $slug = $sp['slugvi'];
             $name = htmlspecialchars($sp['namevi']);
@@ -150,6 +117,7 @@ include 'inc/menu.php';
           <strong>Không tìm thấy kết quả</strong>
         </div>
       <?php endif ?>
+      <?= $pagination_html = $functions-> renderPagination_tc($current_page, $total_pages,BASE . 'san-pham/page-'); ?>
     </div>
   </div>
 </div>

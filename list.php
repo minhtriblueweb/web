@@ -47,7 +47,7 @@ include 'inc/menu.php';
           <a class="text-decoration-none" href="<?= BASE ?>"><span>Trang chủ</span></a>
         </li>
         <li class="breadcrumb-item">
-          <a class="text-decoration-none" href=""><span>Danh mục</span></a>
+          <a class="text-decoration-none" href="san-pham"><span>Sản phẩm</span></a>
         </li>
         <li class="breadcrumb-item active">
           <a class="text-decoration-none"

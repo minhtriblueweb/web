@@ -13,8 +13,6 @@
       </div>
       <div class="slick-product slick-d-none">
         <?php
-          $delay = 0;
-          $delayStep = 100;
           while ($sp = $sanpham_banchay->fetch_assoc()):
             $slug = $sp['slugvi'];
             $name = htmlspecialchars($sp['namevi']);
@@ -25,7 +23,7 @@
             $views = $sp['views'] ?? 0;
           ?>
         <div>
-          <div class="item-product" data-aos="fade-up" data-aos-delay="<?= $delay ?>" data-aos-duration="1000">
+          <div class="item-product">
             <a href="san-pham/<?= $slug ?>">
               <div class="images">
                 <img class="w-100" src="<?= $img ?>" alt="<?= $name ?>" loading="lazy" />
@@ -52,9 +50,7 @@
             </a>
           </div>
         </div>
-        <?php
-            $delay += $delayStep;
-          endwhile; ?>
+        <?php endwhile; ?>
       </div>
 
     </div>
@@ -67,14 +63,12 @@
         <h2>DANH MỤC BẠN QUAN TÂM</h2>
       </div>
       <div class="slick_product_list">
-        <?php if ($show_danhmuc = $danhmuc->show_danhmuc_c2()): ?>
+        <?php if ($show_danhmuc = $danhmuc->show_danhmuc_c2('tbl_danhmuc_c2')): ?>
         <?php while ($dm = $show_danhmuc->fetch_assoc()): ?>
         <?php
             $slug = $dm['slugvi'];
             $name = $dm['namevi'];
-            $imgSrc = !empty($dm['file'])
-              ? BASE_ADMIN . UPLOADS . $dm['file']
-              : NO_IMG;
+            $imgSrc = !empty($dm['file']) ? BASE_ADMIN . UPLOADS . $dm['file'] : NO_IMG;
             ?>
         <a href="cate/<?= $slug ?>" title="<?= $name ?>">
           <div class="item-list">

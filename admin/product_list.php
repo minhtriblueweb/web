@@ -15,7 +15,7 @@ $current_page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
 $total_records = $functions->phantrang_sp('tbl_sanpham');
 $total_pages = ceil($total_records / $records_per_page);
 $show_sanpham = $sanpham->show_sanpham($records_per_page, $current_page);
-$show_danhmuc = $danhmuc->show_danhmuc();
+$show_danhmuc = $danhmuc->show_danhmuc('tbl_danhmuc');
 ?>
 <section class="content-header text-sm">
   <div class="container-fluid">

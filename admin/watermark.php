@@ -2,13 +2,13 @@
 <?php include('inc/sidebar.php'); ?>
 <!-- Main content -->
 <?php
-$get_watermark = $setting->get_setting();
+$get_watermark = $setting-> get_watermark();
 if ($get_watermark) {
   $result = $get_watermark->fetch_assoc();
-  $no_img = $config['baseAdmin'] . "assets/img/noimage.png";
+  $no_img = BASE_ADMIN . "assets/img/noimage.png";
   $watermark_src = empty($result['watermark'])
-    ? $config['baseAdmin'] . "assets/img/noimage.png"
-    : $config['baseAdmin'] . "uploads/" . htmlspecialchars($result['watermark']);
+    ? BASE_ADMIN . "assets/img/noimage.png"
+    : BASE_ADMIN . "uploads/" . htmlspecialchars($result['watermark']);
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['upload'])) {
@@ -44,22 +44,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['upload'])) {
       </div>
 
       <div class="card-body">
-        <div class="form-group">
-          <div class="upload-file">
-            <p>Upload hình ảnh:</p>
-            <label class="upload-file-label mb-2" for="file">
-              <div class="upload-file-image rounded mb-3 preview-wrapper">
-                <img src="<?= $watermark_src ?>" class="rounded img-upload" width="100">
-              </div>
-              <div class="custom-file my-custom-file">
-                <input type="file" class="custom-file-input" name="watermark" id="file" lang="vi">
-                <label class="custom-file-label mb-0" data-browse="Chọn" for="file">Chọn file</label>
-              </div>
-            </label>
-          </div>
-        </div>
         <div class="row">
-          <div class="col-xl-4 row">
+          <div class="col-xl-4">
+            <div class="form-group">
+              <div class="upload-file">
+                <p>Upload hình ảnh:</p>
+                <label class="upload-file-label mb-2" for="file">
+                  <div class="upload-file-image rounded mb-3 preview-wrapper">
+                    <img src="<?= $watermark_src ?>" class="rounded img-upload" width="100">
+                  </div>
+                  <div class="custom-file my-custom-file">
+                    <input type="file" class="custom-file-input" name="watermark" id="file" lang="vi">
+                    <label class="custom-file-label mb-0" data-browse="Chọn" for="file">Chọn file</label>
+                  </div>
+                </label>
+              </div>
+            </div>
             <div class="form-group col-12">
               <label>Vị trí đóng dấu:</label>
               <div class="watermark-position rounded">
@@ -76,7 +76,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['upload'])) {
                   </label>
                 <?php endfor; ?>
               </div>
-
             </div>
           </div>
           <div class="col-xl-8 ">
@@ -85,6 +84,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['upload'])) {
               <input type="number" class="form-control" id="opacity" name="opacity" placeholder="0 - 100" min="0"
                 max="100" value="<?= $result['opacity'] ?>" />
               <p class="text-danger mt-1 small">Độ trong suốt có giá trị từ 0 - 100</p>
+            </div>
+            <div class="form-group col-xl-12 col-sm-4">
+              <label>Tỉ lệ:</label>
+              <input type="text" class="form-control text-sm" name="per" placeholder="2" value="<?= $result['per'] ?>">
+            </div>
+            <div class="form-group col-xl-12 col-sm-4">
+              <label>Tỉ lệ &lt; 300px:</label>
+              <input type="text" class="form-control text-sm" name="small_per" placeholder="3" value="<?= $result['small_per'] ?>">
+            </div>
+            <div class="form-group col-xl-12 col-sm-4">
+              <label>Kích thước tối đa:</label>
+              <input type="text" class="form-control text-sm" name="max" placeholder="600" value="<?= $result['max'] ?>">
+            </div>
+            <div class="form-group col-xl-12 col-sm-4">
+              <label>Kích thước tối thiểu:</label>
+              <input type="text" class="form-control text-sm" name="min" placeholder="100" value="<?= $result['min'] ?>">
             </div>
             <div class="mb-3 col-md-12">
               <label for="offset_x" class="form-label">Độ lệch tương đối tùy chọn của hình ảnh mới trên trục x</label>

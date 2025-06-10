@@ -74,8 +74,6 @@ include 'inc/menu.php';
         data-cat="" data-item="" data-brand="" data-curpage="2" data-total="124">
         <?php while ($sp = $show_sanpham->fetch_assoc()) : ?>
         <?php
-            $get_wm_version = $setting->get_setting_item('wm_version');
-            $wm_version = $get_wm_version->fetch_assoc();
             $slug = $sp['slugvi'];
             $name = htmlspecialchars($sp['namevi']);
             $img = !empty($sp['file'])

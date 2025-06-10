@@ -6,14 +6,13 @@ $records_per_page = 10; // Số bản ghi trên mỗi trang
 $current_page = isset($_GET['page']) ? (int)$_GET['page'] : 1; // Trang hiện tại
 $total_records = $functions->phantrang_sp('tbl_danhmuc'); // Lấy tổng số bản ghi
 $total_pages = ceil($total_records / $records_per_page); // Tính số trang
-$show_danhmuc = $danhmuc->show_danhmuc_pt($records_per_page, $current_page);
+$show_danhmuc = $danhmuc->show_danhmuc('tbl_danhmuc',$records_per_page, $current_page);
 if (isset($_GET['del'])) {
   $id = $_GET['del'];
-  $del = $danhmuc->del_danhmuc($id);
+  $del = $danhmuc->del_category($id, 'tbl_danhmuc', 'category_lv1_list');
 }
 if (isset($_GET['listid'])) {
   $listid = $_GET['listid'];
-  // print_r($listid);
   $xoanhieu = $danhmuc->deleteMultipleCategories($listid, 'tbl_danhmuc', 'file_name', 'category_lv1_list');
 }
 ?>
@@ -96,10 +95,10 @@ if (isset($_GET['listid'])) {
                   <td class="align-middle">
                     <a href="category_lv1_form.php?id=<?php echo $resule['id']; ?>"
                       title="<?php echo $resule['namevi']; ?>">
-                      <img src="<?php if (empty($resule['file_name'])) {
+                      <img src="<?php if (empty($resule['file'])) {
                                   echo $config['baseAdmin'] . "assets/img/noimage.png";
                                 } else {
-                                  echo $config['baseAdmin'] . "uploads/" . $resule['file_name'];
+                                  echo $config['baseAdmin'] . "uploads/" . $resule['file'];
                                 } ?>" alt="<?php echo $resule['namevi']; ?>" class="rounded img-preview" />
                     </a>
                   </td>
@@ -112,9 +111,8 @@ if (isset($_GET['listid'])) {
                       <input type="checkbox" class="custom-control-input show-checkbox"
                         id="show-checkbox-hienthi-<?php echo $resule['id']; ?>" data-table="tbl_danhmuc"
                         data-id="<?php echo $resule['id']; ?>" data-type="hienthi"
-                        data-attr="<?php echo ($resule['hienthi'] == 'hienthi') ? '' : 'hienthi'; ?>" <?php if ($resule['hienthi'] == 'hienthi') {
-                                                                                                        echo "checked";
-                                                                                                      } ?> />
+                        data-attr="<?php echo ($resule['hienthi'] == 'hienthi') ? '' : 'hienthi'; ?>" <?php if ($resule['hienthi'] == 'hienthi') { echo "checked";
+} ?> />
                       <label for="show-checkbox-hienthi-<?php echo $resule['id']; ?>" class="custom-control-label"></label>
                     </div>
                   </td>
@@ -143,7 +141,7 @@ if (isset($_GET['listid'])) {
       </table>
     </div>
     <div class="card-footer text-sm pb-0 mb-5">
-      <?php echo $pagination_html = $functions->renderPagination($current_page, $total_pages); ?>
+      <?= $pagination_html = $functions->renderPagination($current_page, $total_pages); ?>
     </div>
   </div>
 </section>

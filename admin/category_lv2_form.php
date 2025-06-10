@@ -1,7 +1,7 @@
 <?php include 'inc/header.php'; ?>
 <?php include 'inc/sidebar.php'; ?>
 <?php
-$show_danhmuc = $danhmuc->show_danhmuc();
+$show_danhmuc = $danhmuc->show_danhmuc('tbl_danhmuc');
 if (!empty($_GET['id'])) {
   $id = $_GET['id'];
   $get_id = $danhmuc->get_id_danhmuc_c2($id);

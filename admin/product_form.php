@@ -3,14 +3,14 @@ include  'inc/header.php';
 include  'inc/sidebar.php';
 ?>
 <?php
-$show_danhmuc = $danhmuc->show_danhmuc();
+$show_danhmuc = $danhmuc->show_danhmuc('tbl_danhmuc');
 if (isset($_GET['id']) && $_GET['id'] != NULL) {
   $id = $_GET['id'];
   $get_id = $sanpham->get_id_sanpham($id);
   if ($get_id) {
     $result = $get_id->fetch_assoc();
     $get_id_cap1 = $result['id_list'];
-    $show_danhmuc_c2 = $danhmuc->show_danhmuc_c2($get_id_cap1);
+    $show_danhmuc_c2 = $danhmuc->show_danhmuc_c2('tbl_danhmuc_c2',$get_id_cap1);
   }
   if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['edit'])) {
     $update = $sanpham->update_sanpham($_POST, $_FILES, $id);

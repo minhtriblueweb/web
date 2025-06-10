@@ -15,180 +15,6 @@ class functions
     $this->fm = new Format();
   }
 
-  public function convert_webp_from_path($source_path, $original_name)
-  {
-    $ext = strtolower(pathinfo($original_name, PATHINFO_EXTENSION));
-    $filename_no_ext = pathinfo($original_name, PATHINFO_FILENAME);
-    $destination_path = 'uploads/' . $filename_no_ext . '.webp';
-
-    switch ($ext) {
-      case 'jpg':
-      case 'jpeg':
-        $image = imagecreatefromjpeg($source_path);
-        break;
-      case 'png':
-        $image = imagecreatefrompng($source_path);
-        imagepalettetotruecolor($image);
-        imagealphablending($image, true);
-        imagesavealpha($image, true);
-        break;
-      case 'gif':
-        $image = imagecreatefromgif($source_path);
-        break;
-      default:
-        return false;
-    }
-
-    // ✅ Ghi file webp
-    if (imagewebp($image, $destination_path, 80)) {
-      imagedestroy($image); // ⚠️ Quan trọng
-      return $filename_no_ext . '.webp';
-    }
-
-    imagedestroy($image);
-    return false;
-  }
-
-
-  public function resizeImage($source_path, $destination_path, $max_width)
-  {
-    list($width_orig, $height_orig, $image_type) = getimagesize($source_path);
-    if ($width_orig <= $max_width) return;
-
-    $ratio = $height_orig / $width_orig;
-    $new_width = $max_width;
-    $new_height = $max_width * $ratio;
-
-    switch ($image_type) {
-      case IMAGETYPE_JPEG:
-        $image = imagecreatefromjpeg($source_path);
-        break;
-      case IMAGETYPE_PNG:
-        $image = imagecreatefrompng($source_path);
-        break;
-      default:
-        return; // Không hỗ trợ
-    }
-
-    $new_image = imagecreatetruecolor($new_width, $new_height);
-    imagecopyresampled($new_image, $image, 0, 0, 0, 0, $new_width, $new_height, $width_orig, $height_orig);
-
-    if ($image_type == IMAGETYPE_JPEG) {
-      imagejpeg($new_image, $destination_path, 85);
-    } else {
-      imagepng($new_image, $destination_path, 8);
-    }
-
-    imagedestroy($image);
-    imagedestroy($new_image);
-  }
-
-  public function addWatermark($source_path, $destination_path, $position, $opacity, $offset_x, $offset_y)
-  {
-    $result = $this->db->select("SELECT logo FROM tbl_setting LIMIT 1");
-    $row = $result ? $result->fetch_assoc() : null;
-    if (!$row || empty($row['logo'])) return;
-    $watermark_path = 'uploads/' . $row['logo'];
-    if (!file_exists($watermark_path)) return;
-    list($img_width, $img_height, $img_type) = getimagesize($source_path);
-    switch ($img_type) {
-      case IMAGETYPE_JPEG:
-        $image = imagecreatefromjpeg($source_path);
-        break;
-      case IMAGETYPE_PNG:
-        $image = imagecreatefrompng($source_path);
-        break;
-      case IMAGETYPE_WEBP:
-        $image = imagecreatefromwebp($source_path);
-        break;
-      default:
-        return;
-    }
-    $watermark = imagecreatefrompng($watermark_path);
-    imagesavealpha($watermark, true);
-    $wm_width = imagesx($watermark);
-    $wm_height = imagesy($watermark);
-    $padding = 10;
-    switch ($position) {
-      case 1: // Top-left
-        $x = $padding;
-        $y = $padding;
-        break;
-      case 2: // Top-center
-        $x = ($img_width - $wm_width) / 2;
-        $y = $padding;
-        break;
-      case 3: // Top-right
-        $x = $img_width - $wm_width - $padding;
-        $y = $padding;
-        break;
-      case 4: // Middle-right
-        $x = $img_width - $wm_width - $padding;
-        $y = ($img_height - $wm_height) / 2;
-        break;
-      case 5: // Bottom-right
-        $x = $img_width - $wm_width - $padding;
-        $y = $img_height - $wm_height - $padding;
-        break;
-      case 6: // Middle-bottom
-        $x = ($img_width - $wm_width) / 2;
-        $y = $img_height - $wm_height - $padding;
-        break;
-      case 7: // Bottom-left
-        $x = $padding;
-        $y = $img_height - $wm_height - $padding;
-        break;
-      case 8: // Middle-left
-        $x = $padding;
-        $y = ($img_height - $wm_height) / 2;
-        break;
-      case 9: // Center
-      default:
-        $x = ($img_width - $wm_width) / 2;
-        $y = ($img_height - $wm_height) / 2;
-        break;
-    }
-    $x += intval($offset_x);
-    $y += intval($offset_y);
-    $opacity = max(0, min(100, $opacity));
-    $alpha = 127 - intval(($opacity / 100) * 127);
-    $new_watermark = imagecreatetruecolor($wm_width, $wm_height);
-    imagealphablending($new_watermark, false);
-    imagesavealpha($new_watermark, true);
-    for ($y_pos = 0; $y_pos < $wm_height; $y_pos++) {
-      for ($x_pos = 0; $x_pos < $wm_width; $x_pos++) {
-        $rgba = imagecolorat($watermark, $x_pos, $y_pos);
-        $alpha_channel = ($rgba & 0x7F000000) >> 24;
-        $final_alpha = max($alpha, $alpha_channel);
-        $color = imagecolorsforindex($watermark, $rgba);
-        $new_color = imagecolorallocatealpha(
-          $new_watermark,
-          $color['red'],
-          $color['green'],
-          $color['blue'],
-          $final_alpha
-        );
-        imagesetpixel($new_watermark, $x_pos, $y_pos, $new_color);
-      }
-    }
-    imagecopy($image, $new_watermark, $x, $y, 0, 0, $wm_width, $wm_height);
-    switch ($img_type) {
-      case IMAGETYPE_JPEG:
-        imagejpeg($image, $destination_path, 85);
-        break;
-      case IMAGETYPE_PNG:
-        imagepng($image, $destination_path, 8);
-        break;
-      case IMAGETYPE_WEBP:
-        imagewebp($image, $destination_path, 85);
-        break;
-    }
-    imagedestroy($image);
-    imagedestroy($watermark);
-    imagedestroy($new_watermark);
-  }
-
-
   public function phantrang_sp($tbl)
   {
     $tbl = mysqli_real_escape_string($this->db->link, $tbl);
@@ -259,62 +85,62 @@ class functions
 
   function renderPagination($current_page, $total_pages, $base_url = '?page=')
   {
-    // Nếu chỉ có 1 trang, không cần hiển thị phân trang
     if ($total_pages <= 1) {
       return '';
     }
-
-    // Bắt đầu của HTML cho phân trang
     $pagination_html = '<ul class="pagination flex-wrap justify-content-center mb-0">';
-
-    // Hiển thị trang hiện tại / tổng số trang
     $pagination_html .= '<li class="page-item">';
     $pagination_html .= '<a class="page-link">Trang ' . $current_page . ' / ' . $total_pages . '</a>';
     $pagination_html .= '</li>';
-
-    // Các trang cụ thể
-    for ($i = 1; $i <= $total_pages; $i++) {
-      $active_class = ($i === $current_page) ? 'active' : '';
-      $pagination_html .= '<li class="page-item ' . $active_class . '">';
-      $pagination_html .= '<a class="page-link" href="' . $base_url . $i . '">' . $i . '</a>';
-      $pagination_html .= '</li>';
-    }
-
-    // Nút "Trước" (nếu không phải trang đầu)
     if ($current_page > 1) {
       $pagination_html .= '<li class="page-item">';
       $pagination_html .= '<a class="page-link" href="' . $base_url . ($current_page - 1) . '">Trước</a>';
       $pagination_html .= '</li>';
     }
+    $range = 2;
+    for ($i = 1; $i <= $total_pages; $i++) {
+      if (
+        $i == 1 ||
+        $i == 2 ||
+        $i == $total_pages ||
+        $i == $total_pages - 1 ||
+        ($i >= $current_page - $range && $i <= $current_page + $range)
+      ) {
+        $active_class = ($i == $current_page) ? 'active' : '';
+        $pagination_html .= '<li class="page-item ' . $active_class . '">';
+        $pagination_html .= '<a class="page-link" href="' . $base_url . $i . '">' . $i . '</a>';
+        $pagination_html .= '</li>';
+      } elseif (
+        ($i == 3 && $current_page - $range > 4) ||
+        ($i == $total_pages - 2 && $current_page + $range < $total_pages - 3)
+      ) {
+        $pagination_html .= '<li class="page-item disabled">';
+        $pagination_html .= '<a class="page-link">...</a>';
+        $pagination_html .= '</li>';
+      }
+    }
 
-    // Nút "Tiếp" (nếu không phải trang cuối)
     if ($current_page < $total_pages) {
       $pagination_html .= '<li class="page-item">';
       $pagination_html .= '<a class="page-link" href="' . $base_url . ($current_page + 1) . '">Tiếp</a>';
       $pagination_html .= '</li>';
     }
-
-    // Nút "Cuối"
-    $pagination_html .= '<li class="page-item">';
-    $pagination_html .= '<a class="page-link" href="' . $base_url . $total_pages . '">Cuối</a>';
-    $pagination_html .= '</li>';
-
-    // Kết thúc HTML
+    if ($current_page < $total_pages) {
+      $pagination_html .= '<li class="page-item">';
+      $pagination_html .= '<a class="page-link" href="' . $base_url . $total_pages . '">Cuối</a>';
+      $pagination_html .= '</li>';
+    }
     $pagination_html .= '</ul>';
-
-    // Trả về HTML hoàn chỉnh
     return $pagination_html;
   }
+
 
   function renderPagination_tc($current_page, $total_pages, $base_url)
   {
     if ($total_pages <= 1) {
       return '';
     }
-
     $pagination_html = '<ul class="pagination flex-wrap justify-content-center mb-0">';
-
-    // Nút "Trước"
     if ($current_page > 1) {
       $pagination_html .= '<li class="page-item">';
       $pagination_html .= '<a class="page-link" href="' . $base_url . ($current_page - 1) . '"><i class="fas fa-angle-left"></i></a>';
@@ -324,11 +150,8 @@ class functions
       $pagination_html .= '<a class="page-link"><i class="fas fa-angle-left"></i></a>';
       $pagination_html .= '</li>';
     }
-
-    // Hiển thị phân trang có rút gọn
-    $range = 2; // số trang hiển thị xung quanh current page
+    $range = 2;
     $show_dots = false;
-
     for ($i = 1; $i <= $total_pages; $i++) {
       if (
         $i == 1 || $i == $total_pages || // Trang đầu, cuối luôn hiển thị
@@ -338,7 +161,6 @@ class functions
           $pagination_html .= '<li class="page-item disabled"><a class="page-link">...</a></li>';
           $show_dots = false;
         }
-
         $active_class = ($i === $current_page) ? 'active' : '';
         $pagination_html .= '<li class="page-item ' . $active_class . '">';
         $pagination_html .= '<a class="page-link" href="' . $base_url . $i . '">' . $i . '</a>';
@@ -347,8 +169,6 @@ class functions
         $show_dots = true;
       }
     }
-
-    // Nút "Tiếp"
     if ($current_page < $total_pages) {
       $pagination_html .= '<li class="page-item">';
       $pagination_html .= '<a class="page-link" href="' . $base_url . ($current_page + 1) . '"><i class="fas fa-angle-right"></i></a>';
@@ -358,14 +178,10 @@ class functions
       $pagination_html .= '<a class="page-link"><i class="fas fa-angle-right"></i></a>';
       $pagination_html .= '</li>';
     }
-
-    // Nút "Cuối"
     $pagination_html .= '<li class="page-item">';
     $pagination_html .= '<a class="page-link" href="' . $base_url . $total_pages . '"><i class="fa-solid fa-angles-right"></i></a>';
     $pagination_html .= '</li>';
-
     $pagination_html .= '</ul>';
-
     return $pagination_html;
   }
 }

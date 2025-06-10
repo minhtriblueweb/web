@@ -9,12 +9,14 @@ class sanpham
   private $db;
   private $fm;
   private $fn;
+  private $ip;
 
   public function __construct()
   {
     $this->db = new Database();
     $this->fm = new Format();
     $this->fn = new functions();
+    $this->ip = new ImageProcessor();
   }
 
   public function show_sanpham_pagination($records_per_page, $current_page, $hienthi = '', $id_list = '', $id_cat = '', $limit = 0)
@@ -400,6 +402,45 @@ class sanpham
     return $result;
   }
 
+  private function handleImageUpload($file_source_path, $original_name, $old_file_path = '')
+  {
+    $query = "SELECT * FROM tbl_watermark WHERE id = 1 LIMIT 1";
+    $result = $this->db->select($query);
+    $position = 5;
+    $opacity = 50;
+    $offset_x = 0;
+    $offset_y = 0;
+
+    if ($result) {
+      $setting = $result->fetch_assoc();
+      $position = isset($setting['position']) ? intval($setting['position']) : 5;
+      $opacity = isset($setting['opacity']) ? intval($setting['opacity']) : 50;
+      $offset_x = isset($setting['offset_x']) ? intval($setting['offset_x']) : 0;
+      $offset_y = isset($setting['offset_y']) ? intval($setting['offset_y']) : 0;
+    }
+
+    $processed_path = $this->ip->processImageUpload(
+      $file_source_path,
+      $original_name,
+      540,
+      540,
+      $opacity
+    );
+
+    $unique_image = basename($processed_path);
+
+    if (strtolower(pathinfo($processed_path, PATHINFO_EXTENSION)) === 'webp') {
+      if (file_exists($file_source_path)) {
+        unlink($file_source_path);
+      }
+    }
+
+    if (!empty($old_file_path) && file_exists($old_file_path)) {
+      unlink($old_file_path);
+    }
+
+    return $unique_image;
+  }
   public function update_sanpham($data, $files, $id)
   {
     $fields = [
@@ -420,74 +461,52 @@ class sanpham
       'banchay',
       'numb'
     ];
+
     $sanpham_data = [];
     foreach ($fields as $field) {
       $sanpham_data[$field] = mysqli_real_escape_string($this->db->link, $data[$field]);
     }
-    $query = "SELECT * FROM tbl_setting WHERE id = '1' LIMIT 1";
-    $result = $this->db->select($query);
-    if ($result) {
-      $setting = $result->fetch_assoc();
-      $position = isset($setting['position']) ? intval($setting['position']) : 5;
-      $opacity = isset($setting['opacity']) ? intval($setting['opacity']) : 50;
-      $offset_x = isset($setting['offset_x']) ? intval($setting['offset_x']) : 0;
-      $offset_y = isset($setting['offset_y']) ? intval($setting['offset_y']) : 0;
-    }
+
     $get_old_file = $this->db->select("SELECT file FROM tbl_sanpham WHERE id='$id'");
     $old_file_name = $get_old_file ? $get_old_file->fetch_assoc()['file'] : '';
     $old_file_path = "uploads/" . $old_file_name;
+
     $unique_image = '';
     if (!empty($files["file"]["name"])) {
       $file_ext = strtolower(pathinfo($files["file"]["name"], PATHINFO_EXTENSION));
       $raw_name = substr(md5(time()), 0, 10);
       $original_name = $raw_name . '.' . $file_ext;
       $destination = "uploads/" . $original_name;
+
       if (move_uploaded_file($files["file"]["tmp_name"], $destination)) {
-        $this->fn->resizeImage($destination, $destination, 1600);
-        $this->fn->addWatermark($destination, $destination, $position, $opacity, $offset_x, $offset_y);
-        $webp_file = $this->fn->convert_webp_from_path($destination, $original_name);
-        if ($webp_file) {
-          $unique_image = $webp_file;
-          unlink($destination); // Xoá ảnh gốc
-        } else {
-          $unique_image = $original_name;
-        }
-        if (!empty($old_file_name) && file_exists($old_file_path)) {
-          unlink($old_file_path);
-        }
+        $unique_image = $this->handleImageUpload($destination, $original_name, $old_file_path);
       }
     } else if (!empty($old_file_name) && file_exists($old_file_path)) {
       $file_ext = strtolower(pathinfo($old_file_name, PATHINFO_EXTENSION));
       $raw_name = substr(md5(time()), 0, 10);
       $original_name = $raw_name . '.' . $file_ext;
       $destination = "uploads/" . $original_name;
+
       copy($old_file_path, $destination);
-      $this->fn->resizeImage($destination, $destination, 1600);
-      $this->fn->addWatermark($destination, $destination, $position, $opacity, $offset_x, $offset_y);
-      $webp_file = $this->fn->convert_webp_from_path($destination, $original_name);
-      if ($webp_file) {
-        $unique_image = $webp_file;
-        unlink($destination); // Xoá ảnh gốc
-      } else {
-        $unique_image = $original_name;
-      }
-      unlink($old_file_path);
-    } else {
-      $unique_image = '';
+      $unique_image = $this->handleImageUpload($destination, $original_name, $old_file_path);
     }
+
     $slug = $sanpham_data['slugvi'];
     $check_slug = "SELECT COUNT(*) as count FROM tbl_sanpham WHERE slugvi = '$slug' AND id != '$id' LIMIT 1";
     $result_check_slug = $this->db->select($check_slug);
     if ($result_check_slug && $result_check_slug->fetch_assoc()['count'] > 0) {
       return "Đường dẫn đã tồn tại. Đường dẫn truy cập mục này có thể bị trùng lặp";
     }
+
     $update_fields = [];
     foreach ($sanpham_data as $key => $value) {
       $update_fields[] = "$key = '$value'";
     }
+
     $update_fields[] = "file = '$unique_image'";
     $update_query = "UPDATE tbl_sanpham SET " . implode(", ", $update_fields) . " WHERE id = '$id'";
     $result = $this->db->update($update_query);
+
     if ($result) {
       header('Location: transfer.php?stt=success&url=product_list');
       exit();
@@ -516,50 +535,40 @@ class sanpham
       'banchay',
       'numb'
     ];
+
     $sanpham_data = [];
     foreach ($fields as $field) {
       $sanpham_data[$field] = mysqli_real_escape_string($this->db->link, $data[$field]);
     }
+
     $unique_image = '';
     if (!empty($files["file"]["name"])) {
       $file_ext = strtolower(pathinfo($files["file"]["name"], PATHINFO_EXTENSION));
       $raw_name = substr(md5(time()), 0, 10);
       $original_name = $raw_name . '.' . $file_ext;
       $destination = "uploads/" . $original_name;
+
       if (move_uploaded_file($files["file"]["tmp_name"], $destination)) {
-        $this->fn->resizeImage($destination, $destination, 1600);
-        $query = "SELECT * FROM tbl_setting WHERE id = '1' LIMIT 1";
-        $result = $this->db->select($query);
-        if ($result) {
-          $setting = $result->fetch_assoc();
-          $position = isset($setting['position']) ? intval($setting['position']) : 5;
-          $opacity = isset($setting['opacity']) ? intval($setting['opacity']) : 50;
-          $offset_x = isset($setting['offset_x']) ? intval($setting['offset_x']) : 0;
-          $offset_y = isset($setting['offset_y']) ? intval($setting['offset_y']) : 0;
-        }
-        $this->fn->addWatermark($destination, $destination, $position, $opacity, $offset_x, $offset_y);
-        $webp_file = $this->fn->convert_webp_from_path($destination, $original_name);
-        if ($webp_file) {
-          $unique_image = $webp_file;
-          unlink($destination);
-        } else {
-          $unique_image = $original_name;
-        }
+        $unique_image = $this->handleImageUpload($destination, $original_name);
       }
     }
+
     $slug = $sanpham_data['slugvi'];
     $check_slug = "SELECT COUNT(*) as count FROM tbl_sanpham WHERE slugvi = '$slug' LIMIT 1";
     $result_check_slug = $this->db->select($check_slug);
     if ($result_check_slug && $result_check_slug->fetch_assoc()['count'] > 0) {
       return "Đường dẫn đã tồn tại. Đường dẫn truy cập mục này có thể bị trùng lặp";
     }
+
     $sanpham_data['file'] = $unique_image;
     $field_names = array_keys($sanpham_data);
     $field_values = array_map(function ($value) {
       return "'" . $value . "'";
     }, $sanpham_data);
+
     $query = "INSERT INTO tbl_sanpham (" . implode(", ", $field_names) . ") VALUES (" . implode(", ", $field_values) . ")";
     $result = $this->db->insert($query);
+
     if ($result) {
       header('Location: transfer.php?stt=success&url=product_list');
       exit();

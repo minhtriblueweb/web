@@ -177,12 +177,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add'])) {
             <div class="photoUpload-zone">
               <div class="photoUpload-detail" id="photoUpload-preview">
                 <a data-fancybox href="">
-                  <img src="<?= empty($result['file_name']) ? NO_IMG : BASE_ADMIN . UPLOADS . $result['file_name']; ?>"
+                  <img src="<?= empty($result['file']) ? NO_IMG : BASE_ADMIN . UPLOADS . $result['file']; ?>"
                     class="rounded" alt="Alt Photo" /></a>
-                <div class="delete-photo">
-                  <a href="javascript:void(0)" title="Xóa hình ảnh" data-action="photo" data-table="product"
-                    data-upload="product" data-id="10"><i class="far fa-trash-alt"></i></a>
-                </div>
               </div>
               <label class="photoUpload-file" id="photo-zone" for="file-zone">
                 <input type="file" name="file" id="file-zone" />

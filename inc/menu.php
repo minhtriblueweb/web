@@ -19,7 +19,7 @@
                 <a title="<?= $result_danhmuc['namevi'] ?>" href="danh-muc/<?= $result_danhmuc['slugvi'] ?>">
                   <span class="scale-img">
                     <img width="25"
-                      src="<?= empty($result_danhmuc['file_name']) ? BASE_ADMIN . "assets/img/noimage.png" : BASE_ADMIN . UPLOADS . $result_danhmuc['file_name']; ?>"
+                      src="<?= empty($result_danhmuc['file']) ? BASE_ADMIN . "assets/img/noimage.png" : BASE_ADMIN . UPLOADS . $result_danhmuc['file']; ?>"
                       alt="<?= $result_danhmuc['namevi'] ?>" title="<?= $result_danhmuc['namevi'] ?>" />
                   </span>
                   <?= $result_danhmuc['namevi'] ?>

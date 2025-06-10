@@ -705,7 +705,7 @@ NN_FRAMEWORK.SlickPage = function () {
           }
         },
         {
-          breakpoint: 600,
+          breakpoint: 800,
           settings: {
             slidesToShow: 3,
             slidesToScroll: 2,

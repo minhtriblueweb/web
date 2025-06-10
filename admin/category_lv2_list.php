@@ -2,28 +2,29 @@
 <?php include 'inc/sidebar.php'; ?>
 <!-- Main content -->
 <?php
-$records_per_page = 10; // Số bản ghi trên mỗi trang
-$current_page = isset($_GET['page']) ? (int)$_GET['page'] : 1; // Trang hiện tại
-$total_records = $functions->phantrang_sp('tbl_danhmuc_c2'); // Lấy tổng số bản ghi
-$total_pages = ceil($total_records / $records_per_page); // Tính số trang
-$show_danhmuc = $danhmuc->show_danhmuc($records_per_page, $current_page);
+$records_per_page = 10;
+$current_page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+$total_records = $functions->phantrang_sp('tbl_danhmuc_c2');
+$total_pages = ceil($total_records / $records_per_page);
+$show_danhmuc_c1 = $danhmuc->show_danhmuc('tbl_danhmuc');
+$show_danhmuc_c2 = $danhmuc->show_danhmuc('tbl_danhmuc_c2', $records_per_page, $current_page);
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['loc'])) {
   $id_list = $_POST['id_list'];
-  // echo $id_list;
+} else {
+  $id_list = '';
 }
 if (!empty($id_list)) {
-  $show_danhmuc_c2 = $danhmuc->show_danhmuc_c2($id_list);
+  $show_danhmuc_c2 = $danhmuc->show_danhmuc_c2('tbl_danhmuc_c2', $id_list);
 } else {
-  $show_danhmuc_c2 = $danhmuc->show_danhmuc_c2($id_list = '');
+  $show_danhmuc_c2 = $danhmuc->show_danhmuc('tbl_danhmuc_c2', $records_per_page, $current_page);
 }
 if (isset($_GET['del'])) {
   $id = $_GET['del'];
-  $del = $danhmuc->del_danhmuc_c2($id);
+  $del = $danhmuc->del_category($id, 'tbl_danhmuc_c2', 'category_lv2_list');
 }
 
 if (isset($_GET['listid'])) {
   $listid = $_GET['listid'];
-  // print_r($listid);
   $xoanhieu = $danhmuc->deleteMultipleCategories($listid, 'tbl_danhmuc_c2', 'file', 'category_lv2_list');
 }
 ?>
@@ -66,12 +67,10 @@ if (isset($_GET['listid'])) {
           name="loc" />
         <select id="id_list" name="id_list" class="form-control filter-category select2">
           <option value="0">Chọn danh mục</option>
-          <?php if ($show_danhmuc): ?>
-            <?php while ($resule = $show_danhmuc->fetch_assoc()): ?>
+          <?php if ($show_danhmuc_c1): ?>
+            <?php while ($resule = $show_danhmuc_c1->fetch_assoc()): ?>
               <option value="<?= $resule['id']; ?>" data-select2-id="<?= $resule['id']; ?>"
-                <?= ($id_list == $resule['id']) ? 'selected' : ''; ?>>
-                <?= $resule['namevi']; ?>
-              </option>
+                <?= ($id_list == $resule['id']) ? 'selected' : ''; ?>><?= $resule['namevi']; ?></option>
             <?php endwhile; ?>
           <?php endif; ?>
         </select>
@@ -157,7 +156,7 @@ if (isset($_GET['listid'])) {
       </table>
     </div>
     <div class="card-footer text-sm pb-0 mb-5">
-      <?php echo $pagination_html = $functions->renderPagination($current_page, $total_pages); ?>
+      <?= $pagination_html = $functions->renderPagination($current_page, $total_pages); ?>
     </div>
   </div>
 </section>

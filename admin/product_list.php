@@ -91,83 +91,95 @@ $show_danhmuc = $danhmuc->show_danhmuc('tbl_danhmuc');
         <form action="" method="POST">
           <tbody>
             <?php if ($show_sanpham): ?>
-              <?php while ($resule = $show_sanpham->fetch_assoc()): ?>
+              <?php while ($row = $show_sanpham->fetch_assoc()):
+                $id = $row['id'];
+                $namevi = $row['namevi'];
+                $slugvi = $row['slugvi'];
+                $img = !empty($row['file'])
+                  ? BASE_ADMIN . UPLOADS . $row['file']
+                  : NO_IMG;
+                $link = "product_form.php?id=$id";
+              ?>
                 <tr>
+                  <!-- Checkbox chọn -->
                   <td class="align-middle">
                     <div class="custom-control custom-checkbox my-checkbox">
-                      <input type="checkbox" class="custom-control-input select-checkbox"
-                        id="select-checkbox-<?= $resule['id'] ?>" value="<?= $resule['id'] ?>"
-                        name="checkbox_id<?= $resule['id'] ?>" />
-                      <label for="select-checkbox-<?= $resule['id'] ?>" class="custom-control-label"></label>
+                      <input type="checkbox" class="custom-control-input select-checkbox" id="select-checkbox-<?= $id ?>" value="<?= $id ?>" name="checkbox_id<?= $id ?>" />
+                      <label for="select-checkbox-<?= $id ?>" class="custom-control-label"></label>
                     </div>
                   </td>
+
+                  <!-- Số thứ tự -->
                   <td class="align-middle">
                     <input type="number" class="form-control form-control-mini m-auto update-numb" min="0"
-                      value="<?= $resule['numb'] ?>" data-id="<?= $resule['id'] ?>" data-table="tbl_sanpham" />
+                      value="<?= $row['numb'] ?>" data-id="<?= $id ?>" data-table="tbl_sanpham" />
                   </td>
-                  <td class="align-middle">
-                    <a href="product_form.php?id=<?= $resule['id'] ?>" title="<?= $resule['namevi'] ?>">
-                      <img class="rounded img-preview"
-                        src="<?= empty($resule['file']) ? $config['baseAdmin'] . "assets/img/noimage.png" : $config['baseAdmin'] . "uploads/" . $resule['file'] ?>"
-                        alt="<?= $resule['namevi'] ?>" />
-                    </a>
 
-                  </td>
+                  <!-- Ảnh sản phẩm -->
                   <td class="align-middle">
-                    <a class="text-dark text-break" href="product_form.php?id=<?= $resule['id'] ?>"
-                      title="<?= $resule['namevi'] ?>"><?= $resule['namevi'] ?></a>
+                    <a href="<?= $link ?>" title="<?= $namevi ?>">
+                      <img class="rounded img-preview" src="<?= $img ?>" alt="<?= $namevi ?>" />
+                    </a>
+                  </td>
+
+                  <!-- Tên sản phẩm -->
+                  <td class="align-middle">
+                    <a class="text-dark text-break" href="<?= $link ?>" title="<?= $namevi ?>"><?= $namevi ?></a>
                     <div class="tool-action mt-2 w-clear">
-                      <a class="text-primary mr-3" href="<?= "{$config['base']}san-pham/{$resule['slugvi']}" ?>"
-                        target="_blank" title="<?= $resule['namevi'] ?>"><i class="far fa-eye mr-1"></i>View</a>
-                      <a class="text-info mr-3" href="product_form.php?id=<?= $resule['id'] ?>"
-                        title="<?= $resule['namevi'] ?>"><i class="far fa-edit mr-1"></i>Edit</a>
-                      <a class="text-danger" id="delete-item" data-url="?del=<?= $resule['id'] ?>"
-                        title="<?= $resule['namevi'] ?>"><i class="far fa-trash-alt mr-1"></i>Delete</a>
+                      <a class="text-primary mr-3" href="<?= "{$config['base']}san-pham/$slugvi" ?>" target="_blank" title="Xem"><i class="far fa-eye mr-1"></i>View</a>
+                      <a class="text-info mr-3" href="<?= $link ?>" title="Chỉnh sửa"><i class="far fa-edit mr-1"></i>Edit</a>
+                      <a class="text-danger" id="delete-item" data-url="?del=<?= $id ?>" title="Xóa"><i class="far fa-trash-alt mr-1"></i>Delete</a>
                     </div>
                   </td>
+
+                  <!-- Thêm -->
                   <td class="align-middle">
                     <div class="dropdown">
-                      <button type="button" class="btn btn-sm bg-gradient-success dropdown-toggle" id="dropdown-gallery"
-                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Thêm</button>
-                      <div class="dropdown-menu" aria-labelledby="dropdown-gallery">
-                        <a class="dropdown-item text-dark" href="gallery.php?id=<?= $resule['id'] ?>" title="Hình ảnh"><i
-                            class="far fa-caret-square-right text-secondary mr-2"></i>Hình ảnh</a>
+                      <button type="button" class="btn btn-sm bg-gradient-success dropdown-toggle" data-toggle="dropdown">Thêm</button>
+                      <div class="dropdown-menu">
+                        <a class="dropdown-item text-dark" href="gallery.php?id=<?= $id ?>" title="Hình ảnh">
+                          <i class="far fa-caret-square-right text-secondary mr-2"></i>Hình ảnh
+                        </a>
                       </div>
                     </div>
                   </td>
+
+                  <!-- Danh mục cấp 1 -->
                   <td class="align-middle">
-                    <?php if ($resule['id_list']) {
-                      echo $sanpham->get_name_danhmuc($resule['id_list']);
-                    } ?>
+                    <?= $row['id_list'] ? $sanpham->get_name_danhmuc($row['id_list']) : '' ?>
                   </td>
+
+                  <!-- Danh mục cấp 2 -->
                   <td class="align-middle">
-                    <?php if ($resule['id_cat']) {
-                      echo $sanpham->get_name_danhmuc_2($resule['id_cat']);
-                    } ?>
+                    <?= $row['id_cat'] ? $sanpham->get_name_danhmuc_2($row['id_cat']) : '' ?>
                   </td>
+
+                  <!-- Hiển thị -->
                   <td class="align-middle text-center">
                     <div class="custom-control custom-checkbox my-checkbox">
-                      <input type="checkbox" data-type="hienthi" class="custom-control-input show-checkbox"
-                        id="show-checkbox-hienthi-<?= $resule['id'] ?>" data-table="tbl_sanpham"
-                        data-id="<?= $resule['id'] ?>" data-attr="<?= ($resule['hienthi'] == 'hienthi') ? '' : 'hienthi' ?>"
-                        <?= $resule['hienthi'] == 'hienthi' ? 'checked' : '' ?> />
-                      <label for="show-checkbox-hienthi-<?= $resule['id'] ?>" class="custom-control-label"></label>
+                      <input type="checkbox" class="custom-control-input show-checkbox" data-type="hienthi"
+                        id="show-checkbox-hienthi-<?= $id ?>" data-table="tbl_sanpham" data-id="<?= $id ?>"
+                        data-attr="<?= $row['hienthi'] == 'hienthi' ? '' : 'hienthi' ?>"
+                        <?= $row['hienthi'] == 'hienthi' ? 'checked' : '' ?> />
+                      <label for="show-checkbox-hienthi-<?= $id ?>" class="custom-control-label"></label>
                     </div>
                   </td>
+
+                  <!-- Bán chạy -->
                   <td class="align-middle text-center">
                     <div class="custom-control custom-checkbox my-checkbox">
-                      <input type="checkbox" data-type="banchay" class="custom-control-input show-checkbox"
-                        id="show-checkbox-banchay-<?= $resule['id'] ?>" data-table="tbl_sanpham"
-                        data-id="<?= $resule['id'] ?>" data-attr="<?= ($resule['banchay'] == 'banchay') ? '' : 'banchay' ?>"
-                        <?= $resule['banchay'] == 'banchay' ? 'checked' : '' ?> />
-                      <label for="show-checkbox-banchay-<?= $resule['id'] ?>" class="custom-control-label"></label>
+                      <input type="checkbox" class="custom-control-input show-checkbox" data-type="banchay"
+                        id="show-checkbox-banchay-<?= $id ?>" data-table="tbl_sanpham" data-id="<?= $id ?>"
+                        data-attr="<?= $row['banchay'] == 'banchay' ? '' : 'banchay' ?>"
+                        <?= $row['banchay'] == 'banchay' ? 'checked' : '' ?> />
+                      <label for="show-checkbox-banchay-<?= $id ?>" class="custom-control-label"></label>
                     </div>
                   </td>
+
+                  <!-- Hành động -->
                   <td class="align-middle text-center text-md text-nowrap">
-                    <a class="text-primary mr-2" href="product_form.php?id=<?= $resule['id'] ?>" title="Chỉnh sửa"><i
-                        class="fas fa-edit"></i></a>
-                    <a class="text-danger" id="delete-item" data-url="?del=<?= $resule['id'] ?>" title="Xóa"><i
-                        class="fas fa-trash-alt"></i></a>
+                    <a class="text-primary mr-2" href="<?= $link ?>" title="Chỉnh sửa"><i class="fas fa-edit"></i></a>
+                    <a class="text-danger" id="delete-item" data-url="?del=<?= $id ?>" title="Xóa"><i class="fas fa-trash-alt"></i></a>
                   </td>
                 </tr>
               <?php endwhile; ?>

@@ -3,7 +3,12 @@ validateForm("validation-newsletter");
 validateForm("validation-cart");
 validateForm("validation-user");
 validateForm("validation-contact");
-AOS.init();
+AOS.init({
+  offset: window.innerWidth <= 768 ? 60 : 120,
+  duration: 600,
+  easing: 'ease-in-out',
+  once: true,
+});
 NN_FRAMEWORK.Common = function () {
   $(".content-ck iframe,.content-ck embed").each(function (e, n) {
     $(this).wrap("<div class='video-container'></div>");

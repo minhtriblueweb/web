@@ -6,10 +6,8 @@
         <?php if ($show->num_rows > 0): ?>
           <div class="box-ul-left">
             <ul>
-              <?php $i = 0;
-              while ($dm = $show->fetch_assoc()): ?>
+              <?php while ($dm = $show->fetch_assoc()): ?>
                 <?php
-                $top = $i++ * 50;
                 $c2 = $danhmuc->show_danhmuc_c2_index($dm['id']);
                 $has_sub = ($c2 && $c2->num_rows > 0);
                 ?>
@@ -24,7 +22,7 @@
                     <?= $has_sub ? '<i class="fa-solid fa-angle-right"></i>' : '' ?>
                   </a>
                   <?php if ($has_sub): ?>
-                    <div class="box-menu-cat-left" style="top: <?= $top ?>px;">
+                    <div class="box-menu-cat-left">
                       <ul>
                         <?php while ($c2row = $c2->fetch_assoc()): ?>
                           <li><a class="transition" title="<?= $c2row['namevi'] ?>" href="cate/<?= $c2row['slugvi'] ?>"><?= $c2row['namevi'] ?></a></li>
@@ -36,6 +34,7 @@
               <?php endwhile; ?>
             </ul>
           </div>
+
         <?php endif; ?>
       <?php endif; ?>
     </div>

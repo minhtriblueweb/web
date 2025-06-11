@@ -223,10 +223,9 @@ class danhmuc
     }
 
     // Kiểm tra slug trùng
-    $check_slug_query = "SELECT slugvi FROM tbl_danhmuc WHERE slugvi = '{$data_escaped['slugvi']}' AND id != '$id'";
-    $result_check_slug = $this->db->select($check_slug_query);
-    if ($result_check_slug && $result_check_slug->num_rows > 0) {
-      return "Đường dẫn đã tồn tại. Đường dẫn truy cập mục này có thể bị trùng lặp";
+    $duplicated_in = $this->fn->isSlugviDuplicated($data_escaped['slugvi'], 'tbl_danhmuc', '');
+    if ($duplicated_in) {
+      return "Đường dẫn đã tồn tại trong bảng <b>$duplicated_in</b>. Vui lòng chọn đường dẫn khác để tránh trùng lặp.";
     }
 
     $file_name = $_FILES["file"]["name"] ?? '';
@@ -299,12 +298,9 @@ class danhmuc
     }
 
     // Kiểm tra slug trùng
-    $slugvi = mysqli_real_escape_string($this->db->link, $data['slugvi'] ?? '');
-    $check_slug = "SELECT slugvi FROM tbl_danhmuc WHERE slugvi = '$slugvi' LIMIT 1";
-    $result_check_slug = $this->db->select($check_slug);
-
-    if ($result_check_slug && $result_check_slug->num_rows > 0) {
-      return "Đường dẫn đã tồn tại. Đường dẫn truy cập mục này có thể bị trùng lặp.";
+    $duplicated_in = $this->fn->isSlugviDuplicated($data['slugvi'], 'tbl_danhmuc', '');
+    if ($duplicated_in) {
+      return "Đường dẫn đã tồn tại. Vui lòng chọn đường dẫn khác để tránh trùng lặp.";
     }
 
     $query = "INSERT INTO tbl_danhmuc (" . implode(", ", $field_names) . ") VALUES (" . implode(", ", $field_values) . ")";

@@ -71,71 +71,78 @@ if (isset($_GET['listid'])) {
         </thead>
         <form action="" method="POST">
           <tbody>
-            <?php
-            if ($show_danhmuc) {
-              $i = 0;
-              while ($resule = $show_danhmuc->fetch_assoc()) {
-                $i++;
+            <?php if ($show_danhmuc):
+              while ($resule = $show_danhmuc->fetch_assoc()):
+                $id = $resule['id'];
+                $namevi = $resule['namevi'];
+                $file = empty($resule['file']) ? NO_IMG : BASE_ADMIN . UPLOADS . $resule['file'];
+                $hienthi = $resule['hienthi'] === 'hienthi';
+                $noibat = $resule['noibat'] === 'noibat';
             ?>
                 <tr>
+                  <!-- Checkbox chọn -->
                   <td class="align-middle">
                     <div class="custom-control custom-checkbox my-checkbox">
                       <input type="checkbox" class="custom-control-input select-checkbox"
-                        id="select-checkbox-<?php echo $resule['id']; ?>" value="<?php echo $resule['id']; ?>"
-                        name="checkbox_id<?php echo $resule['id']; ?>" />
-                      <label for="select-checkbox-<?php echo $resule['id']; ?>" class="custom-control-label"></label>
+                        id="select-checkbox-<?= $id ?>" value="<?= $id ?>" name="checkbox_id<?= $id ?>" />
+                      <label for="select-checkbox-<?= $id ?>" class="custom-control-label"></label>
                     </div>
                   </td>
+
+                  <!-- Số thứ tự -->
                   <td class="align-middle">
                     <input type="number" class="form-control form-control-mini m-auto update-numb" min="0"
-                      value="<?php echo $resule['numb']; ?>" data-id="<?php echo $resule['id']; ?>"
-                      data-table="tbl_danhmuc" />
+                      value="<?= $resule['numb'] ?>" data-id="<?= $id ?>" data-table="tbl_danhmuc" />
                   </td>
+
+                  <!-- Ảnh -->
                   <td class="align-middle">
-                    <a href="category_lv1_form.php?id=<?php echo $resule['id']; ?>"
-                      title="<?php echo $resule['namevi']; ?>">
-                      <img src="<?php if (empty($resule['file'])) {
-                                  echo $config['baseAdmin'] . "assets/img/noimage.png";
-                                } else {
-                                  echo $config['baseAdmin'] . "uploads/" . $resule['file'];
-                                } ?>" alt="<?php echo $resule['namevi']; ?>" class="rounded img-preview" />
+                    <a href="category_lv1_form.php?id=<?= $id ?>" title="<?= $namevi ?>">
+                      <img src="<?= $file ?>" alt="<?= $namevi ?>" class="rounded img-preview" />
                     </a>
                   </td>
+
+                  <!-- Tên -->
                   <td class="align-middle">
-                    <a class="text-dark text-break" href="category_lv1_form.php?id=<?php echo $resule['id']; ?>"
-                      title="<?php echo $resule['namevi']; ?>"><?php echo $resule['namevi']; ?></a>
+                    <a class="text-dark text-break" href="category_lv1_form.php?id=<?= $id ?>" title="<?= $namevi ?>">
+                      <?= $namevi ?>
+                    </a>
                   </td>
+
+                  <!-- Hiển thị -->
                   <td class="align-middle text-center">
                     <div class="custom-control custom-checkbox my-checkbox">
                       <input type="checkbox" class="custom-control-input show-checkbox"
-                        id="show-checkbox-hienthi-<?php echo $resule['id']; ?>" data-table="tbl_danhmuc"
-                        data-id="<?php echo $resule['id']; ?>" data-type="hienthi"
-                        data-attr="<?php echo ($resule['hienthi'] == 'hienthi') ? '' : 'hienthi'; ?>" <?php if ($resule['hienthi'] == 'hienthi') {
-                                                                                                        echo "checked";
-                                                                                                      } ?> />
-                      <label for="show-checkbox-hienthi-<?php echo $resule['id']; ?>" class="custom-control-label"></label>
+                        id="show-checkbox-hienthi-<?= $id ?>" data-table="tbl_danhmuc"
+                        data-id="<?= $id ?>" data-type="hienthi"
+                        data-attr="<?= $hienthi ? '' : 'hienthi' ?>" <?= $hienthi ? 'checked' : '' ?> />
+                      <label for="show-checkbox-hienthi-<?= $id ?>" class="custom-control-label"></label>
                     </div>
                   </td>
+
+                  <!-- Nổi bật -->
                   <td class="align-middle text-center">
                     <div class="custom-control custom-checkbox my-checkbox">
                       <input type="checkbox" class="custom-control-input show-checkbox"
-                        id="show-checkbox-noibat-<?php echo $resule['id']; ?>" data-table="tbl_danhmuc"
-                        data-id="<?php echo $resule['id']; ?>" data-type="noibat"
-                        data-attr="<?php echo ($resule['noibat'] == 'noibat') ? '' : 'noibat'; ?>" <?php if ($resule['noibat'] == 'noibat') {
-                                                                                                      echo "checked";
-                                                                                                    } ?> />
-                      <label for="show-checkbox-noibat-<?php echo $resule['id']; ?>" class="custom-control-label"></label>
+                        id="show-checkbox-noibat-<?= $id ?>" data-table="tbl_danhmuc"
+                        data-id="<?= $id ?>" data-type="noibat"
+                        data-attr="<?= $noibat ? '' : 'noibat' ?>" <?= $noibat ? 'checked' : '' ?> />
+                      <label for="show-checkbox-noibat-<?= $id ?>" class="custom-control-label"></label>
                     </div>
                   </td>
+
+                  <!-- Hành động -->
                   <td class="align-middle text-center text-md text-nowrap">
-                    <a class="text-primary mr-2" href="category_lv1_form.php?id=<?php echo $resule['id']; ?>"
-                      title="Chỉnh sửa"><i class="fas fa-edit"></i></a>
-                    <a class="text-danger" id="delete-item" data-url="?del=<?php echo $resule['id']; ?>" title="Xóa"><i
-                        class="fas fa-trash-alt"></i></a>
+                    <a class="text-primary mr-2" href="category_lv1_form.php?id=<?= $id ?>" title="Chỉnh sửa">
+                      <i class="fas fa-edit"></i>
+                    </a>
+                    <a class="text-danger" id="delete-item" data-url="?del=<?= $id ?>" title="Xóa">
+                      <i class="fas fa-trash-alt"></i>
+                    </a>
                   </td>
                 </tr>
-            <?php }
-            } ?>
+            <?php endwhile;
+            endif; ?>
           </tbody>
         </form>
       </table>

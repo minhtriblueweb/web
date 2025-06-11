@@ -15,6 +15,58 @@ class functions
     $this->fm = new Format();
   }
 
+  public function isSlugviDuplicated($slugvi, $table, $exclude_id)
+  {
+    // Escape đầu vào
+    $slugvi = mysqli_real_escape_string($this->db->link, trim($slugvi));
+    $table = mysqli_real_escape_string($this->db->link, trim($table));
+    $exclude_id = mysqli_real_escape_string($this->db->link, trim($exclude_id));
+
+    // ✅ Danh sách bảng có thể chứa slugvi
+    $tables = ['tbl_danhmuc', 'tbl_danhmuc_c2', 'tbl_sanpham', 'tbl_news'];
+
+    // ❌ Danh sách slugvi KHÔNG ĐƯỢC sử dụng (trang tĩnh)
+    $reserved_slugs = [
+      'lien-he',
+      'tin-tuc',
+      'huong-dan-choi',
+      'san-pham',
+      'gioi-thieu',
+      'chinh-sach',
+      'mua-hang',
+      'dang-nhap',
+      'dang-ky'
+    ];
+
+    // 🔒 Nếu slug nằm trong danh sách cấm → từ chối ngay
+    if (in_array($slugvi, $reserved_slugs)) {
+      return 'reserved'; // slug bị cấm vì trùng trang tĩnh
+    }
+
+    // 🔁 Kiểm tra trùng trong bảng dữ liệu
+    foreach ($tables as $tbl) {
+      // Bỏ qua nếu bảng không có cột slugvi
+      $check_column_query = "SHOW COLUMNS FROM `$tbl` LIKE 'slugvi'";
+      $check_column_result = $this->db->select($check_column_query);
+      if (!$check_column_result || $check_column_result->num_rows == 0) continue;
+
+      // Câu truy vấn kiểm tra slug
+      $check_slug_query = "SELECT slugvi FROM `$tbl` WHERE slugvi = '$slugvi'";
+      if ($table === $tbl && $exclude_id) {
+        $check_slug_query .= " AND id != '$exclude_id'";
+      }
+      $check_slug_query .= " LIMIT 1";
+
+      $result = $this->db->select($check_slug_query);
+      if ($result && $result->num_rows > 0) {
+        return $tbl; // trùng trong bảng cụ thể
+      }
+    }
+
+    return false; // hợp lệ
+  }
+
+
   public function addWatermark($source_path, $destination_path, $position, $opacity, $offset_x, $offset_y)
   {
     $result = $this->db->select("SELECT * FROM tbl_watermark LIMIT 1");

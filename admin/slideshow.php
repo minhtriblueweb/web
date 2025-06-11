@@ -1,18 +1,18 @@
-<?php include 'inc/header.php';?>
-<?php include 'inc/sidebar.php';?>
+<?php include 'inc/header.php'; ?>
+<?php include 'inc/sidebar.php'; ?>
 
-<?php 
-  $show_slideshow = $slideshow -> show_slideshow();
-  if(isset($_GET['del'])){
-    $id = $_GET['del'];
-    $del = $slideshow -> del_slideshow($id);
-  }
+<?php
+$show_slideshow = $slideshow->show_slideshow();
+if (isset($_GET['del'])) {
+  $id = $_GET['del'];
+  $del = $slideshow->del_slideshow($id);
+}
 
-  if(isset($_GET['listid'])){
-    $listid = $_GET['listid'];
-    print_r($listid);
-    $xoanhieu = $slideshow -> xoanhieu_slideshow($listid);
-  }
+if (isset($_GET['listid'])) {
+  $listid = $_GET['listid'];
+  print_r($listid);
+  $xoanhieu = $slideshow->xoanhieu_slideshow($listid);
+}
 ?>
 <!-- Main content -->
 <section class="content-header text-sm">
@@ -64,53 +64,77 @@
             <th class="align-middle text-center" width="8%">Hình</th>
             <th class="align-middle" style="width:30%">Tiêu đề</th>
             <th class="align-middle">Link</th>
+            <th class="align-middle text-center">Hiển thị</th>
             <th class="align-middle text-center">Thao tác</th>
           </tr>
         </thead>
         <tbody>
-          <?php 
-            if($show_slideshow) {
-              $i=0;
-              while($resule = $show_slideshow -> fetch_assoc()){
-                $i++;
+          <?php if ($show_slideshow):
+            while ($resule = $show_slideshow->fetch_assoc()):
+              $id = $resule['id'];
+              $file = empty($resule['file']) ? NO_IMG : BASE_ADMIN . UPLOADS . $resule['file'];
+              $hienthi = $resule['hienthi'] === 'hienthi';
           ?>
-          <tr>
-            <td class="align-middle">
-              <div class="custom-control custom-checkbox my-checkbox">
-                <input type="checkbox" class="custom-control-input select-checkbox"
-                  id="select-checkbox-<?php echo $resule['id'] ; ?>" value="<?php echo $resule['id'] ; ?>">
-                <label for="select-checkbox-<?php echo $resule['id'] ; ?>" class="custom-control-label"></label>
-              </div>
-            </td>
-            <td class="align-middle">
-              <input type="number" class="form-control form-control-mini m-auto update-numb" min="0"
-                value="<?php echo $resule['numb'] ; ?>" data-id="<?php echo $resule['id'] ; ?>" data-table="photo">
-            </td>
-            <td class="align-middle text-center">
-              <a href="suaslideshow.php?id=<?php echo $resule['id'] ; ?>" title="">
-                <img class="rounded img-preview" src="<?php if(empty($resule['file'])){
-                    echo $config['baseAdmin']."assets/img/noimage.png";
-                  }else{
-                    echo $config['baseAdmin']."uploads/".$resule['file'];
-                  } ?>"> </a>
-            </td>
-            <td class="align-middle">
-              <a class="text-dark text-break" href="suaslideshow.php?id=<?php echo $resule['id'] ; ?>"
-                title="<?php echo $resule['name'] ; ?>"><?php echo $resule['name'] ; ?></a>
-            </td>
-            <td class="align-middle"><?php echo $resule['link'] ; ?></td>
-            <td class="align-middle text-center text-md text-nowrap">
-              <a class="text-primary mr-2" href="suaslideshow.php?id=<?php echo $resule['id'] ; ?>" title="Chỉnh sửa"><i
-                  class="fas fa-edit"></i></a>
-              <a class="text-danger" id="delete-item" data-url="?del=<?php echo $resule['id'] ; ?>" title="Xóa"><i
-                  class="fas fa-trash-alt"></i></a>
-            </td>
-          </tr>
-          <?php } } ?>
+              <tr>
+                <!-- Checkbox chọn nhiều -->
+                <td class="align-middle">
+                  <div class="custom-control custom-checkbox my-checkbox">
+                    <input type="checkbox" class="custom-control-input select-checkbox" id="select-checkbox-<?= $id ?>" value="<?= $id ?>">
+                    <label for="select-checkbox-<?= $id ?>" class="custom-control-label"></label>
+                  </div>
+                </td>
+
+                <!-- Số thứ tự -->
+                <td class="align-middle">
+                  <input type="number" class="form-control form-control-mini m-auto update-numb" min="0"
+                    value="<?= $resule['numb'] ?>" data-id="<?= $id ?>" data-table="tbl_slideshow">
+                </td>
+                <td class="align-middle text-center">
+                  <a href="suaslideshow.php?id=<?= $id ?>" title="">
+                    <img src="<?= $file ?>" class="rounded img-preview">
+                  </a>
+                </td>
+                <td class="align-middle">
+                  <a class="text-dark text-break" href="suaslideshow.php?id=<?= $id ?>" title="<?= $resule['name'] ?>">
+                    <?= $resule['name'] ?>
+                  </a>
+                </td>
+
+                <!-- Link -->
+                <td class="align-middle"><?= $resule['link'] ?></td>
+
+                <!-- Hiển thị -->
+                <td class="align-middle text-center">
+                  <div class="custom-control custom-checkbox my-checkbox">
+                    <input type="checkbox"
+                      class="custom-control-input show-checkbox"
+                      id="show-checkbox-hienthi-<?= $id ?>"
+                      data-table="tbl_slideshow"
+                      data-id="<?= $id ?>"
+                      data-type="hienthi"
+                      data-attr="<?= $hienthi ? '' : 'hienthi' ?>"
+                      <?= $hienthi ? 'checked' : '' ?> />
+                    <label for="show-checkbox-hienthi-<?= $id ?>" class="custom-control-label"></label>
+                  </div>
+                </td>
+
+                <!-- Hành động -->
+                <td class="align-middle text-center text-md text-nowrap">
+                  <a class="text-primary mr-2" href="suaslideshow.php?id=<?= $id ?>" title="Chỉnh sửa">
+                    <i class="fas fa-edit"></i>
+                  </a>
+                  <a class="text-danger" id="delete-item" data-url="?del=<?= $id ?>" title="Xóa">
+                    <i class="fas fa-trash-alt"></i>
+                  </a>
+                </td>
+              </tr>
+          <?php endwhile;
+          endif; ?>
         </tbody>
+
       </table>
     </div>
   </div>
 </section>
 <!-- Main Footer -->
-<?php include 'inc/footer.php';?>
+<?php include 'inc/footer.php'; ?>

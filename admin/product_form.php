@@ -10,7 +10,7 @@ if (isset($_GET['id']) && $_GET['id'] != NULL) {
   if ($get_id) {
     $result = $get_id->fetch_assoc();
     $get_id_cap1 = $result['id_list'];
-    $show_danhmuc_c2 = $danhmuc->show_danhmuc_c2('tbl_danhmuc_c2',$get_id_cap1);
+    $show_danhmuc_c2 = $danhmuc->show_danhmuc_c2('tbl_danhmuc_c2', $get_id_cap1);
   }
   if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['edit'])) {
     $update = $sanpham->update_sanpham($_POST, $_FILES, $id);
@@ -71,10 +71,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add'])) {
                     aria-labelledby="tabs-lang">
                     <div class="form-gourp mb-0">
                       <label class="d-block">Đường dẫn mẫu (vi):<span class="pl-2 font-weight-normal"
-                          id="slugurlpreviewvi"><?= $config['base'] ?>
-                          <?php if (!empty($id)): ?>
-                          <strong class="text-info"><?= $result['slugvi']; ?></strong>
-                          <?php endif; ?>
+                          id="slugurlpreviewvi"><?= $config['base'] ?><?php if (!empty($id)): ?><strong class="text-info"><?= $result['slugvi']; ?></strong>
+                        <?php endif; ?>
                         </span></label>
                       <input type="text" class="form-control slug-input no-validate text-sm" name="slugvi" id="slugvi"
                         placeholder="Đường dẫn (vi)" value="<?= $result['slugvi'] ?? ""; ?>" required>
@@ -82,10 +80,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add'])) {
                       <?php
                       if (isset($insert)) {
                       ?>
-                      <p class="alert-slugvi text-danger mt-2 mb-0" id="alert-slug-dangervi">
-                        <i class="fas fa-exclamation-triangle mr-1"></i>
-                        <span><?= $insert; ?></span>
-                      </p>
+                        <p class="alert-slugvi text-danger mt-2 mb-0" id="alert-slug-dangervi">
+                          <i class="fas fa-exclamation-triangle mr-1"></i>
+                          <span><?= $insert; ?></span>
+                        </p>
                       <?php } ?>
                       <p class="alert-slugvi text-success d-none mt-2 mb-0" id="alert-slug-successvi">
                         <i class="fas fa-check-circle mr-1"></i>
@@ -158,12 +156,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add'])) {
                   data-child="id_cat" class="form-control select2 select-category">
                   <option value="0">Chọn danh mục</option>
                   <?php if ($show_danhmuc): ?>
-                  <?php while ($resule_danhmuc = $show_danhmuc->fetch_assoc()): ?>
-                  <option value="<?= $resule_danhmuc['id'] ?>"
-                    <?= (!empty($id) && $resule_danhmuc['id'] == $result['id_list']) ? "selected" : ''; ?>>
-                    <?= $resule_danhmuc['namevi'] ?>
-                  </option>
-                  <?php endwhile; ?>
+                    <?php while ($resule_danhmuc = $show_danhmuc->fetch_assoc()): ?>
+                      <option value="<?= $resule_danhmuc['id'] ?>"
+                        <?= (!empty($id) && $resule_danhmuc['id'] == $result['id_list']) ? "selected" : ''; ?>>
+                        <?= $resule_danhmuc['namevi'] ?>
+                      </option>
+                    <?php endwhile; ?>
                   <?php endif; ?>
                 </select>
               </div>
@@ -173,11 +171,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add'])) {
                   class="form-control select2 select-category">
                   <option value="0">Chọn danh mục</option>
                   <?php if (!empty($id) && $show_danhmuc_c2): ?>
-                  <?php while ($get_c2 = $show_danhmuc_c2->fetch_assoc()): ?>
-                  <option value="<?= $get_c2['id'] ?>" <?= ($get_c2['id'] == $result['id_cat']) ? "selected" : ''; ?>>
-                    <?= $get_c2['namevi'] ?>
-                  </option>
-                  <?php endwhile; ?>
+                    <?php while ($get_c2 = $show_danhmuc_c2->fetch_assoc()): ?>
+                      <option value="<?= $get_c2['id'] ?>" <?= ($get_c2['id'] == $result['id_cat']) ? "selected" : ''; ?>>
+                        <?= $get_c2['namevi'] ?>
+                      </option>
+                    <?php endwhile; ?>
                   <?php endif; ?>
                 </select>
               </div>

@@ -7,16 +7,12 @@ include_once($filepath . '/../helpers/format.php');
 class sanpham
 {
   private $db;
-  private $fm;
   private $fn;
-  private $ip;
 
   public function __construct()
   {
     $this->db = new Database();
-    $this->fm = new Format();
     $this->fn = new functions();
-    $this->ip = new ImageProcessor();
   }
 
   public function show_sanpham_pagination($records_per_page, $current_page, $hienthi = '', $id_list = '', $id_cat = '', $limit = 0)
@@ -113,7 +109,7 @@ class sanpham
         }
       }
     }
-    $query = "UPDATE tbl_gallery SET 
+    $query = "UPDATE tbl_gallery SET
                 hienthi = '$hienthi',
                 numb = '$numb'";
     if (!empty($unique_image)) {
@@ -238,13 +234,13 @@ class sanpham
 
   public function get_danhmuc_by_sanpham($id)
   {
-    $query = "SELECT tbl_sanpham.*, 
-        tbl_danhmuc.namevi AS danhmuc, 
-        tbl_danhmuc.slugvi AS danhmuc_slugvi, 
-        tbl_danhmuc_c2.namevi AS danhmuc_c2, 
+    $query = "SELECT tbl_sanpham.*,
+        tbl_danhmuc.namevi AS danhmuc,
+        tbl_danhmuc.slugvi AS danhmuc_slugvi,
+        tbl_danhmuc_c2.namevi AS danhmuc_c2,
         tbl_danhmuc_c2.slugvi AS danhmuc_c2_slugvi
-        FROM tbl_sanpham 
-        INNER JOIN tbl_danhmuc ON tbl_sanpham.id_list = tbl_danhmuc.id 
+        FROM tbl_sanpham
+        INNER JOIN tbl_danhmuc ON tbl_sanpham.id_list = tbl_danhmuc.id
         LEFT JOIN tbl_danhmuc_c2 ON tbl_sanpham.id_cat = tbl_danhmuc_c2.id
         WHERE tbl_sanpham.id = '$id'";
     $result = $this->db->select($query);
@@ -404,43 +400,20 @@ class sanpham
 
   private function handleImageUpload($file_source_path, $original_name, $old_file_path = '')
   {
-    $query = "SELECT * FROM tbl_watermark WHERE id = 1 LIMIT 1";
-    $result = $this->db->select($query);
-    $position = 5;
-    $opacity = 50;
-    $offset_x = 0;
-    $offset_y = 0;
-
-    if ($result) {
-      $setting = $result->fetch_assoc();
-      $position = isset($setting['position']) ? intval($setting['position']) : 5;
-      $opacity = isset($setting['opacity']) ? intval($setting['opacity']) : 50;
-      $offset_x = isset($setting['offset_x']) ? intval($setting['offset_x']) : 0;
-      $offset_y = isset($setting['offset_y']) ? intval($setting['offset_y']) : 0;
-    }
-
-    $processed_path = $this->ip->processImageUpload(
-      $file_source_path,
-      $original_name,
-      540,
-      540,
-      $opacity
-    );
-
-    $unique_image = basename($processed_path);
-
-    if (strtolower(pathinfo($processed_path, PATHINFO_EXTENSION)) === 'webp') {
+    $thumb_filename = $this->fn->createFixedThumbnail($file_source_path, 500, 500);
+    if (!$thumb_filename) {
+      $thumb_filename = basename($file_source_path);
+    } else {
       if (file_exists($file_source_path)) {
         unlink($file_source_path);
       }
     }
-
     if (!empty($old_file_path) && file_exists($old_file_path)) {
       unlink($old_file_path);
     }
-
-    return $unique_image;
+    return $thumb_filename;
   }
+
   public function update_sanpham($data, $files, $id)
   {
     $fields = [
@@ -486,7 +459,6 @@ class sanpham
       $raw_name = substr(md5(time()), 0, 10);
       $original_name = $raw_name . '.' . $file_ext;
       $destination = "uploads/" . $original_name;
-
       copy($old_file_path, $destination);
       $unique_image = $this->handleImageUpload($destination, $original_name, $old_file_path);
     }

@@ -400,7 +400,7 @@ class sanpham
 
   private function handleImageUpload($file_source_path, $original_name, $old_file_path = '')
   {
-    $thumb_filename = $this->fn->createFixedThumbnail($file_source_path, 500, 500);
+    $thumb_filename = $this->fn->createFixedThumbnail($file_source_path, 500, 500, [0, 0, 0, 127]);
     if (!$thumb_filename) {
       $thumb_filename = basename($file_source_path);
     } else {

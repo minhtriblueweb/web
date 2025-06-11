@@ -116,7 +116,7 @@ class functions
     return true;
   }
 
-  public function createFixedThumbnail($source_path, $thumb_width = 600, $thumb_height = 600)
+  public function createFixedThumbnail($source_path, $thumb_width = 600, $thumb_height = 600, $background = [0, 0, 0, 127])
   {
     if (!file_exists($source_path)) return false;
 
@@ -160,13 +160,12 @@ class functions
 
     $thumb = imagecreatetruecolor($thumb_width, $thumb_height);
 
-    // Đọc màu nền từ tham số
-    $r = isset($background_color[0]) ? intval($background_color[0]) : 255;
-    $g = isset($background_color[1]) ? intval($background_color[1]) : 255;
-    $b = isset($background_color[2]) ? intval($background_color[2]) : 255;
-    $a = isset($background_color[3]) ? intval($background_color[3]) : 0;
+    // Đọc màu nền từ mảng RGBA
+    $r = isset($background[0]) ? intval($background[0]) : 0;
+    $g = isset($background[1]) ? intval($background[1]) : 0;
+    $b = isset($background[2]) ? intval($background[2]) : 0;
+    $a = isset($background[3]) ? intval($background[3]) : 0;
 
-    // Nếu có alpha và định dạng hỗ trợ, dùng trong suốt
     if (($image_type == IMAGETYPE_PNG || $image_type == IMAGETYPE_WEBP) && $a > 0) {
       imagealphablending($thumb, false);
       imagesavealpha($thumb, true);
@@ -187,15 +186,15 @@ class functions
     $original_name = pathinfo($source_path, PATHINFO_FILENAME);
     $thumb_filename = $original_name . '_' . $thumb_width . 'x' . $thumb_height . '.webp';
     $thumb_path = $upload_dir . $thumb_filename;
-
     imagewebp($thumb, $thumb_path, 80);
-
     imagedestroy($image);
     imagedestroy($resized);
     imagedestroy($thumb);
-
-    return $thumb_filename;
+    $watermarked_path = $upload_dir . $original_name . $thumb_width . 'x' . $thumb_height . '.webp';
+    $this->addWatermark($thumb_path, $watermarked_path, 9, 0.5, 0, 0);
+    return basename($watermarked_path);
   }
+
 
   public function add_thumb($source_path, $thumb_width = 600, $thumb_height = 600, $transparent_background = false)
   {

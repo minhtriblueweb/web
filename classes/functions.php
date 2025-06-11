@@ -116,7 +116,7 @@ class functions
     return true;
   }
 
-  public function createFixedThumbnail($source_path, $thumb_width = 600, $thumb_height = 600, $background = [0, 0, 0, 127])
+  public function createFixedThumbnail($source_path, $thumb_width, $thumb_height, $background = false)
   {
     if (!file_exists($source_path)) return false;
 
@@ -138,10 +138,8 @@ class functions
       default:
         return false;
     }
-
     $ratio_orig = $width_orig / $height_orig;
     $thumb_ratio = $thumb_width / $thumb_height;
-
     if ($ratio_orig > $thumb_ratio) {
       $new_width = $thumb_width;
       $new_height = intval($thumb_width / $ratio_orig);
@@ -149,54 +147,53 @@ class functions
       $new_height = $thumb_height;
       $new_width = intval($thumb_height * $ratio_orig);
     }
-
     $resized = imagecreatetruecolor($new_width, $new_height);
     if ($image_type == IMAGETYPE_PNG || $image_type == IMAGETYPE_WEBP) {
       imagealphablending($resized, false);
       imagesavealpha($resized, true);
     }
-
     imagecopyresampled($resized, $image, 0, 0, 0, 0, $new_width, $new_height, $width_orig, $height_orig);
 
     $thumb = imagecreatetruecolor($thumb_width, $thumb_height);
 
-    // Đọc màu nền từ mảng RGBA
-    $r = isset($background[0]) ? intval($background[0]) : 0;
-    $g = isset($background[1]) ? intval($background[1]) : 0;
-    $b = isset($background[2]) ? intval($background[2]) : 0;
-    $a = isset($background[3]) ? intval($background[3]) : 0;
-
-    if (($image_type == IMAGETYPE_PNG || $image_type == IMAGETYPE_WEBP) && $a > 0) {
+    if ($background && ($image_type == IMAGETYPE_PNG || $image_type == IMAGETYPE_WEBP)) {
       imagealphablending($thumb, false);
       imagesavealpha($thumb, true);
-      $bg_color = imagecolorallocatealpha($thumb, $r, $g, $b, $a);
+      $transparent = imagecolorallocatealpha($thumb, 0, 0, 0, 127); // transparent black
+      imagefill($thumb, 0, 0, $transparent);
     } else {
-      $bg_color = imagecolorallocate($thumb, $r, $g, $b);
+      $white = imagecolorallocate($thumb, 255, 255, 255);
+      imagefill($thumb, 0, 0, $white);
     }
-
-    imagefill($thumb, 0, 0, $bg_color);
 
     $dst_x = intval(($thumb_width - $new_width) / 2);
     $dst_y = intval(($thumb_height - $new_height) / 2);
     imagecopy($thumb, $resized, $dst_x, $dst_y, 0, 0, $new_width, $new_height);
 
+    // Tạo tên & thư mục lưu
     $upload_dir = 'uploads/';
     if (!is_dir($upload_dir)) mkdir($upload_dir, 0777, true);
 
     $original_name = pathinfo($source_path, PATHINFO_FILENAME);
     $thumb_filename = $original_name . '_' . $thumb_width . 'x' . $thumb_height . '.webp';
     $thumb_path = $upload_dir . $thumb_filename;
+
+    // Lưu thumbnail
     imagewebp($thumb, $thumb_path, 80);
+
+    // Thêm watermark lên chính ảnh vừa tạo
+    $this->addWatermark($thumb_path, $thumb_path, 9, 100, 0, 0);
+
+    // Giải phóng bộ nhớ
     imagedestroy($image);
     imagedestroy($resized);
     imagedestroy($thumb);
-    $watermarked_path = $upload_dir . $original_name . $thumb_width . 'x' . $thumb_height . '.webp';
-    $this->addWatermark($thumb_path, $watermarked_path, 9, 0.5, 0, 0);
-    return basename($watermarked_path);
+
+    return basename($thumb_path);
   }
 
 
-  public function add_thumb($source_path, $thumb_width = 600, $thumb_height = 600, $transparent_background = false)
+  public function add_thumb($source_path, $thumb_width, $thumb_height, $background = false)
   {
     if (!file_exists($source_path)) return false;
 
@@ -218,10 +215,8 @@ class functions
       default:
         return false;
     }
-
     $ratio_orig = $width_orig / $height_orig;
     $thumb_ratio = $thumb_width / $thumb_height;
-
     if ($ratio_orig > $thumb_ratio) {
       $new_width = $thumb_width;
       $new_height = intval($thumb_width / $ratio_orig);
@@ -229,18 +224,16 @@ class functions
       $new_height = $thumb_height;
       $new_width = intval($thumb_height * $ratio_orig);
     }
-
     $resized = imagecreatetruecolor($new_width, $new_height);
     if ($image_type == IMAGETYPE_PNG || $image_type == IMAGETYPE_WEBP) {
       imagealphablending($resized, false);
       imagesavealpha($resized, true);
     }
-
     imagecopyresampled($resized, $image, 0, 0, 0, 0, $new_width, $new_height, $width_orig, $height_orig);
 
     $thumb = imagecreatetruecolor($thumb_width, $thumb_height);
 
-    if ($transparent_background && ($image_type == IMAGETYPE_PNG || $image_type == IMAGETYPE_WEBP)) {
+    if ($background && ($image_type == IMAGETYPE_PNG || $image_type == IMAGETYPE_WEBP)) {
       imagealphablending($thumb, false);
       imagesavealpha($thumb, true);
       $transparent = imagecolorallocatealpha($thumb, 0, 0, 0, 127); // transparent black
@@ -269,7 +262,6 @@ class functions
 
     return $thumb_filename;
   }
-
 
   public function phantrang_sp($tbl)
   {

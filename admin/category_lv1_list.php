@@ -6,14 +6,14 @@ $records_per_page = 10; // Số bản ghi trên mỗi trang
 $current_page = isset($_GET['page']) ? (int)$_GET['page'] : 1; // Trang hiện tại
 $total_records = $functions->phantrang_sp('tbl_danhmuc'); // Lấy tổng số bản ghi
 $total_pages = ceil($total_records / $records_per_page); // Tính số trang
-$show_danhmuc = $danhmuc->show_danhmuc('tbl_danhmuc',$records_per_page, $current_page);
+$show_danhmuc = $danhmuc->show_danhmuc('tbl_danhmuc', $records_per_page, $current_page);
 if (isset($_GET['del'])) {
   $id = $_GET['del'];
   $del = $danhmuc->del_category($id, 'tbl_danhmuc', 'category_lv1_list');
 }
 if (isset($_GET['listid'])) {
   $listid = $_GET['listid'];
-  $xoanhieu = $danhmuc->deleteMultipleCategories($listid, 'tbl_danhmuc', 'file_name', 'category_lv1_list');
+  $xoanhieu = $danhmuc->deleteMultipleCategories($listid, 'tbl_danhmuc', 'file', 'category_lv1_list');
 }
 ?>
 <section class="content-header text-sm">
@@ -22,7 +22,6 @@ if (isset($_GET['listid'])) {
       <ol class="breadcrumb float-sm-left">
         <li class="breadcrumb-item"><a href="index.php" title="Bảng điều khiển">Bảng điều khiển</a></li>
         <li class="breadcrumb-item">Danh mục cấp 1</li>
-
       </ol>
     </div>
   </div>
@@ -111,8 +110,9 @@ if (isset($_GET['listid'])) {
                       <input type="checkbox" class="custom-control-input show-checkbox"
                         id="show-checkbox-hienthi-<?php echo $resule['id']; ?>" data-table="tbl_danhmuc"
                         data-id="<?php echo $resule['id']; ?>" data-type="hienthi"
-                        data-attr="<?php echo ($resule['hienthi'] == 'hienthi') ? '' : 'hienthi'; ?>" <?php if ($resule['hienthi'] == 'hienthi') { echo "checked";
-} ?> />
+                        data-attr="<?php echo ($resule['hienthi'] == 'hienthi') ? '' : 'hienthi'; ?>" <?php if ($resule['hienthi'] == 'hienthi') {
+                                                                                                        echo "checked";
+                                                                                                      } ?> />
                       <label for="show-checkbox-hienthi-<?php echo $resule['id']; ?>" class="custom-control-label"></label>
                     </div>
                   </td>

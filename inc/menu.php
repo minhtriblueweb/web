@@ -2,49 +2,42 @@
   <div class="wrap-content d-flex flex-wrap justify-content-between align-items-center">
     <div class="menu-bar-left">
       <p class="title">DANH MỤC SẢN PHẨM</p>
-      <div class="box-ul-left">
-        <ul>
-          <?php
-          $show_danhmuc = $danhmuc->show_danhmuc_index('hienthi');
-          if ($show_danhmuc) {
-            $i = 0;
-            $spacing = 50;
-            while ($result_danhmuc = $show_danhmuc->fetch_assoc()) {
-              $top = $i * $spacing;
-              $list_id = $result_danhmuc['id'];
-              $show_danhmuc_c2 = $danhmuc->show_danhmuc_c2_index($list_id);
-              $has_submenu = ($show_danhmuc_c2 && $show_danhmuc_c2->num_rows > 0);
-          ?>
-              <li>
-                <a title="<?= $result_danhmuc['namevi'] ?>" href="danh-muc/<?= $result_danhmuc['slugvi'] ?>">
-                  <span class="scale-img">
-                    <img width="25"
-                      src="<?= empty($result_danhmuc['file']) ? BASE_ADMIN . "assets/img/noimage.png" : BASE_ADMIN . UPLOADS . $result_danhmuc['file']; ?>"
-                      alt="<?= $result_danhmuc['namevi'] ?>" title="<?= $result_danhmuc['namevi'] ?>" />
-                  </span>
-                  <?= $result_danhmuc['namevi'] ?>
-                  <?php if ($has_submenu): ?><i class="fa-solid fa-angle-right"></i><?php endif; ?>
-                </a>
-                <?php if ($has_submenu): ?>
-                  <div class="box-menu-cat-left" style="top: <?= $top ?>px;">
-                    <ul>
-                      <?php while ($result_danhmuc_c2 = $show_danhmuc_c2->fetch_assoc()): ?>
-                        <li>
-                          <a class="transition" title="<?= $result_danhmuc_c2['namevi'] ?>"
-                            href="cate/<?= $result_danhmuc_c2['slugvi'] ?>"><?= $result_danhmuc_c2['namevi'] ?></a>
-                        </li>
-                      <?php endwhile; ?>
-                    </ul>
-                  </div>
-                <?php endif; ?>
-              </li>
-          <?php
-              $i++;
-            }
-          }
-          ?>
-        </ul>
-      </div>
+      <?php if ($show = $danhmuc->show_danhmuc_index('hienthi')): ?>
+        <?php if ($show->num_rows > 0): ?>
+          <div class="box-ul-left">
+            <ul>
+              <?php $i = 0;
+              while ($dm = $show->fetch_assoc()): ?>
+                <?php
+                $top = $i++ * 50;
+                $c2 = $danhmuc->show_danhmuc_c2_index($dm['id']);
+                $has_sub = ($c2 && $c2->num_rows > 0);
+                ?>
+                <li>
+                  <a title="<?= $dm['namevi'] ?>" href="danh-muc/<?= $dm['slugvi'] ?>">
+                    <span class="scale-img">
+                      <img width="25"
+                        src="<?= empty($dm['file']) ? BASE_ADMIN . "assets/img/noimage.png" : BASE_ADMIN . UPLOADS . $dm['file']; ?>"
+                        alt="<?= $dm['namevi'] ?>" title="<?= $dm['namevi'] ?>" />
+                    </span>
+                    <?= $dm['namevi'] ?>
+                    <?= $has_sub ? '<i class="fa-solid fa-angle-right"></i>' : '' ?>
+                  </a>
+                  <?php if ($has_sub): ?>
+                    <div class="box-menu-cat-left" style="top: <?= $top ?>px;">
+                      <ul>
+                        <?php while ($c2row = $c2->fetch_assoc()): ?>
+                          <li><a class="transition" title="<?= $c2row['namevi'] ?>" href="cate/<?= $c2row['slugvi'] ?>"><?= $c2row['namevi'] ?></a></li>
+                        <?php endwhile; ?>
+                      </ul>
+                    </div>
+                  <?php endif; ?>
+                </li>
+              <?php endwhile; ?>
+            </ul>
+          </div>
+        <?php endif; ?>
+      <?php endif; ?>
     </div>
     <ul class="menu-bar">
       <li>
@@ -99,32 +92,33 @@
     </li>
     <li>
       <a class="transition" href="san-pham" title="Sản phẩm">Sản phẩm</a>
-
-      <ul>
-        <?php
-        $show_danhmuc = $danhmuc->show_danhmuc_index('hienthi');
-        while ($result_danhmuc_mobile = $show_danhmuc->fetch_assoc()):
-          $list_id = $result_danhmuc_mobile['id'];
-          $show_danhmuc_c2 = $danhmuc->show_danhmuc_c2_index($list_id);
-          $has_submenu = ($show_danhmuc_c2 && $show_danhmuc_c2->num_rows > 0);
-        ?>
-          <li>
-            <a title="<?= $result_danhmuc_mobile['namevi'] ?>"
-              href="danh-muc/<?= $result_danhmuc_mobile['slugvi'] ?>"><?= $result_danhmuc_mobile['namevi'] ?></a>
-            <ul>
-              <?php if ($has_submenu): ?>
-                <?php while ($result_danhmuc_c2 = $show_danhmuc_c2->fetch_assoc()): ?>
-                  <li>
-                    <a title="<?= $result_danhmuc_c2['namevi'] ?>" href="cate/<?= $result_danhmuc_c2['slugvi'] ?>">
-                      <?= $result_danhmuc_c2['namevi'] ?>
-                    </a>
-                  </li>
-                <?php endwhile; ?>
+      <?php if ($show = $danhmuc->show_danhmuc_index('hienthi')): ?>
+        <ul>
+          <?php while ($dm = $show->fetch_assoc()): ?>
+            <?php
+            $list_id = $dm['id'];
+            $sub = $danhmuc->show_danhmuc_c2_index($list_id);
+            $has_sub = ($sub && $sub->num_rows > 0);
+            ?>
+            <li>
+              <a title="<?= $dm['namevi'] ?>" href="danh-muc/<?= $dm['slugvi'] ?>">
+                <?= $dm['namevi'] ?>
+              </a>
+              <?php if ($has_sub): ?>
+                <ul>
+                  <?php while ($row = $sub->fetch_assoc()): ?>
+                    <li>
+                      <a title="<?= $row['namevi'] ?>" href="cate/<?= $row['slugvi'] ?>">
+                        <?= $row['namevi'] ?>
+                      </a>
+                    </li>
+                  <?php endwhile; ?>
+                </ul>
               <?php endif; ?>
-            </ul>
-          </li>
-        <?php endwhile; ?>
-      </ul>
+            </li>
+          <?php endwhile; ?>
+        </ul>
+      <?php endif; ?>
     </li>
     <li><a class="transition" href="huong-dan-choi" title="Hướng dẫn chơi">Hướng dẫn chơi</a></li>
     <li>

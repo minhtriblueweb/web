@@ -132,9 +132,6 @@
       <nav class="mt-3">
         <ul class="nav nav-pills nav-sidebar flex-column nav-child-indent text-sm" data-widget="treeview" role="menu"
           data-accordion="false">
-          <?php
-          $currentPage = basename($_SERVER['PHP_SELF'], '.php');
-          ?>
           <?php foreach ($sidebarMenu as $menu): ?>
             <?php if (!empty($menu['children'])): ?>
               <li class="nav-item has-treeview menu-group">
@@ -164,7 +161,6 @@
               </li>
             <?php endif; ?>
           <?php endforeach; ?>
-
         </ul>
       </nav>
     </div>

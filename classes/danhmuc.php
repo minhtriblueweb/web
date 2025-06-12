@@ -34,14 +34,6 @@ class danhmuc
     return $thumb_filename;
   }
 
-  public function get_name_danhmuc($id_list)
-  {
-    $id_list = mysqli_real_escape_string($this->db->link, $id_list);
-    $query = "SELECT * FROM tbl_danhmuc WHERE id = '$id_list' LIMIT 1";
-    $result = $this->db->select($query);
-    return $result;
-  }
-
   public function get_danhmuc($slug)
   {
     $slug = mysqli_real_escape_string($this->db->link, $slug);

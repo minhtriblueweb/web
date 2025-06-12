@@ -3,49 +3,53 @@ include_once 'lib/autoload.php';
 include_once 'lib/router.php';
 ?>
 <?php
-$slug = isset($_GET['slug']) ? $_GET['slug'] : '';
+$slug = $_GET['slug'] ?? '';
 if (empty($slug)) {
   http_response_code(404);
   include '404.php';
   exit();
 }
-$get_danhmuc = $danhmuc->get_danhmuc($slug);
-if (!$get_danhmuc || !($kg_danhmuc = $get_danhmuc->fetch_assoc())) {
+
+$get_danhmuc_c2 = $danhmuc->get_danhmuc_c2($slug);
+if (!$get_danhmuc_c2 || !($kg_danhmuc_c2 = $get_danhmuc_c2->fetch_assoc())) {
   http_response_code(404);
   include '404.php';
   exit();
 }
-$id_list = $kg_danhmuc['id'];
+
+$id_list = $kg_danhmuc_c2['id_list'];
+$get_name_danhmuc_c1 = $sanpham->get_name_danhmuc($id_list, 'tbl_danhmuc');
 $get_danhmuc_c2 = $danhmuc->show_danhmuc_c2_index($id_list);
 
-$records_per_page = 10;
+if (!$get_name_danhmuc_c1 || !($kg_danhmuc = $get_danhmuc_c2->fetch_assoc())) {
+  http_response_code(404);
+  include '404.php';
+  exit();
+}
+
+$id_cat = $kg_danhmuc_c2['id'];
+$records_per_page = 20;
 $current_page = max(1, (int)($_GET['page'] ?? 1));
-$total_records = $sanpham->count_sanpham($id_list, '');
+$total_records = $sanpham->count_sanpham('', $id_cat);
 $total_pages = max(1, ceil($total_records / $records_per_page));
+
 $get_sp = $sanpham->show_sanpham_pagination(
   $records_per_page,
   $current_page,
   'hienthi',
-  $id_list,
   '',
+  $id_cat,
   ''
 );
 
-$temp_seo = [];
 
-if (!empty($kg_danhmuc['titlevi'])) {
-  $temp_seo['title'] = $kg_danhmuc['titlevi'];
-}
-if (!empty($kg_danhmuc['keywordsvi'])) {
-  $temp_seo['keywords'] = $kg_danhmuc['keywordsvi'];
-}
-if (!empty($kg_danhmuc['descriptionvi'])) {
-  $temp_seo['description'] = $kg_danhmuc['descriptionvi'];
-}
-$temp_seo['url'] = BASE . $kg_danhmuc['slugvi'];
-$temp_seo['image'] = !empty($kg_danhmuc['file']) ? BASE_ADMIN . UPLOADS . $kg_danhmuc['file'] : '';
-
-$seo = array_merge($seo, $temp_seo);
+$seo = array_merge($seo, array(
+  'title' => $kg_danhmuc_c2['titlevi'],
+  'keywords' => $kg_danhmuc_c2['keywordsvi'],
+  'description' => $kg_danhmuc_c2['descriptionvi'],
+  'url' => BASE . 'danh-muc/' . $kg_danhmuc_c2['slugvi'],
+  'image' => isset($kg_danhmuc_c2['file']) ? BASE_ADMIN . UPLOADS . $kg_danhmuc_c2['file'] : '',
+));
 ?>
 <?php
 include 'inc/header.php';
@@ -61,9 +65,13 @@ include 'inc/menu.php';
         <li class="breadcrumb-item">
           <a class="text-decoration-none" href="san-pham"><span>Sản phẩm</span></a>
         </li>
-        <li class="breadcrumb-item active">
+        <li class="breadcrumb-item">
           <a class="text-decoration-none"
             href="danh-muc/<?= $kg_danhmuc['slugvi'] ?>"><span><?= $kg_danhmuc['namevi'] ?></span></a>
+        </li>
+        <li class="breadcrumb-item active">
+          <a class="text-decoration-none"
+            href="danh-muc/<?= $kg_danhmuc_c2['slugvi'] ?>"><span><?= $kg_danhmuc_c2['namevi'] ?></span></a>
         </li>
       </ol>
     </div>
@@ -75,8 +83,10 @@ include 'inc/menu.php';
         <div class="grid-list-no-index">
           <?php while ($result_danhmuc_c2 = $get_danhmuc_c2->fetch_assoc()) : ?>
             <div class="item-list-noindex">
-              <a href="danh-muc/<?= $result_danhmuc_c2['slugvi'] ?>">
-                <h3 class="m-0"><?= $result_danhmuc_c2['namevi'] ?></h3>
+              <a class="" href="danh-muc/<?= $result_danhmuc_c2['slugvi'] ?>">
+                <h3 class="m-0">
+                  <?= $result_danhmuc_c2['namevi'] ?>
+                </h3>
               </a>
             </div>
           <?php endwhile; ?>
@@ -84,10 +94,16 @@ include 'inc/menu.php';
       <?php endif; ?>
     </div>
   </div>
-  <div class="title-list-hot text-center">
-    <h2><?= $kg_danhmuc['namevi'] ?></h2>
-    (<?= $total_records ?> sản phẩm)
+
+  <div class="wrap-product-list">
+    <div class="wrap-content" style="background: unset;">
+      <div class="title-list-hot text-center">
+        <h2><?= $kg_danhmuc_c2['namevi'] ?></h2>
+        (<?= $total_records ?> sản phẩm)
+      </div>
+    </div>
   </div>
+
   <div class="wrap-main wrap-template w-clear" style="margin: 0 auto !important;">
     <div class="content-main">
       <?php if ($get_sp && $get_sp->num_rows > 0) : ?>
@@ -131,40 +147,16 @@ include 'inc/menu.php';
               </a>
             </div>
           <?php endwhile; ?>
-
         </div>
-        <!-- <div class="text-center mt-4">
-          <span class="loadmore-product loadmore-product-1" data-list="1">Xem thêm sản phẩm
-            <i class="fa-solid fa-chevron-down"></i></span>
-        </div> -->
       <?php else : ?>
         <div class="alert alert-warning w-100" role="alert">
           <strong>Không tìm thấy kết quả</strong>
         </div>
       <?php endif ?>
       <div class="mt-3">
-        <?= $pagination_html = $functions->renderPagination_tc($current_page, $total_pages, BASE . 'danh-muc/' . $kg_danhmuc['slugvi'] . '/page-');
+        <?= $pagination_html = $functions->renderPagination_tc($current_page, $total_pages, BASE . 'danh-muc/' . $kg_danhmuc_c2['slugvi'] . '/page-');
         ?>
-
       </div>
-      <?php if (!empty($kg_danhmuc['contentvi'])): ?>
-        <div class="desc-list mt-4">
-          <div class="noidung_anhien">
-            <div class="wrap-toc">
-              <div class="meta-toc2">
-                <a class="mucluc-dropdown-list_button">Mục Lục</a>
-                <div class="box-readmore">
-                  <ul class="toc-list" data-toc="article" data-toc-headings="h1, h2, h3"></ul>
-                </div>
-              </div>
-            </div>
-            <div class="content-main content-ck pro_tpl" id="toc-content">
-              <?= $kg_danhmuc['contentvi'] ?>
-            </div>
-            <p class="anhien xemthemnd">Xem thêm nội dung</p>
-            <p class="anhien anbot">Ẩn bớt nội dung</p>
-          </div>
-        </div><?php endif; ?>
     </div>
   </div>
 </div>

@@ -25,7 +25,7 @@
                     <div class="box-menu-cat-left">
                       <ul>
                         <?php while ($c2row = $c2->fetch_assoc()): ?>
-                          <li><a class="transition" title="<?= $c2row['namevi'] ?>" href="cate/<?= $c2row['slugvi'] ?>"><?= $c2row['namevi'] ?></a></li>
+                          <li><a class="transition" title="<?= $c2row['namevi'] ?>" href="danh-muc/<?= $c2row['slugvi'] ?>"><?= $c2row['namevi'] ?></a></li>
                         <?php endwhile; ?>
                       </ul>
                     </div>
@@ -107,7 +107,7 @@
                 <ul>
                   <?php while ($row = $sub->fetch_assoc()): ?>
                     <li>
-                      <a title="<?= $row['namevi'] ?>" href="cate/<?= $row['slugvi'] ?>">
+                      <a title="<?= $row['namevi'] ?>" href="danh-muc/<?= $row['slugvi'] ?>">
                         <?= $row['namevi'] ?>
                       </a>
                     </li>

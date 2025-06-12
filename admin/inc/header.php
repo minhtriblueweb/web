@@ -84,6 +84,7 @@ define('NO_IMG', $config['baseAdmin'] . "assets/img/noimage.png");
       </div>
     </div>
   <?php } ?>
+
   <!-- Wrapper -->
   <div class="wrapper">
     <!-- Header -->

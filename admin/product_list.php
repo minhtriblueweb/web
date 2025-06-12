@@ -2,20 +2,20 @@
 <?php include 'inc/sidebar.php'; ?>
 <!-- Main content -->
 <?php
-if (isset($_GET['del'])) {
-  $id = $_GET['del'];
-  $del = $sanpham->del_sanpham($id);
-}
-if (isset($_GET['listid'])) {
-  $listid = $_GET['listid'];
-  $xoanhieu = $sanpham->xoanhieu_sanpham($listid);
-}
+$redirect_url = pathinfo(basename($_SERVER['PHP_SELF']), PATHINFO_FILENAME);
 $records_per_page = 20; // Số bản ghi trên mỗi trang
 $current_page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
 $total_records = $functions->phantrang_sp('tbl_sanpham');
 $total_pages = ceil($total_records / $records_per_page);
 $show_sanpham = $sanpham->show_sanpham($records_per_page, $current_page);
 $show_danhmuc = $danhmuc->show_danhmuc('tbl_danhmuc');
+if ($id = ($_GET['del'] ?? null)) {
+  $del = $functions->delete($id, 'tbl_sanpham', 'file', $redirect_url);
+}
+
+if ($listid = ($_GET['listid'] ?? null)) {
+  $xoanhieu = $functions->deleteMultiple($listid, 'tbl_sanpham', 'file', $redirect_url);
+}
 ?>
 <section class="content-header text-sm">
   <div class="container-fluid">
@@ -126,7 +126,7 @@ $show_danhmuc = $danhmuc->show_danhmuc('tbl_danhmuc');
                   <td class="align-middle">
                     <a class="text-dark text-break" href="<?= $link ?>" title="<?= $namevi ?>"><?= $namevi ?></a>
                     <div class="tool-action mt-2 w-clear">
-                      <a class="text-primary mr-3" href="<?= "{$config['base']}san-pham/$slugvi" ?>" target="_blank" title="Xem"><i class="far fa-eye mr-1"></i>View</a>
+                      <a class="text-primary mr-3" href="<?= "{$config['base']}$slugvi" ?>" target="_blank" title="Xem"><i class="far fa-eye mr-1"></i>View</a>
                       <a class="text-info mr-3" href="<?= $link ?>" title="Chỉnh sửa"><i class="far fa-edit mr-1"></i>Edit</a>
                       <a class="text-danger" id="delete-item" data-url="?del=<?= $id ?>" title="Xóa"><i class="far fa-trash-alt mr-1"></i>Delete</a>
                     </div>
@@ -146,12 +146,12 @@ $show_danhmuc = $danhmuc->show_danhmuc('tbl_danhmuc');
 
                   <!-- Danh mục cấp 1 -->
                   <td class="align-middle">
-                    <?= $row['id_list'] ? $sanpham->get_name_danhmuc($row['id_list']) : '' ?>
+                    <?= $sanpham->get_name_danhmuc($row['id_list'], 'tbl_danhmuc') ?>
                   </td>
 
                   <!-- Danh mục cấp 2 -->
                   <td class="align-middle">
-                    <?= $row['id_cat'] ? $sanpham->get_name_danhmuc_2($row['id_cat']) : '' ?>
+                    <?= $sanpham->get_name_danhmuc($row['id_cat'], 'tbl_danhmuc_c2') ?>
                   </td>
 
                   <!-- Hiển thị -->
@@ -189,8 +189,7 @@ $show_danhmuc = $danhmuc->show_danhmuc('tbl_danhmuc');
       </table>
     </div>
     <div class="card-footer text-sm pb-0 mb-5">
-      <?php
-      echo  $pagination_html = $functions->renderPagination($current_page, $total_pages);
+      <?= $pagination_html = $functions->renderPagination($current_page, $total_pages);
       ?>
     </div>
   </div>

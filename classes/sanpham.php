@@ -305,28 +305,17 @@ class sanpham
     }
   }
 
-  public function get_name_danhmuc($id)
+  public function get_name_danhmuc($id, $table)
   {
-    $id_1 = mysqli_real_escape_string($this->db->link, $id);
-    $query = "SELECT namevi FROM tbl_danhmuc WHERE id = '$id_1' LIMIT 1";
+    $id = mysqli_real_escape_string($this->db->link, $id);
+    $table = mysqli_real_escape_string($this->db->link, $table);
+    $query = "SELECT namevi FROM `$table` WHERE id = '$id' LIMIT 1";
     $result = $this->db->select($query);
-    if ($result) {
-      $resulted = $result->fetch_assoc();
-      $get_name = $resulted['namevi'];
+    if ($result && $result->num_rows > 0) {
+      $row = $result->fetch_assoc();
+      return $row['namevi'] ?? '';
     }
-    return $get_name;
-  }
-
-  public function get_name_danhmuc_2($id)
-  {
-    $id_2 = mysqli_real_escape_string($this->db->link, $id);
-    $query = "SELECT namevi FROM tbl_danhmuc_c2 WHERE id = '$id_2' LIMIT 1";
-    $result = $this->db->select($query);
-    if ($result) {
-      $resulted = $result->fetch_assoc();
-      $get_name = $resulted['namevi'];
-    }
-    return $get_name;
+    return '';
   }
 
   public function show_sanpham($records_per_page, $current_page, $hienthi = '')
@@ -463,11 +452,9 @@ class sanpham
       $unique_image = $this->handleImageUpload($destination, $original_name, $old_file_path);
     }
 
-    $slug = $sanpham_data['slugvi'];
-    $check_slug = "SELECT COUNT(*) as count FROM tbl_sanpham WHERE slugvi = '$slug' AND id != '$id' LIMIT 1";
-    $result_check_slug = $this->db->select($check_slug);
-    if ($result_check_slug && $result_check_slug->fetch_assoc()['count'] > 0) {
-      return "Đường dẫn đã tồn tại. Đường dẫn truy cập mục này có thể bị trùng lặp";
+    // Kiểm tra slug bị trùng
+    if ($this->fn->isSlugviDuplicated($sanpham_data['slugvi'], 'tbl_sanpham', $id)) {
+      return "Đường dẫn đã tồn tại. Vui lòng chọn đường dẫn khác để tránh trùng lặp.";
     }
 
     $update_fields = [];
@@ -524,12 +511,9 @@ class sanpham
         $unique_image = $this->handleImageUpload($destination, $original_name);
       }
     }
-
-    $slug = $sanpham_data['slugvi'];
-    $check_slug = "SELECT COUNT(*) as count FROM tbl_sanpham WHERE slugvi = '$slug' LIMIT 1";
-    $result_check_slug = $this->db->select($check_slug);
-    if ($result_check_slug && $result_check_slug->fetch_assoc()['count'] > 0) {
-      return "Đường dẫn đã tồn tại. Đường dẫn truy cập mục này có thể bị trùng lặp";
+    // Kiểm tra slug trùng
+    if ($this->fn->isSlugviDuplicated($sanpham_data['slugvi'], 'tbl_sanpham', '')) {
+      return "Đường dẫn đã tồn tại. Vui lòng chọn đường dẫn khác để tránh trùng lặp.";
     }
 
     $sanpham_data['file'] = $unique_image;

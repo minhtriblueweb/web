@@ -11,7 +11,7 @@ include_once 'lib/router.php';
   <!-- UTF-8 -->
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <!-- Title, Keywords, Description -->
-  <title><?= $seo['title'] ?></title>
+  <title><?= $seo['title'] ?? $web_name ?></title>
   <meta name="keywords" content="<?= $seo['keywords'] ?>" />
   <meta name="description" content="<?= $seo['description'] ?>" />
   <!-- Robots -->

@@ -12,7 +12,7 @@
                 $has_sub = ($c2 && $c2->num_rows > 0);
                 ?>
                 <li>
-                  <a title="<?= $dm['namevi'] ?>" href="danh-muc/<?= $dm['slugvi'] ?>">
+                  <a title="<?= $dm['namevi'] ?>" href="<?= $dm['slugvi'] ?>">
                     <span class="scale-img">
                       <img width="25"
                         src="<?= empty($dm['file']) ? BASE_ADMIN . "assets/img/noimage.png" : BASE_ADMIN . UPLOADS . $dm['file']; ?>"
@@ -100,7 +100,7 @@
             $has_sub = ($sub && $sub->num_rows > 0);
             ?>
             <li>
-              <a title="<?= $dm['namevi'] ?>" href="danh-muc/<?= $dm['slugvi'] ?>">
+              <a title="<?= $dm['namevi'] ?>" href="<?= $dm['slugvi'] ?>">
                 <?= $dm['namevi'] ?>
               </a>
               <?php if ($has_sub): ?>

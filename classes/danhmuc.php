@@ -74,52 +74,6 @@ class danhmuc
     return $result;
   }
 
-  public function deleteMultipleCategories($listid, $table, $imageColumn, $redirectUrl)
-  {
-    $querySelect = "SELECT `$imageColumn` FROM `$table` WHERE id IN ($listid)";
-    $resultSelect = $this->db->select($querySelect);
-
-    if ($resultSelect && $resultSelect->num_rows > 0) {
-      while ($row = $resultSelect->fetch_assoc()) {
-        $filePath = 'uploads/' . $row[$imageColumn];
-        if (!empty($row[$imageColumn]) && file_exists($filePath)) {
-          unlink($filePath);
-        }
-      }
-    }
-    $queryDelete = "DELETE FROM `$table` WHERE id IN ($listid)";
-    $resultDelete = $this->db->delete($queryDelete);
-
-    if ($resultDelete) {
-      header("Location: transfer.php?stt=success&url=$redirectUrl");
-      exit();
-    } else {
-      return "Lỗi thao tác!";
-    }
-  }
-
-  public function del_category($id, $table, $redirect_url)
-  {
-    $del_file_name = "SELECT file FROM $table WHERE id='$id'";
-    $delta = $this->db->select($del_file_name);
-    $string = "";
-    while ($rowData = $delta->fetch_assoc()) {
-      $string .= $rowData['file'];
-    }
-    $delLink = "uploads/" . $string;
-    if (!empty($string) && file_exists($delLink)) {
-      unlink($delLink);
-    }
-    $query = "DELETE FROM $table WHERE id = '$id'";
-    $result = $this->db->delete($query);
-    if ($result) {
-      header("Location: transfer.php?stt=success&url=$redirect_url");
-      exit();
-    } else {
-      return "Lỗi thao tác!";
-    }
-  }
-
 
   public function show_danhmuc_index($hienthi = '')
   {
@@ -155,7 +109,7 @@ class danhmuc
   public function update_danhmuc_c2($data, $files, $id)
   {
     // Danh sách các trường cần xử lý
-    $fields = ['slugvi', 'namevi', 'id_list', 'titlevi', 'keywordsvi', 'descriptionvi', 'numb', 'hienthi'];
+    $fields = ['slugvi', 'namevi', 'id_list', 'titlevi', 'keywordsvi', 'descriptionvi', 'numb', 'hienthi', 'noibat'];
     $data_escaped = [];
 
     foreach ($fields as $field) {
@@ -163,11 +117,8 @@ class danhmuc
     }
 
     // Kiểm tra slug bị trùng
-    $slugvi = $data_escaped['slugvi'];
-    $check_slug = "SELECT slugvi FROM tbl_danhmuc_c2 WHERE slugvi = '$slugvi' AND id != '$id'";
-    $result_check_slug = $this->db->select($check_slug);
-    if ($result_check_slug && $result_check_slug->num_rows > 0) {
-      return "Đường dẫn đã tồn tại. Đường dẫn truy cập mục này có thể bị trùng lặp";
+    if ($this->fn->isSlugviDuplicated($data_escaped['slugvi'], 'tbl_danhmuc_c2', $id)) {
+      return "Đường dẫn đã tồn tại. Vui lòng chọn đường dẫn khác để tránh trùng lặp.";
     }
 
     // Chuẩn bị trường cập nhật
@@ -223,9 +174,8 @@ class danhmuc
     }
 
     // Kiểm tra slug trùng
-    $duplicated_in = $this->fn->isSlugviDuplicated($data_escaped['slugvi'], 'tbl_danhmuc', '');
-    if ($duplicated_in) {
-      return "Đường dẫn đã tồn tại trong bảng <b>$duplicated_in</b>. Vui lòng chọn đường dẫn khác để tránh trùng lặp.";
+    if ($this->fn->isSlugviDuplicated($data_escaped['slugvi'], 'tbl_danhmuc', $id)) {
+      return "Đường dẫn đã tồn tại. Vui lòng chọn đường dẫn khác để tránh trùng lặp.";
     }
 
     $file_name = $_FILES["file"]["name"] ?? '';
@@ -298,8 +248,7 @@ class danhmuc
     }
 
     // Kiểm tra slug trùng
-    $duplicated_in = $this->fn->isSlugviDuplicated($data['slugvi'], 'tbl_danhmuc', '');
-    if ($duplicated_in) {
+    if ($this->fn->isSlugviDuplicated($data['slugvi'], 'tbl_danhmuc', '')) {
       return "Đường dẫn đã tồn tại. Vui lòng chọn đường dẫn khác để tránh trùng lặp.";
     }
 
@@ -316,17 +265,15 @@ class danhmuc
 
   public function insert_danhmuc_c2($data, $files)
   {
-    $fields = ['slugvi', 'namevi', 'descvi', 'contentvi', 'id_list', 'titlevi', 'keywordsvi', 'descriptionvi', 'hienthi', 'numb'];
+    $fields = ['slugvi', 'namevi', 'descvi', 'contentvi', 'id_list', 'titlevi', 'keywordsvi', 'descriptionvi', 'hienthi', 'noibat', 'numb'];
     $data_escaped = [];
 
     foreach ($fields as $field) {
       $data_escaped[$field] = !empty($data[$field]) ? mysqli_real_escape_string($this->db->link, $data[$field]) : "";
     }
-    $slug = $data_escaped['slugvi'];
-    $check_slug_query = "SELECT slugvi FROM tbl_danhmuc_c2 WHERE slugvi = '$slug' LIMIT 1";
-    $result_check_slug = $this->db->select($check_slug_query);
-    if ($result_check_slug && $result_check_slug->num_rows > 0) {
-      return "Đường dẫn đã tồn tại. Đường dẫn truy cập mục này có thể bị trùng lặp";
+    // Kiểm tra slug trùng
+    if ($this->fn->isSlugviDuplicated($data_escaped['slugvi'], 'tbl_danhmuc_c2', '')) {
+      return "Đường dẫn đã tồn tại. Vui lòng chọn đường dẫn khác để tránh trùng lặp.";
     }
     $field_names = array_keys($data_escaped);
     $field_values = array_map(function ($value) {

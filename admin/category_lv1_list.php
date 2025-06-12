@@ -2,18 +2,18 @@
 <?php include 'inc/sidebar.php'; ?>
 <!-- Main content -->
 <?php
+$redirect_url = pathinfo(basename($_SERVER['PHP_SELF']), PATHINFO_FILENAME);
 $records_per_page = 10; // Số bản ghi trên mỗi trang
 $current_page = isset($_GET['page']) ? (int)$_GET['page'] : 1; // Trang hiện tại
 $total_records = $functions->phantrang_sp('tbl_danhmuc'); // Lấy tổng số bản ghi
 $total_pages = ceil($total_records / $records_per_page); // Tính số trang
 $show_danhmuc = $danhmuc->show_danhmuc('tbl_danhmuc', $records_per_page, $current_page);
-if (isset($_GET['del'])) {
-  $id = $_GET['del'];
-  $del = $danhmuc->del_category($id, 'tbl_danhmuc', 'category_lv1_list');
+if ($id = ($_GET['del'] ?? null)) {
+  $del = $functions->delete($id, 'tbl_danhmuc', 'file', $redirect_url);
 }
-if (isset($_GET['listid'])) {
-  $listid = $_GET['listid'];
-  $xoanhieu = $danhmuc->deleteMultipleCategories($listid, 'tbl_danhmuc', 'file', 'category_lv1_list');
+
+if ($listid = ($_GET['listid'] ?? null)) {
+  $xoanhieu = $functions->deleteMultiple($listid, 'tbl_danhmuc', 'file', $redirect_url);
 }
 ?>
 <section class="content-header text-sm">

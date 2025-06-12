@@ -4,40 +4,48 @@ include_once 'lib/router.php';
 ?>
 <?php
 $slug = isset($_GET['slug']) ? $_GET['slug'] : '';
-
-if ($slug) {
-  $get_danhmuc = $danhmuc->get_danhmuc($slug);
-  if ($get_danhmuc !== false) {
-    $kg_danhmuc = $get_danhmuc->fetch_assoc();
-    if ($kg_danhmuc) {
-      $id_list = $kg_danhmuc['id'];
-      $get_danhmuc_c2 = $danhmuc->show_danhmuc_c2_index($id_list);
-      $records_per_page = 10; // Số bản ghi trên mỗi trang
-      $current_page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
-      $total_records = $sanpham->count_sanpham($id_list, '');
-      $total_pages = ceil($total_records / $records_per_page);
-      $get_sp = $sanpham->show_sanpham_pagination($records_per_page, $current_page, 'hienthi', $id_list, '', '');
-      // show_sanpham_pagination : số bản ghi -> số trang -> hiển thị -> cấp 1 -> cấp 2 -> limit
-    } else {
-      header('Location: ' . BASE . '404.php');
-      exit();
-    }
-  } else {
-    header('Location: ' . BASE . '404.php');
-    exit();
-  }
-} else {
-  header('Location: ' . BASE . '404.php');
+if (empty($slug)) {
+  http_response_code(404);
+  include '404.php';
   exit();
 }
+$get_danhmuc = $danhmuc->get_danhmuc($slug);
+if (!$get_danhmuc || !($kg_danhmuc = $get_danhmuc->fetch_assoc())) {
+  http_response_code(404);
+  include '404.php';
+  exit();
+}
+$id_list = $kg_danhmuc['id'];
+$get_danhmuc_c2 = $danhmuc->show_danhmuc_c2_index($id_list);
 
-$seo = array_merge($seo, array(
-  'title' => $kg_danhmuc['titlevi'],
-  'keywords' => $kg_danhmuc['keywordsvi'],
-  'description' => $kg_danhmuc['descriptionvi'],
-  'url' => BASE . 'danh-muc/' . $kg_danhmuc['slugvi'],
-  'image' => isset($kg_danhmuc['file']) ? BASE_ADMIN . UPLOADS . $kg_danhmuc['file'] : '',
-));
+$records_per_page = 10;
+$current_page = max(1, (int)($_GET['page'] ?? 1));
+$total_records = $sanpham->count_sanpham($id_list, '');
+$total_pages = max(1, ceil($total_records / $records_per_page));
+$get_sp = $sanpham->show_sanpham_pagination(
+  $records_per_page,
+  $current_page,
+  'hienthi',
+  $id_list,
+  '',
+  ''
+);
+
+$temp_seo = [];
+
+if (!empty($kg_danhmuc['titlevi'])) {
+  $temp_seo['title'] = $kg_danhmuc['titlevi'];
+}
+if (!empty($kg_danhmuc['keywordsvi'])) {
+  $temp_seo['keywords'] = $kg_danhmuc['keywordsvi'];
+}
+if (!empty($kg_danhmuc['descriptionvi'])) {
+  $temp_seo['description'] = $kg_danhmuc['descriptionvi'];
+}
+$temp_seo['url'] = BASE . $kg_danhmuc['slugvi'];
+$temp_seo['image'] = !empty($kg_danhmuc['file']) ? BASE_ADMIN . UPLOADS . $kg_danhmuc['file'] : '';
+
+$seo = array_merge($seo, $temp_seo);
 ?>
 <?php
 include 'inc/header.php';

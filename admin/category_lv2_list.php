@@ -2,6 +2,7 @@
 <?php include 'inc/sidebar.php'; ?>
 <!-- Main content -->
 <?php
+$redirect_url = pathinfo(basename($_SERVER['PHP_SELF']), PATHINFO_FILENAME);
 $records_per_page = 10;
 $current_page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
 $total_records = $functions->phantrang_sp('tbl_danhmuc_c2');
@@ -18,14 +19,12 @@ if (!empty($id_list)) {
 } else {
   $show_danhmuc_c2 = $danhmuc->show_danhmuc('tbl_danhmuc_c2', $records_per_page, $current_page);
 }
-if (isset($_GET['del'])) {
-  $id = $_GET['del'];
-  $del = $danhmuc->del_category($id, 'tbl_danhmuc_c2', 'category_lv2_list');
+if ($id = ($_GET['del'] ?? null)) {
+  $del = $functions->delete($id, 'tbl_danhmuc_c2', 'file', $redirect_url);
 }
 
-if (isset($_GET['listid'])) {
-  $listid = $_GET['listid'];
-  $xoanhieu = $danhmuc->deleteMultipleCategories($listid, 'tbl_danhmuc_c2', 'file', 'category_lv2_list');
+if ($listid = ($_GET['listid'] ?? null)) {
+  $xoanhieu = $functions->deleteMultiple($listid, 'tbl_danhmuc_c2', 'file', $redirect_url);
 }
 ?>
 <section class="content-header text-sm">
@@ -95,6 +94,7 @@ if (isset($_GET['listid'])) {
             <th class="align-middle">Hình</th>
             <th class="align-middle" style="width: 30%">Tiêu đề</th>
             <th class="align-middle text-center">Hiển thị</th>
+            <th class="align-middle text-center">Nổi bật</th>
             <th class="align-middle text-center">Thao tác</th>
           </tr>
         </thead>
@@ -106,6 +106,7 @@ if (isset($_GET['listid'])) {
                 $namevi = $resule_c2['namevi'];
                 $file = empty($resule_c2['file']) ? NO_IMG : BASE_ADMIN . UPLOADS . $resule_c2['file'];
                 $hienthi = $resule_c2['hienthi'] === 'hienthi';
+                $noibat = $resule_c2['noibat'] === 'noibat';
             ?>
                 <tr>
                   <!-- Checkbox chọn -->
@@ -145,6 +146,17 @@ if (isset($_GET['listid'])) {
                         data-id="<?= $id ?>" data-type="hienthi"
                         data-attr="<?= $hienthi ? '' : 'hienthi' ?>" <?= $hienthi ? 'checked' : '' ?> />
                       <label for="show-checkbox-hienthi-<?= $id ?>" class="custom-control-label"></label>
+                    </div>
+                  </td>
+
+                  <!-- Nổi bật -->
+                  <td class="align-middle text-center">
+                    <div class="custom-control custom-checkbox my-checkbox">
+                      <input type="checkbox" class="custom-control-input show-checkbox"
+                        id="show-checkbox-noibat-<?= $id ?>" data-table="tbl_danhmuc_c2"
+                        data-id="<?= $id ?>" data-type="noibat"
+                        data-attr="<?= $noibat ? '' : 'noibat' ?>" <?= $noibat ? 'checked' : '' ?> />
+                      <label for="show-checkbox-noibat-<?= $id ?>" class="custom-control-label"></label>
                     </div>
                   </td>
 

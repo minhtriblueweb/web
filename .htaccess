@@ -11,8 +11,8 @@ RewriteRule ^san-pham$ sanpham.php [L,QSA]
 RewriteRule ^gioi-thieu gioithieu.php [L]
 RewriteRule ^huong-dan$ huongdan.php [L]
 
-RewriteRule ^danh-muc/([a-zA-Z0-9-]+)/?$ list.php?slug=$1 [L,QSA]
-RewriteRule ^danh-muc/([a-zA-Z0-9-]+)/page-([0-9]+)/?$ list.php?slug=$1&page=$2 [L,QSA]
+RewriteRule ^([a-zA-Z0-9-]+)/?$ category_lv1.php?slug=$1 [L,QSA]
+RewriteRule ^([a-zA-Z0-9-]+)/page-([0-9]+)/?$ category_lv1.php?slug=$1&page=$2 [L,QSA]
 
 RewriteRule ^cate/([a-zA-Z0-9-]+)/?$ cat.php?slug=$1 [L,QSA]
 RewriteRule ^cate/([a-zA-Z0-9-]+)/page-([0-9]+)/?$ cat.php?slug=$1&page=$2 [L,QSA]

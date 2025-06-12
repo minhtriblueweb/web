@@ -15,6 +15,76 @@ class functions
     $this->fm = new Format();
   }
 
+  function is_selected($name, $result, $id, $value)
+  {
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+      return (isset($_POST[$name]) && $_POST[$name] == $value) ? 'selected' : '';
+    }
+    if (!empty($id) && isset($result[$name])) {
+      return ($result[$name] == $value) ? 'selected' : '';
+    }
+    return '';
+  }
+
+  function is_checked($name, $result, $id, $default = true)
+  {
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+      return isset($_POST[$name]) && $_POST[$name] === $name ? 'checked' : '';
+    }
+    if (!empty($id) && isset($result[$name])) {
+      return $result[$name] === $name ? 'checked' : '';
+    }
+    return $default ? 'checked' : '';
+  }
+
+
+  public function deleteMultiple($listid, $table, $imageColumn, $redirectUrl)
+  {
+    $querySelect = "SELECT `$imageColumn` FROM `$table` WHERE id IN ($listid)";
+    $resultSelect = $this->db->select($querySelect);
+
+    if ($resultSelect && $resultSelect->num_rows > 0) {
+      while ($row = $resultSelect->fetch_assoc()) {
+        $filePath = 'uploads/' . $row[$imageColumn];
+        if (!empty($row[$imageColumn]) && file_exists($filePath)) {
+          unlink($filePath);
+        }
+      }
+    }
+    $queryDelete = "DELETE FROM `$table` WHERE id IN ($listid)";
+    $resultDelete = $this->db->delete($queryDelete);
+
+    if ($resultDelete) {
+      header("Location: transfer.php?stt=success&url=$redirectUrl");
+      exit();
+    } else {
+      return "Lỗi thao tác!";
+    }
+  }
+
+  public function delete($id, $table, $imageColumn, $redirect_url)
+  {
+    $del_file_name = "SELECT `$imageColumn` FROM $table WHERE id='$id'";
+    $delta = $this->db->select($del_file_name);
+    $string = "";
+    while ($rowData = $delta->fetch_assoc()) {
+      $string .= $rowData[$imageColumn];
+    }
+    $delLink = "uploads/" . $string;
+    if (!empty($string) && file_exists($delLink)) {
+      unlink($delLink);
+    }
+    $query = "DELETE FROM $table WHERE id = '$id'";
+    $result = $this->db->delete($query);
+    if ($result) {
+      header("Location: transfer.php?stt=success&url=$redirect_url");
+      exit();
+    } else {
+      header("Location: transfer.php?stt=danger&url=$redirect_url");
+      exit();
+    }
+  }
+
   public function isSlugviDuplicated($slugvi, $table, $exclude_id)
   {
     // Escape đầu vào
@@ -40,7 +110,7 @@ class functions
 
     // 🔒 Nếu slug nằm trong danh sách cấm → từ chối ngay
     if (in_array($slugvi, $reserved_slugs)) {
-      return 'reserved'; // slug bị cấm vì trùng trang tĩnh
+      return 'reserved';
     }
 
     // 🔁 Kiểm tra trùng trong bảng dữ liệu
@@ -62,7 +132,6 @@ class functions
         return $tbl; // trùng trong bảng cụ thể
       }
     }
-
     return false; // hợp lệ
   }
 

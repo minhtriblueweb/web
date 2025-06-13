@@ -78,7 +78,8 @@ class functions
       header("Location: transfer.php?stt=success&url=$redirectUrl");
       exit();
     } else {
-      return "Lỗi thao tác!";
+      header("Location: transfer.php?stt=danger&url=$redirectUrl");
+      exit();
     }
   }
 
@@ -257,9 +258,17 @@ class functions
     return true;
   }
 
-  public function createFixedThumbnail($source_path, $thumb_width, $thumb_height, $background = false)
+  public function createFixedThumbnail($source_path, $thumb_name, $background = false, $add_watermark = false)
   {
     if (!file_exists($source_path)) return false;
+
+    // Parse kích thước và crop từ tên thumb, ví dụ: 300x300x2
+    if (!preg_match('/^(\d+)x(\d+)(x(\d+))?$/', $thumb_name, $matches)) {
+      return false;
+    }
+    $thumb_width = (int)$matches[1];
+    $thumb_height = (int)$matches[2];
+    $zoom_crop = isset($matches[4]) ? (int)$matches[4] : 1;
 
     $image_info = getimagesize($source_path);
     if (!$image_info) return false;
@@ -279,55 +288,76 @@ class functions
       default:
         return false;
     }
-    $ratio_orig = $width_orig / $height_orig;
-    $thumb_ratio = $thumb_width / $thumb_height;
-    if ($ratio_orig > $thumb_ratio) {
-      $new_width = $thumb_width;
-      $new_height = intval($thumb_width / $ratio_orig);
+
+    // Tính crop/fit
+    $src_x = $src_y = 0;
+    $src_w = $width_orig;
+    $src_h = $height_orig;
+    $dst_w = $thumb_width;
+    $dst_h = $thumb_height;
+
+    $src_ratio = $width_orig / $height_orig;
+    $dst_ratio = $thumb_width / $thumb_height;
+
+    if ($zoom_crop == 2) {
+      // Fit: giữ nguyên toàn bộ ảnh, viền trắng
+      if ($src_ratio > $dst_ratio) {
+        $dst_h = intval($thumb_width / $src_ratio);
+      } else {
+        $dst_w = intval($thumb_height * $src_ratio);
+      }
+    } elseif ($zoom_crop == 1) {
+      // Fill: crop lấp đầy khung
+      if ($src_ratio > $dst_ratio) {
+        $src_w = intval($height_orig * $dst_ratio);
+        $src_x = intval(($width_orig - $src_w) / 2);
+      } else {
+        $src_h = intval($width_orig / $dst_ratio);
+        $src_y = intval(($height_orig - $src_h) / 2);
+      }
     } else {
-      $new_height = $thumb_height;
-      $new_width = intval($thumb_height * $ratio_orig);
+      // Resize vừa khít, không crop
+      if ($src_ratio > $dst_ratio) {
+        $dst_h = intval($thumb_width / $src_ratio);
+      } else {
+        $dst_w = intval($thumb_height * $src_ratio);
+      }
     }
-    $resized = imagecreatetruecolor($new_width, $new_height);
-    if ($image_type == IMAGETYPE_PNG || $image_type == IMAGETYPE_WEBP) {
-      imagealphablending($resized, false);
-      imagesavealpha($resized, true);
-    }
-    imagecopyresampled($resized, $image, 0, 0, 0, 0, $new_width, $new_height, $width_orig, $height_orig);
 
+    // Tạo canvas thumbnail
     $thumb = imagecreatetruecolor($thumb_width, $thumb_height);
-
     if ($background && ($image_type == IMAGETYPE_PNG || $image_type == IMAGETYPE_WEBP)) {
       imagealphablending($thumb, false);
       imagesavealpha($thumb, true);
-      $transparent = imagecolorallocatealpha($thumb, 0, 0, 0, 127); // transparent black
+      $transparent = imagecolorallocatealpha($thumb, 0, 0, 0, 127);
       imagefill($thumb, 0, 0, $transparent);
     } else {
       $white = imagecolorallocate($thumb, 255, 255, 255);
       imagefill($thumb, 0, 0, $white);
     }
 
-    $dst_x = intval(($thumb_width - $new_width) / 2);
-    $dst_y = intval(($thumb_height - $new_height) / 2);
-    imagecopy($thumb, $resized, $dst_x, $dst_y, 0, 0, $new_width, $new_height);
+    // Resize và crop nếu cần
+    $dst_x = intval(($thumb_width - $dst_w) / 2);
+    $dst_y = intval(($thumb_height - $dst_h) / 2);
+    imagecopyresampled($thumb, $image, $dst_x, $dst_y, $src_x, $src_y, $dst_w, $dst_h, $src_w, $src_h);
 
-    // Tạo tên & thư mục lưu
+    // Lưu thumbnail
     $upload_dir = 'uploads/';
     if (!is_dir($upload_dir)) mkdir($upload_dir, 0777, true);
 
     $original_name = pathinfo($source_path, PATHINFO_FILENAME);
-    $thumb_filename = $original_name . '_' . $thumb_width . 'x' . $thumb_height . '.webp';
+    $thumb_filename = $original_name . '_' . $thumb_name . '.webp';
     $thumb_path = $upload_dir . $thumb_filename;
 
-    // Lưu thumbnail
     imagewebp($thumb, $thumb_path, 80);
 
-    // Thêm watermark lên chính ảnh vừa tạo
-    $this->addWatermark($thumb_path, $thumb_path, 9, 100, 0, 0);
+    // Thêm watermark nếu được yêu cầu
+    if ($add_watermark && method_exists($this, 'addWatermark')) {
+      $this->addWatermark($thumb_path, $thumb_path, 9, 100, 0, 0);
+    }
 
     // Giải phóng bộ nhớ
     imagedestroy($image);
-    imagedestroy($resized);
     imagedestroy($thumb);
 
     return basename($thumb_path);

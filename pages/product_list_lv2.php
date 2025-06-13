@@ -10,7 +10,7 @@ if (empty($slug)) {
 // Lấy thông tin danh mục cấp 2 + cha (JOIN sẵn)
 $data = $danhmuc->get_danhmuc_c2_with_parent($slug);
 
-if (!$data || empty($data['id']) || empty($data['slug_lv1'])) {
+if (!$data || empty($data['id'])) {
   http_response_code(404);
   include '404.php';
   exit();

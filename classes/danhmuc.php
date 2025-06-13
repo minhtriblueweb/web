@@ -93,24 +93,26 @@ class danhmuc
   }
 
 
-  private function ImageUpload($file_source_path, $original_name, $thumb_width, $thumb_height, $old_file_path = '', $background = [0, 0, 0, 127])
+  public function ImageUpload($file_source_path, $original_name, $thumb_name, $old_file_path, $background)
   {
-    $thumb_filename = $this->fn->add_thumb($file_source_path, $thumb_width, $thumb_height, $background);
+    // Gọi tạo thumbnail (true = thêm watermark)
+    $thumb_filename = $this->fn->createFixedThumbnail($file_source_path, $thumb_name, $background, true);
 
     if (!$thumb_filename) {
+      // Nếu không tạo được thumbnail thì giữ lại ảnh gốc
       $thumb_filename = basename($file_source_path);
     } else {
+      // Xoá ảnh gốc nếu thumbnail đã tạo thành công
       if (file_exists($file_source_path)) {
         unlink($file_source_path);
       }
     }
-
     if (!empty($old_file_path) && file_exists($old_file_path)) {
       unlink($old_file_path);
     }
-
     return $thumb_filename;
   }
+
 
   public function get_danhmuc($slug)
   {
@@ -311,7 +313,7 @@ class danhmuc
       $unique_image = substr(md5(time()), 0, 10) . '.' . $file_ext;
       $uploaded_image_path = "uploads/" . $unique_image;
       if (move_uploaded_file($file_tmp_name, $uploaded_image_path)) {
-        $thumb_filename = $this->ImageUpload($uploaded_image_path, $file_name, 50, 50, '', [0, 0, 0, 127]);
+        $thumb_filename = $this->ImageUpload($uploaded_image_path, $file_name, '50x50x1', '', [0, 0, 0, 127]);
         $field_names[] = 'file';
         $field_values[] = "'" . $thumb_filename . "'";
       }
@@ -359,7 +361,7 @@ class danhmuc
       $uploaded_image_path = "uploads/" . $unique_image;
 
       if (move_uploaded_file($file_tmp_name, $uploaded_image_path)) {
-        $thumb_filename = $this->ImageUpload($uploaded_image_path, $file_name, 100, 100, '', [0, 0, 0, 127]);
+        $thumb_filename = $this->ImageUpload($uploaded_image_path, $file_name, '100x100x1', '', [0, 0, 0, 127]);
         if (!empty($thumb_filename)) {
           $field_names[] = 'file';
           $field_values[] = "'" . $thumb_filename . "'";

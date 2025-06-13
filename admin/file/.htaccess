@@ -1,0 +1,7 @@
+RewriteEngine On
+
+RewriteRule "trang-chu" "index.php"
+RewriteRule "dang-nhap" "login.php"
+
+
+

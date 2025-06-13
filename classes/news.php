@@ -15,6 +15,23 @@ class news
     $this->fn = new functions();
   }
 
+  public function get_news_by_slug($slug)
+  {
+    $slug = mysqli_real_escape_string($this->db->link, $slug);
+    $query = "SELECT * FROM tbl_news WHERE slugvi = '$slug' LIMIT 1";
+    $result = $this->db->select($query);
+    return $result ? $result->fetch_assoc() : false;
+  }
+
+  public function get_baiviet_by_slug_and_type($slug, $type)
+  {
+    $slug = mysqli_real_escape_string($this->db->link, $slug);
+    $type = mysqli_real_escape_string($this->db->link, $type);
+    $query = "SELECT * FROM tbl_news WHERE slugvi = '$slug' AND type = '$type' LIMIT 1";
+    $result = $this->db->select($query);
+    return $result ? $result->fetch_assoc() : false;
+  }
+
   public function show_news_by_type($type, $hienthi = '', $noibat = '')
   {
     $conditions = ["type = '$type'"];

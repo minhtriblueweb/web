@@ -15,6 +15,26 @@ class functions
     $this->fm = new Format();
   }
 
+  public function convert_type($type)
+  {
+    $type = trim($type);
+    if ($type === '') return '';
+
+    $escapedType = mysqli_real_escape_string($this->db->link, $type);
+    $query = "SELECT langvi FROM tbl_type WHERE lang_define = '$escapedType' LIMIT 1";
+    $result = $this->db->select($query);
+
+    if ($result && $row = $result->fetch_assoc()) {
+      $langvi = $row['langvi'];
+      return [
+        'vi' => $langvi,
+        'slug' => $this->to_slug($langvi)
+      ];
+    }
+    return $type; // fallback nếu không có
+  }
+
+
   function is_selected($name, $result, $id, $value)
   {
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -501,5 +521,47 @@ class functions
     $pagination_html .= '</li>';
     $pagination_html .= '</ul>';
     return $pagination_html;
+  }
+
+  public function to_slug($string)
+  {
+    $search = array(
+      '#(à|á|ạ|ả|ã|â|ầ|ấ|ậ|ẩ|ẫ|ă|ằ|ắ|ặ|ẳ|ẵ)#',
+      '#(è|é|ẹ|ẻ|ẽ|ê|ề|ế|ệ|ể|ễ)#',
+      '#(ì|í|ị|ỉ|ĩ)#',
+      '#(ò|ó|ọ|ỏ|õ|ô|ồ|ố|ộ|ổ|ỗ|ơ|ờ|ớ|ợ|ở|ỡ)#',
+      '#(ù|ú|ụ|ủ|ũ|ư|ừ|ứ|ự|ử|ữ)#',
+      '#(ỳ|ý|ỵ|ỷ|ỹ)#',
+      '#(đ)#',
+      '#(À|Á|Ạ|Ả|Ã|Â|Ầ|Ấ|Ậ|Ẩ|Ẫ|Ă|Ằ|Ắ|Ặ|Ẳ|Ẵ)#',
+      '#(È|É|Ẹ|Ẻ|Ẽ|Ê|Ề|Ế|Ệ|Ể|Ễ)#',
+      '#(Ì|Í|Ị|Ỉ|Ĩ)#',
+      '#(Ò|Ó|Ọ|Ỏ|Õ|Ô|Ồ|Ố|Ộ|Ổ|Ỗ|Ơ|Ờ|Ớ|Ợ|Ở|Ỡ)#',
+      '#(Ù|Ú|Ụ|Ủ|Ũ|Ư|Ừ|Ứ|Ự|Ử|Ữ)#',
+      '#(Ỳ|Ý|Ỵ|Ỷ|Ỹ)#',
+      '#(Đ)#',
+      "/[^a-zA-Z0-9\-\_]/",
+    );
+    $replace = array(
+      'a',
+      'e',
+      'i',
+      'o',
+      'u',
+      'y',
+      'd',
+      'A',
+      'E',
+      'I',
+      'O',
+      'U',
+      'Y',
+      'D',
+      '-',
+    );
+    $string = preg_replace($search, $replace, $string);
+    $string = preg_replace('/(-)+/', '-', $string);
+    $string = strtolower($string);
+    return $string;
   }
 }

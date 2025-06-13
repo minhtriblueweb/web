@@ -15,6 +15,84 @@ class danhmuc
     $this->fn = new functions();
   }
 
+  public function get_danhmuc_c2_with_parent($slug)
+  {
+    $slug = mysqli_real_escape_string($this->db->link, $slug);
+
+    $query = "
+        SELECT
+            c2.*,
+            c1.namevi AS name_lv1,
+            c1.slugvi AS slug_lv1,
+            c1.titlevi AS title_lv1,
+            c1.keywordsvi AS keywords_lv1,
+            c1.descriptionvi AS description_lv1
+        FROM tbl_danhmuc_c2 c2
+        JOIN tbl_danhmuc c1 ON c2.id_list = c1.id
+        WHERE c2.slugvi = '$slug'
+        LIMIT 1
+    ";
+
+    $result = $this->db->select($query);
+    return $result ? $result->fetch_assoc() : false;
+  }
+
+
+  public function find_lv2_with_parent($slug_lv2)
+  {
+    $slug_lv2 = mysqli_real_escape_string($this->db->link, $slug_lv2);
+
+    $query = "
+        SELECT
+            c2.*,
+            c1.slugvi AS slug_lv1,
+            c1.namevi AS name_lv1,
+            c1.id AS id_list
+        FROM tbl_danhmuc_c2 AS c2
+        JOIN tbl_danhmuc AS c1 ON c2.id_list = c1.id
+        WHERE c2.slugvi = '$slug_lv2'
+        LIMIT 1
+    ";
+
+    $result = $this->db->select($query);
+
+    if ($result && $row = $result->fetch_assoc()) {
+      return $row;
+    }
+
+    return false;
+  }
+
+
+  public function slug_exists_lv1($slug)
+  {
+    $slug = mysqli_real_escape_string($this->db->link, $slug);
+    $query = "SELECT id FROM tbl_danhmuc WHERE slugvi = '$slug' LIMIT 1";
+    $result = $this->db->select($query);
+    return $result ? true : false;
+  }
+
+  public function slug_exists_lv2($slug_lv2, $slug_lv1)
+  {
+    $slug_lv1 = mysqli_real_escape_string($this->db->link, $slug_lv1);
+    $slug_lv2 = mysqli_real_escape_string($this->db->link, $slug_lv2);
+
+    // Lấy ID của danh mục cấp 1 từ slug
+    $query_lv1 = "SELECT id FROM tbl_danhmuc WHERE slugvi = '$slug_lv1' LIMIT 1";
+    $result_lv1 = $this->db->select($query_lv1);
+    if ($result_lv1 && $row_lv1 = $result_lv1->fetch_assoc()) {
+      $id_list = $row_lv1['id'];
+
+      // Kiểm tra danh mục cấp 2 trong danh mục cấp 1 đó
+      $query_lv2 = "SELECT id FROM tbl_danhmuc_c2 WHERE slugvi = '$slug_lv2' AND id_list = '$id_list' LIMIT 1";
+      $result_lv2 = $this->db->select($query_lv2);
+      return $result_lv2 ? true : false;
+    }
+
+    return false;
+  }
+
+
   private function ImageUpload($file_source_path, $original_name, $thumb_width, $thumb_height, $old_file_path = '', $background = [0, 0, 0, 127])
   {
     $thumb_filename = $this->fn->add_thumb($file_source_path, $thumb_width, $thumb_height, $background);

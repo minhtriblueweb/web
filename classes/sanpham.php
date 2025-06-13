@@ -235,10 +235,10 @@ class sanpham
   public function get_danhmuc_by_sanpham($id)
   {
     $query = "SELECT tbl_sanpham.*,
-        tbl_danhmuc.namevi AS danhmuc,
-        tbl_danhmuc.slugvi AS danhmuc_slugvi,
-        tbl_danhmuc_c2.namevi AS danhmuc_c2,
-        tbl_danhmuc_c2.slugvi AS danhmuc_c2_slugvi
+        tbl_danhmuc.namevi AS dm_c1_name,
+        tbl_danhmuc.slugvi AS dm_c1_slug,
+        tbl_danhmuc_c2.namevi AS dm_c2_name,
+        tbl_danhmuc_c2.slugvi AS dm_c2_slug
         FROM tbl_sanpham
         INNER JOIN tbl_danhmuc ON tbl_sanpham.id_list = tbl_danhmuc.id
         LEFT JOIN tbl_danhmuc_c2 ON tbl_sanpham.id_cat = tbl_danhmuc_c2.id
@@ -247,11 +247,12 @@ class sanpham
     return $result;
   }
 
-  public function get_sanpham($slug)
+  public function get_sanpham_by_slug($slug)
   {
+    $slug = mysqli_real_escape_string($this->db->link, $slug);
     $query = "SELECT * FROM tbl_sanpham WHERE slugvi = '$slug' AND hienthi = 'hienthi' LIMIT 1";
     $result = $this->db->select($query);
-    return $result;
+    return $result ? $result->fetch_assoc() : false;
   }
 
   public function get_id_sanpham($id)

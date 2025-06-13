@@ -1,34 +1,42 @@
 <?php
-define('UPLOADS', 'uploads/');
-define('BASE_ADMIN', $config['baseAdmin']);
-define('BASE', $config['base']);
-define('NO_IMG', $config['baseAdmin'] . "assets/img/noimage.png");
-$get_setting = $setting->get_setting();
-if ($get_setting) {
-  $result_setting = $get_setting->fetch_assoc();
-}
-$show_danhmuc = $danhmuc->show_danhmuc_index('hienthi');
-$seo = array(
-  'favicon' => isset($result_setting['favicon']) ? BASE_ADMIN . UPLOADS . $result_setting['favicon'] : '',
-  'title' => isset($result_setting['web_name']) ? htmlspecialchars($result_setting['web_name']) : '',
-  'keywords' => '',
-  'description' => isset($result_setting['descvi']) ? htmlspecialchars($result_setting['descvi']) : '',
-  'geo' => isset($result_setting['coords']) ? htmlspecialchars($result_setting['coords']) : '',
-  'web_name' => isset($result_setting['web_name']) ? htmlspecialchars($result_setting['web_name']) : '',
-  'email' => isset($result_setting['email']) ? htmlspecialchars($result_setting['email']) : '',
-  'url' => BASE,
-  'image' => isset($result_setting['logo']) ? BASE_ADMIN . UPLOADS . $result_setting['logo'] : '',
-);
+$request = $_GET['page'] ?? '';
+$request = trim($request, '/');
 
-$hotline = isset($result_setting['hotline']) ? htmlspecialchars($result_setting['hotline']) : '';
-$web_name = isset($result_setting['web_name']) ? htmlspecialchars($result_setting['web_name']) : '';
-$introduction = isset($result_setting['introduction']) ? htmlspecialchars($result_setting['introduction']) : '';
-$logo = isset($result_setting['logo']) ? BASE_ADMIN . UPLOADS . $result_setting['logo'] : '';
-$worktime = isset($result_setting['worktime']) ? htmlspecialchars($result_setting['worktime']) : '';
-$descvi = isset($result_setting['descvi']) ? htmlspecialchars($result_setting['descvi']) : '';
-$client_support = isset($result_setting['client_support']) ? $result_setting['client_support'] : '';
-$support = isset($result_setting['support']) ? $result_setting['support'] : '';
-$copyright = isset($result_setting['copyright']) ? htmlspecialchars($result_setting['copyright']) : '';
-$bodyjs = isset($result_setting['bodyjs']) ? $result_setting['bodyjs'] : '';
-$headjs = isset($result_setting['headjs']) ? $result_setting['headjs'] : '';
-$analytics = isset($result_setting['analytics']) ? $result_setting['analytics'] : '';
+$routes = [
+  '' => 'home.php',
+  'trang-chu' => 'home.php',
+  'gioi-thieu' => 'gioithieu.php',
+  'lien-he' => 'lienhe.php',
+  'san-pham' => 'product_list.php',
+  'mua-hang' => 'muahang.php',
+  'huong-dan-choi' => 'list_huongdan.php',
+  'chinh-sach' => 'list_chinhsach.php',
+  'tin-tuc' => 'list_tintuc.php'
+];
+
+if (isset($routes[$request])) {
+  $page = $routes[$request];
+} elseif ($request !== '') {
+  // Kiểm tra slug trong cấp 1
+  if ($danhmuc->slug_exists_lv1($request)) {
+    $_GET['slug'] = $request;
+    $page = 'product_list_lv1.php';
+  }
+  // Nếu không có trong cấp 1, thử tìm trong cấp 2
+  elseif ($info_lv2 = $danhmuc->find_lv2_with_parent($request)) {
+    $_GET['slug'] = $info_lv2['slugvi'];         // gán slug cấp 2
+    $_GET['slug_lv1'] = $info_lv2['slug_lv1'];   // gán slug cha (cấp 1)
+    $page = 'product_list_lv2.php';
+  } elseif ($newsData = $news->get_news_by_slug($request)) {
+    $_GET['slug'] = $request;
+    $_GET['type'] = $newsData['type'];
+    $page = 'news.php';
+  } elseif ($productData = $sanpham->get_sanpham_by_slug($request)) {
+    $_GET['slug'] = $request;
+    $page = 'product_details.php';
+  } else {
+    $page = '404.php';
+  }
+} else {
+  $page = '404.php';
+}

@@ -8,4 +8,3 @@ $config = array(
   'base' => 'http://localhost/web/',
   'baseAdmin' => 'http://localhost/web/admin/'
 );
-?>

@@ -12,7 +12,6 @@ $show_danhmuc = $danhmuc->show_danhmuc('tbl_danhmuc');
 if ($id = ($_GET['del'] ?? null)) {
   $del = $functions->delete($id, 'tbl_sanpham', 'file', $redirect_url);
 }
-
 if ($listid = ($_GET['listid'] ?? null)) {
   $xoanhieu = $functions->deleteMultiple($listid, 'tbl_sanpham', 'file', $redirect_url);
 }

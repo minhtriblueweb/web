@@ -63,7 +63,6 @@ class danhmuc
     return false;
   }
 
-
   public function slug_exists_lv1($slug)
   {
     $slug = mysqli_real_escape_string($this->db->link, $slug);
@@ -91,28 +90,6 @@ class danhmuc
 
     return false;
   }
-
-
-  public function ImageUpload($file_source_path, $original_name, $thumb_name, $old_file_path, $background)
-  {
-    // Gọi tạo thumbnail (true = thêm watermark)
-    $thumb_filename = $this->fn->createFixedThumbnail($file_source_path, $thumb_name, $background, true);
-
-    if (!$thumb_filename) {
-      // Nếu không tạo được thumbnail thì giữ lại ảnh gốc
-      $thumb_filename = basename($file_source_path);
-    } else {
-      // Xoá ảnh gốc nếu thumbnail đã tạo thành công
-      if (file_exists($file_source_path)) {
-        unlink($file_source_path);
-      }
-    }
-    if (!empty($old_file_path) && file_exists($old_file_path)) {
-      unlink($old_file_path);
-    }
-    return $thumb_filename;
-  }
-
 
   public function get_danhmuc($slug)
   {
@@ -180,50 +157,32 @@ class danhmuc
 
   public function update_danhmuc_c2($data, $files, $id)
   {
-    // Danh sách các trường cần xử lý
     $fields = ['slugvi', 'namevi', 'id_list', 'titlevi', 'keywordsvi', 'descriptionvi', 'numb', 'hienthi', 'noibat'];
     $data_escaped = [];
-
     foreach ($fields as $field) {
       $data_escaped[$field] = !empty($data[$field]) ? mysqli_real_escape_string($this->db->link, $data[$field]) : "";
     }
-
     // Kiểm tra slug bị trùng
-    if ($this->fn->isSlugviDuplicated($data_escaped['slugvi'], 'tbl_danhmuc_c2', $id)) {
-      return "Đường dẫn đã tồn tại. Vui lòng chọn đường dẫn khác để tránh trùng lặp.";
+    $slug_error = $this->fn->isSlugviDuplicated($data_escaped['slugvi'], 'tbl_danhmuc_c2', $id);
+    if ($slug_error) {
+      return $slug_error;
     }
-
-    // Chuẩn bị trường cập nhật
+    $file_name = $files["file"]["name"] ?? '';
+    $old_file_path = '';
+    $old_file = $this->db->select("SELECT file FROM tbl_danhmuc_c2 WHERE id = '$id'");
+    if ($old_file && $old_file->num_rows > 0) {
+      $row = $old_file->fetch_assoc();
+      $old_file_path = "uploads/" . $row['file'];
+    }
+    $thumb_filename = $this->fn->Upload($files, '100x100x1', [0, 0, 0, 127], $old_file_path, false);
     $update_fields = [];
-    foreach ($fields as $field) {
-      $update_fields[] = "`$field` = '{$data_escaped[$field]}'";
+    foreach ($data_escaped as $field => $value) {
+      $update_fields[] = "`$field` = '$value'";
     }
-
-    // Xử lý ảnh nếu có
-    $file_name = $_FILES["file"]["name"] ?? '';
-    $file_tmp_name = $_FILES["file"]["tmp_name"] ?? '';
-    if (!empty($file_name) && !empty($file_tmp_name)) {
-      $file_ext = strtolower(pathinfo($file_name, PATHINFO_EXTENSION));
-      $unique_image = substr(md5(time()), 0, 10) . '.' . $file_ext;
-      $uploaded_image = "uploads/" . $unique_image;
-
-      if (move_uploaded_file($file_tmp_name, $uploaded_image)) {
-        // Lấy ảnh cũ để xóa sau khi tạo thumb
-        $del_file_query = "SELECT file FROM tbl_danhmuc_c2 WHERE id = '$id'";
-        $del_file = $this->db->select($del_file_query);
-        $old_file_path = '';
-        if ($del_file && $del_file->num_rows > 0) {
-          $old_file_name = $del_file->fetch_assoc()['file'];
-          $old_file_path = "uploads/" . $old_file_name;
-        }
-        $thumb_filename = $this->ImageUpload($uploaded_image, $file_name, 100, 100, $old_file_path, [0, 0, 0, 127]);
-        if (!empty($thumb_filename)) {
-          $update_fields[] = "`file` = '$thumb_filename'";
-        }
-      }
+    if (!empty($thumb_filename)) {
+      $update_fields[] = "file = '$thumb_filename'";
     }
-
-    // Thực hiện cập nhật
+    $id = (int)$id;
     $update_query = "UPDATE tbl_danhmuc_c2 SET " . implode(", ", $update_fields) . " WHERE id = '$id'";
     $result = $this->db->update($update_query);
 
@@ -235,43 +194,26 @@ class danhmuc
     }
   }
 
-
   public function update_danhmuc($data, $files, $id)
   {
     $fields = ['slugvi', 'namevi', 'descvi', 'contentvi', 'titlevi', 'keywordsvi', 'descriptionvi', 'numb', 'hienthi', 'noibat'];
     $data_escaped = [];
-
     foreach ($fields as $field) {
       $data_escaped[$field] = !empty($data[$field]) ? mysqli_real_escape_string($this->db->link, $data[$field]) : "";
     }
-
     // Kiểm tra slug trùng
-    if ($this->fn->isSlugviDuplicated($data_escaped['slugvi'], 'tbl_danhmuc', $id)) {
-      return "Đường dẫn đã tồn tại. Vui lòng chọn đường dẫn khác để tránh trùng lặp.";
+    $slug_error = $this->fn->isSlugviDuplicated($data_escaped['slugvi'], 'tbl_danhmuc', $id);
+    if ($slug_error) {
+      return $slug_error;
     }
-
-    $file_name = $_FILES["file"]["name"] ?? '';
-    $file_tmp = $_FILES["file"]["tmp_name"] ?? '';
-    $thumb_filename = '';
-
-    if (!empty($file_name) && !empty($file_tmp)) {
-      // Tạo tên tạm cho file upload
-      $file_ext = strtolower(pathinfo($file_name, PATHINFO_EXTENSION));
-      $unique_image = substr(md5(time()), 0, 10) . '.' . $file_ext;
-      $uploaded_image = "uploads/" . $unique_image;
-
-      if (move_uploaded_file($file_tmp, $uploaded_image)) {
-        // Lấy ảnh cũ để xóa
-        $old_file_query = "SELECT file FROM tbl_danhmuc WHERE id = '$id'";
-        $old_file = $this->db->select($old_file_query);
-        $old_file_path = '';
-        if ($old_file && $old_file->num_rows > 0) {
-          $row = $old_file->fetch_assoc();
-          $old_file_path = "uploads/" . $row['file'];
-        }
-        $thumb_filename = $this->ImageUpload($uploaded_image, $file_name, 50, 50, $old_file_path, [0, 0, 0, 127]);
-      }
+    $file_name = $files["file"]["name"] ?? '';
+    $old_file_path = '';
+    $old_file = $this->db->select("SELECT file FROM tbl_danhmuc WHERE id = '$id'");
+    if ($old_file && $old_file->num_rows > 0) {
+      $row = $old_file->fetch_assoc();
+      $old_file_path = "uploads/" . $row['file'];
     }
+    $thumb_filename = $this->fn->Upload($files, '50x50x1', [0, 0, 0, 127], $old_file_path, false);
     $update_fields = [];
     foreach ($data_escaped as $field => $value) {
       $update_fields[] = "`$field` = '$value'";
@@ -280,6 +222,7 @@ class danhmuc
     if (!empty($thumb_filename)) {
       $update_fields[] = "file = '$thumb_filename'";
     }
+    $id = (int)$id;
     $update_query = "UPDATE tbl_danhmuc SET " . implode(", ", $update_fields) . " WHERE id = '$id'";
     $result = $this->db->update($update_query);
 
@@ -295,37 +238,25 @@ class danhmuc
   public function insert_danhmuc($data, $files)
   {
     $fields = ['slugvi', 'namevi', 'descvi', 'contentvi', 'titlevi', 'keywordsvi', 'descriptionvi', 'hienthi', 'noibat', 'numb'];
-    $field_names = [];
-    $field_values = [];
-
+    $data_escaped = [];
     foreach ($fields as $field) {
-      $field_names[] = $field;
-      $value = !empty($data[$field]) ? mysqli_real_escape_string($this->db->link, $data[$field]) : "";
-      $field_values[] = "'" . $value . "'";
+      $data_escaped[$field] = !empty($data[$field]) ? mysqli_real_escape_string($this->db->link, $data[$field]) : "";
     }
-
-    $file_name = $_FILES["file"]["name"] ?? '';
-    $file_tmp_name = $_FILES["file"]["tmp_name"] ?? '';
-    $unique_image = '';
-
-    if (!empty($file_name)) {
-      $file_ext = strtolower(pathinfo($file_name, PATHINFO_EXTENSION));
-      $unique_image = substr(md5(time()), 0, 10) . '.' . $file_ext;
-      $uploaded_image_path = "uploads/" . $unique_image;
-      if (move_uploaded_file($file_tmp_name, $uploaded_image_path)) {
-        $thumb_filename = $this->ImageUpload($uploaded_image_path, $file_name, '50x50x1', '', [0, 0, 0, 127]);
-        $field_names[] = 'file';
-        $field_values[] = "'" . $thumb_filename . "'";
-      }
-    }
-
     // Kiểm tra slug trùng
-    if ($this->fn->isSlugviDuplicated($data['slugvi'], 'tbl_danhmuc', '')) {
-      return "Đường dẫn đã tồn tại. Vui lòng chọn đường dẫn khác để tránh trùng lặp.";
+    $slug_error = $this->fn->isSlugviDuplicated($data_escaped['slugvi'], 'tbl_danhmuc', '');
+    if ($slug_error) {
+      return $slug_error;
     }
+    $field_names = array_keys($data_escaped);
+    $field_values = array_map(fn($v) => "'" . $v . "'", $data_escaped);
 
-    $query = "INSERT INTO tbl_danhmuc (" . implode(", ", $field_names) . ") VALUES (" . implode(", ", $field_values) . ")";
-    $result = $this->db->insert($query);
+    $thumb_filename = $this->fn->Upload($files, '50x50x1', [0, 0, 0, 127], '',  false);
+    if (!empty($thumb_filename)) {
+      $field_names[] = 'file';
+      $field_values[] = "'" . $thumb_filename . "'";
+    }
+    $insert_query = "INSERT INTO tbl_danhmuc (" . implode(", ", $field_names) . ") VALUES (" . implode(", ", $field_values) . ")";
+    $result = $this->db->insert($insert_query);
 
     if ($result) {
       header('Location: transfer.php?stt=success&url=category_lv1_list');
@@ -344,29 +275,17 @@ class danhmuc
       $data_escaped[$field] = !empty($data[$field]) ? mysqli_real_escape_string($this->db->link, $data[$field]) : "";
     }
     // Kiểm tra slug trùng
-    if ($this->fn->isSlugviDuplicated($data_escaped['slugvi'], 'tbl_danhmuc_c2', '')) {
-      return "Đường dẫn đã tồn tại. Vui lòng chọn đường dẫn khác để tránh trùng lặp.";
+    $slug_error = $this->fn->isSlugviDuplicated($data_escaped['slugvi'], 'tbl_danhmuc', '');
+    if ($slug_error) {
+      return $slug_error;
     }
     $field_names = array_keys($data_escaped);
-    $field_values = array_map(function ($value) {
-      return "'$value'";
-    }, array_values($data_escaped));
+    $field_values = array_map(fn($v) => "'" . $v . "'", $data_escaped);
 
-    $file_name = $_FILES["file"]["name"] ?? '';
-    $file_tmp_name = $_FILES["file"]["tmp_name"] ?? '';
-
-    if (!empty($file_name) && !empty($file_tmp_name)) {
-      $file_ext = strtolower(pathinfo($file_name, PATHINFO_EXTENSION));
-      $unique_image = substr(md5(time()), 0, 10) . '.' . $file_ext;
-      $uploaded_image_path = "uploads/" . $unique_image;
-
-      if (move_uploaded_file($file_tmp_name, $uploaded_image_path)) {
-        $thumb_filename = $this->ImageUpload($uploaded_image_path, $file_name, '100x100x1', '', [0, 0, 0, 127]);
-        if (!empty($thumb_filename)) {
-          $field_names[] = 'file';
-          $field_values[] = "'" . $thumb_filename . "'";
-        }
-      }
+    $thumb_filename = $this->fn->Upload($files, '100x100x1', [0, 0, 0, 127], '', false);
+    if (!empty($thumb_filename)) {
+      $field_names[] = 'file';
+      $field_values[] = "'" . $thumb_filename . "'";
     }
     $insert_query = "INSERT INTO tbl_danhmuc_c2 (" . implode(", ", $field_names) . ") VALUES (" . implode(", ", $field_values) . ")";
     $result = $this->db->insert($insert_query);

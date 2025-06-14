@@ -58,10 +58,15 @@ class functions
   }
 
 
-  public function deleteMultiple($listid, $table, $imageColumn, $redirectUrl)
+  public function deleteMultiple($listid, $table, $imageColumn, $redirectUrl, $hasIdParent = false)
   {
-    $querySelect = "SELECT `$imageColumn` FROM `$table` WHERE id IN ($listid)";
+    $listid_clean = implode(',', array_map(fn($id) => (int)trim($id), explode(',', $listid)));
+
+    // Lấy ảnh và id_parent nếu cần
+    $querySelect = "SELECT id, `$imageColumn`" . ($hasIdParent ? ", id_parent" : "") . " FROM `$table` WHERE id IN ($listid_clean)";
     $resultSelect = $this->db->select($querySelect);
+
+    $last_id_parent = 0;
 
     if ($resultSelect && $resultSelect->num_rows > 0) {
       while ($row = $resultSelect->fetch_assoc()) {
@@ -69,19 +74,29 @@ class functions
         if (!empty($row[$imageColumn]) && file_exists($filePath)) {
           unlink($filePath);
         }
+
+        if ($hasIdParent) {
+          $last_id_parent = $row['id_parent'];
+        }
       }
     }
-    $queryDelete = "DELETE FROM `$table` WHERE id IN ($listid)";
+
+    $queryDelete = "DELETE FROM `$table` WHERE id IN ($listid_clean)";
     $resultDelete = $this->db->delete($queryDelete);
 
     if ($resultDelete) {
-      header("Location: transfer.php?stt=success&url=$redirectUrl");
+      if ($hasIdParent && $table == 'tbl_gallery') {
+        header("Location: transfer.php?stt=success&url=gallery&id=$last_id_parent");
+      } else {
+        header("Location: transfer.php?stt=success&url=$redirectUrl");
+      }
       exit();
     } else {
       header("Location: transfer.php?stt=danger&url=$redirectUrl");
       exit();
     }
   }
+
 
   public function delete($id, $table, $imageColumn, $redirect_url)
   {
@@ -150,7 +165,7 @@ class functions
 
       $result = $this->db->select($check_slug_query);
       if ($result && $result->num_rows > 0) {
-        return $tbl; // trùng trong bảng cụ thể
+        return "Đường dẫn đã tồn tại. Vui lòng chọn đường dẫn khác để tránh trùng lặp.";
       }
     }
     return false; // hợp lệ
@@ -364,74 +379,49 @@ class functions
   }
 
 
-  public function add_thumb($source_path, $thumb_width, $thumb_height, $background = false)
+  public function ImageUpload($file_source_path, $original_name, $old_file_path, $thumb_name, $background, $watermark = false)
   {
-    if (!file_exists($source_path)) return false;
+    // Gọi tạo thumbnail, truyền watermark từ tham số
+    $thumb_filename = $this->createFixedThumbnail($file_source_path, $thumb_name, $background, $watermark);
 
-    $image_info = getimagesize($source_path);
-    if (!$image_info) return false;
-
-    list($width_orig, $height_orig, $image_type) = $image_info;
-
-    switch ($image_type) {
-      case IMAGETYPE_JPEG:
-        $image = imagecreatefromjpeg($source_path);
-        break;
-      case IMAGETYPE_PNG:
-        $image = imagecreatefrompng($source_path);
-        break;
-      case IMAGETYPE_WEBP:
-        $image = imagecreatefromwebp($source_path);
-        break;
-      default:
-        return false;
-    }
-    $ratio_orig = $width_orig / $height_orig;
-    $thumb_ratio = $thumb_width / $thumb_height;
-    if ($ratio_orig > $thumb_ratio) {
-      $new_width = $thumb_width;
-      $new_height = intval($thumb_width / $ratio_orig);
+    if (!$thumb_filename) {
+      // Nếu không tạo được thumbnail thì giữ lại ảnh gốc
+      $thumb_filename = basename($file_source_path);
     } else {
-      $new_height = $thumb_height;
-      $new_width = intval($thumb_height * $ratio_orig);
-    }
-    $resized = imagecreatetruecolor($new_width, $new_height);
-    if ($image_type == IMAGETYPE_PNG || $image_type == IMAGETYPE_WEBP) {
-      imagealphablending($resized, false);
-      imagesavealpha($resized, true);
-    }
-    imagecopyresampled($resized, $image, 0, 0, 0, 0, $new_width, $new_height, $width_orig, $height_orig);
-
-    $thumb = imagecreatetruecolor($thumb_width, $thumb_height);
-
-    if ($background && ($image_type == IMAGETYPE_PNG || $image_type == IMAGETYPE_WEBP)) {
-      imagealphablending($thumb, false);
-      imagesavealpha($thumb, true);
-      $transparent = imagecolorallocatealpha($thumb, 0, 0, 0, 127); // transparent black
-      imagefill($thumb, 0, 0, $transparent);
-    } else {
-      $white = imagecolorallocate($thumb, 255, 255, 255);
-      imagefill($thumb, 0, 0, $white);
+      // Xoá ảnh gốc nếu thumbnail đã tạo thành công
+      if (file_exists($file_source_path)) {
+        unlink($file_source_path);
+      }
     }
 
-    $dst_x = intval(($thumb_width - $new_width) / 2);
-    $dst_y = intval(($thumb_height - $new_height) / 2);
-    imagecopy($thumb, $resized, $dst_x, $dst_y, 0, 0, $new_width, $new_height);
-
-    $upload_dir = 'uploads/';
-    if (!is_dir($upload_dir)) mkdir($upload_dir, 0777, true);
-
-    $original_name = pathinfo($source_path, PATHINFO_FILENAME);
-    $thumb_filename = $original_name . '_' . $thumb_width . 'x' . $thumb_height . '.webp';
-    $thumb_path = $upload_dir . $thumb_filename;
-
-    imagewebp($thumb, $thumb_path, 80);
-
-    imagedestroy($image);
-    imagedestroy($resized);
-    imagedestroy($thumb);
+    // Xoá ảnh cũ nếu tồn tại
+    if (!empty($old_file_path) && file_exists($old_file_path)) {
+      unlink($old_file_path);
+    }
 
     return $thumb_filename;
+  }
+
+  public function Upload(
+    $files,
+    $thumb_name,
+    array $background = [0, 0, 0, 127],
+    string $old_file_path = '',
+    $watermark = false
+  ) {
+    $file_name = $files["file"]["name"] ?? '';
+    $file_tmp = $files["file"]["tmp_name"] ?? '';
+
+    if (!empty($file_name) && !empty($file_tmp)) {
+      $file_ext = strtolower(pathinfo($file_name, PATHINFO_EXTENSION));
+      $unique_image = substr(md5(time() . rand() . uniqid()), 0, 10) . '.' . $file_ext;
+      $uploaded_image = "uploads/" . $unique_image;
+
+      if (move_uploaded_file($file_tmp, $uploaded_image)) {
+        return $this->ImageUpload($uploaded_image, $file_name, $old_file_path, $thumb_name, $background, $watermark);
+      }
+    }
+    return '';
   }
 
   public function phantrang_sp($tbl)
@@ -501,7 +491,6 @@ class functions
     $pagination_html .= '</ul>';
     return $pagination_html;
   }
-
 
   function renderPagination_tc($current_page, $total_pages, $base_url)
   {

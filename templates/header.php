@@ -55,7 +55,6 @@
   <link href="<?= BASE ?>assets/css/animate.min.css" rel="stylesheet" />
   <link href="<?= BASE ?>assets/bootstrap/bootstrap.css" rel="stylesheet" />
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" rel="stylesheet" />
-  <!-- <link href="<?= BASE ?>assets/bootstrap/bootstrap-icons.css" rel="stylesheet" /> -->
   <link href="<?= BASE ?>assets/holdon/HoldOn.css" rel="stylesheet" />
   <link href="<?= BASE ?>assets/holdon/HoldOn-style.css" rel="stylesheet" />
   <link href="<?= BASE ?>assets/confirm/confirm.css" rel="stylesheet" />
@@ -71,8 +70,6 @@
   <link href="<?= BASE ?>assets/menu-mobile/menu-mobile.css" rel="stylesheet" />
   <link href="<?= BASE ?>assets/fancybox5/fancybox.css" rel="stylesheet" />
   <link href="<?= BASE ?>assets/slick/slick.css" rel="stylesheet" />
-  <link href="<?= BASE ?>assets/slick/slick-theme.css" rel="stylesheet" />
-  <link href="<?= BASE ?>assets/slick/slick-style.css" rel="stylesheet" />
   <link href="<?= BASE ?>assets/magiczoomplus/magiczoomplus.css" rel="stylesheet" />
   <link href="<?= BASE ?>assets/aos/aos.css" rel="stylesheet" />
   <link href="<?= BASE ?>assets/css/style.css" rel="stylesheet" />

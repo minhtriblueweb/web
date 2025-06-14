@@ -16,7 +16,7 @@ if (isset($_GET['del'])) {
 }
 if (isset($_GET['listid'])) {
   $listid = $_GET['listid'];
-  $xoanhieu = $sanpham->xoanhieu_gallery($listid);
+  $xoanhieu = $functions->deleteMultiple($listid, 'tbl_gallery', 'photo', 'gallery', true);
 }
 
 ?>
@@ -74,43 +74,43 @@ if (isset($_GET['listid'])) {
         </thead>
         <tbody>
           <?php if ($get_gallery): ?>
-          <?php while ($resule_gallery = $get_gallery->fetch_assoc()) : ?>
-          <tr>
-            <td class="align-middle">
-              <div class="custom-control custom-checkbox my-checkbox">
-                <input type="checkbox" class="custom-control-input select-checkbox"
-                  id="select-checkbox-<?= $resule_gallery['id'] ?>" value="<?= $resule_gallery['id'] ?>">
-                <label for="select-checkbox-<?= $resule_gallery['id'] ?>" class="custom-control-label"></label>
-              </div>
-            </td>
-            <td class="align-middle">
-              <input type="number" class="form-control form-control-mini m-auto update-numb" min="0"
-                value="<?= $resule_gallery['numb'] ?>" data-id="<?= $resule_gallery['id'] ?>" data-table="tbl_gallery">
-            </td>
-            <td class="align-middle text-center">
-              <a href="edit_gallery.php?id=<?= $resule_gallery['id'] ?>">
-                <img class="rounded img-preview"
-                  src="<?= empty($resule_gallery['photo']) ? $config['baseAdmin'] . "assets/img/noimage.png" : $config['baseAdmin'] . "uploads/" . $resule_gallery['photo'] ?>">
-              </a>
-            </td>
-            <td class="align-middle text-center">
-              <div class="custom-control custom-checkbox my-checkbox">
-                <input type="checkbox" data-type="hienthi" class="custom-control-input show-checkbox"
-                  id="show-checkbox-hienthi-<?= $resule_gallery['id'] ?>" data-table="tbl_gallery"
-                  data-id="<?= $resule_gallery['id'] ?>"
-                  data-attr="<?= ($resule_gallery['hienthi'] == 'hienthi') ? '' : 'hienthi' ?>"
-                  <?= $resule_gallery['hienthi'] == 'hienthi' ? 'checked' : '' ?> />
-                <label for="show-checkbox-hienthi-<?= $resule_gallery['id'] ?>" class="custom-control-label"></label>
-              </div>
-            </td>
-            <td class="align-middle text-center text-md text-nowrap">
-              <a class="text-primary mr-2" href="edit_gallery.php?id=<?= $resule_gallery['id'] ?>" title="Chỉnh sửa"><i
-                  class="fas fa-edit"></i></a>
-              <a class="text-danger" id="delete-item" data-url="?del=<?= $resule_gallery['id'] ?>" title="Xóa"><i
-                  class="fas fa-trash-alt"></i></a>
-            </td>
-          </tr>
-          <?php endwhile; ?>
+            <?php while ($resule_gallery = $get_gallery->fetch_assoc()) : ?>
+              <tr>
+                <td class="align-middle">
+                  <div class="custom-control custom-checkbox my-checkbox">
+                    <input type="checkbox" class="custom-control-input select-checkbox"
+                      id="select-checkbox-<?= $resule_gallery['id'] ?>" value="<?= $resule_gallery['id'] ?>">
+                    <label for="select-checkbox-<?= $resule_gallery['id'] ?>" class="custom-control-label"></label>
+                  </div>
+                </td>
+                <td class="align-middle">
+                  <input type="number" class="form-control form-control-mini m-auto update-numb" min="0"
+                    value="<?= $resule_gallery['numb'] ?>" data-id="<?= $resule_gallery['id'] ?>" data-table="tbl_gallery">
+                </td>
+                <td class="align-middle text-center">
+                  <a href="edit_gallery.php?id=<?= $resule_gallery['id'] ?>">
+                    <img class="rounded img-preview"
+                      src="<?= empty($resule_gallery['photo']) ? $config['baseAdmin'] . "assets/img/noimage.png" : $config['baseAdmin'] . "uploads/" . $resule_gallery['photo'] ?>">
+                  </a>
+                </td>
+                <td class="align-middle text-center">
+                  <div class="custom-control custom-checkbox my-checkbox">
+                    <input type="checkbox" data-type="hienthi" class="custom-control-input show-checkbox"
+                      id="show-checkbox-hienthi-<?= $resule_gallery['id'] ?>" data-table="tbl_gallery"
+                      data-id="<?= $resule_gallery['id'] ?>"
+                      data-attr="<?= ($resule_gallery['hienthi'] == 'hienthi') ? '' : 'hienthi' ?>"
+                      <?= $resule_gallery['hienthi'] == 'hienthi' ? 'checked' : '' ?> />
+                    <label for="show-checkbox-hienthi-<?= $resule_gallery['id'] ?>" class="custom-control-label"></label>
+                  </div>
+                </td>
+                <td class="align-middle text-center text-md text-nowrap">
+                  <a class="text-primary mr-2" href="edit_gallery.php?id=<?= $resule_gallery['id'] ?>" title="Chỉnh sửa"><i
+                      class="fas fa-edit"></i></a>
+                  <a class="text-danger" id="delete-item" data-url="?del=<?= $resule_gallery['id'] ?>" title="Xóa"><i
+                      class="fas fa-trash-alt"></i></a>
+                </td>
+              </tr>
+            <?php endwhile; ?>
           <?php endif ?>
         </tbody>
       </table>

@@ -227,10 +227,9 @@ class danhmuc
     $result = $this->db->update($update_query);
 
     if ($result) {
-      header('Location: transfer.php?stt=success&url=category_lv1_list');
-      exit();
+      $this->fn->transfer("Cập nhật danh mục thành công", "index.php?page=category_lv1_list", true);
     } else {
-      return "Lỗi thao tác!";
+      $this->fn->transfer("Cập nhật danh mục thất bại", "index.php?page=category_lv1_list", false);
     }
   }
 
@@ -259,10 +258,9 @@ class danhmuc
     $result = $this->db->insert($insert_query);
 
     if ($result) {
-      header('Location: transfer.php?stt=success&url=category_lv1_list');
-      exit();
+      $this->fn->transfer("Thêm danh mục thành công", "index.php?page=category_lv1_list", true);
     } else {
-      return "Lỗi thao tác!";
+      $this->fn->transfer("Thêm danh mục thất bại", "index.php?page=category_lv1_list", false);
     }
   }
 

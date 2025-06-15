@@ -15,6 +15,18 @@ class functions
     $this->fm = new Format();
   }
 
+  public function transfer($msg = '', $page = '', $numb = true)
+  {
+    $_SESSION['transfer_data'] = [
+      'msg' => $msg,
+      'page' => $page,
+      'numb' => $numb
+    ];
+    header("Location: index.php?page=transfer");
+    exit();
+  }
+
+
   public function convert_type($type)
   {
     $type = trim($type);
@@ -57,22 +69,27 @@ class functions
     return $default ? 'checked' : '';
   }
 
-
   public function deleteMultiple($listid, $table, $imageColumn, $redirectUrl, $hasIdParent = false)
   {
-    $listid_clean = implode(',', array_map(fn($id) => (int)trim($id), explode(',', $listid)));
+    $ids = array_filter(array_map('intval', explode(',', $listid)));
+    if (empty($ids)) {
+      $this->transfer("Danh sách ID không hợp lệ!", "index.php?page=$redirectUrl", false);
+    }
 
-    // Lấy ảnh và id_parent nếu cần
-    $querySelect = "SELECT id, `$imageColumn`" . ($hasIdParent ? ", id_parent" : "") . " FROM `$table` WHERE id IN ($listid_clean)";
+    $idList = implode(',', $ids);
+
+    // Truy vấn lấy ảnh (và id_parent nếu có)
+    $querySelect = "SELECT id, `$imageColumn`" . ($hasIdParent ? ", id_parent" : "") . " FROM `$table` WHERE id IN ($idList)";
     $resultSelect = $this->db->select($querySelect);
 
     $last_id_parent = 0;
-
     if ($resultSelect && $resultSelect->num_rows > 0) {
       while ($row = $resultSelect->fetch_assoc()) {
-        $filePath = 'uploads/' . $row[$imageColumn];
-        if (!empty($row[$imageColumn]) && file_exists($filePath)) {
-          unlink($filePath);
+        if (!empty($row[$imageColumn])) {
+          $filePath = 'uploads/' . $row[$imageColumn];
+          if (file_exists($filePath)) {
+            unlink($filePath);
+          }
         }
 
         if ($hasIdParent) {
@@ -81,45 +98,51 @@ class functions
       }
     }
 
-    $queryDelete = "DELETE FROM `$table` WHERE id IN ($listid_clean)";
+    // Xóa dữ liệu
+    $queryDelete = "DELETE FROM `$table` WHERE id IN ($idList)";
     $resultDelete = $this->db->delete($queryDelete);
 
+    // Chuyển hướng có thông báo
     if ($resultDelete) {
       if ($hasIdParent && $table == 'tbl_gallery') {
-        header("Location: transfer.php?stt=success&url=gallery&id=$last_id_parent");
+        $this->transfer("Xóa dữ liệu thành công!", "gallery&id=$last_id_parent", true);
       } else {
-        header("Location: transfer.php?stt=success&url=$redirectUrl");
+        $this->transfer("Xóa dữ liệu thành công!", "index.php?page=$redirectUrl", true);
       }
-      exit();
     } else {
-      header("Location: transfer.php?stt=danger&url=$redirectUrl");
-      exit();
+      $this->transfer("Xóa dữ liệu thất bại!", "index.php?page=$redirectUrl", false);
     }
   }
-
 
   public function delete($id, $table, $imageColumn, $redirect_url)
   {
-    $del_file_name = "SELECT `$imageColumn` FROM $table WHERE id='$id'";
-    $delta = $this->db->select($del_file_name);
-    $string = "";
-    while ($rowData = $delta->fetch_assoc()) {
-      $string .= $rowData[$imageColumn];
+    $id = intval($id); // Ép kiểu an toàn
+
+    // Truy vấn tên file ảnh
+    $check_query = "SELECT `$imageColumn` FROM `$table` WHERE id = '$id'";
+    $result = $this->db->select($check_query);
+    $row = ($result) ? $result->fetch_assoc() : null;
+
+    // Xóa file ảnh nếu tồn tại
+    if ($row && !empty($row[$imageColumn])) {
+      $filePath = "uploads/" . $row[$imageColumn];
+      if (file_exists($filePath)) {
+        unlink($filePath);
+      }
     }
-    $delLink = "uploads/" . $string;
-    if (!empty($string) && file_exists($delLink)) {
-      unlink($delLink);
-    }
-    $query = "DELETE FROM $table WHERE id = '$id'";
+
+    // Xóa bản ghi trong database
+    $query = "DELETE FROM `$table` WHERE id = '$id'";
     $result = $this->db->delete($query);
+
+    // Chuyển hướng thông báo
     if ($result) {
-      header("Location: transfer.php?stt=success&url=$redirect_url");
-      exit();
+      $this->transfer("Xóa dữ liệu thành công", "index.php?page=" . $redirect_url, true);
     } else {
-      header("Location: transfer.php?stt=danger&url=$redirect_url");
-      exit();
+      $this->transfer("Xóa dữ liệu thất bại", "index.php?page=" . $redirect_url, false);
     }
   }
+
 
   public function isSlugviDuplicated($slugvi, $table, $exclude_id)
   {

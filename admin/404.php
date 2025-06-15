@@ -1,8 +1,3 @@
-<?php
-include_once 'lib/database.php';
-include_once 'config/autoload.php';
-include_once 'lib/router.php';
-?>
 <!DOCTYPE html>
 <html lang="vi">
 

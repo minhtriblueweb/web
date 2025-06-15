@@ -1,10 +1,9 @@
 <?php
-define("DB_HOST", "localhost");
-define("DB_USER", "root");
-define("DB_PASS", "");
-define("DB_NAME", "web");
-
-$config = array(
+$config = [
   'base' => 'http://localhost/web/',
-  'baseAdmin' => 'http://localhost/web/admin/'
-);
+  'baseAdmin' => 'http://localhost/web/admin/',
+  'db_host' => 'localhost',
+  'db_user' => 'root',
+  'db_pass' => '',
+  'db_name' => 'web'
+];

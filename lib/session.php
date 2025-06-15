@@ -51,7 +51,11 @@ class Session
 
   public static function destroy()
   {
+    if (session_id() == '') session_start(); // Khởi động nếu chưa có
+    session_unset();
     session_destroy();
-    header("Location:dang-nhap");
+
+    // Xóa cookie nếu có dùng
+    setcookie(session_name(), '', time() - 3600, '/');
   }
 }

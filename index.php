@@ -1,5 +1,5 @@
 <?php
-include_once 'lib/autoload.php';
+include_once 'config/autoload.php';
 include_once 'lib/router.php';
 
 // SEO mặc định

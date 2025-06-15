@@ -1,5 +1,5 @@
 <?php
-$records_per_page = 20;
+$records_per_page = 1;
 $current_page = max(1, (int)($_GET['page'] ?? 1));
 $total_records = $functions->phantrang_sp('tbl_sanpham');
 $total_pages = max(1, ceil($total_records / $records_per_page));
@@ -72,7 +72,7 @@ $get_count_sp = $sanpham->count_sanpham();
             $views = $sp['views'] ?? 0;
             ?>
             <div class="item-product" data-aos="fade-up" data-aos-duration="1000">
-              <a href="san-pham/<?= $slug ?>">
+              <a href="<?= $slug ?>">
                 <div class="images">
                   <img src="<?= $img ?>" alt="<?= $name ?>" title="<?= $name ?>" class="w-100" loading="lazy" />
                 </div>

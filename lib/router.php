@@ -1,7 +1,21 @@
 <?php
-$request = $_GET['page'] ?? '';
-$request = trim($request, '/');
+$request_uri = $_GET['page'] ?? '';
+$request_uri = trim($request_uri, '/');
 
+// Tách phần page-x nếu có
+$requestParts = explode('/', $request_uri);
+$current_page = 1;
+
+if (preg_match('/^page-(\d+)$/', end($requestParts), $matches)) {
+  $current_page = (int)$matches[1];
+  array_pop($requestParts); // bỏ page-x ra
+}
+$slugPath = implode('/', $requestParts);
+
+// Gán giá trị trang hiện tại vào $_GET để dùng trong các trang khác
+$_GET['page'] = $current_page;
+
+// Các route tĩnh
 $routes = [
   '' => 'home.php',
   'trang-chu' => 'home.php',
@@ -14,25 +28,28 @@ $routes = [
   'tin-tuc' => 'list_tintuc.php'
 ];
 
-if (isset($routes[$request])) {
-  $page = $routes[$request];
-} elseif ($request !== '') {
-  // Kiểm tra slug trong cấp 1
-  if ($danhmuc->slug_exists_lv1($request)) {
-    $_GET['slug'] = $request;
+// Xử lý theo route
+if (isset($routes[$slugPath])) {
+  $page = $routes[$slugPath];
+} elseif ($slugPath !== '') {
+  // Danh mục cấp 1
+  if ($danhmuc->slug_exists_lv1($slugPath)) {
+    $_GET['slug'] = $slugPath;
     $page = 'product_list_lv1.php';
   }
-  // Nếu không có trong cấp 1, thử tìm trong cấp 2
-  elseif ($info_lv2 = $danhmuc->find_lv2_with_parent($request)) {
-    $_GET['slug'] = $info_lv2['slugvi'];         // gán slug cấp 2
-    $_GET['slug_lv1'] = $info_lv2['slug_lv1'];   // gán slug cha (cấp 1)
+  // Danh mục cấp 2 (có slug con và slug cha)
+  elseif ($info_lv2 = $danhmuc->find_lv2_with_parent($slugPath)) {
+    $_GET['slug'] = $info_lv2['slugvi'];
+    $_GET['slug_lv1'] = $info_lv2['slug_lv1'];
     $page = 'product_list_lv2.php';
-  } elseif ($newsData = $news->get_news_by_slug($request)) {
-    $_GET['slug'] = $request;
+  }
+  // Bài viết
+  elseif ($newsData = $news->get_news_by_slug($slugPath)) {
+    $_GET['slug'] = $slugPath;
     $_GET['type'] = $newsData['type'];
     $page = 'news.php';
-  } elseif ($productData = $sanpham->get_sanpham_by_slug($request)) {
-    $_GET['slug'] = $request;
+  } elseif ($productData = $sanpham->get_sanpham_by_slug($slugPath)) {
+    $_GET['slug'] = $slugPath;
     $page = 'product_details.php';
   } else {
     $page = '404.php';

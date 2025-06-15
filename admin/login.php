@@ -1,11 +1,30 @@
 <?php
-include '../classes/adminlogin.php';
-include '../lib/validation.php';
+include_once '../lib/session.php';
+Session::init();
+
+if (Session::get("adminlogin")) {
+  header("Location: index.php");
+  exit();
+}
+
+include_once '../classes/adminlogin.php';
+include_once '../lib/validation.php';
+
 $login = new adminlogin();
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST["btn_login"])) {
-  $username = $_POST['username'];
-  $password = md5($_POST['password']);
-  $login_check = $login->login($username, $password);
+  $username = $_POST['username'] ?? '';
+  $password = $_POST['password'] ?? '';
+
+  // Có thể kiểm tra định dạng ở đây nếu dùng validation
+  $login_check = $login->login($username, md5($password));
+
+  if ($login_check === "success") {
+    header("Location: index.php");
+    exit();
+  } else {
+    $error = $login_check;
+  }
 }
 ?>
 <!DOCTYPE html>
@@ -27,17 +46,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST["btn_login"])) {
 <body class="sidebar-mini hold-transition text-sm login-page">
   <!-- Loader -->
   <?php
-  if (session_id() === '')
-    session_start();
+  if (session_id() === '') session_start();
   if (isset($_SESSION['loader'])) {
     $_SESSION['loader'] += 1;
   } else {
     $_SESSION['loader'] = 1;
   }
   $luotvao = $_SESSION['loader'];
-  if ($luotvao == '1') {
   ?>
-    <div class="loader-wrapper">
+
+  <?php if ($luotvao == 1): ?>
+    <div class="loader-wrapper" id="global-loader">
       <div class="loader">
         <div class="preloader">
           <div class="spinner-layer">
@@ -52,7 +71,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST["btn_login"])) {
         <p>Please wait...</p>
       </div>
     </div>
-  <?php } ?>
+  <?php endif; ?>
+
   <!-- Wrapper -->
   <div class="login_blueweb blue-wrap-main">
     <div class="login_blueweb_content">
@@ -140,6 +160,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST["btn_login"])) {
         showPasswordIcon.classList.toggle("fa-eye-slash");
         showPasswordBtn.classList.toggle("active");
       });
+    });
+    window.addEventListener("load", function() {
+      const loader = document.getElementById("global-loader");
+      if (loader) {
+        loader.style.transition = "opacity 0.5s";
+        loader.style.opacity = 0;
+        setTimeout(() => loader.remove(), 500);
+      }
     });
   </script>
 </body>

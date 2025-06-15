@@ -15,7 +15,7 @@ if (!$get_danhmuc || !($kg_danhmuc = $get_danhmuc->fetch_assoc())) {
 }
 $id_list = $kg_danhmuc['id'];
 $get_danhmuc_c2 = $danhmuc->show_danhmuc_c2_index($id_list);
-$records_per_page = 10;
+$records_per_page = 20;
 $current_page = max(1, (int)($_GET['page'] ?? 1));
 $total_records = $sanpham->count_sanpham($id_list, '');
 $total_pages = max(1, ceil($total_records / $records_per_page));
@@ -127,7 +127,6 @@ $seo['image'] = BASE_ADMIN . UPLOADS . $kg_danhmuc['file'];
       <div class="mt-3">
         <?= $pagination_html = $functions->renderPagination_tc($current_page, $total_pages, BASE . $kg_danhmuc['slugvi'] . '/page-');
         ?>
-
       </div>
       <?php if (!empty($kg_danhmuc['contentvi'])): ?>
         <div class="desc-list mt-4">

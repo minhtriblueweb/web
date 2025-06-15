@@ -33,7 +33,7 @@ $id_list = (int)$dm_c2['id_list'];
 $list_danhmuc_c2 = $danhmuc->show_danhmuc_c2_index($id_list);
 
 // Phân trang
-$records_per_page = 10;
+$records_per_page = 1;
 $current_page = max(1, (int)($_GET['page'] ?? 1));
 
 $total_records = $sanpham->count_sanpham('', $dm_c2['id']);

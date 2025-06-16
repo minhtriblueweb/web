@@ -107,22 +107,13 @@ class danhmuc
     return $result;
   }
 
-  public function get_id_danhmuc($id)
+  public function get_id($table, $id)
   {
+    $table = mysqli_real_escape_string($this->db->link, $table);
     $id = mysqli_real_escape_string($this->db->link, $id);
-    $query = "SELECT * FROM tbl_danhmuc WHERE id = '$id' LIMIT 1";
-    $result = $this->db->select($query);
-    return $result;
+    $query = "SELECT * FROM `$table` WHERE id = '$id' LIMIT 1";
+    return $this->db->select($query);
   }
-
-  public function get_id_danhmuc_c2($id)
-  {
-    $id = mysqli_real_escape_string($this->db->link, $id);
-    $query = "SELECT * FROM tbl_danhmuc_c2 WHERE id = '$id' LIMIT 1";
-    $result = $this->db->select($query);
-    return $result;
-  }
-
 
   public function show_danhmuc_index($hienthi = '')
   {
@@ -155,143 +146,98 @@ class danhmuc
     return $result;
   }
 
-  public function update_danhmuc_c2($data, $files, $id)
-  {
-    $fields = ['slugvi', 'namevi', 'id_list', 'titlevi', 'keywordsvi', 'descriptionvi', 'numb', 'hienthi', 'noibat'];
-    $data_escaped = [];
-    foreach ($fields as $field) {
-      $data_escaped[$field] = !empty($data[$field]) ? mysqli_real_escape_string($this->db->link, $data[$field]) : "";
-    }
-    // Kiểm tra slug bị trùng
-    $slug_error = $this->fn->isSlugviDuplicated($data_escaped['slugvi'], 'tbl_danhmuc_c2', $id);
-    if ($slug_error) {
-      return $slug_error;
-    }
-    $file_name = $files["file"]["name"] ?? '';
-    $old_file_path = '';
-    $old_file = $this->db->select("SELECT file FROM tbl_danhmuc_c2 WHERE id = '$id'");
-    if ($old_file && $old_file->num_rows > 0) {
-      $row = $old_file->fetch_assoc();
-      $old_file_path = "uploads/" . $row['file'];
-    }
-    $thumb_filename = $this->fn->Upload($files, '100x100x1', [0, 0, 0, 127], $old_file_path, false);
-    $update_fields = [];
-    foreach ($data_escaped as $field => $value) {
-      $update_fields[] = "`$field` = '$value'";
-    }
-    if (!empty($thumb_filename)) {
-      $update_fields[] = "file = '$thumb_filename'";
-    }
-    $id = (int)$id;
-    $update_query = "UPDATE tbl_danhmuc_c2 SET " . implode(", ", $update_fields) . " WHERE id = '$id'";
-    $result = $this->db->update($update_query);
-
-    if ($result) {
-      header('Location: transfer.php?stt=success&url=category_lv2_list');
-      exit();
-    } else {
-      return "Lỗi thao tác!";
-    }
-  }
-
-  public function update_danhmuc($data, $files, $id)
-  {
-    $fields = ['slugvi', 'namevi', 'descvi', 'contentvi', 'titlevi', 'keywordsvi', 'descriptionvi', 'numb', 'hienthi', 'noibat'];
-    $data_escaped = [];
-    foreach ($fields as $field) {
-      $data_escaped[$field] = !empty($data[$field]) ? mysqli_real_escape_string($this->db->link, $data[$field]) : "";
-    }
-    // Kiểm tra slug trùng
-    $slug_error = $this->fn->isSlugviDuplicated($data_escaped['slugvi'], 'tbl_danhmuc', $id);
-    if ($slug_error) {
-      return $slug_error;
-    }
-    $file_name = $files["file"]["name"] ?? '';
-    $old_file_path = '';
-    $old_file = $this->db->select("SELECT file FROM tbl_danhmuc WHERE id = '$id'");
-    if ($old_file && $old_file->num_rows > 0) {
-      $row = $old_file->fetch_assoc();
-      $old_file_path = "uploads/" . $row['file'];
-    }
-    $thumb_filename = $this->fn->Upload($files, '50x50x1', [0, 0, 0, 127], $old_file_path, false);
-    $update_fields = [];
-    foreach ($data_escaped as $field => $value) {
-      $update_fields[] = "`$field` = '$value'";
-    }
-
-    if (!empty($thumb_filename)) {
-      $update_fields[] = "file = '$thumb_filename'";
-    }
-    $id = (int)$id;
-    $update_query = "UPDATE tbl_danhmuc SET " . implode(", ", $update_fields) . " WHERE id = '$id'";
-    $result = $this->db->update($update_query);
-
-    if ($result) {
-      $this->fn->transfer("Cập nhật danh mục thành công", "index.php?page=category_lv1_list", true);
-    } else {
-      $this->fn->transfer("Cập nhật danh mục thất bại", "index.php?page=category_lv1_list", false);
-    }
-  }
-
-
-  public function insert_danhmuc($data, $files)
+  public function save_danhmuc($data, $files, $id = null)
   {
     $fields = ['slugvi', 'namevi', 'descvi', 'contentvi', 'titlevi', 'keywordsvi', 'descriptionvi', 'hienthi', 'noibat', 'numb'];
+    $table = 'tbl_danhmuc';
     $data_escaped = [];
+
     foreach ($fields as $field) {
       $data_escaped[$field] = !empty($data[$field]) ? mysqli_real_escape_string($this->db->link, $data[$field]) : "";
     }
-    // Kiểm tra slug trùng
-    $slug_error = $this->fn->isSlugviDuplicated($data_escaped['slugvi'], 'tbl_danhmuc', '');
-    if ($slug_error) {
-      return $slug_error;
+    $slug_error = $this->fn->isSlugviDuplicated($data_escaped['slugvi'], $table, $id ?? '');
+    if ($slug_error) return $slug_error;
+    $thumb_filename = '';
+    $old_file_path = '';
+    if (!empty($id)) {
+      $old_file = $this->db->select("SELECT file FROM $table WHERE id = '" . (int)$id . "'");
+      if ($old_file && $old_file->num_rows > 0) {
+        $row = $old_file->fetch_assoc();
+        $old_file_path = "uploads/" . $row['file'];
+      }
     }
-    $field_names = array_keys($data_escaped);
-    $field_values = array_map(fn($v) => "'" . $v . "'", $data_escaped);
-
-    $thumb_filename = $this->fn->Upload($files, '50x50x1', [0, 0, 0, 127], '',  false);
-    if (!empty($thumb_filename)) {
-      $field_names[] = 'file';
-      $field_values[] = "'" . $thumb_filename . "'";
-    }
-    $insert_query = "INSERT INTO tbl_danhmuc (" . implode(", ", $field_names) . ") VALUES (" . implode(", ", $field_values) . ")";
-    $result = $this->db->insert($insert_query);
-
-    if ($result) {
-      $this->fn->transfer("Thêm danh mục thành công", "index.php?page=category_lv1_list", true);
+    $thumb_filename = $this->fn->Upload($files, '50x50x1', [0, 0, 0, 127], $old_file_path, false);
+    if (!empty($id)) {
+      $update_fields = [];
+      foreach ($data_escaped as $field => $value) {
+        $update_fields[] = "`$field` = '$value'";
+      }
+      if (!empty($thumb_filename)) {
+        $update_fields[] = "file = '$thumb_filename'";
+      }
+      $update_query = "UPDATE $table SET " . implode(", ", $update_fields) . " WHERE id = '" . (int)$id . "'";
+      $result = $this->db->update($update_query);
+      $msg = $result ? "Cập nhật danh mục thành công" : "Cập nhật danh mục thất bại";
     } else {
-      $this->fn->transfer("Thêm danh mục thất bại", "index.php?page=category_lv1_list", false);
+      $field_names = array_keys($data_escaped);
+      $field_values = array_map(fn($v) => "'" . $v . "'", $data_escaped);
+      if (!empty($thumb_filename)) {
+        $field_names[] = 'file';
+        $field_values[] = "'" . $thumb_filename . "'";
+      }
+      $insert_query = "INSERT INTO $table (" . implode(", ", $field_names) . ") VALUES (" . implode(", ", $field_values) . ")";
+      $result = $this->db->insert($insert_query);
+      $msg = $result ? "Thêm danh mục thành công" : "Thêm danh mục thất bại";
     }
+    $this->fn->transfer($msg, "index.php?page=category_lv1_list", $result);
   }
 
-  public function insert_danhmuc_c2($data, $files)
+  public function save_danhmuc_c2($data, $files, $id = null)
   {
-    $fields = ['slugvi', 'namevi', 'descvi', 'contentvi', 'id_list', 'titlevi', 'keywordsvi', 'descriptionvi', 'hienthi', 'noibat', 'numb'];
+    $fields = ['slugvi', 'namevi', 'id_list', 'titlevi', 'keywordsvi', 'descriptionvi', 'numb', 'hienthi', 'noibat'];
+    $table = 'tbl_danhmuc_c2';
     $data_escaped = [];
-
     foreach ($fields as $field) {
       $data_escaped[$field] = !empty($data[$field]) ? mysqli_real_escape_string($this->db->link, $data[$field]) : "";
     }
-    // Kiểm tra slug trùng
-    $slug_error = $this->fn->isSlugviDuplicated($data_escaped['slugvi'], 'tbl_danhmuc', '');
+    $slug_error = $this->fn->isSlugviDuplicated($data_escaped['slugvi'], $table, $id ?? '');
     if ($slug_error) {
       return $slug_error;
     }
-    $field_names = array_keys($data_escaped);
-    $field_values = array_map(fn($v) => "'" . $v . "'", $data_escaped);
+    $thumb_filename = '';
+    $old_file_path = '';
 
-    $thumb_filename = $this->fn->Upload($files, '100x100x1', [0, 0, 0, 127], '', false);
-    if (!empty($thumb_filename)) {
-      $field_names[] = 'file';
-      $field_values[] = "'" . $thumb_filename . "'";
+    if (!empty($id)) {
+      $old_file = $this->db->select("SELECT file FROM $table WHERE id = '" . (int)$id . "'");
+      if ($old_file && $old_file->num_rows > 0) {
+        $row = $old_file->fetch_assoc();
+        $old_file_path = "uploads/" . $row['file'];
+      }
     }
-    $insert_query = "INSERT INTO tbl_danhmuc_c2 (" . implode(", ", $field_names) . ") VALUES (" . implode(", ", $field_values) . ")";
-    $result = $this->db->insert($insert_query);
-    if ($result) {
-      header('Location: transfer.php?stt=success&url=category_lv2_list');
-      exit();
+    $thumb_filename = $this->fn->Upload($files, '100x100x1', [0, 0, 0, 127], $old_file_path, false);
+    if (!empty($id)) {
+      $update_fields = [];
+      foreach ($data_escaped as $field => $value) {
+        $update_fields[] = "`$field` = '$value'";
+      }
+      if (!empty($thumb_filename)) {
+        $update_fields[] = "file = '$thumb_filename'";
+      }
+      $id = (int)$id;
+      $update_query = "UPDATE $table SET " . implode(", ", $update_fields) . " WHERE id = '" . (int)$id . "'";
+      $result = $this->db->update($update_query);
+      $msg = $result ? "Cập nhật danh mục thành công" : "Cập nhật danh mục thất bại";
     } else {
-      return "Lỗi thao tác!";
+      $field_names = array_keys($data_escaped);
+      $field_values = array_map(fn($v) => "'" . $v . "'", $data_escaped);
+      if (!empty($thumb_filename)) {
+        $field_names[] = 'file';
+        $field_values[] = "'" . $thumb_filename . "'";
+      }
+      $insert_query = "INSERT INTO $table (" . implode(", ", $field_names) . ") VALUES (" . implode(", ", $field_values) . ")";
+      $result = $this->db->insert($insert_query);
+      $msg = $result ? "Thêm danh mục thành công" : "Thêm danh mục thất bại";
+      $this->fn->transfer($msg, "index.php?page=category_lv2_list", $result);
     }
   }
 

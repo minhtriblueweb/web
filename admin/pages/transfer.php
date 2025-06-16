@@ -1,6 +1,5 @@
 <?php
 define('IS_TRANSFER', true);
-
 $transferData = $_SESSION['transfer_data'] ?? [
   'msg' => 'Không có thông báo',
   'page' => 'dashboard',
@@ -8,7 +7,6 @@ $transferData = $_SESSION['transfer_data'] ?? [
 ];
 unset($_SESSION['transfer_data']);
 
-$basehref = BASE_ADMIN;
 $showtext = $transferData['msg'];
 $page_transfer = $transferData['page'];
 $numb = $transferData['numb'];

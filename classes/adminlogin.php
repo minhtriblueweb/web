@@ -34,12 +34,11 @@ class adminlogin
 
     if ($result) {
       $value = $result->fetch_assoc();
-      // Lưu session
       Session::set('adminlogin', true);
       Session::set('adminId', $value['id']);
       Session::set('adminUser', $value['username']);
 
-      return "success"; // Thông báo thành công cho login.php xử lý
+      return "success";
     } else {
       return "Tài khoản hoặc mật khẩu không đúng!";
     }

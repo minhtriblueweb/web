@@ -80,10 +80,10 @@ class sanpham
     return $result;
   }
 
-  public function upload_gallery($data, $files, $id, $result_id_parent)
+  public function upload_gallery($data, $files, $id, $id_parent)
   {
     $id = mysqli_real_escape_string($this->db->link, $id);
-    $result_id_parent = mysqli_real_escape_string($this->db->link, $result_id_parent);
+    $id_parent = mysqli_real_escape_string($this->db->link, $id_parent);
     $hienthi = mysqli_real_escape_string($this->db->link, $data['hienthi'] ?? 0);
     $numb = mysqli_real_escape_string($this->db->link, $data['numb'] ?? 0);
     $thumb_filename = '';
@@ -115,21 +115,18 @@ class sanpham
     $query = "UPDATE tbl_gallery SET " . implode(", ", $update_fields) . " WHERE id = '$id'";
     $result = $this->db->update($query);
     if ($result) {
-      header('Location: transfer.php?stt=success&url=gallery&id=' . $result_id_parent);
-      exit();
+      $this->fn->transfer("Cập nhật hình ảnh thành công", "index.php?page=gallery_list&id=$id_parent");
     } else {
       return "Lỗi thao tác!";
     }
   }
 
-  public function them_gallery($data, $files, $id)
+  public function them_gallery($data, $files, $id_parent)
   {
-    $id = mysqli_real_escape_string($this->db->link, $id);
+    $id_parent = mysqli_real_escape_string($this->db->link, $id_parent);
 
-    for ($i = 0; $i < 5; $i++) {
+    for ($i = 0; $i < 6; $i++) {
       $file_key = "file$i";
-
-      // Kiểm tra nếu có upload file và không có lỗi
       if (!empty($files[$file_key]['name']) && $files[$file_key]['error'] == 0) {
         // Gọi hàm Upload
         $thumb_filename = $this->fn->Upload(
@@ -139,12 +136,10 @@ class sanpham
           '',
           true
         );
-
-        // Nếu upload thành công thì insert vào DB
         if (!empty($thumb_filename)) {
           $fields = ['id_parent', 'photo', 'numb', 'hienthi'];
           $values = [
-            "'" . $id . "'",
+            "'" . $id_parent . "'",
             "'" . mysqli_real_escape_string($this->db->link, $thumb_filename) . "'",
             "'" . mysqli_real_escape_string($this->db->link, $data["numb$i"] ?? 0) . "'",
             "'" . mysqli_real_escape_string($this->db->link, $data["hienthi$i"] ?? 0) . "'"
@@ -155,10 +150,7 @@ class sanpham
         }
       }
     }
-
-    // Chuyển trang sau khi xử lý xong
-    header('Location: transfer.php?stt=success&url=gallery&id=' . $id);
-    exit();
+    $this->fn->transfer("Thêm hình ảnh thành công", "index.php?page=gallery_list&id=$id_parent");
   }
 
 
@@ -202,6 +194,14 @@ class sanpham
     return $result;
   }
 
+  public function get_id_sanpham($id)
+  {
+    $id = mysqli_real_escape_string($this->db->link, $id);
+    $query = "SELECT * FROM tbl_sanpham WHERE id = '$id' LIMIT 1";
+    $result = $this->db->select($query);
+    return $result;
+  }
+
   public function update_views_by_slug($slug)
   {
     $query = "SELECT * FROM tbl_sanpham WHERE slugvi = '$slug'";
@@ -238,14 +238,6 @@ class sanpham
     $query = "SELECT * FROM tbl_sanpham WHERE slugvi = '$slug' AND hienthi = 'hienthi' LIMIT 1";
     $result = $this->db->select($query);
     return $result ? $result->fetch_assoc() : false;
-  }
-
-  public function get_id_sanpham($id)
-  {
-    $id = mysqli_real_escape_string($this->db->link, $id);
-    $query = "SELECT * FROM tbl_sanpham WHERE id = '$id' LIMIT 1";
-    $result = $this->db->select($query);
-    return $result;
   }
 
   public function xoanhieu_sanpham($listid)
@@ -373,7 +365,7 @@ class sanpham
     return $result;
   }
 
-  public function update_sanpham($data, $files, $id)
+  public function save_sanpham($data, $files, $id = null)
   {
     $fields = [
       'slugvi',
@@ -393,90 +385,46 @@ class sanpham
       'banchay',
       'numb'
     ];
-
+    $table = 'tbl_sanpham';
     $data_escaped = [];
     foreach ($fields as $field) {
       $data_escaped[$field] = !empty($data[$field]) ? mysqli_real_escape_string($this->db->link, $data[$field]) : "";
     }
-
-    $slug_error = $this->fn->isSlugviDuplicated($data_escaped['slugvi'], 'tbl_sanpham', $id);
-    if ($slug_error) {
-      return $slug_error;
-    }
-    $file_name = $files["file"]["name"] ?? '';
+    $slug_error = $this->fn->isSlugviDuplicated($data_escaped['slugvi'], $table, $id ?? '');
+    if ($slug_error) return $slug_error;
+    $thumb_filename = '';
     $old_file_path = '';
-    $old_file = $this->db->select("SELECT file FROM tbl_sanpham WHERE id = '$id'");
-    if ($old_file && $old_file->num_rows > 0) {
-      $row = $old_file->fetch_assoc();
-      $old_file_path = "uploads/" . $row['file'];
+    if (!empty($id)) {
+      $old_file = $this->db->select("SELECT file FROM $table WHERE id = '" . (int)$id . "'");
+      if ($old_file && $old_file->num_rows > 0) {
+        $row = $old_file->fetch_assoc();
+        $old_file_path = "uploads/" . $row['file'];
+      }
     }
     $thumb_filename = $this->fn->Upload($files, '500x500x1', [0, 0, 0, 127], $old_file_path, true);
-    $update_fields = [];
-    foreach ($data_escaped as $field => $value) {
-      $update_fields[] = "`$field` = '$value'";
-    }
-
-    if (!empty($thumb_filename)) {
-      $update_fields[] = "file = '$thumb_filename'";
-    }
-    $id = (int)$id;
-    $update_query = "UPDATE tbl_sanpham SET " . implode(", ", $update_fields) . " WHERE id = '$id'";
-    $result = $this->db->update($update_query);
-
-    if ($result) {
-      header('Location: transfer.php?stt=success&url=product_list');
-      exit();
+    if (!empty($id)) {
+      $update_fields = [];
+      foreach ($data_escaped as $field => $value) {
+        $update_fields[] = "`$field` = '$value'";
+      }
+      if (!empty($thumb_filename)) {
+        $update_fields[] = "file = '$thumb_filename'";
+      }
+      $query = "UPDATE $table SET " . implode(", ", $update_fields) . " WHERE id = '" . (int)$id . "'";
+      $result = $this->db->update($query);
+      $msg = $result ? "Cập nhật sản phẩm thành công" : "Cập nhật sản phẩm thất bại";
     } else {
-      return "Lỗi thao tác!";
+      $field_names = array_keys($data_escaped);
+      $field_values = array_map(fn($v) => "'" . $v . "'", $data_escaped);
+      if (!empty($thumb_filename)) {
+        $field_names[] = 'file';
+        $field_values[] = "'" . $thumb_filename . "'";
+      }
+      $query = "INSERT INTO $table (" . implode(", ", $field_names) . ") VALUES (" . implode(", ", $field_values) . ")";
+      $result = $this->db->insert($query);
+      $msg = $result ? "Thêm sản phẩm thành công" : "Thêm sản phẩm thất bại";
     }
-  }
-
-  public function them_sanpham($data, $files)
-  {
-    $fields = [
-      'slugvi',
-      'namevi',
-      'id_list',
-      'id_cat',
-      'regular_price',
-      'sale_price',
-      'discount',
-      'code',
-      'descvi',
-      'contentvi',
-      'titlevi',
-      'keywordsvi',
-      'descriptionvi',
-      'hienthi',
-      'banchay',
-      'numb'
-    ];
-    $data_escaped = [];
-    foreach ($fields as $field) {
-      $data_escaped[$field] = !empty($data[$field]) ? mysqli_real_escape_string($this->db->link, $data[$field]) : "";
-    }
-
-    $slug_error = $this->fn->isSlugviDuplicated($data_escaped['slugvi'], 'tbl_sanpham', '');
-    if ($slug_error) {
-      return $slug_error;
-    }
-    $field_names = array_keys($data_escaped);
-    $field_values = array_map(fn($v) => "'" . $v . "'", $data_escaped);
-    $thumb_filename = $this->fn->Upload($files, '500x500x1', [0, 0, 0, 127], '',  true);
-    if (!empty($thumb_filename)) {
-      $field_names[] = 'file';
-      $field_values[] = "'" . $thumb_filename . "'";
-    }
-    $insert_query = "INSERT INTO tbl_sanpham (" . implode(", ", $field_names) . ") VALUES (" . implode(", ", $field_values) . ")";
-    $result = $this->db->insert($insert_query);
-
-    if ($result) {
-      header('Location: transfer.php?stt=success&url=product_list');
-      exit();
-    } else {
-      header('Location: transfer.php?stt=danger&url=product_list');
-      exit();
-    }
+    $this->fn->transfer($msg, "index.php?page=product_list", $result);
   }
 }
 ?>

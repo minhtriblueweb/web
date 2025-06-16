@@ -2,14 +2,15 @@
 $redirect_url = $_GET['page'];
 $records_per_page = 10;
 $current_page = max(1, isset($_GET['p']) ? (int)$_GET['p'] : 1);
-$total_records = $functions->phantrang_sp('tbl_danhmuc');
+$total_records = $functions->phantrang_sp('tbl_danhmuc_c2');
 $total_pages = ceil($total_records / $records_per_page);
-$show_danhmuc = $danhmuc->show_danhmuc('tbl_danhmuc', $records_per_page, $current_page);
-$name = 'danh mục cấp 1';
-$linkMulti = "index.php?page=deleteMulti&table=tbl_danhmuc&image=file&redirect=$redirect_url";
-$linkDelete = "index.php?page=delete&table=tbl_danhmuc&image=file&redirect=$redirect_url&id=";
-$linkEdit = "index.php?page=category_lv1_form&id=";
-$linkAdd = "index.php?page=category_lv1_form";
+$show_danhmuc_c1 = $danhmuc->show_danhmuc('tbl_danhmuc');
+$show_danhmuc_c2 = $danhmuc->show_danhmuc('tbl_danhmuc_c2', $records_per_page, $current_page);
+$name = 'danh mục cấp 2';
+$linkMulti = "index.php?page=deleteMulti&table=tbl_danhmuc_c2&image=file&redirect=$redirect_url";
+$linkDelete = "index.php?page=delete&table=tbl_danhmuc_c2&image=file&redirect=$redirect_url&id=";
+$linkEdit = "index.php?page=category_lv2_form&id=";
+$linkAdd = "index.php?page=category_lv2_form";
 ?>
 <?php
 $breadcrumb = [
@@ -25,6 +26,7 @@ include 'templates/breadcrumb.php';
         class="fas fa-plus mr-2"></i>Thêm mới</a>
     <a class="btn btn-sm bg-gradient-danger text-white" id="delete-all" data-url="<?= $linkMulti ?>" title="Xóa tất cả"><i
         class="far fa-trash-alt mr-2"></i>Xóa tất cả</a>
+
     <div class="form-inline form-search d-inline-block align-middle ml-3">
       <div class="input-group input-group-sm">
         <input class="form-control form-control-navbar text-sm" type="search" id="keyword" placeholder="Tìm kiếm"
@@ -39,9 +41,26 @@ include 'templates/breadcrumb.php';
       </div>
     </div>
   </div>
+  <div class="card-footer form-group-category text-sm bg-light row">
+    <div class="form-group col-xl-2 col-lg-3 col-md-4 col-sm-4 mb-2">
+      <form class="validation-form" novalidate method="post" action="">
+        <input class="btn btn-sm bg-gradient-info submit-check mb-3" type="submit" id="loc" value="Lọc danh mục"
+          name="loc" />
+        <select id="id_list" name="id_list" class="form-control filter-category select2">
+          <option value="0">Chọn danh mục</option>
+          <?php if ($show_danhmuc_c1): ?>
+            <?php while ($resule = $show_danhmuc_c1->fetch_assoc()): ?>
+              <option value="<?= $resule['id']; ?>" data-select2-id="<?= $resule['id']; ?>"
+                <?= ($id_list == $resule['id']) ? 'selected' : ''; ?>><?= $resule['namevi']; ?></option>
+            <?php endwhile; ?>
+          <?php endif; ?>
+        </select>
+      </form>
+    </div>
+  </div>
   <div class="card card-primary card-outline text-sm mb-0">
     <div class="card-header">
-      <h3 class="card-title">Danh sách Danh mục cấp 1</h3>
+      <h3 class="card-title">Danh sách Danh mục cấp 2</h3>
     </div>
     <div class="card-body table-responsive p-0">
       <table class="table table-hover">
@@ -61,15 +80,15 @@ include 'templates/breadcrumb.php';
             <th class="align-middle text-center">Thao tác</th>
           </tr>
         </thead>
-        <form action="" method="POST">
+        <form class="validation-form" novalidate method="post" action="">
           <tbody>
-            <?php if ($show_danhmuc):
-              while ($resule = $show_danhmuc->fetch_assoc()):
-                $id = $resule['id'];
-                $namevi = $resule['namevi'];
-                $file = empty($resule['file']) ? NO_IMG : BASE_ADMIN . UPLOADS . $resule['file'];
-                $hienthi = $resule['hienthi'] === 'hienthi';
-                $noibat = $resule['noibat'] === 'noibat';
+            <?php if ($show_danhmuc_c2):
+              while ($resule_c2 = $show_danhmuc_c2->fetch_assoc()):
+                $id = $resule_c2['id'];
+                $namevi = $resule_c2['namevi'];
+                $file = empty($resule_c2['file']) ? NO_IMG : BASE_ADMIN . UPLOADS . $resule_c2['file'];
+                $hienthi = $resule_c2['hienthi'] === 'hienthi';
+                $noibat = $resule_c2['noibat'] === 'noibat';
             ?>
                 <tr>
                   <!-- Checkbox chọn -->
@@ -84,13 +103,13 @@ include 'templates/breadcrumb.php';
                   <!-- Số thứ tự -->
                   <td class="align-middle">
                     <input type="number" class="form-control form-control-mini m-auto update-numb" min="0"
-                      value="<?= $resule['numb'] ?>" data-id="<?= $id ?>" data-table="tbl_danhmuc" />
+                      value="<?= $resule_c2['numb'] ?>" data-id="<?= $id ?>" data-table="tbl_danhmuc_c2" />
                   </td>
 
                   <!-- Ảnh -->
                   <td class="align-middle">
                     <a href="<?= $linkEdit ?><?= $id ?>" title="<?= $namevi ?>">
-                      <img src="<?= $file ?>" alt="<?= $namevi ?>" class="rounded img-preview" />
+                      <img src="<?= $file ?>" class="rounded img-preview" alt="<?= $namevi ?>" />
                     </a>
                   </td>
 
@@ -105,7 +124,7 @@ include 'templates/breadcrumb.php';
                   <td class="align-middle text-center">
                     <div class="custom-control custom-checkbox my-checkbox">
                       <input type="checkbox" class="custom-control-input show-checkbox"
-                        id="show-checkbox-hienthi-<?= $id ?>" data-table="tbl_danhmuc"
+                        id="show-checkbox-hienthi-<?= $id ?>" data-table="tbl_danhmuc_c2"
                         data-id="<?= $id ?>" data-type="hienthi"
                         data-attr="<?= $hienthi ? '' : 'hienthi' ?>" <?= $hienthi ? 'checked' : '' ?> />
                       <label for="show-checkbox-hienthi-<?= $id ?>" class="custom-control-label"></label>
@@ -116,7 +135,7 @@ include 'templates/breadcrumb.php';
                   <td class="align-middle text-center">
                     <div class="custom-control custom-checkbox my-checkbox">
                       <input type="checkbox" class="custom-control-input show-checkbox"
-                        id="show-checkbox-noibat-<?= $id ?>" data-table="tbl_danhmuc"
+                        id="show-checkbox-noibat-<?= $id ?>" data-table="tbl_danhmuc_c2"
                         data-id="<?= $id ?>" data-type="noibat"
                         data-attr="<?= $noibat ? '' : 'noibat' ?>" <?= $noibat ? 'checked' : '' ?> />
                       <label for="show-checkbox-noibat-<?= $id ?>" class="custom-control-label"></label>
@@ -143,7 +162,6 @@ include 'templates/breadcrumb.php';
         </form>
       </table>
     </div>
-
   </div>
   <?php if ($total_pages > 1): ?>
     <div class="card-footer text-sm pb-0 mb-5">

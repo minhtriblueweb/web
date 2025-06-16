@@ -8,7 +8,7 @@ $current_page = 1;
 
 if (preg_match('/^page-(\d+)$/', end($requestParts), $matches)) {
   $current_page = (int)$matches[1];
-  array_pop($requestParts); // bỏ page-x ra
+  array_pop($requestParts);
 }
 $slugPath = implode('/', $requestParts);
 

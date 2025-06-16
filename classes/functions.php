@@ -15,13 +15,15 @@ class functions
     $this->fm = new Format();
   }
 
-  public function transfer($msg = '', $page = '', $numb = true)
+  function transfer($msg, $page = 'dashboard', $numb = true)
   {
     $_SESSION['transfer_data'] = [
       'msg' => $msg,
       'page' => $page,
       'numb' => $numb
     ];
+
+    define('IS_TRANSFER', true);
     header("Location: index.php?page=transfer");
     exit();
   }
@@ -43,7 +45,7 @@ class functions
         'slug' => $this->to_slug($langvi)
       ];
     }
-    return $type; // fallback nếu không có
+    return $type;
   }
 
 
@@ -75,13 +77,9 @@ class functions
     if (empty($ids)) {
       $this->transfer("Danh sách ID không hợp lệ!", "index.php?page=$redirectUrl", false);
     }
-
     $idList = implode(',', $ids);
-
-    // Truy vấn lấy ảnh (và id_parent nếu có)
     $querySelect = "SELECT id, `$imageColumn`" . ($hasIdParent ? ", id_parent" : "") . " FROM `$table` WHERE id IN ($idList)";
     $resultSelect = $this->db->select($querySelect);
-
     $last_id_parent = 0;
     if ($resultSelect && $resultSelect->num_rows > 0) {
       while ($row = $resultSelect->fetch_assoc()) {
@@ -91,18 +89,13 @@ class functions
             unlink($filePath);
           }
         }
-
         if ($hasIdParent) {
           $last_id_parent = $row['id_parent'];
         }
       }
     }
-
-    // Xóa dữ liệu
     $queryDelete = "DELETE FROM `$table` WHERE id IN ($idList)";
     $resultDelete = $this->db->delete($queryDelete);
-
-    // Chuyển hướng có thông báo
     if ($resultDelete) {
       if ($hasIdParent && $table == 'tbl_gallery') {
         $this->transfer("Xóa dữ liệu thành công!", "gallery&id=$last_id_parent", true);
@@ -116,14 +109,10 @@ class functions
 
   public function delete($id, $table, $imageColumn, $redirect_url)
   {
-    $id = intval($id); // Ép kiểu an toàn
-
-    // Truy vấn tên file ảnh
+    $id = intval($id);
     $check_query = "SELECT `$imageColumn` FROM `$table` WHERE id = '$id'";
     $result = $this->db->select($check_query);
     $row = ($result) ? $result->fetch_assoc() : null;
-
-    // Xóa file ảnh nếu tồn tại
     if ($row && !empty($row[$imageColumn])) {
       $filePath = "uploads/" . $row[$imageColumn];
       if (file_exists($filePath)) {
@@ -169,7 +158,7 @@ class functions
 
     // 🔒 Nếu slug nằm trong danh sách cấm → từ chối ngay
     if (in_array($slugvi, $reserved_slugs)) {
-      return 'reserved';
+      return 'Đường dẫn đã tồn tại. Vui lòng chọn đường dẫn khác để tránh trùng lặp.';
     }
 
     // 🔁 Kiểm tra trùng trong bảng dữ liệu
@@ -181,7 +170,7 @@ class functions
 
       // Câu truy vấn kiểm tra slug
       $check_slug_query = "SELECT slugvi FROM `$tbl` WHERE slugvi = '$slugvi'";
-      if ($table === $tbl && $exclude_id) {
+      if ($table === $tbl && is_numeric($exclude_id) && (int)$exclude_id > 0) {
         $check_slug_query .= " AND id != '$exclude_id'";
       }
       $check_slug_query .= " LIMIT 1";
@@ -300,7 +289,7 @@ class functions
   {
     if (!file_exists($source_path)) return false;
 
-    // Parse kích thước và crop từ tên thumb, ví dụ: 300x300x2
+    // Parse kích thước và kiểu crop: 300x300x1
     if (!preg_match('/^(\d+)x(\d+)(x(\d+))?$/', $thumb_name, $matches)) {
       return false;
     }
@@ -327,7 +316,7 @@ class functions
         return false;
     }
 
-    // Tính crop/fit
+    // Crop/fit logic
     $src_x = $src_y = 0;
     $src_w = $width_orig;
     $src_h = $height_orig;
@@ -338,14 +327,14 @@ class functions
     $dst_ratio = $thumb_width / $thumb_height;
 
     if ($zoom_crop == 2) {
-      // Fit: giữ nguyên toàn bộ ảnh, viền trắng
+      // Fit - toàn bộ ảnh nằm trong khung, thêm viền
       if ($src_ratio > $dst_ratio) {
         $dst_h = intval($thumb_width / $src_ratio);
       } else {
         $dst_w = intval($thumb_height * $src_ratio);
       }
     } elseif ($zoom_crop == 1) {
-      // Fill: crop lấp đầy khung
+      // Fill - crop để lấp khung
       if ($src_ratio > $dst_ratio) {
         $src_w = intval($height_orig * $dst_ratio);
         $src_x = intval(($width_orig - $src_w) / 2);
@@ -362,19 +351,24 @@ class functions
       }
     }
 
-    // Tạo canvas thumbnail
+    // Tạo canvas
     $thumb = imagecreatetruecolor($thumb_width, $thumb_height);
-    if ($background && ($image_type == IMAGETYPE_PNG || $image_type == IMAGETYPE_WEBP)) {
+
+    if (!$background && ($image_type == IMAGETYPE_PNG || $image_type == IMAGETYPE_WEBP)) {
       imagealphablending($thumb, false);
       imagesavealpha($thumb, true);
       $transparent = imagecolorallocatealpha($thumb, 0, 0, 0, 127);
       imagefill($thumb, 0, 0, $transparent);
     } else {
-      $white = imagecolorallocate($thumb, 255, 255, 255);
-      imagefill($thumb, 0, 0, $white);
+      if (is_array($background)) {
+        $bg_color = imagecolorallocatealpha($thumb, $background[0], $background[1], $background[2], $background[3]);
+      } else {
+        $bg_color = imagecolorallocate($thumb, 255, 255, 255);
+      }
+      imagefill($thumb, 0, 0, $bg_color);
     }
 
-    // Resize và crop nếu cần
+    // Resize
     $dst_x = intval(($thumb_width - $dst_w) / 2);
     $dst_y = intval(($thumb_height - $dst_h) / 2);
     imagecopyresampled($thumb, $image, $dst_x, $dst_y, $src_x, $src_y, $dst_w, $dst_h, $src_w, $src_h);
@@ -387,9 +381,12 @@ class functions
     $thumb_filename = $original_name . '_' . $thumb_name . '.webp';
     $thumb_path = $upload_dir . $thumb_filename;
 
-    imagewebp($thumb, $thumb_path, 80);
+    // Chất lượng cao hơn để ảnh không vỡ
+    $success = imagewebp($thumb, $thumb_path, 90);
 
-    // Thêm watermark nếu được yêu cầu
+    if (!$success) return false;
+
+    // Watermark nếu có
     if ($add_watermark && method_exists($this, 'addWatermark')) {
       $this->addWatermark($thumb_path, $thumb_path, 9, 100, 0, 0);
     }
@@ -464,55 +461,42 @@ class functions
     return $result ? $result->fetch_assoc()['total'] : 0;
   }
 
-  function renderPagination($current_page, $total_pages, $base_url = '?page=')
+  function renderPagination($current_page, $total_pages, $base_url = '?p=')
   {
-    if ($total_pages <= 1) {
-      return '';
-    }
-    $pagination_html = '<ul class="pagination flex-wrap justify-content-center mb-0">';
-    $pagination_html .= '<li class="page-item">';
-    $pagination_html .= '<a class="page-link">Trang ' . $current_page . ' / ' . $total_pages . '</a>';
-    $pagination_html .= '</li>';
+    if ($total_pages <= 1) return '';
+
+    $html = '<ul class="pagination flex-wrap justify-content-center mb-0">';
+    $html .= '<li class="page-item"><a class="page-link">Trang ' . $current_page . ' / ' . $total_pages . '</a></li>';
+
     if ($current_page > 1) {
-      $pagination_html .= '<li class="page-item">';
-      $pagination_html .= '<a class="page-link" href="' . $base_url . ($current_page - 1) . '">Trước</a>';
-      $pagination_html .= '</li>';
+      $html .= '<li class="page-item"><a class="page-link" href="' . $base_url . ($current_page - 1) . '">Trước</a></li>';
     }
+
     $range = 2;
     for ($i = 1; $i <= $total_pages; $i++) {
       if (
-        $i == 1 ||
-        $i == 2 ||
-        $i == $total_pages ||
-        $i == $total_pages - 1 ||
+        $i == 1 || $i == 2 || $i == $total_pages || $i == $total_pages - 1 ||
         ($i >= $current_page - $range && $i <= $current_page + $range)
       ) {
         $active_class = ($i == $current_page) ? 'active' : '';
-        $pagination_html .= '<li class="page-item ' . $active_class . '">';
-        $pagination_html .= '<a class="page-link" href="' . $base_url . $i . '">' . $i . '</a>';
-        $pagination_html .= '</li>';
+        $html .= '<li class="page-item ' . $active_class . '">';
+        $html .= '<a class="page-link" href="' . $base_url . $i . '">' . $i . '</a>';
+        $html .= '</li>';
       } elseif (
         ($i == 3 && $current_page - $range > 4) ||
         ($i == $total_pages - 2 && $current_page + $range < $total_pages - 3)
       ) {
-        $pagination_html .= '<li class="page-item disabled">';
-        $pagination_html .= '<a class="page-link">...</a>';
-        $pagination_html .= '</li>';
+        $html .= '<li class="page-item disabled"><a class="page-link">...</a></li>';
       }
     }
 
     if ($current_page < $total_pages) {
-      $pagination_html .= '<li class="page-item">';
-      $pagination_html .= '<a class="page-link" href="' . $base_url . ($current_page + 1) . '">Tiếp</a>';
-      $pagination_html .= '</li>';
+      $html .= '<li class="page-item"><a class="page-link" href="' . $base_url . ($current_page + 1) . '">Tiếp</a></li>';
+      $html .= '<li class="page-item"><a class="page-link" href="' . $base_url . $total_pages . '">Cuối</a></li>';
     }
-    if ($current_page < $total_pages) {
-      $pagination_html .= '<li class="page-item">';
-      $pagination_html .= '<a class="page-link" href="' . $base_url . $total_pages . '">Cuối</a>';
-      $pagination_html .= '</li>';
-    }
-    $pagination_html .= '</ul>';
-    return $pagination_html;
+
+    $html .= '</ul>';
+    return $html;
   }
 
   function renderPagination_tc($current_page, $total_pages, $base_url)

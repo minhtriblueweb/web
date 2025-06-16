@@ -77,16 +77,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST["btn_login"])) {
   <div class="login_blueweb blue-wrap-main">
     <div class="login_blueweb_content">
       <div class="login_blueweb_left">
-        <img src="./assets/img/bg_admin2.jpg" alt="BlueWeb Login Banner">
+        <img src="./assets/img/bg_admin2.jpg">
       </div>
       <div class="login_blueweb_right">
         <div class="login-trongdong">
-          <img src="./assets/img/trongdong.png" alt="BlueWeb Login">
+          <img src="./assets/img/trongdong.png">
         </div>
 
         <div class="login_blueweb_right_content">
           <div class="gr_toploginf ">
-            <div class="title_bluewf">MINH TRÍ <span>BLUE WEB</span></div>
+            <div class="title_bluewf">MINH TRÍ <span>WEB</span></div>
             <a href="../" target="_blank" title="Xem website">
               Về trang chủ
               <img src="./assets/img/icontrangchu.png" alt="" class="icontrangchu">
@@ -96,7 +96,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST["btn_login"])) {
           <div class="gr_titlehethong">
             <img src="./assets/img/security.png" alt="" class="security">
             <div class="title_loginhethong">Đăng Nhập Hệ Thống</div>
-            <div class="mien"></div>
+            <div class="mien"><?= $config['base'] ?></div>
           </div>
 
           <form action="" method="post" class="formLoginBlueweb" enctype="multipart/form-data">
@@ -136,7 +136,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST["btn_login"])) {
             </button>
 
             <div class="login_l_footer">
-              Designed by Minh Trí <a href="" target="_blank">Blueweb</a>
+              Designed by Minh Trí <a href="" target="_blank">Blueweb</a> - 0328 732 834
             </div>
             <?php if (isset($login_check)): ?>
               <div class="alert my-alert alert-login text-center text-sm p-2 mb-0 mt-2 alert-danger" role="alert">

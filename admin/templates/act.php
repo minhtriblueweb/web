@@ -6,5 +6,5 @@
   <button type="reset" class="btn btn-sm bg-gradient-secondary">
     <i class="fas fa-redo mr-2"></i>Làm lại
   </button>
-  <a class="btn btn-sm bg-gradient-danger" href="<?= $redirectUrl ?>.php" title="Thoát"><i class="fas fa-sign-out-alt mr-2"></i>Thoát</a>
+  <a class="btn btn-sm bg-gradient-danger" href="index.php?page=<?= $redirectUrl ?>" title="Thoát"><i class="fas fa-sign-out-alt mr-2"></i>Thoát</a>
 </div>

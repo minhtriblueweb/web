@@ -10,9 +10,6 @@ if (!empty($id)) {
     $result = $get_id->fetch_assoc();
   }
 }
-if (!isset($id)) {
-  $id = $_GET['id'] ?? null;
-}
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && (isset($_POST['add']) || isset($_POST['edit']))) {
   $message = $danhmuc->save_danhmuc($_POST, $_FILES, $id);
 }
@@ -73,22 +70,26 @@ include 'templates/breadcrumb.php';
               </div>
             </div>
             <div class="form-group">
-              <div class="form-group d-inline-block mb-2 mr-2">
-                <label for="hienthi-checkbox" class="d-inline-block align-middle mb-0 mr-2">Hiển thị:</label>
-                <div class="custom-control custom-checkbox d-inline-block align-middle">
-                  <input <?= $functions->is_checked('hienthi', $result ?? null, $id ?? null) ?> type="checkbox" class="custom-control-input hienthi-checkbox" name="hienthi"
-                    id="hienthi-checkbox"
-                    value="hienthi" />
-                  <label for="hienthi-checkbox" class="custom-control-label"></label>
+              <?php
+              $checkboxes = [
+                'hienthi' => 'Hiển thị',
+                'noibat' => 'Nổi bật'
+              ];
+              ?>
+              <?php foreach ($checkboxes as $name => $label): ?>
+                <div class="form-group d-inline-block mb-2 mr-2">
+                  <label for="<?= $name ?>-checkbox" class="d-inline-block align-middle mb-0 mr-2"><?= $label ?>:</label>
+                  <div class="custom-control custom-checkbox d-inline-block align-middle">
+                    <input <?= $functions->is_checked($name, $result ?? null, $id ?? null) ?>
+                      type="checkbox"
+                      class="custom-control-input <?= $name ?>-checkbox"
+                      name="<?= $name ?>"
+                      id="<?= $name ?>-checkbox"
+                      value="<?= $name ?>" />
+                    <label for="<?= $name ?>-checkbox" class="custom-control-label"></label>
+                  </div>
                 </div>
-              </div>
-              <div class="form-group d-inline-block mb-2 mr-2">
-                <label for="noibat-checkbox" class="d-inline-block align-middle mb-0 mr-2">Nổi bật:</label>
-                <div class="custom-control custom-checkbox d-inline-block align-middle">
-                  <input <?= $functions->is_checked('noibat', $result ?? null, $id ?? null) ?> type="checkbox" class="custom-control-input noibat-checkbox" name="noibat" id="noibat-checkbox" value="noibat">
-                  <label for="noibat-checkbox" class="custom-control-label"></label>
-                </div>
-              </div>
+              <?php endforeach; ?>
             </div>
             <div class="form-group">
               <label for="numb" class="d-inline-block align-middle mb-0 mr-2">Số thứ tự:</label>
@@ -111,9 +112,8 @@ include 'templates/breadcrumb.php';
           <div class="card-body">
             <div class="photoUpload-zone">
               <div class="photoUpload-detail" id="photoUpload-preview">
-                <a data-fancybox href="">
-                  <img src="<?= empty($result['file']) ? NO_IMG : BASE_ADMIN . UPLOADS . $result['file']; ?>"
-                    class="rounded" alt="Alt Photo" /></a>
+                <img src="<?= empty($result['file']) ? NO_IMG : BASE_ADMIN . UPLOADS . $result['file']; ?>"
+                  class="rounded" alt="Alt Photo" />
               </div>
               <label class="photoUpload-file" id="photo-zone" for="file-zone">
                 <input type="file" name="file" id="file-zone" />

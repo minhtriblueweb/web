@@ -9,14 +9,15 @@ $get_gallery = $sanpham->get_gallery($id);
 if ($get_id) {
   $result = $get_id->fetch_assoc();
 }
-$linkDelete = "index.php?page=delete&table=tbl_gallery&image=photo&redirect=$redirect_url&id=$id";
+$linkMulti = "index.php?page=deleteMulti&table=tbl_gallery&image=photo&redirect=$redirect_url&id_parent=$id";
+$linkDelete = "index.php?page=delete&table=tbl_gallery&image=photo&redirect=$redirect_url&id_parent=$id&id=";
 $linkGallery = "index.php?page=gallery_save&id=";
 $linkEdit = "index.php?page=gallery_save&id_child=";
 ?>
 <?php
 $breadcrumb = [
   ['label' => 'Bảng điều khiển', 'link' => '?page=dashboard'],
-  ['label' => 'Sản phẩm'],
+  ['label' =>  $name],
   ['label' => 'Hình ảnh ' . $name]
 ];
 include 'templates/breadcrumb.php';
@@ -25,9 +26,9 @@ include 'templates/breadcrumb.php';
   <div class="card-footer text-sm sticky-top">
     <a class="btn btn-sm bg-gradient-primary text-white" href="<?= $linkGallery ?><?= $result['id'] ?>"
       title="Thêm mới"><i class="fas fa-plus mr-2"></i>Thêm mới</a>
-    <a class="btn btn-sm bg-gradient-danger text-white" id="delete-all" data-url="?xoa=1" title="Xóa tất cả"><i
+    <a class="btn btn-sm bg-gradient-danger text-white" id="delete-all" data-url="<?= $linkMulti ?>" title="Xóa tất cả"><i
         class="far fa-trash-alt mr-2"></i>Xóa tất cả</a>
-
+    <a href="<?= $linkMulti ?>">text</a>
     <div class="form-inline form-search d-inline-block align-middle ml-3">
       <div class="input-group input-group-sm">
         <input class="form-control form-control-navbar text-sm" type="search" id="keyword" placeholder="Tìm kiếm"
@@ -81,7 +82,7 @@ include 'templates/breadcrumb.php';
                 <td class="align-middle text-center">
                   <a href="<?= $linkEdit ?><?= $resule_gallery['id'] ?>">
                     <img class="rounded img-preview"
-                      src="<?= empty($resule_gallery['photo']) ? $config['baseAdmin'] . "assets/img/noimage.png" : $config['baseAdmin'] . "uploads/" . $resule_gallery['photo'] ?>">
+                      src="<?= empty($resule_gallery['photo']) ? NO_IMG : BASE_ADMIN . UPLOADS . $resule_gallery['photo'] ?>">
                   </a>
                 </td>
                 <td class="align-middle text-center">
@@ -95,9 +96,9 @@ include 'templates/breadcrumb.php';
                   </div>
                 </td>
                 <td class="align-middle text-center text-md text-nowrap">
-                  <a class="text-primary mr-2" href="edit_gallery.php?id=<?= $resule_gallery['id'] ?>" title="Chỉnh sửa"><i
+                  <a class="text-primary mr-2" href="<?= $linkEdit ?><?= $resule_gallery['id'] ?>" title="Chỉnh sửa"><i
                       class="fas fa-edit"></i></a>
-                  <a class="text-danger" id="delete-item" data-url="?del=<?= $resule_gallery['id'] ?>" title="Xóa"><i
+                  <a class="text-danger" id="delete-item" data-url="<?= $linkDelete ?><?= $resule_gallery['id'] ?>" title="Xóa"><i
                       class="fas fa-trash-alt"></i></a>
                 </td>
               </tr>

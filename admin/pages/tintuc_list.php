@@ -2,19 +2,18 @@
 $redirect_url = $_GET['page'];
 $records_per_page = 10;
 $current_page = max(1, isset($_GET['p']) ? (int)$_GET['p'] : 1);
-$total_records = $functions->phantrang('tbl_danhmuc');
-$total_pages = ceil($total_records / $records_per_page);
-$show_danhmuc = $danhmuc->show_danhmuc('tbl_danhmuc', $records_per_page, $current_page);
-$name = 'danh mục cấp 1';
-$linkMulti = "index.php?page=deleteMulti&table=tbl_danhmuc&image=file&redirect=$redirect_url";
-$linkDelete = "index.php?page=delete&table=tbl_danhmuc&image=file&redirect=$redirect_url&id=";
-$linkEdit = "index.php?page=category_lv1_form&id=";
-$linkAdd = "index.php?page=category_lv1_form";
+$total_pages = ceil($functions->phantrang('tbl_news', 'tintuc') / $records_per_page);
+$show_tintuc = $news->show_news($records_per_page, $current_page, '', 'tintuc');
+$linkMulti = "index.php?page=deleteMulti&table=tbl_news&image=file&redirect=$redirect_url";
+$linkDelete = "index.php?page=delete&table=tbl_news&image=file&redirect=$redirect_url&id=";
+$linkEdit = "index.php?page=tintuc_form&id=";
+$linkAdd = "index.php?page=tintuc_form";
 ?>
 <?php
+$name = 'tin tức';
 $breadcrumb = [
   ['label' => 'Bảng điều khiển', 'link' => '?page=dashboard'],
-  ['label' => 'Danh mục'],
+  ['label' => $name],
   ['label' => 'Danh sách ' . $name]
 ];
 include 'templates/breadcrumb.php';
@@ -25,6 +24,7 @@ include 'templates/breadcrumb.php';
         class="fas fa-plus mr-2"></i>Thêm mới</a>
     <a class="btn btn-sm bg-gradient-danger text-white" id="delete-all" data-url="<?= $linkMulti ?>" title="Xóa tất cả"><i
         class="far fa-trash-alt mr-2"></i>Xóa tất cả</a>
+
     <div class="form-inline form-search d-inline-block align-middle ml-3">
       <div class="input-group input-group-sm">
         <input class="form-control form-control-navbar text-sm" type="search" id="keyword" placeholder="Tìm kiếm"
@@ -41,7 +41,7 @@ include 'templates/breadcrumb.php';
   </div>
   <div class="card card-primary card-outline text-sm mb-0">
     <div class="card-header">
-      <h3 class="card-title">Danh sách Danh mục cấp 1</h3>
+      <h3 class="card-title">Danh sách tin tức</h3>
     </div>
     <div class="card-body table-responsive p-0">
       <table class="table table-hover">
@@ -53,9 +53,9 @@ include 'templates/breadcrumb.php';
                 <label for="selectall-checkbox" class="custom-control-label"></label>
               </div>
             </th>
-            <th class="align-middle text-center" width="10%">STT</th>
+            <th class="align-middle text-center" style="width: 10%">STT</th>
             <th class="align-middle">Hình</th>
-            <th class="align-middle" style="width: 30%">Tiêu đề</th>
+            <th class="align-middle" style="width: 40%">Tiêu đề</th>
             <th class="align-middle text-center">Hiển thị</th>
             <th class="align-middle text-center">Nổi bật</th>
             <th class="align-middle text-center">Thao tác</th>
@@ -63,41 +63,47 @@ include 'templates/breadcrumb.php';
         </thead>
         <form action="" method="POST">
           <tbody>
-            <?php if ($show_danhmuc):
-              while ($resule = $show_danhmuc->fetch_assoc()):
+            <?php if ($show_tintuc): ?>
+              <?php while ($resule = $show_tintuc->fetch_assoc()):
                 $id = $resule['id'];
-                $namevi = $resule['namevi'];
-                $file = empty($resule['file']) ? NO_IMG : BASE_ADMIN . UPLOADS . $resule['file'];
-            ?>
+                $name = $resule['namevi'];
+                $slug = $resule['slugvi'];
+                $imgSrc = !empty($resule['file'])
+                  ? BASE_ADMIN . UPLOADS . $resule['file']
+                  : NO_IMG;
+              ?>
                 <tr>
                   <!-- Checkbox chọn -->
                   <td class="align-middle">
                     <div class="custom-control custom-checkbox my-checkbox">
-                      <input type="checkbox" class="custom-control-input select-checkbox"
-                        id="select-checkbox-<?= $id ?>" value="<?= $id ?>" name="checkbox_id<?= $id ?>" />
+                      <input type="checkbox" class="custom-control-input select-checkbox" id="select-checkbox-<?= $id ?>" value="<?= $id ?>" name="checkbox_id<?= $id ?>" />
                       <label for="select-checkbox-<?= $id ?>" class="custom-control-label"></label>
                     </div>
                   </td>
 
-                  <!-- Số thứ tự -->
+                  <!-- STT -->
                   <td class="align-middle">
                     <input type="number" class="form-control form-control-mini m-auto update-numb" min="0"
-                      value="<?= $resule['numb'] ?>" data-id="<?= $id ?>" data-table="tbl_danhmuc" />
+                      value="<?= $resule['numb'] ?>" data-id="<?= $id ?>" data-table="tbl_news" />
                   </td>
 
                   <!-- Ảnh -->
                   <td class="align-middle">
-                    <a href="<?= $linkEdit ?><?= $id ?>" title="<?= $namevi ?>">
-                      <img src="<?= $file ?>" alt="<?= $namevi ?>" class="rounded img-preview" />
+                    <a href="<?= $linkEdit ?><?= $id ?>" title="<?= $name ?>">
+                      <img class="rounded img-preview" src="<?= $imgSrc ?>" alt="<?= $name ?>" />
                     </a>
                   </td>
 
-                  <!-- Tên -->
+                  <!-- Tên + tools -->
                   <td class="align-middle">
-                    <a class="text-dark text-break" href="<?= $linkEdit ?><?= $id ?>" title="<?= $namevi ?>">
-                      <?= $namevi ?>
-                    </a>
+                    <a class="text-dark text-break" href="<?= $linkEdit ?><?= $id ?>" title="<?= $name ?>"><?= $name ?></a>
+                    <div class="tool-action mt-2 w-clear">
+                      <a class="text-primary mr-3" href="<?= BASE . $slug ?>" target="_blank" title="Xem"><i class="far fa-eye mr-1"></i>View</a>
+                      <a class="text-info mr-3" href="<?= $linkEdit ?><?= $id ?>" title="Chỉnh sửa"><i class="far fa-edit mr-1"></i>Edit</a>
+                      <a class="text-danger" id="delete-item" data-url="?del=<?= $id ?>" title="Xoá"><i class="far fa-trash-alt mr-1"></i>Delete</a>
+                    </div>
                   </td>
+
                   <!-- Checkbox Hiển thị, Nổi bật -->
                   <?php foreach (['hienthi', 'noibat'] as $attr): ?>
                     <td class="align-middle text-center">
@@ -106,7 +112,7 @@ include 'templates/breadcrumb.php';
                           data-type="<?= $attr ?>"
                           class="custom-control-input show-checkbox"
                           id="show-checkbox-<?= $attr ?>-<?= $id ?>"
-                          data-table="tbl_danhmuc"
+                          data-table="tbl_news"
                           data-id="<?= $id ?>"
                           data-attr="<?= $resule[$attr] == $attr ? '' : $attr ?>"
                           <?= $resule[$attr] == $attr ? 'checked' : '' ?> />
@@ -117,12 +123,8 @@ include 'templates/breadcrumb.php';
 
                   <!-- Hành động -->
                   <td class="align-middle text-center text-md text-nowrap">
-                    <a class="text-primary mr-2" href="<?= $linkEdit ?><?= $id ?>" title="Chỉnh sửa">
-                      <i class="fas fa-edit"></i>
-                    </a>
-                    <a class="text-danger" id="delete-item" data-url="<?= $linkDelete ?><?= $id ?>" title="Xóa">
-                      <i class="fas fa-trash-alt"></i>
-                    </a>
+                    <a class="text-primary mr-2" href="<?= $linkEdit ?><?= $id ?>" title="Chỉnh sửa"><i class="fas fa-edit"></i></a>
+                    <a class="text-danger" id="delete-item" data-url="<?= $linkDelete ?><?= $id ?>" title="Xoá"><i class="fas fa-trash-alt"></i></a>
                   </td>
                 </tr>
               <?php endwhile; ?>
@@ -131,11 +133,11 @@ include 'templates/breadcrumb.php';
                 <td colspan="100" class="text-center">Không có dữ liệu</td>
               </tr>
             <?php endif; ?>
+
           </tbody>
         </form>
       </table>
     </div>
-
   </div>
   <?php if ($total_pages > 1): ?>
     <div class="card-footer text-sm pb-0 mb-5">

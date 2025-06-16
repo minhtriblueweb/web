@@ -2,7 +2,7 @@
 $redirect_url = $_GET['page'];
 $records_per_page = 10;
 $current_page = max(1, isset($_GET['p']) ? (int)$_GET['p'] : 1);
-$total_records = $functions->phantrang_sp('tbl_danhmuc_c2');
+$total_records = $functions->phantrang('tbl_danhmuc_c2');
 $total_pages = ceil($total_records / $records_per_page);
 $show_danhmuc_c1 = $danhmuc->show_danhmuc('tbl_danhmuc');
 $show_danhmuc_c2 = $danhmuc->show_danhmuc('tbl_danhmuc_c2', $records_per_page, $current_page);
@@ -83,12 +83,10 @@ include 'templates/breadcrumb.php';
         <form class="validation-form" novalidate method="post" action="">
           <tbody>
             <?php if ($show_danhmuc_c2):
-              while ($resule_c2 = $show_danhmuc_c2->fetch_assoc()):
-                $id = $resule_c2['id'];
-                $namevi = $resule_c2['namevi'];
-                $file = empty($resule_c2['file']) ? NO_IMG : BASE_ADMIN . UPLOADS . $resule_c2['file'];
-                $hienthi = $resule_c2['hienthi'] === 'hienthi';
-                $noibat = $resule_c2['noibat'] === 'noibat';
+              while ($row = $show_danhmuc_c2->fetch_assoc()):
+                $id = $row['id'];
+                $namevi = $row['namevi'];
+                $file = empty($row['file']) ? NO_IMG : BASE_ADMIN . UPLOADS . $row['file'];
             ?>
                 <tr>
                   <!-- Checkbox chọn -->
@@ -103,7 +101,7 @@ include 'templates/breadcrumb.php';
                   <!-- Số thứ tự -->
                   <td class="align-middle">
                     <input type="number" class="form-control form-control-mini m-auto update-numb" min="0"
-                      value="<?= $resule_c2['numb'] ?>" data-id="<?= $id ?>" data-table="tbl_danhmuc_c2" />
+                      value="<?= $row['numb'] ?>" data-id="<?= $id ?>" data-table="tbl_danhmuc_c2" />
                   </td>
 
                   <!-- Ảnh -->
@@ -120,27 +118,22 @@ include 'templates/breadcrumb.php';
                     </a>
                   </td>
 
-                  <!-- Hiển thị -->
-                  <td class="align-middle text-center">
-                    <div class="custom-control custom-checkbox my-checkbox">
-                      <input type="checkbox" class="custom-control-input show-checkbox"
-                        id="show-checkbox-hienthi-<?= $id ?>" data-table="tbl_danhmuc_c2"
-                        data-id="<?= $id ?>" data-type="hienthi"
-                        data-attr="<?= $hienthi ? '' : 'hienthi' ?>" <?= $hienthi ? 'checked' : '' ?> />
-                      <label for="show-checkbox-hienthi-<?= $id ?>" class="custom-control-label"></label>
-                    </div>
-                  </td>
-
-                  <!-- Nổi bật -->
-                  <td class="align-middle text-center">
-                    <div class="custom-control custom-checkbox my-checkbox">
-                      <input type="checkbox" class="custom-control-input show-checkbox"
-                        id="show-checkbox-noibat-<?= $id ?>" data-table="tbl_danhmuc_c2"
-                        data-id="<?= $id ?>" data-type="noibat"
-                        data-attr="<?= $noibat ? '' : 'noibat' ?>" <?= $noibat ? 'checked' : '' ?> />
-                      <label for="show-checkbox-noibat-<?= $id ?>" class="custom-control-label"></label>
-                    </div>
-                  </td>
+                  <!-- Checkbox Hiển thị, Nổi bật -->
+                  <?php foreach (['hienthi', 'noibat'] as $attr): ?>
+                    <td class="align-middle text-center">
+                      <div class="custom-control custom-checkbox my-checkbox">
+                        <input type="checkbox"
+                          data-type="<?= $attr ?>"
+                          class="custom-control-input show-checkbox"
+                          id="show-checkbox-<?= $attr ?>-<?= $id ?>"
+                          data-table="tbl_danhmuc_c2"
+                          data-id="<?= $id ?>"
+                          data-attr="<?= $row[$attr] == $attr ? '' : $attr ?>"
+                          <?= $row[$attr] == $attr ? 'checked' : '' ?> />
+                        <label for="show-checkbox-<?= $attr ?>-<?= $id ?>" class="custom-control-label"></label>
+                      </div>
+                    </td>
+                  <?php endforeach; ?>
 
                   <!-- Hành động -->
                   <td class="align-middle text-center text-md text-nowrap">

@@ -1,23 +1,22 @@
 <?php
 $message = '';
-$name = 'danh mục cấp 2';
-$redirectUrl = 'category_lv2_list';
-$show_danhmuc = $danhmuc->show_danhmuc('tbl_danhmuc');
+$name = 'tin tức';
+$redirectUrl = 'tintuc_list';
 $id = $_GET['id'] ?? null;
 if (!empty($id)) {
-  $get_id = $danhmuc->get_id('tbl_danhmuc_c2', $id);
-  if ($get_id && $get_id->num_rows > 0) {
+  $get_id = $news->get_id_news($id);
+  if ($get_id  && $get_id->num_rows > 0) {
     $result = $get_id->fetch_assoc();
   }
 }
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && (isset($_POST['add']) || isset($_POST['edit']))) {
-  $message = $danhmuc->save_danhmuc_c2($_POST, $_FILES, $id);
+  $message = $news->save_news($_POST, $_FILES, $id);
 }
 ?>
 <?php
 $breadcrumb = [
-  ['label' => 'Bảng điều khiển', 'link' => 'index.php'],
-  ['label' => 'Danh mục', 'link' => $redirectUrl],
+  ['label' => 'Bảng điều khiển', 'link' => '?page=dashboard'],
+  ['label' => 'Tin tức', 'link' => $redirectUrl],
   ['label' => !empty($id) ? 'Cập nhật ' . $name : 'Thêm mới ' . $name]
 ];
 include 'templates/breadcrumb.php';
@@ -53,12 +52,12 @@ include 'templates/breadcrumb.php';
                     <div class="form-group">
                       <label for="namevi">Tiêu đề (vi):</label>
                       <input type="text" class="form-control for-seo text-sm" name="namevi" id="namevi"
-                        placeholder="Tiêu đề (vi)" value="<?= $_POST['namevi'] ?? ($result['namevi'] ?? "") ?>" required />
+                        placeholder="Tiêu đề (vi)" value="<?= $_POST['namevi'] ?? ($result['namevi'] ?? "") ?>" required>
                     </div>
                     <div class="form-group">
                       <label for="descvi">Mô tả (vi):</label>
-                      <textarea class="form-control for-seo text-sm" name="descvi" id="descvi" rows="4"
-                        placeholder="Mô tả (vi)"><?= $_POST['descvi'] ?? ($result['descvi'] ?? "") ?></textarea>
+                      <textarea class="form-control for-seo text-sm" name="descvi" id="descvi" rows="5"
+                        placeholder="Mô tả"><?= $_POST['descvi'] ?? ($result['descvi'] ?? "") ?></textarea>
                     </div>
                     <div class="form-group">
                       <label for="contentvi">Nội dung (vi):</label>
@@ -69,6 +68,47 @@ include 'templates/breadcrumb.php';
                 </div>
               </div>
             </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-xl-4">
+        <div class="card card-primary card-outline text-sm">
+          <div class="card-header">
+            <h3 class="card-title">Hình ảnh <?= $name ?></h3>
+            <div class="card-tools">
+              <button type="button" class="btn btn-tool" data-card-widget="collapse"><i
+                  class="fas fa-minus"></i></button>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="photoUpload-zone">
+              <div class="photoUpload-detail" id="photoUpload-preview">
+                <img src="<?= empty($result['file']) ? NO_IMG : BASE_ADMIN . UPLOADS . $result['file']; ?>"
+                  class="rounded" alt="Alt Photo" />
+              </div>
+              <label class="photoUpload-file" id="photo-zone" for="file-zone">
+                <input type="file" name="file" id="file-zone">
+                <i class="fas fa-cloud-upload-alt"></i>
+                <p class="photoUpload-drop">Kéo và thả hình vào đây</p>
+                <p class="photoUpload-or">hoặc</p>
+                <p class="photoUpload-choose btn btn-sm bg-gradient-success">Chọn hình</p>
+              </label>
+              <div class="photoUpload-dimension">
+                (.jpg|.gif|.png|.jpeg|.gif|.webp|.WEBP)
+              </div>
+            </div>
+          </div>
+
+        </div>
+        <div class="card card-primary card-outline text-sm">
+          <div class="card-header">
+            <h3 class="card-title">Thông tin <?= $name ?></h3>
+            <div class="card-tools">
+              <button type="button" class="btn btn-tool" data-card-widget="collapse"><i
+                  class="fas fa-minus"></i></button>
+            </div>
+          </div>
+          <div class="card-body">
             <div class="form-group">
               <?php
               $checkboxes = [
@@ -93,64 +133,14 @@ include 'templates/breadcrumb.php';
             </div>
             <div class="form-group">
               <label for="numb" class="d-inline-block align-middle mb-0 mr-2">Số thứ tự:</label>
-              <input value="<?= $_POST['numb'] ?? (!empty($id) ? $result['numb'] : '1') ?>" type="number"
-                class="form-control form-control-mini d-inline-block align-middle text-sm" min="0" name="numb" id="numb"
-                placeholder="Số thứ tự">
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="col-xl-4">
-        <div class="card card-primary card-outline text-sm">
-          <div class="card-header">
-            <h3 class="card-title">Danh mục cấp 1</h3>
-          </div>
-          <div class="card-body">
-            <div class="form-group-category">
-              <select id="id_list" name="id_list" data-level="0" data-type="san-pham" data-table="#_product_cat"
-                data-child="id_cat" class="form-control select2 select-category">
-                <option value="0">Chọn danh mục</option>
-                <?php if ($show_danhmuc): ?>
-                  <?php while ($row = $show_danhmuc->fetch_assoc()): ?>
-                    <option value="<?= $row['id'] ?>"
-                      <?= (($_POST['id_list'] ?? ($result['id_list'] ?? '')) == $row['id']) ? 'selected' : '' ?>>
-                      <?= $row['namevi'] ?>
-                    </option>
-                  <?php endwhile; ?>
-                <?php endif; ?>
-              </select>
-            </div>
-          </div>
-        </div>
-        <div class="card card-primary card-outline text-sm">
-          <div class="card-header">
-            <h3 class="card-title">Hình ảnh Danh mục cấp 2</h3>
-            <div class="card-tools">
-              <button type="button" class="btn btn-tool" data-card-widget="collapse"><i
-                  class="fas fa-minus"></i></button>
-            </div>
-          </div>
-          <div class="card-body">
-            <div class="photoUpload-zone">
-              <div class="photoUpload-detail" id="photoUpload-preview">
-                <img class='rounded'
-                  src='<?= empty($result['file']) ? NO_IMG : BASE_ADMIN . UPLOADS . $result['file']; ?>'
-                  alt='Alt Photo' />
-              </div>
-              <label class="photoUpload-file" id="photo-zone" for="file-zone">
-                <input type="file" name="file" id="file-zone">
-                <i class="fas fa-cloud-upload-alt"></i>
-                <p class="photoUpload-drop">Kéo và thả hình vào đây</p>
-                <p class="photoUpload-or">hoặc</p>
-                <p class="photoUpload-choose btn btn-sm bg-gradient-success">Chọn hình</p>
-              </label>
-              <div class="photoUpload-dimension">(.jpg|.gif|.png|.jpeg|.gif|.webp|.WEBP)
-              </div>
+              <input type="number" class="form-control form-control-mini d-inline-block align-middle text-sm" min="0"
+                name="numb" id="numb" placeholder="Số thứ tự" value="<?= $_POST['numb'] ?? (!empty($id) ? $result['numb'] : '1') ?>" />
             </div>
           </div>
         </div>
       </div>
     </div>
     <?php include 'templates/seo.php'; ?>
+    <input type="hidden" name="type" id="type" value="tintuc">
   </form>
 </section>

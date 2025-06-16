@@ -98,7 +98,7 @@ class functions
     $resultDelete = $this->db->delete($queryDelete);
     if ($resultDelete) {
       if ($hasIdParent && $table == 'tbl_gallery') {
-        $this->transfer("Xóa dữ liệu thành công!", "gallery&id=$last_id_parent", true);
+        $this->transfer("Xóa dữ liệu thành công!", "index.php?page=gallery_list&id=$last_id_parent", true);
       } else {
         $this->transfer("Xóa dữ liệu thành công!", "index.php?page=$redirectUrl", true);
       }
@@ -107,12 +107,17 @@ class functions
     }
   }
 
-  public function delete($id, $table, $imageColumn, $redirect_url)
+  public function delete($id, $table, $imageColumn, $redirect_url, $id_parent = null)
   {
     $id = intval($id);
-    $check_query = "SELECT `$imageColumn` FROM `$table` WHERE id = '$id'";
+    $table = mysqli_real_escape_string($this->db->link, $table);
+    $imageColumn = mysqli_real_escape_string($this->db->link, $imageColumn);
+
+    // Lấy dữ liệu ảnh & id_parent nếu có
+    $check_query = "SELECT `$imageColumn`" . ($table === 'tbl_gallery' ? ", id_parent" : "") . " FROM `$table` WHERE id = '$id'";
     $result = $this->db->select($check_query);
     $row = ($result) ? $result->fetch_assoc() : null;
+
     if ($row && !empty($row[$imageColumn])) {
       $filePath = "uploads/" . $row[$imageColumn];
       if (file_exists($filePath)) {
@@ -120,18 +125,27 @@ class functions
       }
     }
 
-    // Xóa bản ghi trong database
+    // Xóa bản ghi
     $query = "DELETE FROM `$table` WHERE id = '$id'";
-    $result = $this->db->delete($query);
+    $delete_result = $this->db->delete($query);
 
-    // Chuyển hướng thông báo
-    if ($result) {
-      $this->transfer("Xóa dữ liệu thành công", "index.php?page=" . $redirect_url, true);
+    // Chuyển hướng
+    if ($delete_result) {
+      if ($table === 'tbl_gallery') {
+        // Ưu tiên id_parent nếu truyền vào, nếu không lấy từ bản ghi
+        $parentId = $id_parent ?? ($row['id_parent'] ?? 0);
+        $this->transfer("Xóa hình ảnh thành công", "index.php?page=gallery_list&id=" . intval($parentId));
+      } else {
+        $this->transfer("Xóa dữ liệu thành công", "index.php?page=" . $redirect_url, true);
+      }
     } else {
-      $this->transfer("Xóa dữ liệu thất bại", "index.php?page=" . $redirect_url, false);
+      if ($table === 'tbl_gallery') {
+        $this->transfer("Xóa hình ảnh thất bại", "index.php?page=gallery_list&id=" . intval($id_parent ?? 0));
+      } else {
+        $this->transfer("Xóa dữ liệu thất bại", "index.php?page=" . $redirect_url, false);
+      }
     }
   }
-
 
   public function isSlugviDuplicated($slugvi, $table, $exclude_id)
   {
@@ -444,21 +458,17 @@ class functions
     return '';
   }
 
-  public function phantrang_sp($tbl)
+  public function phantrang($tbl, $type = null)
   {
     $tbl = mysqli_real_escape_string($this->db->link, $tbl);
     $query = "SELECT COUNT(*) as total FROM `$tbl`";
-    $result = $this->db->select($query);
-    return $result ? $result->fetch_assoc()['total'] : 0;
-  }
+    if (!empty($type)) {
 
-  public function phantrang($tbl, $type)
-  {
-    $tbl = mysqli_real_escape_string($this->db->link, $tbl);
-    $type = mysqli_real_escape_string($this->db->link, $type);
-    $query = "SELECT COUNT(*) as total FROM `$tbl` WHERE type = '$type'";
+      $type = mysqli_real_escape_string($this->db->link, $type);
+      $query .= " WHERE type = '$type'";
+    }
     $result = $this->db->select($query);
-    return $result ? $result->fetch_assoc()['total'] : 0;
+    return $result ? (int)$result->fetch_assoc()['total'] : 0;
   }
 
   function renderPagination($current_page, $total_pages, $base_url = '?p=')

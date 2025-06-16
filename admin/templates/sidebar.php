@@ -33,18 +33,18 @@ $sidebarMenu = [
     'children' => [
       [
         'title' => 'Tin tức',
-        'link' => '?page=tintuc',
-        'active' => ['tintuc', 'themtintuc', 'suatintuc']
+        'link' => '?page=tintuc_list',
+        'active' => ['tintuc_list', 'tintuc_form']
       ],
       [
         'title' => 'Chính sách',
-        'link' => '?page=chinhsach',
-        'active' => ['chinhsach', 'themchinhsach', 'suachinhsach']
+        'link' => '?page=chinhsach_list',
+        'active' => ['chinhsach_list', 'chinhsach_form']
       ],
       [
         'title' => 'Tiêu chí',
-        'link' => '?page=tieuchi',
-        'active' => ['tieuchi', 'themtieuchi', 'suatieuchi']
+        'link' => '?page=tieuchi_list',
+        'active' => ['tieuchi_list', 'tieuchi_form']
       ],
       [
         'title' => 'Đánh giá khách hàng',
@@ -53,8 +53,8 @@ $sidebarMenu = [
       ],
       [
         'title' => 'Hướng dẫn chơi',
-        'link' => '?page=huongdanchoi',
-        'active' => ['huongdanchoi', 'themhuongdanchoi', 'suahuongdanchoi']
+        'link' => '?page=huongdanchoi_list',
+        'active' => ['huongdanchoi_list', 'huongdanchoi_form']
       ],
     ]
   ],

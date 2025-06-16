@@ -3,17 +3,14 @@ $message = '';
 $name = 'sản phẩm';
 $redirectUrl = 'product_list';
 $show_danhmuc = $danhmuc->show_danhmuc('tbl_danhmuc');
-if (isset($_GET['id']) && $_GET['id'] != NULL) {
-  $id = $_GET['id'];
+$id = $_GET['id'] ?? null;
+if (!empty($id)) {
   $get_id = $sanpham->get_id_sanpham($id);
   if ($get_id) {
     $result = $get_id->fetch_assoc();
     $get_id_cap1 = $result['id_list'];
     $show_danhmuc_c2 = $danhmuc->show_danhmuc_c2('tbl_danhmuc_c2', $get_id_cap1);
   }
-}
-if (!isset($id)) {
-  $id = $_GET['id'] ?? null;
 }
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && (isset($_POST['add']) || isset($_POST['edit']))) {
   $message = $sanpham->save_sanpham($_POST, $_FILES, $id);
@@ -23,7 +20,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && (isset($_POST['add']) || isset($_PO
 <?php
 $breadcrumb = [
   ['label' => 'Bảng điều khiển', 'link' => 'index.php'],
-  ['label' => 'Sản phẩm', 'link' => $redirectUrl],
+  ['label' => $name, 'link' => $redirectUrl],
   ['label' => !empty($id) ? 'Cập nhật ' . $name : 'Thêm mới ' . $name]
 ];
 include 'templates/breadcrumb.php';
@@ -171,24 +168,26 @@ include 'templates/breadcrumb.php';
               </div>
             </div>
             <div class="form-group">
-              <div class="form-group d-inline-block mb-2 mr-2">
-                <label for="hienthi-checkbox" class="d-inline-block align-middle mb-0 mr-2">Hiển thị:</label>
-                <div class="custom-control custom-checkbox d-inline-block align-middle">
-                  <input <?= $functions->is_checked('hienthi', $result ?? null, $id ?? null) ?> type="checkbox" class="custom-control-input hienthi-checkbox" name="hienthi"
-                    id="hienthi-checkbox"
-                    value="hienthi" />
-                  <label for="hienthi-checkbox" class="custom-control-label"></label>
+              <?php
+              $checkboxes = [
+                'hienthi' => 'Hiển thị',
+                'banchay' => 'Bán chạy'
+              ];
+              ?>
+              <?php foreach ($checkboxes as $name => $label): ?>
+                <div class="form-group d-inline-block mb-2 mr-2">
+                  <label for="<?= $name ?>-checkbox" class="d-inline-block align-middle mb-0 mr-2"><?= $label ?>:</label>
+                  <div class="custom-control custom-checkbox d-inline-block align-middle">
+                    <input <?= $functions->is_checked($name, $result ?? null, $id ?? null) ?>
+                      type="checkbox"
+                      class="custom-control-input <?= $name ?>-checkbox"
+                      name="<?= $name ?>"
+                      id="<?= $name ?>-checkbox"
+                      value="<?= $name ?>" />
+                    <label for="<?= $name ?>-checkbox" class="custom-control-label"></label>
+                  </div>
                 </div>
-              </div>
-              <div class="form-group d-inline-block mb-2 mr-2">
-                <label for="banchay-checkbox" class="d-inline-block align-middle mb-0 mr-2">Bán chạy:</label>
-                <div class="custom-control custom-checkbox d-inline-block align-middle">
-                  <input <?= $functions->is_checked('banchay', $result ?? null, $id ?? null) ?> type="checkbox" class="custom-control-input banchay-checkbox" name="banchay"
-                    id="banchay-checkbox"
-                    value="banchay" />
-                  <label for="banchay-checkbox" class="custom-control-label"></label>
-                </div>
-              </div>
+              <?php endforeach; ?>
             </div>
             <div class="form-group">
               <label for="numb" class="d-inline-block align-middle mb-0 mr-2">Số thứ tự:</label>

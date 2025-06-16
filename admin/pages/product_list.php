@@ -2,7 +2,7 @@
 $redirect_url = $_GET['page'];
 $records_per_page = 10;
 $current_page = max(1, isset($_GET['p']) ? (int)$_GET['p'] : 1);
-$total_pages = ceil($functions->phantrang_sp('tbl_sanpham') / $records_per_page);
+$total_pages = ceil($functions->phantrang('tbl_sanpham') / $records_per_page);
 $show_sanpham = $sanpham->show_sanpham($records_per_page, $current_page);
 $name = 'sản phẩm';
 $show_danhmuc = $danhmuc->show_danhmuc('tbl_danhmuc');
@@ -149,28 +149,22 @@ include 'templates/breadcrumb.php';
                   <td class="align-middle">
                     <?= $sanpham->get_name_danhmuc($row['id_cat'], 'tbl_danhmuc_c2') ?>
                   </td>
-
-                  <!-- Hiển thị -->
-                  <td class="align-middle text-center">
-                    <div class="custom-control custom-checkbox my-checkbox">
-                      <input type="checkbox" class="custom-control-input show-checkbox" data-type="hienthi"
-                        id="show-checkbox-hienthi-<?= $id ?>" data-table="tbl_sanpham" data-id="<?= $id ?>"
-                        data-attr="<?= $row['hienthi'] == 'hienthi' ? '' : 'hienthi' ?>"
-                        <?= $row['hienthi'] == 'hienthi' ? 'checked' : '' ?> />
-                      <label for="show-checkbox-hienthi-<?= $id ?>" class="custom-control-label"></label>
-                    </div>
-                  </td>
-
-                  <!-- Bán chạy -->
-                  <td class="align-middle text-center">
-                    <div class="custom-control custom-checkbox my-checkbox">
-                      <input type="checkbox" class="custom-control-input show-checkbox" data-type="banchay"
-                        id="show-checkbox-banchay-<?= $id ?>" data-table="tbl_sanpham" data-id="<?= $id ?>"
-                        data-attr="<?= $row['banchay'] == 'banchay' ? '' : 'banchay' ?>"
-                        <?= $row['banchay'] == 'banchay' ? 'checked' : '' ?> />
-                      <label for="show-checkbox-banchay-<?= $id ?>" class="custom-control-label"></label>
-                    </div>
-                  </td>
+                  <!-- Checkbox Hiển thị, bán chạy -->
+                  <?php foreach (['hienthi', 'banchay'] as $attr): ?>
+                    <td class="align-middle text-center">
+                      <div class="custom-control custom-checkbox my-checkbox">
+                        <input type="checkbox"
+                          data-type="<?= $attr ?>"
+                          class="custom-control-input show-checkbox"
+                          id="show-checkbox-<?= $attr ?>-<?= $id ?>"
+                          data-table="tbl_sanpham"
+                          data-id="<?= $id ?>"
+                          data-attr="<?= $row[$attr] == $attr ? '' : $attr ?>"
+                          <?= $row[$attr] == $attr ? 'checked' : '' ?> />
+                        <label for="show-checkbox-<?= $attr ?>-<?= $id ?>" class="custom-control-label"></label>
+                      </div>
+                    </td>
+                  <?php endforeach; ?>
 
                   <!-- Hành động -->
                   <td class="align-middle text-center text-md text-nowrap">

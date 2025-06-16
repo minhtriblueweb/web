@@ -53,8 +53,6 @@ class sanpham
     return $result;
   }
 
-
-
   public function total_pages_sanpham_lienquan($id, $id_cat, $limit)
   {
     $id_cat = mysqli_real_escape_string($this->db->link, $id_cat);
@@ -153,29 +151,6 @@ class sanpham
     $this->fn->transfer("Thêm hình ảnh thành công", "index.php?page=gallery_list&id=$id_parent");
   }
 
-
-  public function del_gallery($id)
-  {
-    $del_file_name = "SELECT * FROM tbl_gallery WHERE id='$id'";
-    $delta = $this->db->select($del_file_name);
-    if ($delta) {
-      $get_id_parent = $delta->fetch_assoc();
-      $photo = $get_id_parent['photo'];
-      $file_path = "uploads/" . $photo;
-      if (file_exists($file_path)) {
-        unlink($file_path);
-      }
-      $query = "DELETE FROM tbl_gallery WHERE id = '$id'";
-      $result = $this->db->delete($query);
-      if ($result) {
-        header('Location: transfer.php?stt=success&url=gallery&id=' . $get_id_parent['id_parent']);
-      } else {
-        return "Lỗi thao tác!";
-      }
-    } else {
-      return "Không tìm thấy ảnh để xoá!";
-    }
-  }
 
   public function get_img_gallery($id)
   {

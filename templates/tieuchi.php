@@ -1,7 +1,7 @@
 <div class="wrap-criterion">
   <div class="wrap-content">
     <div class="slick-criterion slick-d-none">
-      <?php $show_tieuchi = $tieuchi->show_tieuchi("hienthi");
+      <?php $show_tieuchi = $tieuchi->show_tieuchi_index();
       if ($show_tieuchi): ?>
         <?php while ($result_tieuchi = $show_tieuchi->fetch_assoc()): ?>
           <div>

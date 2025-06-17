@@ -2120,26 +2120,25 @@ $(document).ready(function () {
           holdonOpen();
         },
         success: function (data, el) {
-          data = JSON.parse(data);
+          try {
+            if (typeof data === 'string') data = JSON.parse(data);
+          } catch (e) {
+            console.error("JSON parse error:", e, data);
+            holdonClose(); // Đóng loading nếu lỗi
+            return;
+          }
+
           if (data["success"] == true) {
             var parent = el.find(".jFiler-jProgressBar").parent();
             el.find(".jFiler-jProgressBar").fadeOut("slow", function () {
-              $(
-                '<div class = "jFiler-item-others text-success"><i class = "icon-jfi-check-circle"></i> Success</div>'
-              )
-                .hide()
-                .appendTo(parent)
-                .fadeIn("slow");
+              $('<div class="jFiler-item-others text-success"><i class="icon-jfi-check-circle"></i> Success</div>')
+                .hide().appendTo(parent).fadeIn("slow");
             });
           } else {
             var parent = el.find(".jFiler-jProgressBar").parent();
             el.find(".jFiler-jProgressBar").fadeOut("slow", function () {
-              $(
-                '<div class = "jFiler-item-others text-error"><i class = "icon-jfi-minus-circle"></i> Error</div>'
-              )
-                .hide()
-                .appendTo(parent)
-                .fadeIn("slow");
+              $('<div class="jFiler-item-others text-error"><i class="icon-jfi-minus-circle"></i> Error</div>')
+                .hide().appendTo(parent).fadeIn("slow");
             });
           }
         },

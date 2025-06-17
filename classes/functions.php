@@ -663,4 +663,12 @@ class functions
     $string = strtolower($string);
     return $string;
   }
+
+  public function generateHash()
+  {
+    if (!isset($_SESSION['upload_hash'])) {
+      $_SESSION['upload_hash'] = bin2hex(random_bytes(16));
+    }
+    return $_SESSION['upload_hash'];
+  }
 }

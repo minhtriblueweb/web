@@ -13,6 +13,11 @@ if (!empty($id)) {
   }
 }
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && (isset($_POST['add']) || isset($_POST['edit']))) {
+  // echo '<pre>';
+  // print_r($_POST);
+  // print_r($_FILES);
+  // echo '</pre>';
+  // exit;
   $message = $sanpham->save_sanpham($_POST, $_FILES, $id);
 }
 ?>
@@ -225,6 +230,36 @@ include 'templates/breadcrumb.php';
         </div>
       </div>
     </div>
+    <!-- <div class="card card-primary card-outline text-sm">
+      <div class="card-header">
+        <h3 class="card-title">Bộ sưu tập Sản phẩm</h3>
+        <div class="card-tools">
+          <button type="button" class="btn btn-tool" data-card-widget="collapse">
+            <i class="fas fa-minus"></i>
+          </button>
+        </div>
+      </div>
+
+      <div class="card-body">
+        <div class="form-group">
+          <label for="filer-gallery" class="label-filer-gallery mb-3">
+            Album: (.jpg|.gif|.png|.jpeg|.webp)
+          </label>
+          <input
+            type="file"
+            name="files[]"
+            id="filer-gallery"
+            multiple="multiple"
+            data-id_parent="<?= $id ?? 0 ?>"
+            data-hash="<?= $functions->generateHash() ?>"
+            class="form-control-file" />
+          <input type="hidden" class="col-filer" value="col-xl-2 col-lg-3 col-md-3 col-sm-4 col-6">
+          <input type="hidden" class="act-filer" value="man">
+          <input type="hidden" class="folder-filer" value="product">
+        </div>
+      </div>
+    </div> -->
+
     <?php include 'templates/seo.php'; ?>
   </form>
 </section>

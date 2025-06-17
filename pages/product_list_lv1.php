@@ -24,8 +24,8 @@ $get_sp = $sanpham->show_sanpham_pagination(
   $current_page,
   'hienthi',
   $id_list,
-  '',
-  ''
+  $id_cat = '',
+  $limit = ''
 );
 $seo['title'] = !empty($kg_danhmuc['titlevi']) ? $kg_danhmuc['titlevi'] : $kg_danhmuc['namevi'];
 $seo['keywords'] = $kg_danhmuc['keywordsvi'];

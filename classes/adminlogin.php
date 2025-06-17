@@ -22,25 +22,30 @@ class adminlogin
     $password = $this->fm->validation($password);
 
     $username = mysqli_real_escape_string($this->db->link, $username);
-    $password = mysqli_real_escape_string($this->db->link, $password);
 
     if (empty($username) || empty($password)) {
       return "Không được để trống tài khoản hoặc mật khẩu!";
     }
 
-    // Truy vấn DB
-    $query = "SELECT * FROM admin WHERE username = '$username' AND password = '$password' LIMIT 1";
+    // Truy vấn DB: chỉ kiểm tra username
+    $query = "SELECT * FROM admin WHERE username = '$username' LIMIT 1";
     $result = $this->db->select($query);
 
-    if ($result) {
+    if ($result && $result->num_rows > 0) {
       $value = $result->fetch_assoc();
-      Session::set('adminlogin', true);
-      Session::set('adminId', $value['id']);
-      Session::set('adminUser', $value['username']);
+      $hashedPassword = $value['password'];
 
-      return "success";
+      // So sánh với password người dùng nhập
+      if (password_verify($password, $hashedPassword)) {
+        Session::set('adminlogin', true);
+        Session::set('adminId', $value['id']);
+        Session::set('adminUser', $value['username']);
+        return "success";
+      } else {
+        return "Sai mật khẩu!";
+      }
     } else {
-      return "Tài khoản hoặc mật khẩu không đúng!";
+      return "Tài khoản không tồn tại!";
     }
   }
 }

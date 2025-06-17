@@ -162,7 +162,7 @@ $seo['image'] = BASE_ADMIN . UPLOADS . $kg_sanpham['file'];
         </div>
       </div>
       <div class="policy-detail">
-        <?php $show_tieuchi = $tieuchi->show_tieuchi("hienthi");
+        <?php $show_tieuchi = $tieuchi->show_tieuchi_index();
         if ($show_tieuchi): ?>
           <?php while ($result_tieuchi = $show_tieuchi->fetch_assoc()): ?>
             <div class="list-policy">

@@ -1,13 +1,11 @@
 <?php
-$records_per_page = 1;
+$records_per_page = 10;
 $current_page = max(1, (int)($_GET['page'] ?? 1));
-$total_records = $functions->phantrang_sp('tbl_sanpham');
-$total_pages = max(1, ceil($total_records / $records_per_page));
+$total_pages = max(1, ceil($functions->phantrang('tbl_sanpham') / $records_per_page));
 if ($current_page > $total_pages) {
   $current_page = $total_pages;
 }
-$show_sanpham = $sanpham->show_sanpham_pagination($records_per_page, $current_page, 'hienthi', '', '');
-// show_sanpham_pagination : số bản ghi -> số trang -> hiển thị -> cấp 1 -> cấp 2 -> limit
+$show_sanpham = $sanpham->show_sanpham_pagination($records_per_page, $current_page, 'hienthi', $id_list = '', $id_cat = '', $limit = '');
 $get_count_sp = $sanpham->count_sanpham();
 ?>
 <div class="wrap-main wrap-home w-clear">

@@ -21,7 +21,7 @@
         <?php $show_tintuc = $news->show_news_by_type('tintuc', 'hienthi'); ?>
         <?php if ($show_tintuc): ?>
           <?php while ($resule_tintuc = $show_tintuc->fetch_assoc()) : ?>
-            <div class="col-6 col-sm-4" data-aos="fade-up" data-aos-duration="1000">
+            <div class="col-6 col-sm-3" data-aos="fade-up" data-aos-duration="1000">
               <div class="item-service">
                 <div class="images">
                   <a class="scale-img hover-glass text-decoration-none" href="<?= $resule_tintuc['slugvi'] ?>"

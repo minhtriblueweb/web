@@ -256,7 +256,7 @@ class news
         $old_file_path = "uploads/" . $row['file'];
       }
     }
-    $thumb_filename = $this->fn->Upload($files, '310x350x1', [0, 0, 0, 127], $old_file_path, false);
+    $thumb_filename = $this->fn->Upload($files, '391x215x1', [255, 255, 255, 0], $old_file_path, $watermark = false, $convert_webp = true);
     if (!empty($id)) {
       $update_fields = [];
       foreach ($data_escaped as $field => $value) {

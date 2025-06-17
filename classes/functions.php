@@ -125,7 +125,6 @@ class functions
       }
     }
 
-    // Xóa bản ghi
     $query = "DELETE FROM `$table` WHERE id = '$id'";
     $delete_result = $this->db->delete($query);
 
@@ -197,14 +196,44 @@ class functions
     return false; // hợp lệ
   }
 
+  private function applyOpacity($image, $opacity)
+  {
+    $opacity = max(0, min(100, $opacity));
+    $w = imagesx($image);
+    $h = imagesy($image);
 
-  public function addWatermark($source_path, $destination_path, $position, $opacity, $offset_x, $offset_y)
+    $tmp = imagecreatetruecolor($w, $h);
+    imagealphablending($tmp, false);
+    imagesavealpha($tmp, true);
+
+    for ($x = 0; $x < $w; ++$x) {
+      for ($y = 0; $y < $h; ++$y) {
+        $rgba = imagecolorat($image, $x, $y);
+        $alpha = ($rgba & 0x7F000000) >> 24;
+        $alpha = 127 - ((127 - $alpha) * ($opacity / 100));
+        $color = imagecolorsforindex($image, $rgba);
+        $newColor = imagecolorallocatealpha($tmp, $color['red'], $color['green'], $color['blue'], $alpha);
+        imagesetpixel($tmp, $x, $y, $newColor);
+      }
+    }
+
+    return $tmp;
+  }
+
+  public function addWatermark($source_path, $destination_path)
   {
     $result = $this->db->select("SELECT * FROM tbl_watermark LIMIT 1");
     $row = $result ? $result->fetch_assoc() : null;
     if (!$row || empty($row['watermark'])) return false;
+
+    $position = isset($row['position']) ? intval($row['position']) : 9;
+    $opacity = isset($row['opacity']) ? floatval($row['opacity']) : 100;
+    $offset_x = isset($row['offset_x']) ? intval($row['offset_x']) : 0;
+    $offset_y = isset($row['offset_y']) ? intval($row['offset_y']) : 0;
+
     $watermark_path = 'uploads/' . $row['watermark'];
     if (!file_exists($watermark_path)) return false;
+
     $img_type = exif_imagetype($source_path);
     switch ($img_type) {
       case IMAGETYPE_JPEG:
@@ -220,69 +249,90 @@ class functions
         return false;
     }
     if (!$image) return false;
+
     $img_width = imagesx($image);
     $img_height = imagesy($image);
+
+    // Load watermark gốc
     $watermark_src = imagecreatefrompng($watermark_path);
     if (!$watermark_src) return false;
     imagesavealpha($watermark_src, true);
+
     $wm_orig_width = imagesx($watermark_src);
     $wm_orig_height = imagesy($watermark_src);
+
+    // Scale watermark
     $per = isset($row['per']) ? floatval($row['per']) : 2;
     $small_per = isset($row['small_per']) ? floatval($row['small_per']) : 3;
     $max_size = isset($row['max']) ? intval($row['max']) : 120;
     $min_size = isset($row['min']) ? intval($row['min']) : 120;
     $scale_percent = ($img_width < 300) ? $small_per : $per;
+
     $target_wm_width = $img_width * $scale_percent / 100;
-    $target_wm_width = max(min($target_wm_width, $max_size), $min_size);
+    $target_wm_width = max(20, min($target_wm_width, $img_width * 0.5));
     $target_wm_height = intval($wm_orig_height * ($target_wm_width / $wm_orig_width));
-    $watermark = imagecreatetruecolor($target_wm_width, $target_wm_height);
-    imagealphablending($watermark, false);
-    imagesavealpha($watermark, true);
-    imagecopyresampled($watermark, $watermark_src, 0, 0, 0, 0, $target_wm_width, $target_wm_height, $wm_orig_width, $wm_orig_height);
+
+    // Resize watermark
+    $scaled_wm = imagecreatetruecolor($target_wm_width, $target_wm_height);
+    imagealphablending($scaled_wm, false);
+    imagesavealpha($scaled_wm, true);
+    imagecopyresampled($scaled_wm, $watermark_src, 0, 0, 0, 0, $target_wm_width, $target_wm_height, $wm_orig_width, $wm_orig_height);
     imagedestroy($watermark_src);
+
+    // Áp dụng opacity
+    $watermark = $this->applyOpacity($scaled_wm, $opacity);
+    imagedestroy($scaled_wm);
+
+    // Tính vị trí
     $padding = 10;
     switch ($position) {
       case 1:
         $x = $padding;
         $y = $padding;
-        break; // top-left
+        break;
       case 2:
         $x = ($img_width - $target_wm_width) / 2;
         $y = $padding;
-        break; // top-center
+        break;
       case 3:
         $x = $img_width - $target_wm_width - $padding;
         $y = $padding;
-        break; // top-right
+        break;
       case 4:
         $x = $img_width - $target_wm_width - $padding;
         $y = ($img_height - $target_wm_height) / 2;
-        break; // middle-right
+        break;
       case 5:
         $x = $img_width - $target_wm_width - $padding;
         $y = $img_height - $target_wm_height - $padding;
-        break; // bottom-right
+        break;
       case 6:
         $x = ($img_width - $target_wm_width) / 2;
         $y = $img_height - $target_wm_height - $padding;
-        break; // bottom-center
+        break;
       case 7:
         $x = $padding;
         $y = $img_height - $target_wm_height - $padding;
-        break; // bottom-left
+        break;
       case 8:
         $x = $padding;
         $y = ($img_height - $target_wm_height) / 2;
-        break; // middle-left
+        break;
       case 9:
       default:
         $x = ($img_width - $target_wm_width) / 2;
         $y = ($img_height - $target_wm_height) / 2;
-        break; // center
+        break;
     }
-    $x += intval($offset_x);
-    $y += intval($offset_y);
+
+    // Áp dụng offset từ config
+    $x += $offset_x;
+    $y += $offset_y;
+
+    // Dán watermark vào ảnh
     imagecopy($image, $watermark, $x, $y, 0, 0, $target_wm_width, $target_wm_height);
+
+    // Lưu ảnh đầu ra
     switch ($img_type) {
       case IMAGETYPE_JPEG:
         imagejpeg($image, $destination_path, 85);
@@ -294,19 +344,18 @@ class functions
         imagewebp($image, $destination_path, 80);
         break;
     }
+
     imagedestroy($image);
     imagedestroy($watermark);
     return true;
   }
 
-  public function createFixedThumbnail($source_path, $thumb_name, $background = false, $add_watermark = false)
+  public function createFixedThumbnail($source_path, $thumb_name, $background = false, $add_watermark = false, $convert_webp = false)
   {
     if (!file_exists($source_path)) return false;
 
-    // Parse kích thước và kiểu crop: 300x300x1
-    if (!preg_match('/^(\d+)x(\d+)(x(\d+))?$/', $thumb_name, $matches)) {
-      return false;
-    }
+    if (!preg_match('/^(\d+)x(\d+)(x(\d+))?$/', $thumb_name, $matches)) return false;
+
     $thumb_width = (int)$matches[1];
     $thumb_height = (int)$matches[2];
     $zoom_crop = isset($matches[4]) ? (int)$matches[4] : 1;
@@ -319,36 +368,40 @@ class functions
     switch ($image_type) {
       case IMAGETYPE_JPEG:
         $image = imagecreatefromjpeg($source_path);
+        $ext = 'jpg';
         break;
       case IMAGETYPE_PNG:
         $image = imagecreatefrompng($source_path);
+        $ext = 'png';
         break;
       case IMAGETYPE_WEBP:
         $image = imagecreatefromwebp($source_path);
+        $ext = 'webp';
         break;
       default:
         return false;
     }
 
-    // Crop/fit logic
+    // Hỗ trợ alpha cho ảnh gốc (PNG, WebP)
+    if (in_array($image_type, [IMAGETYPE_PNG, IMAGETYPE_WEBP])) {
+      imagepalettetotruecolor($image);
+      imagealphablending($image, true);
+      imagesavealpha($image, true);
+    }
+
+    // Tính toán crop
     $src_x = $src_y = 0;
     $src_w = $width_orig;
     $src_h = $height_orig;
     $dst_w = $thumb_width;
     $dst_h = $thumb_height;
-
     $src_ratio = $width_orig / $height_orig;
     $dst_ratio = $thumb_width / $thumb_height;
 
     if ($zoom_crop == 2) {
-      // Fit - toàn bộ ảnh nằm trong khung, thêm viền
-      if ($src_ratio > $dst_ratio) {
-        $dst_h = intval($thumb_width / $src_ratio);
-      } else {
-        $dst_w = intval($thumb_height * $src_ratio);
-      }
+      if ($src_ratio > $dst_ratio) $dst_h = intval($thumb_width / $src_ratio);
+      else $dst_w = intval($thumb_height * $src_ratio);
     } elseif ($zoom_crop == 1) {
-      // Fill - crop để lấp khung
       if ($src_ratio > $dst_ratio) {
         $src_w = intval($height_orig * $dst_ratio);
         $src_x = intval(($width_orig - $src_w) / 2);
@@ -357,78 +410,86 @@ class functions
         $src_y = intval(($height_orig - $src_h) / 2);
       }
     } else {
-      // Resize vừa khít, không crop
-      if ($src_ratio > $dst_ratio) {
-        $dst_h = intval($thumb_width / $src_ratio);
-      } else {
-        $dst_w = intval($thumb_height * $src_ratio);
-      }
+      if ($src_ratio > $dst_ratio) $dst_h = intval($thumb_width / $src_ratio);
+      else $dst_w = intval($thumb_height * $src_ratio);
     }
 
-    // Tạo canvas
     $thumb = imagecreatetruecolor($thumb_width, $thumb_height);
 
-    if (!$background && ($image_type == IMAGETYPE_PNG || $image_type == IMAGETYPE_WEBP)) {
+    // Fill nền
+    if (is_array($background) && count($background) === 4 && $background[3] == 127 && $convert_webp) {
       imagealphablending($thumb, false);
       imagesavealpha($thumb, true);
       $transparent = imagecolorallocatealpha($thumb, 0, 0, 0, 127);
       imagefill($thumb, 0, 0, $transparent);
+    } elseif (is_array($background) && count($background) === 4) {
+      imagealphablending($thumb, true);
+      imagesavealpha($thumb, true);
+      $bg_color = imagecolorallocatealpha($thumb, $background[0], $background[1], $background[2], $background[3]);
+      imagefill($thumb, 0, 0, $bg_color);
     } else {
-      if (is_array($background)) {
-        $bg_color = imagecolorallocatealpha($thumb, $background[0], $background[1], $background[2], $background[3]);
-      } else {
-        $bg_color = imagecolorallocate($thumb, 255, 255, 255);
-      }
+      $bg_color = imagecolorallocate($thumb, 255, 255, 255);
       imagefill($thumb, 0, 0, $bg_color);
     }
 
-    // Resize
     $dst_x = intval(($thumb_width - $dst_w) / 2);
     $dst_y = intval(($thumb_height - $dst_h) / 2);
     imagecopyresampled($thumb, $image, $dst_x, $dst_y, $src_x, $src_y, $dst_w, $dst_h, $src_w, $src_h);
 
-    // Lưu thumbnail
+    // Tên file
     $upload_dir = 'uploads/';
     if (!is_dir($upload_dir)) mkdir($upload_dir, 0777, true);
 
     $original_name = pathinfo($source_path, PATHINFO_FILENAME);
-    $thumb_filename = $original_name . '_' . $thumb_name . '.webp';
+    $thumb_ext = $convert_webp ? 'webp' : $ext;
+    $thumb_filename = $original_name . '_' . $thumb_name . '.' . $thumb_ext;
     $thumb_path = $upload_dir . $thumb_filename;
 
-    // Chất lượng cao hơn để ảnh không vỡ
-    $success = imagewebp($thumb, $thumb_path, 90);
+    // Ghi file
+    if ($convert_webp) {
+      $success = imagewebp($thumb, $thumb_path, 100);
+      if (!$success) {
+        unlink($thumb_path); // xóa file lỗi nếu có
+        return false;
+      }
+    } elseif ($ext === 'jpg') {
+      $success = imagejpeg($thumb, $thumb_path, 90);
+    } elseif ($ext === 'png') {
+      $success = imagepng($thumb, $thumb_path);
+    } else {
+      $success = false;
+    }
 
     if (!$success) return false;
 
-    // Watermark nếu có
     if ($add_watermark && method_exists($this, 'addWatermark')) {
-      $this->addWatermark($thumb_path, $thumb_path, 9, 100, 0, 0);
+      $this->addWatermark($thumb_path, $thumb_path);
     }
 
-    // Giải phóng bộ nhớ
     imagedestroy($image);
     imagedestroy($thumb);
 
     return basename($thumb_path);
   }
 
-
-  public function ImageUpload($file_source_path, $original_name, $old_file_path, $thumb_name, $background, $watermark = false)
-  {
-    // Gọi tạo thumbnail, truyền watermark từ tham số
-    $thumb_filename = $this->createFixedThumbnail($file_source_path, $thumb_name, $background, $watermark);
+  public function ImageUpload(
+    $file_source_path,
+    $original_name,
+    $old_file_path,
+    $thumb_name,
+    $background,
+    $watermark = false,
+    $convert_webp = false
+  ) {
+    // Gọi tạo thumbnail, truyền watermark và convert_webp trực tiếp
+    $thumb_filename = $this->createFixedThumbnail($file_source_path, $thumb_name, $background, $watermark, $convert_webp);
 
     if (!$thumb_filename) {
-      // Nếu không tạo được thumbnail thì giữ lại ảnh gốc
       $thumb_filename = basename($file_source_path);
     } else {
-      // Xoá ảnh gốc nếu thumbnail đã tạo thành công
-      if (file_exists($file_source_path)) {
-        unlink($file_source_path);
-      }
+      if (file_exists($file_source_path)) unlink($file_source_path);
     }
 
-    // Xoá ảnh cũ nếu tồn tại
     if (!empty($old_file_path) && file_exists($old_file_path)) {
       unlink($old_file_path);
     }
@@ -436,12 +497,14 @@ class functions
     return $thumb_filename;
   }
 
+
   public function Upload(
     $files,
     $thumb_name,
-    array $background = [0, 0, 0, 127],
+    array $background,
     string $old_file_path = '',
-    $watermark = false
+    $watermark = false,
+    $convert_webp = false
   ) {
     $file_name = $files["file"]["name"] ?? '';
     $file_tmp = $files["file"]["tmp_name"] ?? '';
@@ -452,7 +515,7 @@ class functions
       $uploaded_image = "uploads/" . $unique_image;
 
       if (move_uploaded_file($file_tmp, $uploaded_image)) {
-        return $this->ImageUpload($uploaded_image, $file_name, $old_file_path, $thumb_name, $background, $watermark);
+        return $this->ImageUpload($uploaded_image, $file_name, $old_file_path, $thumb_name, $background, $watermark, $convert_webp);
       }
     }
     return '';

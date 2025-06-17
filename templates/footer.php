@@ -38,7 +38,7 @@
               <?php if ($show_chinhsach): ?>
                 <?php while ($resule_chinhsach = $show_chinhsach->fetch_assoc()): ?>
                   <li>
-                    <a class="transition" href="chinh-sach/<?= $resule_chinhsach['slugvi'] ?>"
+                    <a class="transition" href="<?= $resule_chinhsach['slugvi'] ?>"
                       title="<?= $resule_chinhsach['namevi'] ?>"><?= $resule_chinhsach['namevi'] ?></a>
                   </li>
                 <?php endwhile; ?>

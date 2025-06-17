@@ -43,9 +43,9 @@ $get_sp = $sanpham->show_sanpham_pagination(
   $records_per_page,
   $current_page,
   'hienthi',
-  '',
+  $id_list = '',
   $dm_c2['id'],
-  ''
+  $limit = ''
 );
 
 // SEO

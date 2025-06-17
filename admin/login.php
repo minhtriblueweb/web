@@ -15,10 +15,7 @@ $login = new adminlogin();
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST["btn_login"])) {
   $username = $_POST['username'] ?? '';
   $password = $_POST['password'] ?? '';
-
-  // Có thể kiểm tra định dạng ở đây nếu dùng validation
-  $login_check = $login->login($username, md5($password));
-
+  $login_check = $login->login($username, $password);
   if ($login_check === "success") {
     header("Location: index.php");
     exit();
@@ -26,7 +23,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST["btn_login"])) {
     $error = $login_check;
   }
 }
+// $password = "oyvcw^SUn";
+// $hashed = password_hash($password, PASSWORD_DEFAULT);
+// echo "Mật khẩu đã hash: " . $hashed;
 ?>
+
 <!DOCTYPE html>
 <html lang="vi">
 

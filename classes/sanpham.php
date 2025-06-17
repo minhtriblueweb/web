@@ -376,7 +376,7 @@ class sanpham
         $old_file_path = "uploads/" . $row['file'];
       }
     }
-    $thumb_filename = $this->fn->Upload($files, '500x500x1', [0, 0, 0, 127], $old_file_path, true);
+    $thumb_filename = $this->fn->Upload($files, '500x500x1', [0, 0, 0, 127], $old_file_path, $watermark = true, $convert_webp = true);
     if (!empty($id)) {
       $update_fields = [];
       foreach ($data_escaped as $field => $value) {

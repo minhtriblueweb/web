@@ -148,14 +148,11 @@ class functions
 
   public function isSlugviDuplicated($slugvi, $table, $exclude_id)
   {
-    // Escape đầu vào
     $slugvi = mysqli_real_escape_string($this->db->link, trim($slugvi));
     $table = mysqli_real_escape_string($this->db->link, trim($table));
     $exclude_id = mysqli_real_escape_string($this->db->link, trim($exclude_id));
-
     // ✅ Danh sách bảng có thể chứa slugvi
     $tables = ['tbl_danhmuc', 'tbl_danhmuc_c2', 'tbl_sanpham', 'tbl_news'];
-
     // ❌ Danh sách slugvi KHÔNG ĐƯỢC sử dụng (trang tĩnh)
     $reserved_slugs = [
       'lien-he',
@@ -168,32 +165,28 @@ class functions
       'dang-nhap',
       'dang-ky'
     ];
-
     // 🔒 Nếu slug nằm trong danh sách cấm → từ chối ngay
     if (in_array($slugvi, $reserved_slugs)) {
       return 'Đường dẫn đã tồn tại. Vui lòng chọn đường dẫn khác để tránh trùng lặp.';
     }
-
     // 🔁 Kiểm tra trùng trong bảng dữ liệu
     foreach ($tables as $tbl) {
       // Bỏ qua nếu bảng không có cột slugvi
       $check_column_query = "SHOW COLUMNS FROM `$tbl` LIKE 'slugvi'";
       $check_column_result = $this->db->select($check_column_query);
       if (!$check_column_result || $check_column_result->num_rows == 0) continue;
-
       // Câu truy vấn kiểm tra slug
       $check_slug_query = "SELECT slugvi FROM `$tbl` WHERE slugvi = '$slugvi'";
       if ($table === $tbl && is_numeric($exclude_id) && (int)$exclude_id > 0) {
         $check_slug_query .= " AND id != '$exclude_id'";
       }
       $check_slug_query .= " LIMIT 1";
-
       $result = $this->db->select($check_slug_query);
       if ($result && $result->num_rows > 0) {
         return "Đường dẫn đã tồn tại. Vui lòng chọn đường dẫn khác để tránh trùng lặp.";
       }
     }
-    return false; // hợp lệ
+    return false;
   }
 
   private function applyOpacity($image, $opacity)
@@ -267,9 +260,17 @@ class functions
     $max_size = isset($row['max']) ? intval($row['max']) : 120;
     $min_size = isset($row['min']) ? intval($row['min']) : 120;
     $scale_percent = ($img_width < 300) ? $small_per : $per;
-
     $target_wm_width = $img_width * $scale_percent / 100;
-    $target_wm_width = max(20, min($target_wm_width, $img_width * 0.5));
+    if ($max_size > 0) {
+      $target_wm_width = min($max_size, max($min_size, $target_wm_width));
+    } else {
+      $target_wm_width = max($min_size, $target_wm_width);
+    }
+    $target_wm_width = min($target_wm_width, $img_width);
+    $target_wm_width = intval($target_wm_width);
+    if ($target_wm_width <= 0) {
+      return false;
+    }
     $target_wm_height = intval($wm_orig_height * ($target_wm_width / $wm_orig_width));
 
     // Resize watermark
@@ -382,7 +383,10 @@ class functions
         return false;
     }
 
-    // Hỗ trợ alpha cho ảnh gốc (PNG, WebP)
+    // Gốc là webp?
+    $is_source_webp = ($image_type === IMAGETYPE_WEBP);
+
+    // Alpha hỗ trợ
     if (in_array($image_type, [IMAGETYPE_PNG, IMAGETYPE_WEBP])) {
       imagepalettetotruecolor($image);
       imagealphablending($image, true);
@@ -417,7 +421,7 @@ class functions
     $thumb = imagecreatetruecolor($thumb_width, $thumb_height);
 
     // Fill nền
-    if (is_array($background) && count($background) === 4 && $background[3] == 127 && $convert_webp) {
+    if (is_array($background) && count($background) === 4 && $background[3] == 127 && ($convert_webp || $is_source_webp)) {
       imagealphablending($thumb, false);
       imagesavealpha($thumb, true);
       $transparent = imagecolorallocatealpha($thumb, 0, 0, 0, 127);
@@ -436,20 +440,20 @@ class functions
     $dst_y = intval(($thumb_height - $dst_h) / 2);
     imagecopyresampled($thumb, $image, $dst_x, $dst_y, $src_x, $src_y, $dst_w, $dst_h, $src_w, $src_h);
 
-    // Tên file
+    // Tên file và đường dẫn
     $upload_dir = 'uploads/';
     if (!is_dir($upload_dir)) mkdir($upload_dir, 0777, true);
 
     $original_name = pathinfo($source_path, PATHINFO_FILENAME);
-    $thumb_ext = $convert_webp ? 'webp' : $ext;
+    $thumb_ext = ($convert_webp || $is_source_webp) ? 'webp' : $ext;
     $thumb_filename = $original_name . '_' . $thumb_name . '.' . $thumb_ext;
     $thumb_path = $upload_dir . $thumb_filename;
 
     // Ghi file
-    if ($convert_webp) {
+    if ($convert_webp || $is_source_webp) {
       $success = imagewebp($thumb, $thumb_path, 100);
       if (!$success) {
-        unlink($thumb_path); // xóa file lỗi nếu có
+        unlink($thumb_path);
         return false;
       }
     } elseif ($ext === 'jpg') {

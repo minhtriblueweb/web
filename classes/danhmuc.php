@@ -151,7 +151,6 @@ class danhmuc
     $fields = ['slugvi', 'namevi', 'descvi', 'contentvi', 'titlevi', 'keywordsvi', 'descriptionvi', 'hienthi', 'noibat', 'numb'];
     $table = 'tbl_danhmuc';
     $data_escaped = [];
-
     foreach ($fields as $field) {
       $data_escaped[$field] = !empty($data[$field]) ? mysqli_real_escape_string($this->db->link, $data[$field]) : "";
     }
@@ -175,7 +174,7 @@ class danhmuc
       if (!empty($thumb_filename)) {
         $update_fields[] = "file = '$thumb_filename'";
       }
-      $update_query = "UPDATE $table SET " . implode(", ", $update_fields) . " WHERE id = '" . (int)$id . "'";
+      $update_query = "UPDATE $table SET " . implode(", ", $update_fields) . " WHERE id = '$id'";
       $result = $this->db->update($update_query);
       $msg = $result ? "Cập nhật danh mục thành công" : "Cập nhật danh mục thất bại";
     } else {
@@ -224,7 +223,7 @@ class danhmuc
         $update_fields[] = "file = '$thumb_filename'";
       }
       $id = (int)$id;
-      $update_query = "UPDATE $table SET " . implode(", ", $update_fields) . " WHERE id = '" . (int)$id . "'";
+      $update_query = "UPDATE $table SET " . implode(", ", $update_fields) . " WHERE id = '$id'";
       $result = $this->db->update($update_query);
       $msg = $result ? "Cập nhật danh mục thành công" : "Cập nhật danh mục thất bại";
     } else {
@@ -237,8 +236,8 @@ class danhmuc
       $insert_query = "INSERT INTO $table (" . implode(", ", $field_names) . ") VALUES (" . implode(", ", $field_values) . ")";
       $result = $this->db->insert($insert_query);
       $msg = $result ? "Thêm danh mục thành công" : "Thêm danh mục thất bại";
-      $this->fn->transfer($msg, "index.php?page=category_lv2_list", $result);
     }
+    $this->fn->transfer($msg, "index.php?page=category_lv2_list", $result);
   }
 
   public function show_danhmuc_c2($tbl, $id_list = null)

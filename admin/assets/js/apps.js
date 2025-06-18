@@ -850,48 +850,41 @@ function slugStatus(status) {
     }
   });
 }
-function slugAlert(result, lang) {
+function slugAlert(result) {
   if (result == 1) {
-    $("#alert-slug-danger" + lang).addClass("d-none");
-    $("#alert-slug-success" + lang).removeClass("d-none");
+    $("#alert-slug-danger").addClass("d-none");
+    $("#alert-slug-success").removeClass("d-none");
   } else if (result == 0) {
-    $("#alert-slug-danger" + lang).removeClass("d-none");
-    $("#alert-slug-success" + lang).addClass("d-none");
+    $("#alert-slug-danger").removeClass("d-none");
+    $("#alert-slug-success").addClass("d-none");
   } else if (result == 2) {
-    $("#alert-slug-danger" + lang).addClass("d-none");
-    $("#alert-slug-success" + lang).addClass("d-none");
+    $("#alert-slug-danger").addClass("d-none");
+    $("#alert-slug-success").addClass("d-none");
   }
 }
-function slugCheck() {
-  var sluglang = "vi,en";
-  var slugInput = $(".slug-input");
-  var id = $(".slug-id").val();
-  var copy = $(".slug-copy").val();
 
-  slugInput.each(function (index) {
-    var slugId = $(this).attr("id");
-    var slug = $(this).val();
-    var lang = slugId.substr(slugId.length - 2);
-    if (sluglang.indexOf(lang) >= 0) {
-      if (slug) {
-        $.ajax({
-          url: "api/slug.php",
-          type: "POST",
-          dataType: "html",
-          async: false,
-          data: {
-            slug: slug,
-            id: id,
-            copy: copy,
-          },
-          success: function (result) {
-            slugAlert(result, lang);
-          },
-        });
+function slugCheck() {
+  var slug = $(".slug-input").val();
+  var id = $(".slug-id").val();
+  var table = $(".slug-table").val();
+
+  if (slug) {
+    $.ajax({
+      url: "api/slug.php",
+      type: "POST",
+      dataType: "html",
+      data: {
+        slug: slug,
+        id: id,
+        table: table
+      },
+      success: function (result) {
+        slugAlert(result);
       }
-    }
-  });
+    });
+  }
 }
+
 
 /* Reader image */
 function readImage(inputFile, elementPhoto) {

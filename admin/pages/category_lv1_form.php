@@ -2,6 +2,7 @@
 $message = '';
 $name = 'danh mục cấp 1';
 $redirectUrl = 'category_lv1_list';
+$table = 'tbl_danhmuc';
 $result = [];
 $id = $_GET['id'] ?? null;
 if (!empty($id)) {

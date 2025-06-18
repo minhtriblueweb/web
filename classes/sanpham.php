@@ -385,7 +385,7 @@ class sanpham
       if (!empty($thumb_filename)) {
         $update_fields[] = "file = '$thumb_filename'";
       }
-      $query = "UPDATE $table SET " . implode(", ", $update_fields) . " WHERE id = '" . (int)$id . "'";
+      $query = "UPDATE $table SET " . implode(", ", $update_fields) . " WHERE id = '$id'";
       $result = $this->db->update($query);
       $msg = $result ? "Cập nhật sản phẩm thành công" : "Cập nhật sản phẩm thất bại";
     } else {

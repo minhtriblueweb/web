@@ -12,8 +12,6 @@
           <label for="slugchange" class="custom-control-label"></label>
         </div>
       <?php endif; ?>
-      <input type="hidden" class="slug-id" value="<?= !empty($id) ? $result['id'] : ''; ?>" />
-      <input type="hidden" class="slug-copy" value="0" />
       <div class="card card-primary card-outline card-outline-tabs">
         <div class="card-header p-0 border-bottom-0">
           <ul class="nav nav-tabs" id="custom-tabs-three-tab-lang" role="tablist">
@@ -34,6 +32,12 @@
                 <input type="text" class="form-control slug-input no-validate text-sm" name="slugvi" id="slugvi"
                   placeholder="Đường dẫn (vi)" required value="<?= $_POST['slugvi'] ?? ($result['slugvi'] ?? "") ?>" />
                 <input type="hidden" id="slug-defaultvi" value="" />
+                <input type="hidden" class="slug-id" value="<?= !empty($id) ? $id : '' ?>" />
+                <input type="hidden" class="slug-table" value="<?= $table ?>" />
+                <input type="hidden" class="slug-copy" value="" />
+                <p class="alert-slugvi text-danger mt-2 mb-0" id="alert-slug-danger">
+                <p class="alert-slugvi text-danger mt-2 mb-0" id="alert-slug-success">
+                </p>
                 <?php if (!empty($message)): ?>
                   <p class="alert-slugvi text-danger mt-2 mb-0" id="alert-slug-dangervi">
                     <i class="fas fa-exclamation-triangle mr-1"></i>

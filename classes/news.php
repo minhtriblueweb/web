@@ -155,58 +155,6 @@ class news
     return $result;
   }
 
-  public function delete_multiple_news($listid, $type)
-  {
-    if (empty($listid)) {
-      return "Không có bản ghi nào được chọn.";
-    }
-    $type = mysqli_real_escape_string($this->db->link, $type);
-    $del_file_query = "SELECT file FROM tbl_news WHERE id IN ($listid)";
-    $old_files = $this->db->select($del_file_query);
-    if ($old_files) {
-      while ($rowData = $old_files->fetch_assoc()) {
-        $old_file_path = "uploads/" . $rowData['file'];
-        if (file_exists($old_file_path)) {
-          unlink($old_file_path);
-        }
-      }
-    }
-    $query = "DELETE FROM tbl_news WHERE id IN ($listid)";
-    $result = $this->db->delete($query);
-    if ($result) {
-      header("Location: transfer.php?stt=success&url=$type");
-      exit();
-    } else {
-      return "Lỗi thao tác!";
-    }
-  }
-
-  public function del_news($id, $type)
-  {
-    $id = (int)$id;
-    $type = mysqli_real_escape_string($this->db->link, $type);
-    $del_file_name = "SELECT file FROM tbl_news WHERE id='$id' AND type='$type'";
-    $delta = $this->db->select($del_file_name);
-    if ($delta && $delta->num_rows > 0) {
-      $rowData = $delta->fetch_assoc();
-      $file_name = $rowData['file'];
-      if (!empty($file_name)) {
-        $file_path = "uploads/$file_name";
-        if (file_exists($file_path)) {
-          unlink($file_path);
-        }
-      }
-    }
-    $query = "DELETE FROM tbl_news WHERE id = '$id' AND type='$type'";
-    $result = $this->db->delete($query);
-    if ($result) {
-      header("Location: transfer.php?stt=success&url=$type");
-      exit();
-    } else {
-      return "Lỗi thao tác!";
-    }
-  }
-
   public function show_news($records_per_page, $current_page, $hienthi = '', $type = '')
   {
     $type = mysqli_real_escape_string($this->db->link, $type);
@@ -235,8 +183,6 @@ class news
       'titlevi',
       'keywordsvi',
       'descriptionvi',
-      'hienthi',
-      'noibat',
       'numb',
       'type'
     ];
@@ -245,6 +191,14 @@ class news
     foreach ($fields as $field) {
       $data_escaped[$field] = !empty($data[$field]) ? mysqli_real_escape_string($this->db->link, $data[$field]) : "";
     }
+    $status_flags = ['hienthi', 'noibat'];
+    $status_values = [];
+    foreach ($status_flags as $flag) {
+      if (!empty($data[$flag])) {
+        $status_values[] = $flag;
+      }
+    }
+    $data_escaped['status'] = mysqli_real_escape_string($this->db->link, implode(',', $status_values));
     $slug_error = $this->fn->isSlugviDuplicated($data_escaped['slugvi'], $table, $id ?? '');
     if ($slug_error) return $slug_error;
     $thumb_filename = '';
@@ -280,7 +234,7 @@ class news
       $msg = $result ? "Thêm dữ liệu thành công" : "Thêm dữ liệu thất bại";
     }
     $type_safe = preg_replace('/[^a-zA-Z0-9_-]/', '', $data_escaped['type']);
-    $this->fn->transfer($msg, "index.php?page={$type_safe}_list", $result);
+    $this->fn->transfer($msg, "index.php?page=news_list&type={$type_safe}", $result);
   }
 }
 ?>

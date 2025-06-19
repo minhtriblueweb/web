@@ -4,10 +4,14 @@ $records_per_page = 10;
 $current_page = max(1, isset($_GET['p']) ? (int)$_GET['p'] : 1);
 $total_records = $functions->phantrang('tbl_danhmuc');
 $total_pages = ceil($total_records / $records_per_page);
-$show_danhmuc = $danhmuc->show_danhmuc('tbl_danhmuc', $records_per_page, $current_page);
+$show_danhmuc = $danhmuc->show_danhmuc('tbl_danhmuc', [
+  'records_per_page' => $records_per_page,
+  'current_page' => $current_page,
+  'keyword' => $_GET['keyword'] ?? ''
+]);
 $name = 'danh mục cấp 1';
-$linkMulti = "index.php?page=deleteMulti&table=tbl_danhmuc&image=file&redirect=$redirect_url";
-$linkDelete = "index.php?page=delete&table=tbl_danhmuc&image=file&redirect=$redirect_url&id=";
+$linkMulti = "index.php?page=deleteMulti&table=tbl_danhmuc&image=file";
+$linkDelete = "index.php?page=delete&table=tbl_danhmuc&image=file&id=";
 $linkEdit = "index.php?page=category_lv1_form&id=";
 $linkAdd = "index.php?page=category_lv1_form";
 ?>
@@ -63,12 +67,12 @@ include 'templates/breadcrumb.php';
         </thead>
         <form action="" method="POST">
           <tbody>
-            <?php if ($show_danhmuc):
-              while ($resule = $show_danhmuc->fetch_assoc()):
-                $id = $resule['id'];
-                $namevi = $resule['namevi'];
-                $file = empty($resule['file']) ? NO_IMG : BASE_ADMIN . UPLOADS . $resule['file'];
-            ?>
+            <?php if ($show_danhmuc && $show_danhmuc->num_rows > 0): ?>
+              <?php while ($row = $show_danhmuc->fetch_assoc()):
+                $id = $row['id'];
+                $namevi = $row['namevi'];
+                $file = empty($row['file']) ? NO_IMG : BASE_ADMIN . UPLOADS . $row['file'];
+              ?>
                 <tr>
                   <!-- Checkbox chọn -->
                   <td class="align-middle">
@@ -81,35 +85,36 @@ include 'templates/breadcrumb.php';
 
                   <!-- Số thứ tự -->
                   <td class="align-middle">
-                    <input type="number" class="form-control form-control-mini m-auto update-numb" min="0"
-                      value="<?= $resule['numb'] ?>" data-id="<?= $id ?>" data-table="tbl_danhmuc" />
+                    <input type="number" class="form-control form-control-mini m-auto update-numb"
+                      min="0" value="<?= $row['numb'] ?>"
+                      data-id="<?= $id ?>" data-table="tbl_danhmuc" />
                   </td>
 
                   <!-- Ảnh -->
                   <td class="align-middle">
-                    <a href="<?= $linkEdit ?><?= $id ?>" title="<?= $namevi ?>">
+                    <a href="<?= $linkEdit . $id ?>" title="<?= $namevi ?>">
                       <img src="<?= $file ?>" alt="<?= $namevi ?>" class="rounded img-preview" />
                     </a>
                   </td>
 
                   <!-- Tên -->
                   <td class="align-middle">
-                    <a class="text-dark text-break" href="<?= $linkEdit ?><?= $id ?>" title="<?= $namevi ?>">
+                    <a class="text-dark text-break" href="<?= $linkEdit . $id ?>" title="<?= $namevi ?>">
                       <?= $namevi ?>
                     </a>
                   </td>
-                  <!-- Checkbox Hiển thị, Nổi bật -->
+
+                  <!-- Checkbox trạng thái (hiển thị, nổi bật) -->
                   <?php foreach (['hienthi', 'noibat'] as $attr): ?>
                     <td class="align-middle text-center">
                       <div class="custom-control custom-checkbox my-checkbox">
                         <input type="checkbox"
-                          data-type="<?= $attr ?>"
                           class="custom-control-input show-checkbox"
                           id="show-checkbox-<?= $attr ?>-<?= $id ?>"
-                          data-table="tbl_danhmuc"
                           data-id="<?= $id ?>"
-                          data-attr="<?= $resule[$attr] == $attr ? '' : $attr ?>"
-                          <?= $resule[$attr] == $attr ? 'checked' : '' ?> />
+                          data-table="tbl_danhmuc"
+                          data-attr="<?= $attr ?>"
+                          <?= (strpos($row['status'], $attr) !== false) ? 'checked' : '' ?> />
                         <label for="show-checkbox-<?= $attr ?>-<?= $id ?>" class="custom-control-label"></label>
                       </div>
                     </td>
@@ -117,10 +122,10 @@ include 'templates/breadcrumb.php';
 
                   <!-- Hành động -->
                   <td class="align-middle text-center text-md text-nowrap">
-                    <a class="text-primary mr-2" href="<?= $linkEdit ?><?= $id ?>" title="Chỉnh sửa">
+                    <a class="text-primary mr-2" href="<?= $linkEdit . $id ?>" title="Chỉnh sửa">
                       <i class="fas fa-edit"></i>
                     </a>
-                    <a class="text-danger" id="delete-item" data-url="<?= $linkDelete ?><?= $id ?>" title="Xóa">
+                    <a class="text-danger" id="delete-item" data-url="<?= $linkDelete . $id ?>" title="Xóa">
                       <i class="fas fa-trash-alt"></i>
                     </a>
                   </td>
@@ -135,7 +140,6 @@ include 'templates/breadcrumb.php';
         </form>
       </table>
     </div>
-
   </div>
   <?php if ($total_pages > 1): ?>
     <div class="card-footer text-sm pb-0 mb-5">

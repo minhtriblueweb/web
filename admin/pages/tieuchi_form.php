@@ -1,7 +1,6 @@
 <?php
 $message = '';
 $name = 'tiêu chí';
-$redirectUrl = 'tieuchi_list';
 $id = $_GET['id'] ?? null;
 if (!empty($id)) {
   $get_id = $tieuchi->get_id_tieuchi($id);
@@ -17,7 +16,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && (isset($_POST['add']) || isset($_PO
 <?php
 $breadcrumb = [
   ['label' => 'Bảng điều khiển', 'link' => 'index.php'],
-  ['label' => $name, 'link' => $redirectUrl],
+  ['label' => $name, 'link' => 'tieuchi_list'],
   ['label' => !empty($id) ? 'Cập nhật ' . $name : 'Thêm mới ' . $name]
 ];
 include 'templates/breadcrumb.php';
@@ -109,17 +108,17 @@ include 'templates/breadcrumb.php';
             'hienthi' => 'Hiển thị',
           ];
           ?>
-          <?php foreach ($checkboxes as $name => $label): ?>
+          <?php foreach ($checkboxes as $check => $label): ?>
             <div class="form-group d-inline-block mb-2 mr-2">
-              <label for="<?= $name ?>-checkbox" class="d-inline-block align-middle mb-0 mr-2"><?= $label ?>:</label>
+              <label for="<?= $check ?>-checkbox" class="d-inline-block align-middle mb-0 mr-2"><?= $label ?>:</label>
               <div class="custom-control custom-checkbox d-inline-block align-middle">
-                <input <?= $functions->is_checked($name, $result ?? null, $id ?? null) ?>
+                <input <?= $functions->is_checked($check, $result ?? null, $id ?? null) ?>
                   type="checkbox"
-                  class="custom-control-input <?= $name ?>-checkbox"
-                  name="<?= $name ?>"
-                  id="<?= $name ?>-checkbox"
-                  value="<?= $name ?>" />
-                <label for="<?= $name ?>-checkbox" class="custom-control-label"></label>
+                  class="custom-control-input <?= $check ?>-checkbox"
+                  name="<?= $check ?>"
+                  id="<?= $check ?>-checkbox"
+                  value="<?= $check ?>" />
+                <label for="<?= $check ?>-checkbox" class="custom-control-label"></label>
               </div>
             </div>
           <?php endforeach; ?>
@@ -127,7 +126,7 @@ include 'templates/breadcrumb.php';
         <div class="form-group">
           <label for="numb" class="d-inline-block align-middle mb-0 mr-2">Số thứ tự:</label>
           <input type="number" class="form-control form-control-mini d-inline-block align-middle text-sm" min="0"
-            name="numb" id="numb" placeholder="Số thứ tự" value="<?php echo $result['numb'] ?? "1"; ?>">
+            name="numb" id="numb" placeholder="Số thứ tự" value="<?= $_POST['numb'] ?? (!empty($id) ? $result['numb'] : '1') ?>">
         </div>
       </div>
     </div>

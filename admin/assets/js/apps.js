@@ -850,16 +850,29 @@ function slugStatus(status) {
     }
   });
 }
-function slugAlert(result) {
-  if (result == 1) {
+
+function slugAlert(res) {
+  const defaultInvalidMsg = "Đường dẫn đã tồn tại.";
+  const defaultValidMsg = "Đường dẫn hợp lệ.";
+
+  if (res.status == 1) {
     $("#alert-slug-danger").addClass("d-none");
     $("#alert-slug-success").removeClass("d-none");
-  } else if (result == 0) {
-    $("#alert-slug-danger").removeClass("d-none");
+    $("#alert-slug-success span").text(defaultValidMsg);
+    $(".submit-check").prop("disabled", false);
+  } else if (res.status == 0) {
     $("#alert-slug-success").addClass("d-none");
-  } else if (result == 2) {
+    $("#alert-slug-danger").removeClass("d-none");
+
+    // Dùng message từ PHP nếu có
+    const msg = res.message && typeof res.message === "string" ? res.message : defaultInvalidMsg;
+    $("#alert-slug-danger span").text(msg);
+
+    $(".submit-check").prop("disabled", true);
+  } else {
     $("#alert-slug-danger").addClass("d-none");
     $("#alert-slug-success").addClass("d-none");
+    $(".submit-check").prop("disabled", true);
   }
 }
 
@@ -867,23 +880,34 @@ function slugCheck() {
   var slug = $(".slug-input").val();
   var id = $(".slug-id").val();
   var table = $(".slug-table").val();
-
   if (slug) {
     $.ajax({
       url: "api/slug.php",
       type: "POST",
-      dataType: "html",
-      data: {
-        slug: slug,
-        id: id,
-        table: table
-      },
-      success: function (result) {
-        slugAlert(result);
+      dataType: "json",
+      data: { slug: slug, id: id, table: table },
+      success: function (res) {
+        slugAlert(res);
       }
     });
+  } else {
+    $("#alert-slug-danger").addClass("d-none");
+    $("#alert-slug-success").addClass("d-none");
   }
 }
+
+
+let lastSlug = "";
+setInterval(function () {
+  const currentSlug = $(".slug-input").val();
+  if (currentSlug !== lastSlug) {
+    lastSlug = currentSlug;
+    slugCheck(); // Gọi kiểm tra nếu slug thay đổi
+  }
+}, 500);
+$("#slugvi").on("blur", function () {
+  slugCheck();
+});
 
 
 /* Reader image */
@@ -1208,24 +1232,28 @@ $(document).ready(function () {
     });
   }
 
-  /* Menu */
   $(document).ready(function () {
-    var currentPage = window.location.pathname.split("/").pop();
-    currentPage = currentPage.replace('.php', '');
+    const currentQuery = window.location.search;
+
     $(".sidebar .nav-link[data-active]").each(function () {
-      var activeList = $(this).data('active').split(',');
-      if (activeList.includes(currentPage)) {
-        $(this).addClass('active');
+      const activeList = $(this).data("active").split(",").map(s => s.trim());
+
+      // So sánh đúng query string
+      if (activeList.includes(currentQuery)) {
+        $(this).addClass("active");
       }
     });
+
+    // Mở nhóm menu nếu có menu con active
     $(".menu-group").each(function () {
-      var hasActive = $(this).find('.nav-link.active').length > 0;
-      if (hasActive) {
-        $(this).addClass('menu-open');
-        $(this).find('> .nav-link').addClass('active');
+      if ($(this).find(".nav-link.active").length > 0) {
+        $(this).addClass("menu-open");
+        $(this).find("> .nav-link").addClass("active");
       }
     });
   });
+
+
   /* Import excell */
   if (IMPORT_IMAGE_EXCELL && $(".copy-excel").length) {
     $(".copy-excel").click(function () {
@@ -1749,34 +1777,39 @@ $(document).ready(function () {
   });
 
   /* Change status */
-  if ($(".show-checkbox").length) {
-    $("body").on("click", ".show-checkbox", function () {
-      var id = $(this).attr("data-id");
-      var table = $(this).attr("data-table");
-      var attr = $(this).attr("data-attr");
-      var type = $(this).attr("data-type");
-      var $this = $(this);
+  $("body").on("click", ".show-checkbox", function () {
+    const $checkbox = $(this);
+    const id = $checkbox.data("id");
+    const table = $checkbox.data("table");
+    const attr = $checkbox.data("attr");
+    const isChecked = $checkbox.is(":checked");
 
-      $.ajax({
-        url: "api/status.php",
-        type: "POST",
-        dataType: "html",
-        data: {
-          id: id,
-          table: table,
-          attr: attr,
-          type: type,
-        },
-        success: function () {
-          if ($this.is(":checked")) $this.prop("checked", false);
-          else $this.prop("checked", true);
-          console.log(attr);
-        },
-      });
-
-      return false;
+    $.ajax({
+      url: "api/status.php",
+      type: "POST",
+      dataType: "json",
+      data: {
+        id: id,
+        table: table,
+        attr: attr,
+        checked: isChecked ? 1 : 0,
+      },
+      success: function (res) {
+        if (res.success) {
+          $checkbox.prop("checked", isChecked);
+        } else {
+          $checkbox.prop("checked", !isChecked);
+          alert("Lỗi cập nhật trạng thái.");
+        }
+      },
+      error: function () {
+        $checkbox.prop("checked", !isChecked);
+        alert("Lỗi kết nối đến máy chủ.");
+      },
     });
-  }
+    return false;
+  });
+
 
   /* Change numb */
   if ($("input.update-numb").length) {

@@ -137,7 +137,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST["btn_login"])) {
             </button>
 
             <div class="login_l_footer">
-              Designed by Minh Trí <a href="" target="_blank">Blueweb</a> - 0328 732 834
+              Designed by Minh Trí Website - 0328 732 834
             </div>
             <?php if (isset($login_check)): ?>
               <div class="alert my-alert alert-login text-center text-sm p-2 mb-0 mt-2 alert-danger" role="alert">

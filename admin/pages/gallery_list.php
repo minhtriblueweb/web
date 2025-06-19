@@ -9,8 +9,8 @@ $get_gallery = $sanpham->get_gallery($id);
 if ($get_id) {
   $result = $get_id->fetch_assoc();
 }
-$linkMulti = "index.php?page=deleteMulti&table=tbl_gallery&image=photo&redirect=$redirect_url&id_parent=$id";
-$linkDelete = "index.php?page=delete&table=tbl_gallery&image=photo&redirect=$redirect_url&id_parent=$id&id=";
+$linkMulti = "index.php?page=deleteMulti&table=tbl_gallery&image=photo&id_parent=$id";
+$linkDelete = "index.php?page=delete&table=tbl_gallery&image=photo&id_parent=$id&id=";
 $linkGallery = "index.php?page=gallery_save&id=";
 $linkEdit = "index.php?page=gallery_save&id_child=";
 ?>

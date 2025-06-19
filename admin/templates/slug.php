@@ -35,19 +35,22 @@
                 <input type="hidden" class="slug-id" value="<?= !empty($id) ? $id : '' ?>" />
                 <input type="hidden" class="slug-table" value="<?= $table ?>" />
                 <input type="hidden" class="slug-copy" value="" />
-                <p class="alert-slugvi text-danger mt-2 mb-0" id="alert-slug-danger">
-                <p class="alert-slugvi text-danger mt-2 mb-0" id="alert-slug-success">
-                </p>
+                <div id="slugvi-alert-wrapper" class="mt-2" style="min-height: 20px;">
+                  <p id="alert-slug-danger" class="alert-slugvi text-danger mb-0 d-none">
+                    <i class="fas fa-exclamation-triangle mr-1"></i>
+                    <span>Đường dẫn đã tồn tại</span>
+                  </p>
+                  <p id="alert-slug-success" class="alert-slugvi text-success mb-0 d-none">
+                    <i class="fa-solid fa-circle-check mr-1"></i>
+                    <span>Đường dẫn hợp lệ.</span>
+                  </p>
+                </div>
                 <?php if (!empty($message)): ?>
                   <p class="alert-slugvi text-danger mt-2 mb-0" id="alert-slug-dangervi">
                     <i class="fas fa-exclamation-triangle mr-1"></i>
                     <span><?= $message ?></span>
                   </p>
                 <?php endif; ?>
-                <p class="alert-slugvi text-success d-none mt-2 mb-0" id="alert-slug-successvi">
-                  <i class="fas fa-check-circle mr-1"></i>
-                  <span>Đường dẫn hợp lệ.</span>
-                </p>
               </div>
             </div>
           </div>

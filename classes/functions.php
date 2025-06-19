@@ -15,6 +15,104 @@ class functions
     $this->fm = new Format();
   }
 
+  // Trong class Functions hoặc file helper
+  public function getRedirectPath($table, $params = [])
+  {
+    $map = [
+      'tbl_news' => 'news_list',
+      'tbl_sanpham' => 'product_list',
+      'tbl_gallery' => 'gallery_list',
+      'tbl_danhmuc' => 'category_lv1_list',
+      'tbl_danhmuc_c2' => 'category_lv2_list',
+      'tbl_tieuchi' => 'tieuchi_list',
+    ];
+
+    $page = $map[$table] ?? 'dashboard';
+    $query = "index.php?page={$page}";
+    if (!empty($params['type'])) {
+      $query .= "&type=" . urlencode($params['type']);
+    }
+    if (!empty($params['id_parent'])) {
+      $query .= "&id=" . (int)$params['id_parent'];
+    }
+
+    return $query;
+  }
+  public function deleteMultiple($listid, $table, $imageColumn, $type = '', $id_parent = null)
+  {
+    $ids = array_filter(array_map('intval', explode(',', $listid)));
+    if (empty($ids)) {
+      $this->transfer("Danh sách ID không hợp lệ!", $this->getRedirectPath($table, ['type' => $type, 'id_parent' => $id_parent]), false);
+    }
+
+    $idList = implode(',', $ids);
+    $querySelect = "SELECT id, `$imageColumn`" . ($table === 'tbl_gallery' ? ", id_parent" : "") . " FROM `$table` WHERE id IN ($idList)";
+    $resultSelect = $this->db->select($querySelect);
+
+    $last_id_parent = 0;
+    if ($resultSelect && $resultSelect->num_rows > 0) {
+      while ($row = $resultSelect->fetch_assoc()) {
+        if (!empty($row[$imageColumn])) {
+          $filePath = 'uploads/' . $row[$imageColumn];
+          if (file_exists($filePath)) {
+            unlink($filePath);
+          }
+        }
+
+        if ($table === 'tbl_gallery') {
+          $last_id_parent = $row['id_parent'];
+        }
+      }
+    }
+
+    $queryDelete = "DELETE FROM `$table` WHERE id IN ($idList)";
+    $resultDelete = $this->db->delete($queryDelete);
+
+    $redirectPath = $this->getRedirectPath($table, [
+      'type' => $type,
+      'id_parent' => $table === 'tbl_gallery' ? $last_id_parent : $id_parent
+    ]);
+
+    $this->transfer(
+      $resultDelete ? "Xóa dữ liệu thành công!" : "Xóa dữ liệu thất bại!",
+      $redirectPath,
+      $resultDelete
+    );
+  }
+  public function delete($id, $table, $imageColumn, $type = '', $id_parent = null)
+  {
+    $id = intval($id);
+    $table = mysqli_real_escape_string($this->db->link, $table);
+    $imageColumn = mysqli_real_escape_string($this->db->link, $imageColumn);
+
+    $querySelect = "SELECT `$imageColumn`" . ($table === 'tbl_gallery' ? ", id_parent" : "") . " FROM `$table` WHERE id = $id";
+    $result = $this->db->select($querySelect);
+    $row = ($result) ? $result->fetch_assoc() : null;
+
+    if ($row && !empty($row[$imageColumn])) {
+      $filePath = "uploads/" . $row[$imageColumn];
+      if (file_exists($filePath)) {
+        unlink($filePath);
+      }
+    }
+
+    $delete_result = $this->db->delete("DELETE FROM `$table` WHERE id = $id");
+
+    $redirectPath = $this->getRedirectPath($table, [
+      'type' => $type,
+      'id_parent' => $table === 'tbl_gallery' ? ($id_parent ?? $row['id_parent'] ?? 0) : $id_parent
+    ]);
+
+    $this->transfer(
+      $delete_result ? "Xóa dữ liệu thành công!" : "Xóa dữ liệu thất bại!",
+      $redirectPath,
+      $delete_result
+    );
+  }
+
+
+
+
   function transfer($msg, $page = 'dashboard', $numb = true)
   {
     $_SESSION['transfer_data'] = [
@@ -65,85 +163,13 @@ class functions
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       return isset($_POST[$name]) && $_POST[$name] === $name ? 'checked' : '';
     }
-    if (!empty($id) && isset($result[$name])) {
-      return $result[$name] === $name ? 'checked' : '';
+
+    if (!empty($id) && isset($result['status'])) {
+      $statuses = explode(',', $result['status']);
+      return in_array($name, $statuses) ? 'checked' : '';
     }
+
     return $default ? 'checked' : '';
-  }
-
-  public function deleteMultiple($listid, $table, $imageColumn, $redirectUrl, $hasIdParent = false)
-  {
-    $ids = array_filter(array_map('intval', explode(',', $listid)));
-    if (empty($ids)) {
-      $this->transfer("Danh sách ID không hợp lệ!", "index.php?page=$redirectUrl", false);
-    }
-    $idList = implode(',', $ids);
-    $querySelect = "SELECT id, `$imageColumn`" . ($hasIdParent ? ", id_parent" : "") . " FROM `$table` WHERE id IN ($idList)";
-    $resultSelect = $this->db->select($querySelect);
-    $last_id_parent = 0;
-    if ($resultSelect && $resultSelect->num_rows > 0) {
-      while ($row = $resultSelect->fetch_assoc()) {
-        if (!empty($row[$imageColumn])) {
-          $filePath = 'uploads/' . $row[$imageColumn];
-          if (file_exists($filePath)) {
-            unlink($filePath);
-          }
-        }
-        if ($hasIdParent) {
-          $last_id_parent = $row['id_parent'];
-        }
-      }
-    }
-    $queryDelete = "DELETE FROM `$table` WHERE id IN ($idList)";
-    $resultDelete = $this->db->delete($queryDelete);
-    if ($resultDelete) {
-      if ($hasIdParent && $table == 'tbl_gallery') {
-        $this->transfer("Xóa dữ liệu thành công!", "index.php?page=gallery_list&id=$last_id_parent", true);
-      } else {
-        $this->transfer("Xóa dữ liệu thành công!", "index.php?page=$redirectUrl", true);
-      }
-    } else {
-      $this->transfer("Xóa dữ liệu thất bại!", "index.php?page=$redirectUrl", false);
-    }
-  }
-
-  public function delete($id, $table, $imageColumn, $redirect_url, $id_parent = null)
-  {
-    $id = intval($id);
-    $table = mysqli_real_escape_string($this->db->link, $table);
-    $imageColumn = mysqli_real_escape_string($this->db->link, $imageColumn);
-
-    // Lấy dữ liệu ảnh & id_parent nếu có
-    $check_query = "SELECT `$imageColumn`" . ($table === 'tbl_gallery' ? ", id_parent" : "") . " FROM `$table` WHERE id = '$id'";
-    $result = $this->db->select($check_query);
-    $row = ($result) ? $result->fetch_assoc() : null;
-
-    if ($row && !empty($row[$imageColumn])) {
-      $filePath = "uploads/" . $row[$imageColumn];
-      if (file_exists($filePath)) {
-        unlink($filePath);
-      }
-    }
-
-    $query = "DELETE FROM `$table` WHERE id = '$id'";
-    $delete_result = $this->db->delete($query);
-
-    // Chuyển hướng
-    if ($delete_result) {
-      if ($table === 'tbl_gallery') {
-        // Ưu tiên id_parent nếu truyền vào, nếu không lấy từ bản ghi
-        $parentId = $id_parent ?? ($row['id_parent'] ?? 0);
-        $this->transfer("Xóa hình ảnh thành công", "index.php?page=gallery_list&id=" . intval($parentId));
-      } else {
-        $this->transfer("Xóa dữ liệu thành công", "index.php?page=" . $redirect_url, true);
-      }
-    } else {
-      if ($table === 'tbl_gallery') {
-        $this->transfer("Xóa hình ảnh thất bại", "index.php?page=gallery_list&id=" . intval($id_parent ?? 0));
-      } else {
-        $this->transfer("Xóa dữ liệu thất bại", "index.php?page=" . $redirect_url, false);
-      }
-    }
   }
 
   public function isSlugviDuplicated($slugvi, $table, $exclude_id)
@@ -500,7 +526,6 @@ class functions
 
     return $thumb_filename;
   }
-
 
   public function Upload(
     $files,

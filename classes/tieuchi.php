@@ -8,10 +8,12 @@ class tieuchi
 {
   private $db;
   private $fm;
+  private $fn;
 
   public function __construct()
   {
     $this->db = new Database();
+    $this->fn = new functions();
     $this->fm = new Format();
   }
 
@@ -42,44 +44,6 @@ class tieuchi
       return "Lỗi thao tác!";
     }
   }
-
-
-  public function update_tieuchi($data, $files, $id)
-  {
-    $name = mysqli_real_escape_string($this->db->link, $data['name']);
-    $desc = mysqli_real_escape_string($this->db->link, $data['desc']);
-    $hienthi = mysqli_real_escape_string($this->db->link, $data['hienthi']);
-    $numb = mysqli_real_escape_string($this->db->link, $data['numb']);
-    $unique_image = '';
-    if (!empty($files['file']['name'])) {
-      $file_ext = strtolower(pathinfo($files['file']['name'], PATHINFO_EXTENSION));
-      $unique_image = substr(md5(time()), 0, 10) . '.' . $file_ext;
-      move_uploaded_file($files['file']['tmp_name'], "uploads/" . $unique_image);
-
-      // Xóa file cũ nếu có
-      $del_file_query = "SELECT file FROM tbl_tieuchi WHERE id='$id'";
-      $old_file = $this->db->select($del_file_query);
-      if ($old_file && $old_file->num_rows > 0) {
-        $rowData = $old_file->fetch_assoc();
-        $old_file_path = "uploads/" . $rowData['file'];
-        if (file_exists($old_file_path)) {
-          unlink($old_file_path);
-        }
-      }
-    }
-    $query = "UPDATE tbl_tieuchi SET name = '$name', `desc` = '$desc', hienthi = '$hienthi', numb = '$numb'";
-    if (!empty($unique_image)) {
-      $query .= ", file = '$unique_image'";
-    }
-    $query .= " WHERE id = '$id'";
-    $result = $this->db->update($query);
-    if ($result) {
-      header('Location: transfer.php?stt=success&url=tieuchi');
-    } else {
-      return "Lỗi thao tác!";
-    }
-  }
-
 
   public function get_id_tieuchi($id)
   {
@@ -131,28 +95,68 @@ class tieuchi
     $query = "SELECT * FROM tbl_tieuchi WHERE hienthi = 'hienthi' ORDER BY numb, id DESC";
     return $this->db->select($query);
   }
-
-  public function insert_tieuchi($data, $files)
+  public function save_tieuchi($data, $files, $id = null)
   {
-    $name = mysqli_real_escape_string($this->db->link, $data['name']);
-    $desc = mysqli_real_escape_string($this->db->link, $data['desc']);
-    $hienthi = mysqli_real_escape_string($this->db->link, $data['hienthi']);
-    $numb = mysqli_real_escape_string($this->db->link, $data['numb']);
+    $fields = ['name', 'desc', 'numb'];
+    $table = 'tbl_tieuchi';
 
-    $unique_image = '';
-    if (!empty($files['file']['name'])) {
-      $file_ext = strtolower(pathinfo($files['file']['name'], PATHINFO_EXTENSION));
-      $unique_image = substr(md5(time()), 0, 10) . '.' . $file_ext;
-      move_uploaded_file($files['file']['tmp_name'], "uploads/" . $unique_image);
+    // Escape dữ liệu đầu vào
+    $data_escaped = [];
+    foreach ($fields as $field) {
+      $data_escaped[$field] = !empty($data[$field]) ? mysqli_real_escape_string($this->db->link, $data[$field]) : "";
     }
-    $query = "INSERT INTO tbl_tieuchi(name, `desc`, hienthi, numb, file) VALUES('$name', '$desc', '$hienthi', '$numb', '$unique_image')";
 
-    // Kiểm tra kết quả
-    if ($this->db->insert($query)) {
-      header('Location: transfer.php?stt=success&url=tieuchi');
+    // Xử lý status (checkbox: hienthi)
+    $status_flags = ['hienthi'];
+    $status_values = [];
+    foreach ($status_flags as $flag) {
+      if (!empty($data[$flag])) {
+        $status_values[] = $flag;
+      }
+    }
+    $data_escaped['status'] = mysqli_real_escape_string($this->db->link, implode(',', $status_values));
+
+    // Xử lý ảnh (nếu có)
+    $thumb_filename = '';
+    $old_file_path = '';
+
+    if (!empty($id)) {
+      $old_file = $this->db->select("SELECT file FROM $table WHERE id = '" . (int)$id . "'");
+      if ($old_file && $old_file->num_rows > 0) {
+        $row = $old_file->fetch_assoc();
+        $old_file_path = "uploads/" . $row['file'];
+      }
+    }
+
+    // Gọi hàm upload chuẩn hóa
+    $thumb_filename = $this->fn->Upload($files, '40x40x1', [255, 255, 255, 0], $old_file_path, false, true);
+
+    // Thực thi query
+    if (!empty($id)) {
+      $update_fields = [];
+      foreach ($data_escaped as $field => $value) {
+        $update_fields[] = "`$field` = '$value'";
+      }
+      if (!empty($thumb_filename)) {
+        $update_fields[] = "`file` = '$thumb_filename'";
+      }
+      $query = "UPDATE `$table` SET " . implode(", ", $update_fields) . " WHERE id = '" . (int)$id . "'";
+      $result = $this->db->update($query);
+      $msg = $result ? "Cập nhật dữ liệu thành công" : "Cập nhật dữ liệu thất bại";
     } else {
-      return "Lỗi thao tác!";
+      $field_names = array_map(fn($k) => "`$k`", array_keys($data_escaped));
+      $field_values = array_map(fn($v) => "'" . $v . "'", $data_escaped);
+      if (!empty($thumb_filename)) {
+        $field_names[] = '`file`';
+        $field_values[] = "'" . $thumb_filename . "'";
+      }
+      $query = "INSERT INTO `$table` (" . implode(", ", $field_names) . ") VALUES (" . implode(", ", $field_values) . ")";
+      $result = $this->db->insert($query);
+      $msg = $result ? "Thêm dữ liệu thành công" : "Thêm dữ liệu thất bại";
     }
+
+    // Chuyển hướng
+    $this->fn->transfer($msg, "index.php?page=tieuchi_list", $result);
   }
 }
 

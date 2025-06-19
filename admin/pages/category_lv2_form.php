@@ -2,6 +2,7 @@
 $message = '';
 $name = 'danh mục cấp 2';
 $redirectUrl = 'category_lv2_list';
+$table = 'tbl_danhmuc_c2';
 $show_danhmuc = $danhmuc->show_danhmuc('tbl_danhmuc');
 $id = $_GET['id'] ?? null;
 if (!empty($id)) {
@@ -76,17 +77,17 @@ include 'templates/breadcrumb.php';
                 'noibat' => 'Nổi bật'
               ];
               ?>
-              <?php foreach ($checkboxes as $name => $label): ?>
+              <?php foreach ($checkboxes as $check => $label): ?>
                 <div class="form-group d-inline-block mb-2 mr-2">
-                  <label for="<?= $name ?>-checkbox" class="d-inline-block align-middle mb-0 mr-2"><?= $label ?>:</label>
+                  <label for="<?= $check ?>-checkbox" class="d-inline-block align-middle mb-0 mr-2"><?= $label ?>:</label>
                   <div class="custom-control custom-checkbox d-inline-block align-middle">
-                    <input <?= $functions->is_checked($name, $result ?? null, $id ?? null) ?>
+                    <input <?= $functions->is_checked($check, $result ?? null, $id ?? null) ?>
                       type="checkbox"
-                      class="custom-control-input <?= $name ?>-checkbox"
-                      name="<?= $name ?>"
-                      id="<?= $name ?>-checkbox"
-                      value="<?= $name ?>" />
-                    <label for="<?= $name ?>-checkbox" class="custom-control-label"></label>
+                      class="custom-control-input <?= $check ?>-checkbox"
+                      name="<?= $check ?>"
+                      id="<?= $check ?>-checkbox"
+                      value="<?= $check ?>" />
+                    <label for="<?= $check ?>-checkbox" class="custom-control-label"></label>
                   </div>
                 </div>
               <?php endforeach; ?>

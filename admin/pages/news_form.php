@@ -1,8 +1,10 @@
 <?php
 $message = '';
-$name = 'tin tức';
+$table = 'tbl_news';
 $redirectUrl = 'tintuc_list';
 $id = $_GET['id'] ?? null;
+$type = $_GET['type'] ?? null;
+$name = $type;
 if (!empty($id)) {
   $get_id = $news->get_id_news($id);
   if ($get_id  && $get_id->num_rows > 0) {
@@ -16,7 +18,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && (isset($_POST['add']) || isset($_PO
 <?php
 $breadcrumb = [
   ['label' => 'Bảng điều khiển', 'link' => '?page=dashboard'],
-  ['label' => 'Tin tức', 'link' => $redirectUrl],
+  ['label' => $name, 'link' => $redirectUrl],
   ['label' => !empty($id) ? 'Cập nhật ' . $name : 'Thêm mới ' . $name]
 ];
 include 'templates/breadcrumb.php';
@@ -116,17 +118,17 @@ include 'templates/breadcrumb.php';
                 'noibat' => 'Nổi bật'
               ];
               ?>
-              <?php foreach ($checkboxes as $name => $label): ?>
+              <?php foreach ($checkboxes as $check => $label): ?>
                 <div class="form-group d-inline-block mb-2 mr-2">
-                  <label for="<?= $name ?>-checkbox" class="d-inline-block align-middle mb-0 mr-2"><?= $label ?>:</label>
+                  <label for="<?= $check ?>-checkbox" class="d-inline-block align-middle mb-0 mr-2"><?= $label ?>:</label>
                   <div class="custom-control custom-checkbox d-inline-block align-middle">
-                    <input <?= $functions->is_checked($name, $result ?? null, $id ?? null) ?>
+                    <input <?= $functions->is_checked($check, $result ?? null, $id ?? null) ?>
                       type="checkbox"
-                      class="custom-control-input <?= $name ?>-checkbox"
-                      name="<?= $name ?>"
-                      id="<?= $name ?>-checkbox"
-                      value="<?= $name ?>" />
-                    <label for="<?= $name ?>-checkbox" class="custom-control-label"></label>
+                      class="custom-control-input <?= $check ?>-checkbox"
+                      name="<?= $check ?>"
+                      id="<?= $check ?>-checkbox"
+                      value="<?= $check ?>" />
+                    <label for="<?= $check ?>-checkbox" class="custom-control-label"></label>
                   </div>
                 </div>
               <?php endforeach; ?>
@@ -141,6 +143,6 @@ include 'templates/breadcrumb.php';
       </div>
     </div>
     <?php include 'templates/seo.php'; ?>
-    <input type="hidden" name="type" id="type" value="tintuc">
+    <input type="hidden" name="type" id="type" value="<?= $type ?>">
   </form>
 </section>

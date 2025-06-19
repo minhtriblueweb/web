@@ -5,32 +5,25 @@ Session::checkSession();
 $page = $_GET['page'] ?? 'dashboard';
 $page = preg_replace('/[^a-zA-Z0-9_-]/', '', basename($page));
 if ($page === 'delete') {
-  $id = $_GET['id'] ?? 0;
-  $table = $_GET['table'] ?? '';
-  $imageColumn = $_GET['image'] ?? '';
-  $redirect = $_GET['redirect'] ?? 'dashboard';
-  $id_parent = $_GET['id_parent'] ?? null;
-  if ($id && $table && $imageColumn) {
-    $functions->delete($id, $table, $imageColumn, $redirect, $id_parent);
-  } else {
-    $functions->transfer("Thiếu dữ liệu để xóa!", "index.php?page=$redirect", false);
-  }
-  exit();
+  $functions->delete(
+    $_GET['id'] ?? 0,
+    $_GET['table'] ?? '',
+    $_GET['image'] ?? '',
+    $_GET['type'] ?? '',
+    $_GET['id_parent'] ?? null
+  );
+  exit;
 }
 
 if ($page === 'deleteMulti') {
-  $listid = $_GET['listid'] ?? '';
-  $table = $_GET['table'] ?? '';
-  $imageColumn = $_GET['image'] ?? '';
-  $redirect = $_GET['redirect'] ?? 'dashboard';
-  $id_parent = $_GET['id_parent'] ?? null;
-
-  if ($listid && $table && $imageColumn) {
-    $functions->deleteMultiple($listid, $table, $imageColumn, $redirect, $id_parent);
-  } else {
-    $functions->transfer("Thiếu dữ liệu để xóa!", "index.php?page=$redirect", false);
-  }
-  exit();
+  $functions->deleteMultiple(
+    $_GET['listid'] ?? '',
+    $_GET['table'] ?? '',
+    $_GET['image'] ?? '',
+    $_GET['type'] ?? '',
+    $_GET['id_parent'] ?? null
+  );
+  exit;
 }
 $page_file = __DIR__ . "/pages/{$page}.php";
 

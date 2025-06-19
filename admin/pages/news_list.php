@@ -1,16 +1,17 @@
 <?php
 $redirect_url = $_GET['page'];
+$type = $_GET['type'] ?? null;
 $records_per_page = 10;
 $current_page = max(1, isset($_GET['p']) ? (int)$_GET['p'] : 1);
-$total_pages = ceil($functions->phantrang('tbl_news', 'chinhsach') / $records_per_page);
-$show_chinhsach = $news->show_news($records_per_page, $current_page, '', 'chinhsach');
-$linkMulti = "index.php?page=deleteMulti&table=tbl_news&image=file&redirect=$redirect_url";
-$linkDelete = "index.php?page=delete&table=tbl_news&image=file&redirect=$redirect_url&id=";
-$linkEdit = "index.php?page=chinhsach_form&id=";
-$linkAdd = "index.php?page=chinhsach_form";
+$total_pages = ceil($functions->phantrang('tbl_news', $type) / $records_per_page);
+$show_news = $news->show_news($records_per_page, $current_page, '', $type);
+$linkMulti = "index.php?page=deleteMulti&table=tbl_news&image=file&type=$type";
+$linkDelete = "index.php?page=delete&table=tbl_news&image=file&type=$type&id=";
+$linkEdit = "index.php?page=news_form&type=$type&id=";
+$linkAdd = "index.php?page=news_form&type=$type";
 ?>
 <?php
-$name = 'chính sách';
+$name = $type;
 $breadcrumb = [
   ['label' => 'Bảng điều khiển', 'link' => '?page=dashboard'],
   ['label' => $name],
@@ -41,7 +42,7 @@ include 'templates/breadcrumb.php';
   </div>
   <div class="card card-primary card-outline text-sm mb-0">
     <div class="card-header">
-      <h3 class="card-title">Danh sách <?= $name ?></h3>
+      <h3 class="card-title">Danh sách tin tức</h3>
     </div>
     <div class="card-body table-responsive p-0">
       <table class="table table-hover">
@@ -63,13 +64,13 @@ include 'templates/breadcrumb.php';
         </thead>
         <form action="" method="POST">
           <tbody>
-            <?php if ($show_chinhsach): ?>
-              <?php while ($resule = $show_chinhsach->fetch_assoc()):
-                $id = $resule['id'];
-                $name = $resule['namevi'];
-                $slug = $resule['slugvi'];
-                $imgSrc = !empty($resule['file'])
-                  ? BASE_ADMIN . UPLOADS . $resule['file']
+            <?php if ($show_news): ?>
+              <?php while ($row = $show_news->fetch_assoc()):
+                $id = $row['id'];
+                $name = $row['namevi'];
+                $slug = $row['slugvi'];
+                $imgSrc = !empty($row['file'])
+                  ? BASE_ADMIN . UPLOADS . $row['file']
                   : NO_IMG;
               ?>
                 <tr>
@@ -84,7 +85,7 @@ include 'templates/breadcrumb.php';
                   <!-- STT -->
                   <td class="align-middle">
                     <input type="number" class="form-control form-control-mini m-auto update-numb" min="0"
-                      value="<?= $resule['numb'] ?>" data-id="<?= $id ?>" data-table="tbl_news" />
+                      value="<?= $row['numb'] ?>" data-id="<?= $id ?>" data-table="tbl_news" />
                   </td>
 
                   <!-- Ảnh -->
@@ -109,13 +110,12 @@ include 'templates/breadcrumb.php';
                     <td class="align-middle text-center">
                       <div class="custom-control custom-checkbox my-checkbox">
                         <input type="checkbox"
-                          data-type="<?= $attr ?>"
                           class="custom-control-input show-checkbox"
                           id="show-checkbox-<?= $attr ?>-<?= $id ?>"
-                          data-table="tbl_news"
                           data-id="<?= $id ?>"
-                          data-attr="<?= $resule[$attr] == $attr ? '' : $attr ?>"
-                          <?= $resule[$attr] == $attr ? 'checked' : '' ?> />
+                          data-table="tbl_news"
+                          data-attr="<?= $attr ?>"
+                          <?= (strpos($row['status'], $attr) !== false) ? 'checked' : '' ?> />
                         <label for="show-checkbox-<?= $attr ?>-<?= $id ?>" class="custom-control-label"></label>
                       </div>
                     </td>
@@ -133,7 +133,6 @@ include 'templates/breadcrumb.php';
                 <td colspan="100" class="text-center">Không có dữ liệu</td>
               </tr>
             <?php endif; ?>
-
           </tbody>
         </form>
       </table>

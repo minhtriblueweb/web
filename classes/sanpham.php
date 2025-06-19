@@ -356,8 +356,6 @@ class sanpham
       'titlevi',
       'keywordsvi',
       'descriptionvi',
-      'hienthi',
-      'banchay',
       'numb'
     ];
     $table = 'tbl_sanpham';
@@ -365,6 +363,14 @@ class sanpham
     foreach ($fields as $field) {
       $data_escaped[$field] = !empty($data[$field]) ? mysqli_real_escape_string($this->db->link, $data[$field]) : "";
     }
+    $status_flags = ['hienthi', 'noibat', 'banchay'];
+    $status_values = [];
+    foreach ($status_flags as $flag) {
+      if (!empty($data[$flag])) {
+        $status_values[] = $flag;
+      }
+    }
+    $data_escaped['status'] = mysqli_real_escape_string($this->db->link, implode(',', $status_values));
     $slug_error = $this->fn->isSlugviDuplicated($data_escaped['slugvi'], $table, $id ?? '');
     if ($slug_error) return $slug_error;
     $thumb_filename = '';

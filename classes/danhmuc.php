@@ -135,25 +135,70 @@ class danhmuc
     return $this->db->select($query);
   }
 
-  public function show_danhmuc($tbl, $records_per_page = null, $current_page = null)
+  public function show_danhmuc($tbl, $options = [])
   {
-    $query = "SELECT * FROM $tbl ORDER BY numb,id DESC ";
-    if ($records_per_page !== null && $current_page !== null) {
-      $offset = ((int)$current_page - 1) * (int)$records_per_page;
-      $query .= "LIMIT $records_per_page OFFSET $offset";
+    $where = [];
+
+    // 🔍 Lọc theo status
+    if (!empty($options['status'])) {
+      if (is_array($options['status'])) {
+        $status_conditions = array_map(function ($s) {
+          return "FIND_IN_SET('" . mysqli_real_escape_string($this->db->link, $s) . "', status)";
+        }, $options['status']);
+        $where[] = "(" . implode(" OR ", $status_conditions) . ")";
+      } else {
+        $status = mysqli_real_escape_string($this->db->link, $options['status']);
+        $where[] = "FIND_IN_SET('$status', status)";
+      }
     }
-    $result = $this->db->select($query);
-    return $result;
+
+    // 🔍 Lọc theo id_list
+    if (!empty($options['id_list'])) {
+      $id_list = (int)$options['id_list'];
+      $where[] = "`id_list` = $id_list";
+    }
+
+    // 🔍 Tìm kiếm theo từ khóa trong namevi
+    if (!empty($options['keyword'])) {
+      $keyword = mysqli_real_escape_string($this->db->link, $options['keyword']);
+      $where[] = "`namevi` LIKE '%$keyword%'";
+    }
+
+    // Câu lệnh SELECT
+    $query = "SELECT * FROM `$tbl`";
+    if (!empty($where)) {
+      $query .= " WHERE " . implode(" AND ", $where);
+    }
+
+    $query .= " ORDER BY numb, id DESC";
+
+    // ⚙️ Phân trang nếu có
+    if (!empty($options['records_per_page']) && !empty($options['current_page'])) {
+      $limit = (int)$options['records_per_page'];
+      $offset = ((int)$options['current_page'] - 1) * $limit;
+      $query .= " LIMIT $limit OFFSET $offset";
+    }
+
+    return $this->db->select($query);
   }
+
 
   public function save_danhmuc($data, $files, $id = null)
   {
-    $fields = ['slugvi', 'namevi', 'descvi', 'contentvi', 'titlevi', 'keywordsvi', 'descriptionvi', 'hienthi', 'noibat', 'numb'];
+    $fields = ['slugvi', 'namevi', 'descvi', 'contentvi', 'titlevi', 'keywordsvi', 'descriptionvi', 'numb'];
     $table = 'tbl_danhmuc';
     $data_escaped = [];
     foreach ($fields as $field) {
       $data_escaped[$field] = !empty($data[$field]) ? mysqli_real_escape_string($this->db->link, $data[$field]) : "";
     }
+    $status_flags = ['hienthi', 'noibat'];
+    $status_values = [];
+    foreach ($status_flags as $flag) {
+      if (!empty($data[$flag])) {
+        $status_values[] = $flag;
+      }
+    }
+    $data_escaped['status'] = mysqli_real_escape_string($this->db->link, implode(',', $status_values));
     $slug_error = $this->fn->isSlugviDuplicated($data_escaped['slugvi'], $table, $id ?? '');
     if ($slug_error) return $slug_error;
     $thumb_filename = '';
@@ -193,12 +238,20 @@ class danhmuc
 
   public function save_danhmuc_c2($data, $files, $id = null)
   {
-    $fields = ['slugvi', 'namevi', 'id_list', 'titlevi', 'keywordsvi', 'descriptionvi', 'numb', 'hienthi', 'noibat'];
+    $fields = ['slugvi', 'namevi', 'id_list', 'titlevi', 'keywordsvi', 'descriptionvi', 'numb'];
     $table = 'tbl_danhmuc_c2';
     $data_escaped = [];
     foreach ($fields as $field) {
       $data_escaped[$field] = !empty($data[$field]) ? mysqli_real_escape_string($this->db->link, $data[$field]) : "";
     }
+    $status_flags = ['hienthi', 'noibat'];
+    $status_values = [];
+    foreach ($status_flags as $flag) {
+      if (!empty($data[$flag])) {
+        $status_values[] = $flag;
+      }
+    }
+    $data_escaped['status'] = mysqli_real_escape_string($this->db->link, implode(',', $status_values));
     $slug_error = $this->fn->isSlugviDuplicated($data_escaped['slugvi'], $table, $id ?? '');
     if ($slug_error) {
       return $slug_error;

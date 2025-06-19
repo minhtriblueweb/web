@@ -6,8 +6,8 @@ $total_pages = ceil($functions->phantrang('tbl_sanpham') / $records_per_page);
 $show_sanpham = $sanpham->show_sanpham($records_per_page, $current_page);
 $name = 'sản phẩm';
 $show_danhmuc = $danhmuc->show_danhmuc('tbl_danhmuc');
-$linkMulti = "index.php?page=deleteMulti&table=tbl_sanpham&image=file&redirect=$redirect_url";
-$linkDelete = "index.php?page=delete&table=tbl_sanpham&image=file&redirect=$redirect_url&id=";
+$linkMulti = "index.php?page=deleteMulti&table=tbl_sanpham&image=file";
+$linkDelete = "index.php?page=delete&table=tbl_sanpham&image=file&id=";
 $linkEdit = "index.php?page=product_form&id=";
 $linkAdd = "index.php?page=product_form";
 $linkGalleryList = "index.php?page=gallery_list&id=";
@@ -78,6 +78,7 @@ include 'templates/breadcrumb.php';
             <th class="align-middle">Danh mục</th>
             <th class="align-middle">Danh mục cấp 2</th>
             <th class="align-middle text-center">Hiển thị</th>
+            <th class="align-middle text-center">Nổi bật</th>
             <th class="align-middle text-center">Bán chạy</th>
             <th class="align-middle text-center">Thao tác</th>
           </tr>
@@ -150,17 +151,16 @@ include 'templates/breadcrumb.php';
                     <?= $sanpham->get_name_danhmuc($row['id_cat'], 'tbl_danhmuc_c2') ?>
                   </td>
                   <!-- Checkbox Hiển thị, bán chạy -->
-                  <?php foreach (['hienthi', 'banchay'] as $attr): ?>
+                  <?php foreach (['hienthi', 'noibat', 'banchay'] as $attr): ?>
                     <td class="align-middle text-center">
                       <div class="custom-control custom-checkbox my-checkbox">
                         <input type="checkbox"
-                          data-type="<?= $attr ?>"
                           class="custom-control-input show-checkbox"
                           id="show-checkbox-<?= $attr ?>-<?= $id ?>"
-                          data-table="tbl_sanpham"
                           data-id="<?= $id ?>"
-                          data-attr="<?= $row[$attr] == $attr ? '' : $attr ?>"
-                          <?= $row[$attr] == $attr ? 'checked' : '' ?> />
+                          data-table="tbl_sanpham"
+                          data-attr="<?= $attr ?>"
+                          <?= (strpos($row['status'], $attr) !== false) ? 'checked' : '' ?> />
                         <label for="show-checkbox-<?= $attr ?>-<?= $id ?>" class="custom-control-label"></label>
                       </div>
                     </td>

@@ -5,10 +5,14 @@ $current_page = max(1, isset($_GET['p']) ? (int)$_GET['p'] : 1);
 $total_records = $functions->phantrang('tbl_danhmuc_c2');
 $total_pages = ceil($total_records / $records_per_page);
 $show_danhmuc_c1 = $danhmuc->show_danhmuc('tbl_danhmuc');
-$show_danhmuc_c2 = $danhmuc->show_danhmuc('tbl_danhmuc_c2', $records_per_page, $current_page);
+$show_danhmuc_c2 = $danhmuc->show_danhmuc('tbl_danhmuc_c2', [
+  'records_per_page' => $records_per_page,
+  'current_page' => $current_page,
+  'keyword' => $_GET['keyword'] ?? ''
+]);
 $name = 'danh mục cấp 2';
-$linkMulti = "index.php?page=deleteMulti&table=tbl_danhmuc_c2&image=file&redirect=$redirect_url";
-$linkDelete = "index.php?page=delete&table=tbl_danhmuc_c2&image=file&redirect=$redirect_url&id=";
+$linkMulti = "index.php?page=deleteMulti&table=tbl_danhmuc_c2&image=file";
+$linkDelete = "index.php?page=delete&table=tbl_danhmuc_c2&image=file&id=";
 $linkEdit = "index.php?page=category_lv2_form&id=";
 $linkAdd = "index.php?page=category_lv2_form";
 ?>
@@ -48,11 +52,15 @@ include 'templates/breadcrumb.php';
           name="loc" />
         <select id="id_list" name="id_list" class="form-control filter-category select2">
           <option value="0">Chọn danh mục</option>
-          <?php if ($show_danhmuc_c1): ?>
+          <?php if ($show_danhmuc_c1 && $show_danhmuc_c1->num_rows > 0): ?>
             <?php while ($resule = $show_danhmuc_c1->fetch_assoc()): ?>
               <option value="<?= $resule['id']; ?>" data-select2-id="<?= $resule['id']; ?>"
-                <?= ($id_list == $resule['id']) ? 'selected' : ''; ?>><?= $resule['namevi']; ?></option>
+                <?= (isset($id_list) && $id_list == $resule['id']) ? 'selected' : ''; ?>>
+                <?= $resule['namevi']; ?>
+              </option>
             <?php endwhile; ?>
+          <?php else: ?>
+            <option disabled>Không có danh mục</option>
           <?php endif; ?>
         </select>
       </form>
@@ -123,17 +131,17 @@ include 'templates/breadcrumb.php';
                     <td class="align-middle text-center">
                       <div class="custom-control custom-checkbox my-checkbox">
                         <input type="checkbox"
-                          data-type="<?= $attr ?>"
                           class="custom-control-input show-checkbox"
                           id="show-checkbox-<?= $attr ?>-<?= $id ?>"
-                          data-table="tbl_danhmuc_c2"
                           data-id="<?= $id ?>"
-                          data-attr="<?= $row[$attr] == $attr ? '' : $attr ?>"
-                          <?= $row[$attr] == $attr ? 'checked' : '' ?> />
+                          data-table="tbl_danhmuc_c2"
+                          data-attr="<?= $attr ?>"
+                          <?= (strpos($row['status'], $attr) !== false) ? 'checked' : '' ?> />
                         <label for="show-checkbox-<?= $attr ?>-<?= $id ?>" class="custom-control-label"></label>
                       </div>
                     </td>
                   <?php endforeach; ?>
+
 
                   <!-- Hành động -->
                   <td class="align-middle text-center text-md text-nowrap">
@@ -161,4 +169,5 @@ include 'templates/breadcrumb.php';
       <?= $functions->renderPagination($current_page, $total_pages, "index.php?page=$redirect_url&p="); ?>
     </div>
   <?php endif; ?>
+
 </section>

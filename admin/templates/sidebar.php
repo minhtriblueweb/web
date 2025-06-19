@@ -48,8 +48,8 @@ $sidebarMenu = [
       ],
       [
         'title' => 'Đánh giá khách hàng',
-        'link' => '?page=danhgia',
-        'active' => ['?page=danhgia', '?page=themdanhgia', '?page=suadanhgia']
+        'link' => '?page=danhgia_list',
+        'active' => ['?page=danhgia_list', '?page=danhgia_form']
       ],
       [
         'title' => 'Hướng dẫn chơi',

@@ -215,49 +215,6 @@ class sanpham
     return $result ? $result->fetch_assoc() : false;
   }
 
-  public function xoanhieu_sanpham($listid)
-  {
-    // Lấy danh sách các file cần xóa trước khi xóa bản ghi
-    $del_file_query = "SELECT file FROM tbl_sanpham WHERE id IN ($listid)";
-    $old_files = $this->db->select($del_file_query);
-
-    // Xóa các file trên hệ thống
-    if ($old_files) {
-      while ($rowData = $old_files->fetch_assoc()) {
-        $old_file_path = "uploads/" . $rowData['file'];
-        if (file_exists($old_file_path)) {
-          unlink($old_file_path);  // Xóa file nếu tồn tại
-        }
-      }
-    }
-    $query = "DELETE FROM tbl_sanpham WHERE id IN ($listid)";
-    $result = $this->db->delete($query);
-    if ($result) {
-      header('Location: transfer.php?stt=success&url=product_list');
-    } else {
-      return "Lỗi thao tác!";
-    }
-  }
-
-  public function del_sanpham($id)
-  {
-    $del_file_name = "SELECT file FROM tbl_sanpham WHERE id='$id'";
-    $delta = $this->db->select($del_file_name);
-    $string = "";
-    while ($rowData = $delta->fetch_assoc()) {
-      $string .= $rowData['file'];
-    }
-    $delLink = "uploads/" . $string;
-    unlink("$delLink");
-    $query = "DELETE FROM tbl_sanpham WHERE id = '$id'";
-    $result = $this->db->delete($query);
-    if ($result) {
-      header('Location: transfer.php?stt=success&url=product_list');
-    } else {
-      return "Lỗi thao tác!";
-    }
-  }
-
   public function get_name_danhmuc($id, $table)
   {
     $id = mysqli_real_escape_string($this->db->link, $id);
@@ -283,13 +240,6 @@ class sanpham
       $result = $this->db->select($query);
       return $result;
     }
-  }
-
-  public function sanpham_banchay()
-  {
-    $query = "SELECT * FROM tbl_sanpham WHERE banchay = 'banchay' AND hienthi = 'hienthi' ORDER BY numb ASC";
-    $result = $this->db->select($query);
-    return $result;
   }
 
   public function show_sanpham_tc($id_list = '')

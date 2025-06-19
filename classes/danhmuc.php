@@ -115,26 +115,6 @@ class danhmuc
     return $this->db->select($query);
   }
 
-  public function show_danhmuc_index($hienthi = '')
-  {
-    $query = "SELECT * FROM tbl_danhmuc";
-    if (!empty($hienthi)) {
-      $query .= " WHERE hienthi = '$hienthi'";
-    }
-    $query .= " ORDER BY numb ASC";
-    return $this->db->select($query);
-  }
-
-  public function show_danhmuc_noibat($hienthi = '', $noibat = '')
-  {
-    $query = "SELECT * FROM tbl_danhmuc";
-    if (!empty($hienthi)) {
-      $query .= " WHERE hienthi = '$hienthi' AND noibat = '$noibat'";
-    }
-    $query .= " ORDER BY numb ASC";
-    return $this->db->select($query);
-  }
-
   public function show_danhmuc($tbl, $options = [])
   {
     $where = [];
@@ -291,25 +271,6 @@ class danhmuc
       $msg = $result ? "Thêm danh mục thành công" : "Thêm danh mục thất bại";
     }
     $this->fn->transfer($msg, "index.php?page=category_lv2_list", $result);
-  }
-
-  public function show_danhmuc_c2($tbl, $id_list = null)
-  {
-    $query = "SELECT * FROM $tbl";
-    if ($id_list !== null) {
-      $query .= " WHERE id_list = '$id_list'";
-    }
-    $query .= " ORDER BY numb, id DESC";
-    $result = $this->db->select($query);
-    return $result;
-  }
-
-
-  public function show_danhmuc_c2_index($list_id)
-  {
-    $query = "SELECT * FROM tbl_danhmuc_c2 WHERE id_list = '$list_id' AND hienthi = 'hienthi' ORDER BY numb ASC";
-    $result = $this->db->select($query);
-    return $result;
   }
 }
 

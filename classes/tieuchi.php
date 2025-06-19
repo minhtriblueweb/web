@@ -16,35 +16,6 @@ class tieuchi
     $this->fn = new functions();
     $this->fm = new Format();
   }
-
-  public function xoanhieu_tieuchi($listid)
-  {
-    // Lấy danh sách các file cần xóa trước khi xóa bản ghi
-    $del_file_query = "SELECT file FROM tbl_tieuchi WHERE id IN ($listid)";
-    $old_files = $this->db->select($del_file_query);
-
-    // Xóa các file trên hệ thống
-    if ($old_files) {
-      while ($rowData = $old_files->fetch_assoc()) {
-        $old_file_path = "uploads/" . $rowData['file'];
-        if (file_exists($old_file_path)) {
-          unlink($old_file_path);  // Xóa file nếu tồn tại
-        }
-      }
-    }
-
-    // Xóa bản ghi trong cơ sở dữ liệu
-    $query = "DELETE FROM tbl_tieuchi WHERE id IN ($listid)";
-    $result = $this->db->delete($query);
-
-    // Kiểm tra kết quả
-    if ($result) {
-      header('Location: transfer.php?stt=success&url=tieuchi');
-    } else {
-      return "Lỗi thao tác!";
-    }
-  }
-
   public function get_id_tieuchi($id)
   {
     $id = mysqli_real_escape_string($this->db->link, $id);
@@ -53,43 +24,24 @@ class tieuchi
     return $result;
   }
 
-  public function del_tieuchi($id)
+  public function show_tieuchi($records_per_page, $current_page, $only_show = false)
   {
-    $query = "SELECT file FROM tbl_tieuchi WHERE id='$id'";
-    $delta = $this->db->select($query);
-    $file = $delta ? $delta->fetch_assoc()['file'] : null;
-
-    if ($file) {
-      $filePath = "uploads/" . $file;
-      if (file_exists($filePath)) {
-        unlink($filePath);
-      }
-    }
-    $result = $this->db->delete("DELETE FROM tbl_tieuchi WHERE id = '$id'");
-    if ($result) {
-      header('Location: transfer.php?stt=' . urlencode("success") . '&url=' . urlencode("tieuchi"));
-    } else {
-      return "Lỗi thao tác !";
-    }
-  }
-
-  public function show_tieuchi($records_per_page, $current_page)
-  {
-    $records_per_page = (int)$records_per_page;
-    $current_page = (int)$current_page;
+    $records_per_page = max(1, (int)$records_per_page);
+    $current_page = max(1, (int)$current_page);
     $offset = ($current_page - 1) * $records_per_page;
+
     $where = [];
+    if ($only_show) {
+      $where[] = "FIND_IN_SET('hienthi', status)";
+    }
     $query = "SELECT * FROM tbl_tieuchi";
     if (!empty($where)) {
       $query .= " WHERE " . implode(" AND ", $where);
     }
-    $query .= " ORDER BY numb, id DESC";
-    if (empty($hienthi)) {
-      $query .= " LIMIT $records_per_page OFFSET $offset";
-    }
+
+    $query .= " ORDER BY numb, id DESC LIMIT $records_per_page OFFSET $offset";
     return $this->db->select($query);
   }
-
   public function show_tieuchi_index()
   {
     $query = "SELECT * FROM tbl_tieuchi WHERE hienthi = 'hienthi' ORDER BY numb, id DESC";

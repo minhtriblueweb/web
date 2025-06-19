@@ -92,7 +92,6 @@ class news
     }
   }
 
-
   public function relatedNews($id, $type)
   {
     $id = mysqli_real_escape_string($this->db->link, $id);
@@ -101,7 +100,6 @@ class news
     $result = $this->db->select($query);
     return $result;
   }
-
 
   public function update_views_by_slug($slug)
   {
@@ -136,13 +134,6 @@ class news
   public function get_news($slug)
   {
     $query = "SELECT * FROM tbl_news WHERE slugvi = '$slug' AND hienthi = 'hienthi' LIMIT 1";
-    $result = $this->db->select($query);
-    return $result;
-  }
-
-  public function get_chinhsach($slug)
-  {
-    $query = "SELECT * FROM tbl_news WHERE slugvi = '$slug' AND hienthi = 'hienthi' AND type = 'chinh-sach' LIMIT 1";
     $result = $this->db->select($query);
     return $result;
   }

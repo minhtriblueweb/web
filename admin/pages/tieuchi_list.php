@@ -3,7 +3,7 @@ $redirect_url = $_GET['page'];
 $records_per_page = 10;
 $current_page = max(1, isset($_GET['p']) ? (int)$_GET['p'] : 1);
 $total_pages = ceil($functions->phantrang('tbl_tieuchi') / $records_per_page);
-$show_tieuchi = $tieuchi->show_tieuchi($records_per_page, $current_page);
+$show_tieuchi = $tieuchi->show_tieuchi($records_per_page, $current_page, $only_show = false);
 $linkMulti = "index.php?page=deleteMulti&table=tbl_tieuchi&image=file&";
 $linkDelete = "index.php?page=delete&table=tbl_tieuchi&image=file&&id=";
 $linkEdit = "index.php?page=tieuchi_form&id=";
@@ -41,7 +41,7 @@ include 'templates/breadcrumb.php';
   </div>
   <div class="card card-primary card-outline text-sm mb-0">
     <div class="card-header">
-      <h3 class="card-title">Danh sách tiêu chí</h3>
+      <h3 class="card-title">Danh sách <?= $name ?></h3>
     </div>
     <div class="card-body table-responsive p-0">
       <table class="table table-hover">
@@ -142,7 +142,6 @@ include 'templates/breadcrumb.php';
               </tr>
             <?php endif; ?>
           </tbody>
-
         </form>
       </table>
     </div>

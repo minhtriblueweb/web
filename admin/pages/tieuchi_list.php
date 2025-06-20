@@ -3,7 +3,11 @@ $redirect_url = $_GET['page'];
 $records_per_page = 10;
 $current_page = max(1, isset($_GET['p']) ? (int)$_GET['p'] : 1);
 $total_pages = ceil($functions->phantrang('tbl_tieuchi') / $records_per_page);
-$show_tieuchi = $tieuchi->show_tieuchi($records_per_page, $current_page, $only_show = false);
+$show_tieuchi = $functions->show_data('tbl_tieuchi', [
+  'records_per_page' => $records_per_page,
+  'current_page' => $current_page,
+  'keyword' => $_GET['keyword'] ?? ''
+]);
 $linkMulti = "index.php?page=deleteMulti&table=tbl_tieuchi&image=file&";
 $linkDelete = "index.php?page=delete&table=tbl_tieuchi&image=file&&id=";
 $linkEdit = "index.php?page=tieuchi_form&id=";

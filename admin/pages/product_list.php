@@ -1,11 +1,16 @@
 <?php
 $redirect_url = $_GET['page'];
+$name = 'sản phẩm';
 $records_per_page = 10;
 $current_page = max(1, isset($_GET['p']) ? (int)$_GET['p'] : 1);
 $total_pages = ceil($functions->phantrang('tbl_sanpham') / $records_per_page);
-$show_sanpham = $sanpham->show_sanpham($records_per_page, $current_page);
-$name = 'sản phẩm';
-$show_danhmuc = $danhmuc->show_danhmuc('tbl_danhmuc');
+$show_sanpham = $functions->show_data([
+  'table' => 'tbl_sanpham',
+  'records_per_page' => $records_per_page,
+  'current_page' => $current_page,
+  'keyword' => $_GET['keyword'] ?? ''
+]);
+$show_danhmuc = $functions->show_data('tbl_danhmuc');
 $linkMulti = "index.php?page=deleteMulti&table=tbl_sanpham&image=file";
 $linkDelete = "index.php?page=delete&table=tbl_sanpham&image=file&id=";
 $linkEdit = "index.php?page=product_form&id=";

@@ -17,13 +17,17 @@
         </div>
         <div class="social">
           <p>KẾT NỐI VỚI CHÚNG TÔI</p>
-          <?php $show_social = $social->show_social("hienthi"); ?>
+          <?php
+          $show_social = $functions->show_data([
+            'table' => 'tbl_social',
+            'status' => 'hienthi'
+          ]); ?>
           <?php if ($show_social): ?>
-            <?php while ($result_social = $show_social->fetch_assoc()): ?>
-              <a class="hvr-icon-rotate" href="<?= $result_social['link'] ?>" target="_blank" class="me-2">
+            <?php while ($row_social = $show_social->fetch_assoc()): ?>
+              <a class="hvr-icon-rotate" href="<?= $row_social['link'] ?>" target="_blank" class="me-2">
                 <img width="50" class="hvr-icon"
-                  src="<?= empty($result_social['file']) ? BASE_ADMIN . "assets/img/noimage.png" : BASE_ADMIN . UPLOADS . $result_social['file']; ?>"
-                  alt="<?= $result_social['name'] ?>" title="<?= $result_social['name'] ?>" />
+                  src="<?= empty($row_social['file']) ? BASE_ADMIN . "assets/img/noimage.png" : BASE_ADMIN . UPLOADS . $row_social['file']; ?>"
+                  alt="<?= $row_social['name'] ?>" title="<?= $row_social['name'] ?>" />
               </a>
             <?php endwhile; ?>
           <?php endif; ?>
@@ -34,12 +38,12 @@
           <div class="footer-policy">
             <p class="footer-title">Chính sách hỗ trợ</p>
             <ul class="footer-ul">
-              <?php $show_chinhsach = $news->show_news_by_type('chinhsach', 'hienthi', 'noibat'); ?>
+              <?php $show_chinhsach = $functions->show_data('tbl_news', ['status' => 'hienthi,noibat', 'type' => 'chinhsach']); ?>
               <?php if ($show_chinhsach): ?>
-                <?php while ($resule_chinhsach = $show_chinhsach->fetch_assoc()): ?>
+                <?php while ($row_cs = $show_chinhsach->fetch_assoc()): ?>
                   <li>
-                    <a class="transition" href="<?= $resule_chinhsach['slugvi'] ?>"
-                      title="<?= $resule_chinhsach['namevi'] ?>"><?= $resule_chinhsach['namevi'] ?></a>
+                    <a class="transition" href="<?= $row_cs['slugvi'] ?>"
+                      title="<?= $row_cs['namevi'] ?>"><?= $row_cs['namevi'] ?></a>
                   </li>
                 <?php endwhile; ?>
               <?php endif; ?>
@@ -50,11 +54,11 @@
             <div class="ibank-wrapper">
               <?php $show_phuongthuctt = $phuongthuctt->show_phuongthuctt("hienthi"); ?>
               <?php if ($show_phuongthuctt): ?>
-                <?php while ($result_phuongthuctt = $show_phuongthuctt->fetch_assoc()): ?>
+                <?php while ($row_pt = $show_phuongthuctt->fetch_assoc()): ?>
                   <span class="ibank scale-img">
                     <img
-                      src="<?= empty($result_phuongthuctt['file']) ? BASE_ADMIN . "assets/img/noimage.png" : BASE_ADMIN . UPLOADS . $result_phuongthuctt['file']; ?>"
-                      alt="<?= $result_phuongthuctt['name'] ?>" title="<?= $result_phuongthuctt['name'] ?>" />
+                      src="<?= empty($row_pt['file']) ? BASE_ADMIN . "assets/img/noimage.png" : BASE_ADMIN . UPLOADS . $row_pt['file']; ?>"
+                      alt="<?= $row_pt['name'] ?>" title="<?= $row_pt['name'] ?>" />
                   </span>
                 <?php endwhile; ?>
               <?php endif; ?>

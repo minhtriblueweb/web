@@ -6,7 +6,7 @@ $table = 'tbl_danhmuc';
 $result = [];
 $id = $_GET['id'] ?? null;
 if (!empty($id)) {
-  $get_id = $danhmuc->get_id('tbl_danhmuc', $id);
+  $get_id = $functions->get_id($table, $id);
   if ($get_id && $get_id->num_rows > 0) {
     $result = $get_id->fetch_assoc();
   }

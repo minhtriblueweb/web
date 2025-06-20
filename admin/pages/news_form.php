@@ -6,7 +6,7 @@ $id = $_GET['id'] ?? null;
 $type = $_GET['type'] ?? null;
 $name = $type;
 if (!empty($id)) {
-  $get_id = $news->get_id_news($id);
+  $get_id = $functions->get_id($table, $id);
   if ($get_id  && $get_id->num_rows > 0) {
     $result = $get_id->fetch_assoc();
   }

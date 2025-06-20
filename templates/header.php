@@ -21,12 +21,12 @@
   <meta name="ICBM" content="<?= $seo['geo'] ?>" />
   <!-- Author - Copyright -->
   <meta name='revisit-after' content='1 days' />
-  <meta name="author" content="<?= $seo['web_name'] ?>" />
-  <meta name="copyright" content="<?= $seo['web_name'] ?> - [<?= $seo['email'] ?>]" />
+  <meta name="author" content="<?= $web_name ?>" />
+  <meta name="copyright" content="<?= $web_name ?> - [<?= $seo['email'] ?>]" />
   <link rel="canonical" href="<?= $seo['url'] ?>" />
   <!-- Facebook -->
   <meta property="og:type" content="website" />
-  <meta property="og:site_name" content="<?= $seo['web_name'] ?>" />
+  <meta property="og:site_name" content="<?= $web_name ?>" />
   <meta property="og:title" content="<?= $seo['title'] ?>" />
   <meta property="og:description" content="<?= $seo['description'] ?>" />
   <meta property="og:url" content="<?= $seo['url'] ?>" />
@@ -41,7 +41,7 @@
   <!-- Twitter -->
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:site" content="<?= $seo['email'] ?>" />
-  <meta name="twitter:creator" content="<?= $seo['web_name'] ?>" />
+  <meta name="twitter:creator" content="<?= $web_name ?>" />
   <meta property="og:url" content="<?= $seo['url'] ?>" />
   <meta property="og:title" content="<?= $seo['title'] ?>" />
   <meta property="og:description" content="<?= $seo['description'] ?>" />
@@ -97,13 +97,17 @@
             <a class="pay" href="">Phương thức thanh toán</a>
             <div class="social-header">
               <p>Kết nối :</p>
-              <?php $show_social = $social->show_social("hienthi"); ?>
+              <?php
+              $show_social = $functions->show_data([
+                'table' => 'tbl_social',
+                'status' => 'hienthi'
+              ]); ?>
               <?php if ($show_social): ?>
-                <?php while ($result_social = $show_social->fetch_assoc()): ?><a href="<?= $result_social['link'] ?>"
+                <?php while ($row_social = $show_social->fetch_assoc()): ?><a href="<?= $row_social['link'] ?>"
                     class="lazy hvr-icon-rotate" class="me-2">
                     <img width="20" height="20"
-                      src="<?= empty($result_social['file']) ? BASE_ADMIN . "assets/img/noimage.png" : BASE_ADMIN . UPLOADS . $result_social['file']; ?>"
-                      alt="<?= $result_social['name'] ?>" />
+                      src="<?= empty($row_social['file']) ? BASE_ADMIN . "assets/img/noimage.png" : BASE_ADMIN . UPLOADS . $row_social['file']; ?>"
+                      alt="<?= $row_social['name'] ?>" />
                   </a>
                 <?php endwhile; ?>
               <?php endif; ?>

@@ -1,61 +1,67 @@
 <div class="wrap-content">
-  <?php $show_danhmuc = $danhmuc->show_danhmuc_noibat('hienthi', 'noibat'); ?>
+  <?php $show_danhmuc = $functions->show_data([
+    'table' => 'tbl_danhmuc',
+    'status' => 'hienthi,noibat'
+  ]); ?>
+
   <?php if ($show_danhmuc): ?>
-    <?php while ($resule_danhmuc = $show_danhmuc->fetch_assoc()) : ?>
+    <?php while ($danhmuc_lv1 = $show_danhmuc->fetch_assoc()): ?>
       <?php
-      $id_list = $resule_danhmuc['id'];
-      $show_sanpham = $sanpham->show_sanpham_tc($id_list);
-      if ($show_sanpham && $show_sanpham->num_rows > 0):
+      $id_list = $danhmuc_lv1['id'];
+      $sp_all = $functions->show_data([
+        'table' => 'tbl_sanpham',
+        'status' => 'hienthi',
+        'id_list' => $id_list
+      ]);
+      $danhmuc_c2 = $functions->show_data([
+        'table' => 'tbl_danhmuc_c2',
+        'status' => 'hienthi',
+        'id_list' => $id_list
+      ]);
       ?>
+
+      <?php if ($sp_all && $sp_all->num_rows > 0): ?>
         <div class="box-list" data-aos="fade-up" data-aos-duration="1000">
           <div class="title-list">
-            <h2><span class="text-split"><?= $resule_danhmuc['namevi'] ?></span></h2>
+            <h2><span class="text-split"><?= $danhmuc_lv1['namevi'] ?></span></h2>
             <div class="box-tab-cat">
               <ul class="tab-cat" data-aos="fade-left" data-aos-duration="500">
-                <li>
-                  <a href="#" class="tab-cat-link active" data-tab="tab-all-<?= $id_list ?>">Tất cả</a>
-                </li>
-                <?php $show_danhmuc_c2 = $danhmuc->show_danhmuc_c2_index($id_list); ?>
-                <?php if ($show_danhmuc_c2): ?>
-                  <?php while ($resule_danhmuc_c2 = $show_danhmuc_c2->fetch_assoc()) : ?>
+                <li><a href="#" class="tab-cat-link active" data-tab="tab-all-<?= $id_list ?>">Tất cả</a></li>
+                <?php if ($danhmuc_c2): ?>
+                  <?php while ($dm_c2 = $danhmuc_c2->fetch_assoc()): ?>
                     <li>
-                      <a href="#" class="tab-cat-link" data-tab="tab-<?= $resule_danhmuc_c2['id'] ?>">
-                        <?= $resule_danhmuc_c2['namevi'] ?>
-                      </a>
+                      <a href="#" class="tab-cat-link" data-tab="tab-<?= $dm_c2['id'] ?>"><?= $dm_c2['namevi'] ?></a>
                     </li>
                   <?php endwhile; ?>
                 <?php endif; ?>
               </ul>
-              <a class="viewlist" href="danh-muc/<?= $resule_danhmuc['slugvi'] ?>">Xem tất cả</a>
+              <a class="viewlist" href="<?= $danhmuc_lv1['slugvi'] ?>">Xem tất cả</a>
             </div>
           </div>
-          <div class="paging-product-list paging-product-list-1 tabcontent show-fade" id="tab-all-<?= $id_list ?>"
-            style="display: block;">
+
+          <!-- Tab Tất cả -->
+          <div class="paging-product-list tabcontent show-fade" id="tab-all-<?= $id_list ?>" style="display: block;">
             <div class="grid-product">
-              <?php while ($sp = $show_sanpham->fetch_assoc()) : ?>
+              <?php while ($sp = $sp_all->fetch_assoc()): ?>
                 <?php
                 $slug = $sp['slugvi'];
                 $name = htmlspecialchars($sp['namevi']);
-                $img = !empty($sp['file'])
-                  ? BASE_ADMIN . UPLOADS . $sp['file']
-                  : NO_IMG;
+                $img = !empty($sp['file']) ? BASE_ADMIN . UPLOADS . $sp['file'] : NO_IMG;
                 $sale = $sp['sale_price'] ?? '';
                 $regular = $sp['regular_price'] ?? '';
                 $views = $sp['views'] ?? 0;
                 ?>
                 <div class="item-product">
                   <a href="san-pham/<?= $slug ?>">
-                    <div class="images">
-                      <img src="<?= $img ?>" alt="<?= $name ?>" title="<?= $name ?>" class="w-100" />
-                    </div>
+                    <div class="images"><img src="<?= $img ?>" alt="<?= $name ?>" title="<?= $name ?>" class="w-100" /></div>
                     <div class="content">
                       <div class="title">
                         <h3><?= $name ?></h3>
                         <p class="price-product">
-                          <?php if (!empty($sale) && !empty($regular)): ?>
+                          <?php if ($sale && $regular): ?>
                             <span class="price-new"><?= $sale ?>₫</span>
                             <span class="price-old"><?= $regular ?>₫</span>
-                          <?php elseif (!empty($regular)): ?>
+                          <?php elseif ($regular): ?>
                             <span class="price-new"><?= $regular ?>₫</span>
                           <?php else: ?>
                             <span class="price-new">Liên hệ</span>
@@ -72,40 +78,47 @@
               <?php endwhile; ?>
             </div>
           </div>
+
+          <!-- Tab theo từng danh mục cấp 2 -->
           <?php
-          $show_danhmuc_c2 = $danhmuc->show_danhmuc_c2_index($id_list);
-          if ($show_danhmuc_c2):
-            while ($resule_danhmuc_c2 = $show_danhmuc_c2->fetch_assoc()) :
-              $id_c2 = $resule_danhmuc_c2['id'];
-              $show_sanpham_c2 = $sanpham->show_sanpham_tc_c2($id_c2);
+          $danhmuc_c2 = $functions->show_data([
+            'table' => 'tbl_danhmuc_c2',
+            'status' => 'hienthi',
+            'id_list' => $id_list
+          ]);
+          if ($danhmuc_c2):
+            while ($dm_c2 = $danhmuc_c2->fetch_assoc()):
+              $id_cat = $dm_c2['id'];
+              $sp_cat = $functions->show_data([
+                'table' => 'tbl_sanpham',
+                'status' => 'hienthi',
+                'id_list' => $id_list,
+                'id_cat' => $id_cat
+              ]);
           ?>
-              <div class="paging-product-list paging-product-list-1 tabcontent" id="tab-<?= $id_c2 ?>" style="display: none;">
+              <div class="paging-product-list tabcontent" id="tab-<?= $id_cat ?>" style="display: none;">
                 <div class="grid-product">
-                  <?php if ($show_sanpham_c2 && $show_sanpham_c2->num_rows > 0): ?>
-                    <?php while ($sp = $show_sanpham_c2->fetch_assoc()) : ?>
+                  <?php if ($sp_cat && $sp_cat->num_rows > 0): ?>
+                    <?php while ($sp = $sp_cat->fetch_assoc()): ?>
                       <?php
                       $slug = $sp['slugvi'];
                       $name = htmlspecialchars($sp['namevi']);
-                      $img = !empty($sp['file'])
-                        ? BASE_ADMIN . UPLOADS . $sp['file']
-                        : NO_IMG;
+                      $img = !empty($sp['file']) ? BASE_ADMIN . UPLOADS . $sp['file'] : NO_IMG;
                       $sale = $sp['sale_price'] ?? '';
                       $regular = $sp['regular_price'] ?? '';
                       $views = $sp['views'] ?? 0;
                       ?>
                       <div class="item-product">
                         <a href="san-pham/<?= $slug ?>">
-                          <div class="images">
-                            <img src="<?= $img ?>" alt="<?= $name ?>" title="<?= $name ?>" class="w-100" />
-                          </div>
+                          <div class="images"><img src="<?= $img ?>" alt="<?= $name ?>" title="<?= $name ?>" class="w-100" /></div>
                           <div class="content">
                             <div class="title">
                               <h3><?= $name ?></h3>
                               <p class="price-product">
-                                <?php if (!empty($sale) && !empty($regular)): ?>
+                                <?php if ($sale && $regular): ?>
                                   <span class="price-new"><?= $sale ?>₫</span>
                                   <span class="price-old"><?= $regular ?>₫</span>
-                                <?php elseif (!empty($regular)): ?>
+                                <?php elseif ($regular): ?>
                                   <span class="price-new"><?= $regular ?>₫</span>
                                 <?php else: ?>
                                   <span class="price-new">Liên hệ</span>

@@ -72,38 +72,7 @@ class danhgia
       $result = $this->db->insert($query);
       $msg = $result ? "Thêm dữ liệu thành công" : "Thêm dữ liệu thất bại";
     }
-
-    // Chuyển hướng
     $this->fn->transfer($msg, "index.php?page=danhgia_list", $result);
   }
-
-
-  public function get_id_danhgia($id)
-  {
-    $id = mysqli_real_escape_string($this->db->link, $id);
-    $query = "SELECT * FROM tbl_danhgia WHERE id = '$id' LIMIT 1";
-    $result = $this->db->select($query);
-    return $result;
-  }
-
-  public function show_danhgia($records_per_page, $current_page, $only_show = false)
-  {
-    $records_per_page = max(1, (int)$records_per_page);
-    $current_page = max(1, (int)$current_page);
-    $offset = ($current_page - 1) * $records_per_page;
-
-    $where = [];
-    if ($only_show) {
-      $where[] = "FIND_IN_SET('hienthi', status)";
-    }
-    $query = "SELECT * FROM tbl_danhgia";
-    if (!empty($where)) {
-      $query .= " WHERE " . implode(" AND ", $where);
-    }
-
-    $query .= " ORDER BY numb, id DESC LIMIT $records_per_page OFFSET $offset";
-    return $this->db->select($query);
-  }
 }
-
 ?>

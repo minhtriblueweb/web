@@ -1,59 +1,48 @@
 <?php
 $slug = $_GET['slug'] ?? '';
 
-if (empty($slug)) {
-  http_response_code(404);
-  include '404.php';
-  exit();
-}
+if (empty($slug)) $functions->abort_404();
 
-// Lấy thông tin danh mục cấp 2 + cha (JOIN sẵn)
-$data = $danhmuc->get_danhmuc_c2_with_parent($slug);
-
-if (!$data || empty($data['id'])) {
-  http_response_code(404);
-  include '404.php';
-  exit();
-}
-
-// Cấp 2
-$dm_c2 = $data;
-
+// Lấy thông tin danh mục cấp 2 và cấp 1 (JOIN)
+$dm_c2 = $danhmuc->get_danhmuc_c2_with_parent_or_404($slug);
 // Cấp 1 (cha)
 $dm_c1 = [
-  'namevi' => $data['name_lv1'] ?? '',
-  'slugvi' => $data['slug_lv1'] ?? '',
-  'titlevi' => $data['title_lv1'] ?? '',
-  'keywordsvi' => $data['keywords_lv1'] ?? '',
-  'descriptionvi' => $data['description_lv1'] ?? ''
+  'namevi' => $dm_c2['name_lv1'] ?? '',
+  'slugvi' => $dm_c2['slug_lv1'] ?? '',
+  'titlevi' => $dm_c2['title_lv1'] ?? '',
+  'keywordsvi' => $dm_c2['keywords_lv1'] ?? '',
+  'descriptionvi' => $dm_c2['description_lv1'] ?? ''
 ];
-
-// Sidebar: danh sách danh mục cấp 2 thuộc cấp 1
+// Sidebar: danh sách danh mục cấp 2 thuộc cùng cấp 1
 $id_list = (int)$dm_c2['id_list'];
-$list_danhmuc_c2 = $danhmuc->show_danhmuc_c2_index($id_list);
+$list_danhmuc_c2 = $functions->show_data([
+  'table' => 'tbl_danhmuc_c2',
+  'status' => 'hienthi',
+  'id_list' => $id_list
+]);
 
-// Phân trang
-$records_per_page = 1;
+// Phân trang sản phẩm
+$records_per_page = 20;
 $current_page = max(1, (int)($_GET['page'] ?? 1));
 
-$total_records = $sanpham->count_sanpham('', $dm_c2['id']);
+$total_records = $functions->count_data([
+  'table' => 'tbl_sanpham',
+  'status' => 'hienthi',
+  'id_cat' => $dm_c2['id']
+]);
+
 $total_pages = max(1, ceil($total_records / $records_per_page));
 
-$get_sp = $sanpham->show_sanpham_pagination(
-  $records_per_page,
-  $current_page,
-  'hienthi',
-  $id_list = '',
-  $dm_c2['id'],
-  $limit = ''
-);
-
+$get_sp = $functions->show_data([
+  'table' => 'tbl_sanpham',
+  'status' => 'hienthi',
+  'id_cat' => $dm_c2['id'],
+  'records_per_page' => $records_per_page,
+  'current_page' => $current_page
+]);
 // SEO
-$seo['title'] = !empty($dm_c2['titlevi']) ? $dm_c2['titlevi'] : $dm_c2['namevi'];
-$seo['keywords'] = !empty($dm_c2['keywordsvi']) ? $dm_c2['keywordsvi'] : '';
-$seo['description'] = !empty($dm_c2['descriptionvi']) ? $dm_c2['descriptionvi'] : '';
-$seo['url'] = BASE . $dm_c2['slugvi'];
-$seo['image'] = !empty($dm_c2['file']) ? BASE_ADMIN . UPLOADS . $dm_c2['file'] : '';
+$seo = array_merge($seo, array_filter($functions->get_seo_data($dm_c2), fn($v) => $v !== null && $v !== ''));
+
 ?>
 
 <div class="wrap-main wrap-home w-clear">
@@ -121,7 +110,7 @@ $seo['image'] = !empty($dm_c2['file']) ? BASE_ADMIN . UPLOADS . $dm_c2['file'] :
             $views = $sp['views'] ?? 0;
             ?>
             <div class="item-product" data-aos="fade-up" data-aos-duration="1000">
-              <a href="san-pham/<?= $slug ?>">
+              <a href="<?= $slug ?>">
                 <div class="images">
                   <img src="<?= $img ?>" alt="<?= $name ?>" title="<?= $name ?>" class="w-100" loading="lazy" />
                 </div>

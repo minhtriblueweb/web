@@ -15,20 +15,6 @@ class slideshow
     $this->fm = new Format();
   }
 
-  public function xoanhieu_slideshow($listid)
-  {
-    $query = "DELETE FROM tbl_slideshow WHERE id IN ($listid)";
-    $result = $this->db->delete($query);
-    if ($result) {
-      $stt = "success";
-      $url = "slideshow";
-      header('Location: transfer.php?stt=' . urlencode($stt) . '&url=' . urlencode($url));
-    } else {
-      $alert = "Lỗi thao tác !";
-      return $alert;
-    }
-  }
-
   public function update_slideshow($data, $files, $id)
   {
     $name = mysqli_real_escape_string($this->db->link, $data['name']);
@@ -83,35 +69,6 @@ class slideshow
   {
     $id = mysqli_real_escape_string($this->db->link, $id);
     $query = "SELECT * FROM tbl_slideshow WHERE id = '$id' LIMIT 1";
-    $result = $this->db->select($query);
-    return $result;
-  }
-
-  public function del_slideshow($id)
-  {
-    $del_file_name = "SELECT file FROM tbl_slideshow WHERE id='$id'";
-    $delta = $this->db->select($del_file_name);
-    $string = "";
-    while ($rowData = $delta->fetch_assoc()) {
-      $string .= $rowData['file'];
-    }
-    $delLink = "uploads/" . $string;
-    unlink("$delLink");
-    $query = "DELETE FROM tbl_slideshow WHERE id = '$id'";
-    $result = $this->db->delete($query);
-    if ($result) {
-      $stt = "success";
-      $url = "slideshow";
-      header('Location: transfer.php?stt=' . urlencode($stt) . '&url=' . urlencode($url));
-    } else {
-      $alert = "Lỗi thao tác !";
-      return $alert;
-    }
-  }
-
-  public function show_slideshow()
-  {
-    $query = "SELECT * FROM tbl_slideshow ORDER BY numb,id DESC";
     $result = $this->db->select($query);
     return $result;
   }

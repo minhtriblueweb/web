@@ -1,9 +1,11 @@
 <?php
 $message = '';
 $name = 'tiêu chí';
+$redirectUrl = 'tieuchi_list';
+$table = "tbl_tieuchi";
 $id = $_GET['id'] ?? null;
 if (!empty($id)) {
-  $get_id = $tieuchi->get_id_tieuchi($id);
+  $get_id = $functions->get_id($table, $id);
   if ($get_id) {
     $result = $get_id->fetch_assoc();
   }
@@ -16,7 +18,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && (isset($_POST['add']) || isset($_PO
 <?php
 $breadcrumb = [
   ['label' => 'Bảng điều khiển', 'link' => 'index.php'],
-  ['label' => $name, 'link' => 'tieuchi_list'],
+  ['label' => $name, 'link' => $redirectUrl],
   ['label' => !empty($id) ? 'Cập nhật ' . $name : 'Thêm mới ' . $name]
 ];
 include 'templates/breadcrumb.php';

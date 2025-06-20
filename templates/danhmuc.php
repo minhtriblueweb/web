@@ -1,5 +1,7 @@
-<?php if ($show_danhmuc = $danhmuc->show_danhmuc_c2('tbl_danhmuc_c2')): ?>
-  <?php if ($show_danhmuc->num_rows > 0): ?>
+<?php if ($show_danhmuc = $functions->show_data([
+  'table' => 'tbl_danhmuc_c2',
+  'status' => 'hienthi,noibat'
+])): ?> <?php if ($show_danhmuc->num_rows > 0): ?>
     <div class="wrap-product-list">
       <div class="wrap-content">
         <div class="title-list-hot">

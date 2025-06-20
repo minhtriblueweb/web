@@ -137,15 +137,6 @@ class news
     $result = $this->db->select($query);
     return $result;
   }
-
-  public function get_id_news($id)
-  {
-    $id = mysqli_real_escape_string($this->db->link, $id);
-    $query = "SELECT * FROM tbl_news WHERE id = '$id' LIMIT 1";
-    $result = $this->db->select($query);
-    return $result;
-  }
-
   public function show_news($records_per_page, $current_page, $hienthi = '', $type = '')
   {
     $type = mysqli_real_escape_string($this->db->link, $type);

@@ -44,32 +44,42 @@ define('BASE', $config['base']);
 define('BASE_ADMIN', $config['baseAdmin']);
 define('NO_IMG', BASE_ADMIN . 'assets/img/noimage.png');
 
-
 $get_setting = $setting->get_setting();
 if ($get_setting) {
-  $result_setting = $get_setting->fetch_assoc();
+  $row_st = $get_setting->fetch_assoc();
 }
-$seo = array(
-  'favicon' => isset($result_setting['favicon']) ? BASE_ADMIN . UPLOADS . $result_setting['favicon'] : '',
-  'title' => isset($result_setting['web_name']) ? htmlspecialchars($result_setting['web_name']) : '',
-  'keywords' => '',
-  'description' => isset($result_setting['descvi']) ? htmlspecialchars($result_setting['descvi']) : '',
-  'geo' => isset($result_setting['coords']) ? htmlspecialchars($result_setting['coords']) : '',
-  'web_name' => isset($result_setting['web_name']) ? htmlspecialchars($result_setting['web_name']) : '',
-  'email' => isset($result_setting['email']) ? htmlspecialchars($result_setting['email']) : '',
-  'url' => BASE,
-  'image' => isset($result_setting['logo']) ? BASE_ADMIN . UPLOADS . $result_setting['logo'] : '',
-);
 
-$hotline = isset($result_setting['hotline']) ? htmlspecialchars($result_setting['hotline']) : '';
-$web_name = isset($result_setting['web_name']) ? htmlspecialchars($result_setting['web_name']) : '';
-$introduction = isset($result_setting['introduction']) ? htmlspecialchars($result_setting['introduction']) : '';
-$logo = isset($result_setting['logo']) ? BASE_ADMIN . UPLOADS . $result_setting['logo'] : '';
-$worktime = isset($result_setting['worktime']) ? htmlspecialchars($result_setting['worktime']) : '';
-$descvi = isset($result_setting['descvi']) ? htmlspecialchars($result_setting['descvi']) : '';
-$client_support = isset($result_setting['client_support']) ? $result_setting['client_support'] : '';
-$support = isset($result_setting['support']) ? $result_setting['support'] : '';
-$copyright = isset($result_setting['copyright']) ? htmlspecialchars($result_setting['copyright']) : '';
-$bodyjs = isset($result_setting['bodyjs']) ? $result_setting['bodyjs'] : '';
-$headjs = isset($result_setting['headjs']) ? $result_setting['headjs'] : '';
-$analytics = isset($result_setting['analytics']) ? $result_setting['analytics'] : '';
+function get_setting_value($key, $htmlspecialchars = true, $default = '')
+{
+  global $row_st;
+  if (isset($row_st[$key])) {
+    return $htmlspecialchars ? htmlspecialchars($row_st[$key]) : $row_st[$key];
+  }
+  return $default;
+}
+
+$default_seo = [
+  'favicon'     => !empty($row_st['favicon']) ? BASE_ADMIN . UPLOADS . $row_st['favicon'] : '',
+  'title'       => get_setting_value('web_name'),
+  'keywords'    => '',
+  'description' => get_setting_value('descvi'),
+  'geo'         => get_setting_value('coords'),
+  'web_name'    => get_setting_value('web_name'),
+  'email'       => get_setting_value('email'),
+  'url'         => BASE,
+  'image'       => !empty($row_st['logo']) ? BASE_ADMIN . UPLOADS . $row_st['logo'] : ''
+];
+
+// Các biến khác
+$hotline         = get_setting_value('hotline');
+$web_name        = get_setting_value('web_name');
+$introduction    = get_setting_value('introduction');
+$logo            = !empty($row_st['logo']) ? BASE_ADMIN . UPLOADS . $row_st['logo'] : '';
+$worktime        = get_setting_value('worktime');
+$descvi          = get_setting_value('descvi');
+$client_support  = get_setting_value('client_support', false);
+$support         = get_setting_value('support', false);
+$copyright       = get_setting_value('copyright');
+$bodyjs          = get_setting_value('bodyjs', false);
+$headjs          = get_setting_value('headjs', false);
+$analytics       = get_setting_value('analytics', false);

@@ -15,44 +15,6 @@ class sanpham
     $this->fn = new functions();
   }
 
-  public function show_sanpham_pagination($records_per_page, $current_page, $hienthi = '', $id_list = '', $id_cat = '', $limit = 0)
-  {
-    // Escape các giá trị truyền vào
-    $hienthi = mysqli_real_escape_string($this->db->link, $hienthi);
-    $id_list = mysqli_real_escape_string($this->db->link, $id_list);
-    $id_cat = mysqli_real_escape_string($this->db->link, $id_cat);
-
-    // Bắt đầu query
-    $query = "SELECT * FROM tbl_sanpham WHERE 1";
-
-    // Thêm điều kiện nếu có
-    if ($hienthi !== '') {
-      $query .= " AND hienthi = '$hienthi'";
-    }
-
-    if ($id_list !== '') {
-      $query .= " AND id_list = '$id_list'";
-    }
-
-    if ($id_cat !== '') {
-      $query .= " AND id_cat = '$id_cat'";
-    }
-
-    // Thứ tự sắp xếp
-    $query .= " ORDER BY numb, id DESC";
-
-    // Xử lý phân trang hoặc limit
-    if ($limit > 0) {
-      $query .= " LIMIT $limit";
-    } else {
-      $offset = ((int)$current_page - 1) * (int)$records_per_page;
-      $query .= " LIMIT $records_per_page OFFSET $offset";
-    }
-
-    $result = $this->db->select($query);
-    return $result;
-  }
-
   public function total_pages_sanpham_lienquan($id, $id_cat, $limit)
   {
     $id_cat = mysqli_real_escape_string($this->db->link, $id_cat);
@@ -169,14 +131,6 @@ class sanpham
     return $result;
   }
 
-  public function get_id_sanpham($id)
-  {
-    $id = mysqli_real_escape_string($this->db->link, $id);
-    $query = "SELECT * FROM tbl_sanpham WHERE id = '$id' LIMIT 1";
-    $result = $this->db->select($query);
-    return $result;
-  }
-
   public function update_views_by_slug($slug)
   {
     $query = "SELECT * FROM tbl_sanpham WHERE slugvi = '$slug'";
@@ -226,68 +180,6 @@ class sanpham
       return $row['namevi'] ?? '';
     }
     return '';
-  }
-
-  public function show_sanpham($records_per_page, $current_page, $hienthi = '')
-  {
-    if (!empty($hienthi)) {
-      $query = "SELECT * FROM tbl_sanpham WHERE hienthi = '$hienthi' ORDER BY numb,id ASC";
-      $result = $this->db->select($query);
-      return $result;
-    } else {
-      $offset = ((int)$current_page - 1) * (int)$records_per_page;
-      $query = "SELECT * FROM tbl_sanpham ORDER BY numb,id DESC LIMIT $records_per_page OFFSET $offset";
-      $result = $this->db->select($query);
-      return $result;
-    }
-  }
-
-  public function show_sanpham_tc($id_list = '')
-  {
-    $query = "SELECT * FROM tbl_sanpham WHERE id_list = '$id_list' AND hienthi = 'hienthi' ORDER BY numb,id DESC LIMIT 10";
-    $result = $this->db->select($query);
-    return $result;
-  }
-
-  public function show_sanpham_tc_c2($id_c2)
-  {
-    $query = "SELECT * FROM tbl_sanpham WHERE id_cat = '$id_c2' AND hienthi = 'hienthi' ORDER BY numb,id DESC LIMIT 10";
-    $result = $this->db->select($query);
-    return $result;
-  }
-
-  public function show_sanpham_cap_1($id_list = '')
-  {
-    $query = "SELECT * FROM tbl_sanpham WHERE id_list = '$id_list' AND hienthi = 'hienthi' ORDER BY numb,id DESC";
-    $result = $this->db->select($query);
-    return $result;
-  }
-
-  public function count_sanpham($id_list = '', $id_cat = '')
-  {
-    $id_list = mysqli_real_escape_string($this->db->link, $id_list);
-    $id_cat = mysqli_real_escape_string($this->db->link, $id_cat);
-    $query = "SELECT COUNT(*) as total FROM tbl_sanpham WHERE hienthi = 'hienthi'";
-    if ($id_list !== '') {
-      $query .= " AND id_list = '$id_list'";
-    }
-    if ($id_cat !== '') {
-      $query .= " AND id_cat = '$id_cat'";
-    }
-    $result = $this->db->select($query);
-    if ($result) {
-      $row = $result->fetch_assoc();
-      return $row['total'];
-    }
-    return 0;
-  }
-
-
-  public function show_sanpham_c2_tc($id_cat = '')
-  {
-    $query = "SELECT * FROM tbl_sanpham WHERE id_cat = '$id_cat' AND hienthi = 'hienthi' ORDER BY numb,id DESC";
-    $result = $this->db->select($query);
-    return $result;
   }
 
   public function save_sanpham($data, $files, $id = null)

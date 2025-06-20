@@ -3,18 +3,7 @@ include_once 'config/autoload.php';
 include_once 'lib/router.php';
 
 // SEO mặc định
-$seo = [
-  'title' => $web_name,
-  'keywords' => $seo['keywords'],
-  'description' => $seo['description'],
-  'favicon' => $seo['favicon'],
-  'url' => $seo['url'],
-  'image' => $seo['image'],
-  'web_name' => $web_name,
-  'email' => $seo['email'],
-  'geo' => $seo['geo']
-];
-
+$seo = $default_seo;
 // Cho phép các trang ghi đè biến SEO
 $page_file = 'pages/' . $page;
 

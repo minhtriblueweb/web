@@ -1,53 +1,36 @@
-<?php include 'inc/header.php'; ?>
-<?php include 'inc/sidebar.php'; ?>
 <?php
-if (isset($_GET['id']) && $_GET['id'] != NULL) {
-  $id = $_GET['id'];
-  $get_id = $danhgia->get_id_danhgia($id);
-  if ($get_id) {
+$message = '';
+$name = 'đánh giá khách hàng';
+$table = "tbl_danhgia";
+$redirectUrl = 'danhgia_list';
+$id = $_GET['id'] ?? null;
+if (!empty($id)) {
+  $get_id = $functions->get_id($table, $id);
+  if ($get_id && $get_id->num_rows > 0) {
     $result = $get_id->fetch_assoc();
   }
-  if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['edit'])) {
-    $update = $danhgia->update_danhgia($_POST, $_FILES, $id);
-  }
 }
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add'])) {
-  $data = array($_POST);
-  // echo "<pre>";
-  // print_r($data);
-  // echo "</pre>";
-  $insert = $danhgia->insert_danhgia($_POST, $_FILES);
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && (isset($_POST['add']) || isset($_POST['edit']))) {
+  $message = $danhgia->save_danhgia($_POST, $_FILES, $id);
 }
 ?>
 <!-- Main content -->
-<section class="content-header text-sm">
-  <div class="container-fluid">
-    <div class="row">
-      <ol class="breadcrumb float-sm-left">
-        <li class="breadcrumb-item"><a href="index.php" title="Bảng điều khiển">Bảng điều khiển</a></li>
-        <li class="breadcrumb-item active">
-          <?php echo !empty($id) ? "Chỉnh sửa" : "Thêm mới"; ?> Đánh giá khách hàng
-        </li>
-      </ol>
-    </div>
-  </div>
-</section>
+<?php
+$breadcrumb = [
+  ['label' => 'Bảng điều khiển', 'link' => 'index.php'],
+  ['label' => $name, 'link' => $redirectUrl],
+  ['label' => !empty($id) ? 'Cập nhật ' . $name : 'Thêm mới ' . $name]
+];
+include 'templates/breadcrumb.php';
+?>
 <section class="content">
   <form class="validation-form" novalidate method="post" action="" enctype="multipart/form-data">
-    <div class="card-footer text-sm sticky-top">
-      <button name="<?php echo !empty($id) ? "edit" : "add"; ?>" type="submit"
-        class="btn btn-sm bg-gradient-primary submit-check" disabled><i class="far fa-save mr-2"></i>Lưu</button>
-      <button type="submit" class="btn btn-sm bg-gradient-success submit-check" name="save-here" disabled><i
-          class="far fa-save mr-2"></i>Lưu tại trang</button>
-      <button type="reset" class="btn btn-sm bg-gradient-secondary"><i class="fas fa-redo mr-2"></i>Làm lại</button>
-      <a class="btn btn-sm bg-gradient-danger" href="danhgia.php" title="Thoát"><i
-          class="fas fa-sign-out-alt mr-2"></i>Thoát</a>
-    </div>
+    <?php include 'templates/act.php'; ?>
     <div class="row">
       <div class="col-xl-8">
         <div class="card card-primary card-outline text-sm">
           <div class="card-header">
-            <h3 class="card-title">Nội dung</h3>
+            <h3 class="card-title">Nội dung <?= $name ?></h3>
             <div class="card-tools">
               <button type="button" class="btn btn-tool" data-card-widget="collapse"><i
                   class="fas fa-minus"></i></button>
@@ -69,17 +52,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add'])) {
                     <div class="form-group">
                       <label for="name">Tiêu đề:</label>
                       <input type="text" class="form-control for-seo text-sm" name="name" id="name"
-                        placeholder="Tiêu đề" value="<?php echo $result['name'] ?? ""; ?>" required>
+                        placeholder="Tiêu đề" value="<?= $_POST['name'] ?? ($result['name'] ?? "") ?>" required>
                     </div>
                     <div class="form-group">
                       <label for="address">Địa chỉ:</label>
                       <input type="text" class="form-control text-sm" name="address" id="address" placeholder="Địa chỉ"
-                        value="<?php echo $result['address'] ?? ""; ?>">
+                        value="<?= $_POST['address'] ?? ($result['address'] ?? "") ?>">
                     </div>
                     <div class="form-group">
                       <label for="desc">Mô tả:</label>
                       <textarea class="form-control for-seo text-sm" name="desc" id="desc" rows="5"
-                        placeholder="Mô tả"><?php echo $result['desc'] ?? ""; ?></textarea>
+                        placeholder="Mô tả"><?= $_POST['desc'] ?? ($result['desc'] ?? "") ?></textarea>
                     </div>
                   </div>
                 </div>
@@ -100,9 +83,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add'])) {
           <div class="card-body">
             <div class="photoUpload-zone">
               <div class="photoUpload-detail" id="photoUpload-preview">
-                <img class='rounded' src='<?php
-                                          echo empty($result['file']) ? $config['baseAdmin'] . "assets/img/noimage.png" : $config['baseAdmin'] . "uploads/" . $result['file'];
-                                          ?>' alt='Alt Photo' />
+                <img src="<?= empty($result['file']) ? NO_IMG : BASE_ADMIN . UPLOADS . $result['file']; ?>"
+                  alt='Alt Photo' class='rounded' />
               </div>
               <label class="photoUpload-file" id="photo-zone" for="file-zone">
                 <input type="file" name="file" id="file-zone">
@@ -111,7 +93,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add'])) {
                 <p class="photoUpload-or">hoặc</p>
                 <p class="photoUpload-choose btn btn-sm bg-gradient-success">Chọn hình</p>
               </label>
-              <div class="photoUpload-dimension">Width: 30 px - Height: 30 px (.jpg|.gif|.png|.jpeg|.gif|.webp|.WEBP)
+              <div class="photoUpload-dimension">(.jpg|.gif|.png|.jpeg|.gif|.webp|.WEBP)
               </div>
             </div>
           </div>
@@ -120,29 +102,39 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add'])) {
     </div>
     <div class="card card-primary card-outline text-sm">
       <div class="card-header">
-        <h3 class="card-title">Thông tin</h3>
+        <h3 class="card-title">Thông tin <?= $name ?></h3>
         <div class="card-tools">
           <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
         </div>
       </div>
       <div class="card-body">
         <div class="form-group">
-          <div class="form-group d-inline-block mb-2 mr-2">
-            <label for="hienthi-checkbox" class="d-inline-block align-middle mb-0 mr-2">Hiển thị:</label>
-            <div class="custom-control custom-checkbox d-inline-block align-middle">
-              <input type="checkbox" class="custom-control-input hienthi-checkbox" name="hienthi" id="hienthi-checkbox"
-                checked value="hienthi" <?php echo $result['numb'] ?? "checked"; ?>>
-              <label for="hienthi-checkbox" class="custom-control-label"></label>
+          <?php
+          $checkboxes = [
+            'hienthi' => 'Hiển thị',
+          ];
+          ?>
+          <?php foreach ($checkboxes as $check => $label): ?>
+            <div class="form-group d-inline-block mb-2 mr-2">
+              <label for="<?= $check ?>-checkbox" class="d-inline-block align-middle mb-0 mr-2"><?= $label ?>:</label>
+              <div class="custom-control custom-checkbox d-inline-block align-middle">
+                <input <?= $functions->is_checked($check, $result ?? null, $id ?? null) ?>
+                  type="checkbox"
+                  class="custom-control-input <?= $check ?>-checkbox"
+                  name="<?= $check ?>"
+                  id="<?= $check ?>-checkbox"
+                  value="<?= $check ?>" />
+                <label for="<?= $check ?>-checkbox" class="custom-control-label"></label>
+              </div>
             </div>
-          </div>
+          <?php endforeach; ?>
         </div>
         <div class="form-group">
           <label for="numb" class="d-inline-block align-middle mb-0 mr-2">Số thứ tự:</label>
           <input type="number" class="form-control form-control-mini d-inline-block align-middle text-sm" min="0"
-            name="numb" id="numb" placeholder="Số thứ tự" value="<?php echo $result['numb'] ?? "1"; ?>">
+            name="numb" id="numb" placeholder="Số thứ tự" value="<?= $_POST['numb'] ?? (!empty($id) ? $result['numb'] : '1') ?>">
         </div>
       </div>
     </div>
   </form>
 </section>
-<?php include 'inc/footer.php'; ?>

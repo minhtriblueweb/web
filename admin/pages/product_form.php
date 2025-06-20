@@ -3,14 +3,14 @@ $message = '';
 $name = 'sản phẩm';
 $redirectUrl = 'product_list';
 $table = 'tbl_sanpham';
-$show_danhmuc = $danhmuc->show_danhmuc('tbl_danhmuc');
+$show_danhmuc = $functions->show_data('tbl_danhmuc');
 $id = $_GET['id'] ?? null;
 if (!empty($id)) {
-  $get_id = $sanpham->get_id_sanpham($id);
+  $get_id = $functions->get_id($table, $id);
   if ($get_id) {
     $result = $get_id->fetch_assoc();
     $get_id_cap1 = $result['id_list'];
-    $show_danhmuc_c2 = $danhmuc->show_danhmuc_c2('tbl_danhmuc_c2', $get_id_cap1);
+    $show_danhmuc_c2 = $functions->show_data('tbl_danhmuc_c2');
   }
 }
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && (isset($_POST['add']) || isset($_POST['edit']))) {

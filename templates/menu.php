@@ -1,64 +1,74 @@
 <div class="menu">
   <div class="wrap-content d-flex flex-wrap justify-content-between align-items-center">
+    <!-- Menu bên trái: Danh mục sản phẩm -->
     <div class="menu-bar-left">
       <p class="title">DANH MỤC SẢN PHẨM</p>
-      <?php if ($show = $danhmuc->show_danhmuc_index('hienthi')): ?>
-        <?php if ($show->num_rows > 0): ?>
-          <div class="box-ul-left">
-            <ul>
-              <?php while ($dm = $show->fetch_assoc()): ?>
-                <?php
-                $c2 = $danhmuc->show_danhmuc_c2_index($dm['id']);
-                $has_sub = ($c2 && $c2->num_rows > 0);
-                ?>
-                <li>
-                  <a title="<?= $dm['namevi'] ?>" href="<?= $dm['slugvi'] ?>">
-                    <span class="scale-img">
-                      <img width="25"
-                        src="<?= empty($dm['file']) ? BASE_ADMIN . "assets/img/noimage.png" : BASE_ADMIN . UPLOADS . $dm['file']; ?>"
-                        alt="<?= $dm['namevi'] ?>" title="<?= $dm['namevi'] ?>" />
-                    </span>
-                    <?= $dm['namevi'] ?>
-                    <?= $has_sub ? '<i class="fa-solid fa-angle-right"></i>' : '' ?>
-                  </a>
-                  <?php if ($has_sub): ?>
-                    <div class="box-menu-cat-left">
-                      <ul>
-                        <?php while ($dm2 = $c2->fetch_assoc()): ?>
-                          <li><a class="transition" title="<?= $dm2['namevi'] ?>" href="<?= $dm2['slugvi'] ?>"><?= $dm2['namevi'] ?></a></li>
-                        <?php endwhile; ?>
-                      </ul>
-                    </div>
-                  <?php endif; ?>
-                </li>
-              <?php endwhile; ?>
-            </ul>
-          </div>
-        <?php endif; ?>
+      <?php
+      $danhmuc_lv1 = $functions->show_data([
+        'table' => 'tbl_danhmuc',
+        'status' => 'hienthi'
+      ]);
+      ?>
+      <?php if ($danhmuc_lv1 && $danhmuc_lv1->num_rows > 0): ?>
+        <div class="box-ul-left">
+          <ul>
+            <?php while ($dm = $danhmuc_lv1->fetch_assoc()): ?>
+              <?php
+              $danhmuc_lv2 = $functions->show_data([
+                'table' => 'tbl_danhmuc_c2',
+                'status' => 'hienthi',
+                'id_list' => $dm['id']
+              ]);
+              $has_sub = ($danhmuc_lv2 && $danhmuc_lv2->num_rows > 0);
+              ?>
+              <li>
+                <a title="<?= $dm['namevi'] ?>" href="<?= $dm['slugvi'] ?>">
+                  <span class="scale-img">
+                    <img width="25"
+                      src="<?= empty($dm['file']) ? NO_IMG : BASE_ADMIN . UPLOADS . $dm['file'] ?>"
+                      alt="<?= $dm['namevi'] ?>" title="<?= $dm['namevi'] ?>" />
+                  </span>
+                  <?= $dm['namevi'] ?>
+                  <?= $has_sub ? '<i class="fa-solid fa-angle-right"></i>' : '' ?>
+                </a>
+                <?php if ($has_sub): ?>
+                  <div class="box-menu-cat-left">
+                    <ul>
+                      <?php while ($dm2 = $danhmuc_lv2->fetch_assoc()): ?>
+                        <li>
+                          <a class="transition"
+                            title="<?= $dm2['namevi'] ?>"
+                            href="<?= $dm2['slugvi'] ?>">
+                            <?= $dm2['namevi'] ?>
+                          </a>
+                        </li>
+                      <?php endwhile; ?>
+                    </ul>
+                  </div>
+                <?php endif; ?>
+              </li>
+            <?php endwhile; ?>
+          </ul>
+        </div>
       <?php endif; ?>
     </div>
+
+    <!-- Menu ngang bên phải -->
     <ul class="menu-bar">
       <li>
         <a class="transition" href="./" title="Trang chủ">
           <i class="fa-solid fa-house"></i>
         </a>
       </li>
-      <li>
-        <a class="transition" href="gioi-thieu" title="Giới thiệu">Giới thiệu</a>
-      </li>
-      <li>
-        <a class="transition" href="mua-hang" title="Mua hàng">Mua hàng</a>
-      </li>
+      <li><a class="transition" href="gioi-thieu" title="Giới thiệu">Giới thiệu</a></li>
+      <li><a class="transition" href="mua-hang" title="Mua hàng">Mua hàng</a></li>
       <li><a class="transition" href="huong-dan-choi" title="Hướng dẫn chơi">Hướng dẫn chơi</a></li>
-      <li>
-        <a class="transition" href="tin-tuc" title="Tin tức">Tin tức</a>
-      </li>
-      <li>
-        <a class="transition" href="lien-he" title="Liên hệ">Liên hệ</a>
-      </li>
+      <li><a class="transition" href="tin-tuc" title="Tin tức">Tin tức</a></li>
+      <li><a class="transition" href="lien-he" title="Liên hệ">Liên hệ</a></li>
     </ul>
   </div>
 </div>
+
 <div class="menu-mobile">
   <div class="wrap-content d-flex flex-wrap justify-content-between align-items-center">
     <div class="box-banner">
@@ -90,13 +100,22 @@
     </li>
     <li>
       <a class="transition" href="san-pham" title="Sản phẩm">Sản phẩm</a>
-      <?php if ($show = $danhmuc->show_danhmuc_index('hienthi')): ?>
+      <?php
+      $menu_lv1 = $functions->show_data([
+        'table' => 'tbl_danhmuc',
+        'status' => 'hienthi'
+      ]);
+      ?>
+      <?php if ($menu_lv1 && $menu_lv1->num_rows > 0): ?>
         <ul>
-          <?php while ($dm = $show->fetch_assoc()): ?>
+          <?php while ($dm = $menu_lv1->fetch_assoc()): ?>
             <?php
-            $list_id = $dm['id'];
-            $sub = $danhmuc->show_danhmuc_c2_index($list_id);
-            $has_sub = ($sub && $sub->num_rows > 0);
+            $menu_lv2 = $functions->show_data([
+              'table' => 'tbl_danhmuc_c2',
+              'status' => 'hienthi',
+              'id_list' => $dm['id']
+            ]);
+            $has_sub = ($menu_lv2 && $menu_lv2->num_rows > 0);
             ?>
             <li>
               <a title="<?= $dm['namevi'] ?>" href="<?= $dm['slugvi'] ?>">
@@ -104,9 +123,9 @@
               </a>
               <?php if ($has_sub): ?>
                 <ul>
-                  <?php while ($dm2 = $sub->fetch_assoc()): ?>
+                  <?php while ($dm2 = $menu_lv2->fetch_assoc()): ?>
                     <li>
-                      <a title="<?= $dm2['namevi'] ?>" href="<?= $dm2['slugvi'] ?>/<?= $dm2['slugvi'] ?>">
+                      <a title="<?= $dm2['namevi'] ?>" href="<?= $dm['slugvi'] ?>/<?= $dm2['slugvi'] ?>">
                         <?= $dm2['namevi'] ?>
                       </a>
                     </li>
@@ -119,14 +138,8 @@
       <?php endif; ?>
     </li>
     <li><a class="transition" href="huong-dan-choi" title="Hướng dẫn chơi">Hướng dẫn chơi</a></li>
-    <li>
-      <a class="transition" href="tin-tuc" title="Tin tức">Tin tức</a>
-    </li>
-    <li>
-      <a class="transition" href="mua-hang" title="Mua hàng">Mua hàng</a>
-    </li>
-    <li>
-      <a class="transition" href="lien-he" title="Liên hệ">Liên hệ</a>
-    </li>
+    <li><a class="transition" href="tin-tuc" title="Tin tức">Tin tức</a></li>
+    <li><a class="transition" href="mua-hang" title="Mua hàng">Mua hàng</a></li>
+    <li><a class="transition" href="lien-he" title="Liên hệ">Liên hệ</a></li>
   </ul>
 </nav>

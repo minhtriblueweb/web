@@ -15,52 +15,32 @@ class danhmuc
     $this->fn = new functions();
   }
 
-  public function get_danhmuc_c2_with_parent($slug)
+  public function get_danhmuc_c2_with_parent_or_404($slug)
   {
     $slug = mysqli_real_escape_string($this->db->link, $slug);
 
     $query = "
-        SELECT
-            c2.*,
-            c1.namevi AS name_lv1,
-            c1.slugvi AS slug_lv1,
-            c1.titlevi AS title_lv1,
-            c1.keywordsvi AS keywords_lv1,
-            c1.descriptionvi AS description_lv1
-        FROM tbl_danhmuc_c2 c2
-        JOIN tbl_danhmuc c1 ON c2.id_list = c1.id
-        WHERE c2.slugvi = '$slug'
-        LIMIT 1
-    ";
+          SELECT
+              c2.*,
+              c1.namevi AS name_lv1,
+              c1.slugvi AS slug_lv1,
+              c1.titlevi AS title_lv1,
+              c1.keywordsvi AS keywords_lv1,
+              c1.descriptionvi AS description_lv1
+          FROM tbl_danhmuc_c2 c2
+          JOIN tbl_danhmuc c1 ON c2.id_list = c1.id
+          WHERE c2.slugvi = '$slug'
+          LIMIT 1
+      ";
 
     $result = $this->db->select($query);
-    return $result ? $result->fetch_assoc() : false;
-  }
-
-
-  public function find_lv2_with_parent($slug_lv2)
-  {
-    $slug_lv2 = mysqli_real_escape_string($this->db->link, $slug_lv2);
-
-    $query = "
-        SELECT
-            c2.*,
-            c1.slugvi AS slug_lv1,
-            c1.namevi AS name_lv1,
-            c1.id AS id_list
-        FROM tbl_danhmuc_c2 AS c2
-        JOIN tbl_danhmuc AS c1 ON c2.id_list = c1.id
-        WHERE c2.slugvi = '$slug_lv2'
-        LIMIT 1
-    ";
-
-    $result = $this->db->select($query);
-
     if ($result && $row = $result->fetch_assoc()) {
       return $row;
+    } else {
+      http_response_code(404);
+      include '404.php';
+      exit();
     }
-
-    return false;
   }
 
   public function slug_exists_lv1($slug)
@@ -90,6 +70,30 @@ class danhmuc
 
     return false;
   }
+  public function find_lv2_with_parent($slug_lv2)
+  {
+    $slug_lv2 = mysqli_real_escape_string($this->db->link, $slug_lv2);
+
+    $query = "
+        SELECT
+            c2.*,
+            c1.slugvi AS slug_lv1,
+            c1.namevi AS name_lv1,
+            c1.id AS id_list
+        FROM tbl_danhmuc_c2 AS c2
+        JOIN tbl_danhmuc AS c1 ON c2.id_list = c1.id
+        WHERE c2.slugvi = '$slug_lv2'
+        LIMIT 1
+    ";
+
+    $result = $this->db->select($query);
+
+    if ($result && $row = $result->fetch_assoc()) {
+      return $row;
+    }
+
+    return false;
+  }
 
   public function get_danhmuc($slug)
   {
@@ -99,20 +103,26 @@ class danhmuc
     return $result;
   }
 
+  public function get_danhmuc_or_404($slug, $table)
+  {
+    $slug = mysqli_real_escape_string($this->db->link, $slug);
+    $query = "SELECT * FROM $table WHERE slugvi = '$slug' LIMIT 1";
+    $result = $this->db->select($query);
+    if ($result && $row = $result->fetch_assoc()) {
+      return $row;
+    } else {
+      http_response_code(404);
+      include '404.php';
+      exit();
+    }
+  }
+
   public function get_danhmuc_c2($slug)
   {
     $slug = mysqli_real_escape_string($this->db->link, $slug);
     $query = "SELECT * FROM tbl_danhmuc_c2 WHERE slugvi = '$slug' LIMIT 1";
     $result = $this->db->select($query);
     return $result;
-  }
-
-  public function get_id($table, $id)
-  {
-    $table = mysqli_real_escape_string($this->db->link, $table);
-    $id = mysqli_real_escape_string($this->db->link, $id);
-    $query = "SELECT * FROM `$table` WHERE id = '$id' LIMIT 1";
-    return $this->db->select($query);
   }
 
   public function show_danhmuc($tbl, $options = [])
@@ -161,7 +171,6 @@ class danhmuc
 
     return $this->db->select($query);
   }
-
 
   public function save_danhmuc($data, $files, $id = null)
   {

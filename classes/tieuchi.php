@@ -24,29 +24,6 @@ class tieuchi
     return $result;
   }
 
-  public function show_tieuchi($records_per_page, $current_page, $only_show = false)
-  {
-    $records_per_page = max(1, (int)$records_per_page);
-    $current_page = max(1, (int)$current_page);
-    $offset = ($current_page - 1) * $records_per_page;
-
-    $where = [];
-    if ($only_show) {
-      $where[] = "FIND_IN_SET('hienthi', status)";
-    }
-    $query = "SELECT * FROM tbl_tieuchi";
-    if (!empty($where)) {
-      $query .= " WHERE " . implode(" AND ", $where);
-    }
-
-    $query .= " ORDER BY numb, id DESC LIMIT $records_per_page OFFSET $offset";
-    return $this->db->select($query);
-  }
-  public function show_tieuchi_index()
-  {
-    $query = "SELECT * FROM tbl_tieuchi WHERE hienthi = 'hienthi' ORDER BY numb, id DESC";
-    return $this->db->select($query);
-  }
   public function save_tieuchi($data, $files, $id = null)
   {
     $fields = ['name', 'desc', 'numb'];
@@ -57,8 +34,6 @@ class tieuchi
     foreach ($fields as $field) {
       $data_escaped[$field] = !empty($data[$field]) ? mysqli_real_escape_string($this->db->link, $data[$field]) : "";
     }
-
-    // Xử lý status (checkbox: hienthi)
     $status_flags = ['hienthi'];
     $status_values = [];
     foreach ($status_flags as $flag) {
@@ -67,11 +42,8 @@ class tieuchi
       }
     }
     $data_escaped['status'] = mysqli_real_escape_string($this->db->link, implode(',', $status_values));
-
-    // Xử lý ảnh (nếu có)
     $thumb_filename = '';
     $old_file_path = '';
-
     if (!empty($id)) {
       $old_file = $this->db->select("SELECT file FROM $table WHERE id = '" . (int)$id . "'");
       if ($old_file && $old_file->num_rows > 0) {
@@ -79,11 +51,7 @@ class tieuchi
         $old_file_path = "uploads/" . $row['file'];
       }
     }
-
-    // Gọi hàm upload chuẩn hóa
-    $thumb_filename = $this->fn->Upload($files, '40x40x1', [255, 255, 255, 0], $old_file_path, false, true);
-
-    // Thực thi query
+    $thumb_filename = $this->fn->Upload($files, '40x40x1', [255, 255, 255, 0], $old_file_path, $watermark = false, $convert_webp = true);
     if (!empty($id)) {
       $update_fields = [];
       foreach ($data_escaped as $field => $value) {
@@ -106,8 +74,6 @@ class tieuchi
       $result = $this->db->insert($query);
       $msg = $result ? "Thêm dữ liệu thành công" : "Thêm dữ liệu thất bại";
     }
-
-    // Chuyển hướng
     $this->fn->transfer($msg, "index.php?page=tieuchi_list", $result);
   }
 }

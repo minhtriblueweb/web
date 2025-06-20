@@ -1,5 +1,8 @@
 <?php
-$sanpham_banchay = $sanpham->sanpham_banchay();
+$sanpham_banchay = $functions->show_data([
+  'table' => 'tbl_sanpham',
+  'status' => 'hienthi,banchay'
+]);
 if ($sanpham_banchay && $sanpham_banchay->num_rows > 0): ?>
   <div class="wrap-product-hot">
     <div class="wrap-content" data-aos="fade-up" data-aos-duration="1000">

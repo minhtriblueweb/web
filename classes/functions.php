@@ -15,7 +15,16 @@ class functions
     $this->fm = new Format();
   }
 
-  // Trong class Functions hoặc file helper
+  public function get_seo_data(array $data): array
+  {
+    return [
+      'title'       => !empty($data['titlevi']) ? htmlspecialchars($data['titlevi']) : (!empty($data['namevi']) ? htmlspecialchars($data['namevi']) : ''),
+      'keywords'    => !empty($data['keywordsvi']) ? htmlspecialchars($data['keywordsvi']) : '',
+      'description' => !empty($data['descriptionvi']) ? htmlspecialchars($data['descriptionvi']) : '',
+      'url'         => !empty($data['slugvi']) ? BASE . $data['slugvi'] : BASE,
+      'image'       => !empty($data['file']) ? BASE_ADMIN . UPLOADS . $data['file'] : '',
+    ];
+  }
   public function getRedirectPath($table, $params = [])
   {
     $map = [
@@ -37,6 +46,78 @@ class functions
     }
 
     return $query;
+  }
+  public function get_id($table, $id)
+  {
+    $table = mysqli_real_escape_string($this->db->link, $table);
+    $id = mysqli_real_escape_string($this->db->link, $id);
+    $query = "SELECT * FROM `$table` WHERE id = '$id' LIMIT 1";
+    return $this->db->select($query);
+  }
+  private function build_where_conditions($options)
+  {
+    $where = [];
+    if (!empty($options['status'])) {
+      if (is_array($options['status'])) {
+        $status_conditions = array_map(function ($s) {
+          return "FIND_IN_SET('" . mysqli_real_escape_string($this->db->link, $s) . "', status)";
+        }, $options['status']);
+        $where[] = "(" . implode(" AND ", $status_conditions) . ")";
+      } else {
+        $statuses = explode(',', $options['status']);
+        $status_conditions = array_map(function ($s) {
+          return "FIND_IN_SET('" . mysqli_real_escape_string($this->db->link, $s) . "', status)";
+        }, $statuses);
+        $where[] = "(" . implode(" AND ", $status_conditions) . ")";
+      }
+    }
+    if (!empty($options['id_list'])) {
+      $where[] = "`id_list` = " . (int)$options['id_list'];
+    }
+    if (!empty($options['id_cat'])) {
+      $where[] = "`id_cat` = " . (int)$options['id_cat'];
+    }
+    if (!empty($options['type'])) {
+      $type = mysqli_real_escape_string($this->db->link, $options['type']);
+      $where[] = "`type` = '$type'";
+    }
+    if (!empty($options['keyword'])) {
+      $keyword = mysqli_real_escape_string($this->db->link, $options['keyword']);
+      $where[] = "`namevi` LIKE '%$keyword%'";
+    }
+    return $where;
+  }
+  public function show_data($options = [])
+  {
+    if (empty($options['table'])) return false;
+    $tbl = mysqli_real_escape_string($this->db->link, $options['table']);
+    $where = $this->build_where_conditions($options);
+    $query = "SELECT * FROM `$tbl`";
+    if (!empty($where)) {
+      $query .= " WHERE " . implode(" AND ", $where);
+    }
+    $query .= " ORDER BY numb, id DESC";
+    if (!empty($options['records_per_page']) && !empty($options['current_page'])) {
+      $limit = (int)$options['records_per_page'];
+      $offset = ((int)$options['current_page'] - 1) * $limit;
+      $query .= " LIMIT $limit OFFSET $offset";
+    }
+    return $this->db->select($query);
+  }
+  public function count_data($options = [])
+  {
+    if (empty($options['table'])) return 0;
+    $tbl = mysqli_real_escape_string($this->db->link, $options['table']);
+    $where = $this->build_where_conditions($options);
+    $query = "SELECT COUNT(*) AS total FROM `$tbl`";
+    if (!empty($where)) {
+      $query .= " WHERE " . implode(" AND ", $where);
+    }
+    $result = $this->db->select($query);
+    if ($result && $row = $result->fetch_assoc()) {
+      return (int)$row['total'];
+    }
+    return 0;
   }
   public function deleteMultiple($listid, $table, $imageColumn, $type = '', $id_parent = null)
   {

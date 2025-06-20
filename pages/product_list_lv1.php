@@ -7,26 +7,39 @@ if (empty($slug)) {
   exit();
 }
 
-$get_danhmuc = $danhmuc->get_danhmuc($slug);
-if (!$get_danhmuc || !($kg_danhmuc = $get_danhmuc->fetch_assoc())) {
-  http_response_code(404);
-  include '404.php';
-  exit();
-}
+// Lấy thông tin danh mục cấp 1
+$kg_danhmuc = $danhmuc->get_danhmuc_or_404($slug, 'tbl_danhmuc');
 $id_list = $kg_danhmuc['id'];
-$get_danhmuc_c2 = $danhmuc->show_danhmuc_c2_index($id_list);
+
+// Lấy danh mục cấp 2
+$get_danhmuc_c2 = $functions->show_data([
+  'table' => 'tbl_danhmuc_c2',
+  'status' => 'hienthi',
+  'id_list' => $id_list
+]);
+
+// Phân trang sản phẩm
 $records_per_page = 20;
 $current_page = max(1, (int)($_GET['page'] ?? 1));
-$total_records = $sanpham->count_sanpham($id_list, '');
+
+// Đếm tổng sản phẩm theo danh mục cấp 1
+$total_records = $functions->count_data([
+  'table' => 'tbl_sanpham',
+  'status' => 'hienthi',
+  'id_list' => $id_list
+]);
+
 $total_pages = max(1, ceil($total_records / $records_per_page));
-$get_sp = $sanpham->show_sanpham_pagination(
-  $records_per_page,
-  $current_page,
-  'hienthi',
-  $id_list,
-  $id_cat = '',
-  $limit = ''
-);
+
+// Lấy sản phẩm theo phân trang
+$get_sp = $functions->show_data([
+  'table' => 'tbl_sanpham',
+  'status' => 'hienthi',
+  'id_list' => $id_list,
+  'records_per_page' => $records_per_page,
+  'current_page' => $current_page
+]);
+
 $seo['title'] = !empty($kg_danhmuc['titlevi']) ? $kg_danhmuc['titlevi'] : $kg_danhmuc['namevi'];
 $seo['keywords'] = $kg_danhmuc['keywordsvi'];
 $seo['description'] = $kg_danhmuc['descriptionvi'];

@@ -7,22 +7,27 @@
         data-animations="animate__fadeInDown, animate__backInUp, animate__rollIn, animate__backInRight, animate__zoomInUp, animate__backInLeft, animate__rotateInDownLeft, animate__backInDown, animate__zoomInDown, animate__fadeInUp, animate__zoomIn"
         data-nav="1" data-navcontainer=".control-slideshow">
         <?php
-        $show_slideshow = $slideshow->show_slideshow();
-        if ($show_slideshow) {
-          while ($result_slideshow = $show_slideshow->fetch_assoc()) {
+        $show_slideshow = $functions->show_data([
+          'table' => 'tbl_slideshow',
+          'status' => 'hienthi'
+        ]);
+        if ($show_slideshow):
+          while ($row_slider = $show_slideshow->fetch_assoc()):
         ?>
             <div class="slideshow-item" owl-item-animation>
-              <a class="slideshow-image" href="<?= $result_slideshow['link'] ?>" target="_blank"
-                title="<?= $result_slideshow['name'] ?>">
+              <a class="slideshow-image" href="<?= $row_slider['link'] ?>" target="_blank" title="<?= $row_slider['name'] ?>">
                 <picture>
                   <img class="w-100"
-                    src="<?= empty($result_slideshow['file']) ? BASE_ADMIN . "assets/img/noimage.png" : BASE_ADMIN . UPLOADS . $result_slideshow['file']; ?>"
-                    alt="<?= $result_slideshow['name'] ?>" title="<?= $result_slideshow['name'] ?>" />
+                    src="<?= empty($row_slider['file']) ? NO_IMG : BASE_ADMIN . UPLOADS . $row_slider['file'] ?>"
+                    alt="<?= $row_slider['name'] ?>" title="<?= $row_slider['name'] ?>" />
                 </picture>
               </a>
             </div>
-        <?php }
-        } ?>
+        <?php
+          endwhile;
+        endif;
+        ?>
+
       </div>
       <div class="control-slideshow control-owl transition"></div>
     </div>

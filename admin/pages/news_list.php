@@ -4,7 +4,12 @@ $type = $_GET['type'] ?? null;
 $records_per_page = 10;
 $current_page = max(1, isset($_GET['p']) ? (int)$_GET['p'] : 1);
 $total_pages = ceil($functions->phantrang('tbl_news', $type) / $records_per_page);
-$show_news = $news->show_news($records_per_page, $current_page, '', $type);
+$show_news = $functions->show_data('tbl_news', [
+  'records_per_page' => $records_per_page,
+  'current_page' => $current_page,
+  'type' => $type,
+  'keyword' => $_GET['keyword'] ?? ''
+]);
 $linkMulti = "index.php?page=deleteMulti&table=tbl_news&image=file&type=$type";
 $linkDelete = "index.php?page=delete&table=tbl_news&image=file&type=$type&id=";
 $linkEdit = "index.php?page=news_form&type=$type&id=";

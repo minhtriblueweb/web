@@ -3,7 +3,7 @@ $message = '';
 $name = 'danh mục cấp 2';
 $redirectUrl = 'category_lv2_list';
 $table = 'tbl_danhmuc_c2';
-$show_danhmuc = $danhmuc->show_danhmuc('tbl_danhmuc');
+$show_danhmuc = $functions->show_data(['table' => 'tbl_danhmuc']);
 $id = $_GET['id'] ?? null;
 if (!empty($id)) {
   $get_id = $functions->get_id($table, $id);
@@ -70,34 +70,6 @@ include 'templates/breadcrumb.php';
                 </div>
               </div>
             </div>
-            <div class="form-group">
-              <?php
-              $checkboxes = [
-                'hienthi' => 'Hiển thị',
-                'noibat' => 'Nổi bật'
-              ];
-              ?>
-              <?php foreach ($checkboxes as $check => $label): ?>
-                <div class="form-group d-inline-block mb-2 mr-2">
-                  <label for="<?= $check ?>-checkbox" class="d-inline-block align-middle mb-0 mr-2"><?= $label ?>:</label>
-                  <div class="custom-control custom-checkbox d-inline-block align-middle">
-                    <input <?= $functions->is_checked($check, $result ?? null, $id ?? null) ?>
-                      type="checkbox"
-                      class="custom-control-input <?= $check ?>-checkbox"
-                      name="<?= $check ?>"
-                      id="<?= $check ?>-checkbox"
-                      value="<?= $check ?>" />
-                    <label for="<?= $check ?>-checkbox" class="custom-control-label"></label>
-                  </div>
-                </div>
-              <?php endforeach; ?>
-            </div>
-            <div class="form-group">
-              <label for="numb" class="d-inline-block align-middle mb-0 mr-2">Số thứ tự:</label>
-              <input value="<?= $_POST['numb'] ?? (!empty($id) ? $result['numb'] : '1') ?>" type="number"
-                class="form-control form-control-mini d-inline-block align-middle text-sm" min="0" name="numb" id="numb"
-                placeholder="Số thứ tự">
-            </div>
           </div>
         </div>
       </div>
@@ -147,6 +119,43 @@ include 'templates/breadcrumb.php';
               </label>
               <div class="photoUpload-dimension">(.jpg|.gif|.png|.jpeg|.gif|.webp|.WEBP)
               </div>
+            </div>
+          </div>
+        </div>
+        <div class="card card-primary card-outline text-sm">
+          <div class="card-header">
+            <h3 class="card-title">Thông tin</h3>
+            <div class="card-tools">
+              <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="form-group">
+              <?php
+              $checkboxes = [
+                'hienthi' => 'Hiển thị',
+                'noibat' => 'Nổi bật'
+              ];
+              ?>
+              <?php foreach ($checkboxes as $check => $label): ?>
+                <div class="form-group d-inline-block mb-2 mr-2">
+                  <label for="<?= $check ?>-checkbox" class="d-inline-block align-middle mb-0 mr-2"><?= $label ?>:</label>
+                  <div class="custom-control custom-checkbox d-inline-block align-middle">
+                    <input <?= $functions->is_checked($check, $result ?? null, $id ?? null) ?>
+                      type="checkbox"
+                      class="custom-control-input <?= $check ?>-checkbox"
+                      name="<?= $check ?>"
+                      id="<?= $check ?>-checkbox"
+                      value="<?= $check ?>" />
+                    <label for="<?= $check ?>-checkbox" class="custom-control-label"></label>
+                  </div>
+                </div>
+              <?php endforeach; ?>
+            </div>
+            <div class="form-group">
+              <label for="numb" class="d-inline-block align-middle mb-0 mr-2">Số thứ tự:</label>
+              <input type="number" class="form-control form-control-mini d-inline-block align-middle text-sm" min="0"
+                name="numb" id="numb" placeholder="Số thứ tự" value="<?= $_POST['numb'] ?? (!empty($id) ? $result['numb'] : '1') ?>" />
             </div>
           </div>
         </div>

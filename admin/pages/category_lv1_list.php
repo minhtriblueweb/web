@@ -11,8 +11,8 @@ $show_danhmuc = $functions->show_data([
   'keyword' => $_GET['keyword'] ?? ''
 ]);
 $name = 'danh mục cấp 1';
-$linkMulti = "index.php?page=deleteMulti&table=tbl_danhmuc&image=file";
-$linkDelete = "index.php?page=delete&table=tbl_danhmuc&image=file&id=";
+$linkMulti = "index.php?page=deleteMulti&table=tbl_danhmuc";
+$linkDelete = "index.php?page=delete&table=tbl_danhmuc&id=";
 $linkEdit = "index.php?page=category_lv1_form&id=";
 $linkAdd = "index.php?page=category_lv1_form";
 ?>
@@ -25,28 +25,10 @@ $breadcrumb = [
 include 'templates/breadcrumb.php';
 ?>
 <section class="content">
-  <div class="card-footer text-sm sticky-top">
-    <a class="btn btn-sm bg-gradient-primary text-white" href="<?= $linkAdd ?>" title="Thêm mới"><i
-        class="fas fa-plus mr-2"></i>Thêm mới</a>
-    <a class="btn btn-sm bg-gradient-danger text-white" id="delete-all" data-url="<?= $linkMulti ?>" title="Xóa tất cả"><i
-        class="far fa-trash-alt mr-2"></i>Xóa tất cả</a>
-    <div class="form-inline form-search d-inline-block align-middle ml-3">
-      <div class="input-group input-group-sm">
-        <input class="form-control form-control-navbar text-sm" type="search" id="keyword" placeholder="Tìm kiếm"
-          aria-label="Tìm kiếm" value=""
-          onkeypress="doEnter(event,'keyword','index.php?com=product&act=man_list&type=san-pham')" />
-        <div class="input-group-append bg-primary rounded-right">
-          <button class="btn btn-navbar text-white" type="button"
-            onclick="onSearch('keyword','index.php?com=product&act=man_list&type=san-pham')">
-            <i class="fas fa-search"></i>
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
+  <?php include 'templates/act_list.php'; ?>
   <div class="card card-primary card-outline text-sm mb-0">
     <div class="card-header">
-      <h3 class="card-title">Danh sách Danh mục cấp 1</h3>
+      <h3 class="card-title">Danh sách <?= $name ?></h3>
     </div>
     <div class="card-body table-responsive p-0">
       <table class="table table-hover">
@@ -108,16 +90,13 @@ include 'templates/breadcrumb.php';
                   <!-- Checkbox trạng thái (hiển thị, nổi bật) -->
                   <?php foreach (['hienthi', 'noibat'] as $attr): ?>
                     <td class="align-middle text-center">
-                      <div class="custom-control custom-checkbox my-checkbox">
-                        <input type="checkbox"
-                          class="custom-control-input show-checkbox"
-                          id="show-checkbox-<?= $attr ?>-<?= $id ?>"
-                          data-id="<?= $id ?>"
-                          data-table="tbl_danhmuc"
-                          data-attr="<?= $attr ?>"
-                          <?= (strpos($row['status'], $attr) !== false) ? 'checked' : '' ?> />
-                        <label for="show-checkbox-<?= $attr ?>-<?= $id ?>" class="custom-control-label"></label>
-                      </div>
+                      <label class="switch switch-success">
+                        <input type="checkbox" class="switch-input custom-control-input show-checkbox" id="show-checkbox-<?= $attr ?>-<?= $id ?>" data-table="tbl_danhmuc" data-id="<?= $id ?>" data-attr="<?= $attr ?>" <?= (strpos($row['status'], $attr) !== false) ? 'checked' : '' ?>>
+                        <span class="switch-toggle-slider">
+                          <span class="switch-on"><i class="fa-solid fa-check"></i></span>
+                          <span class="switch-off"><i class="fa-solid fa-xmark"></i></span>
+                        </span>
+                      </label>
                     </td>
                   <?php endforeach; ?>
 

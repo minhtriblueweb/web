@@ -4,19 +4,21 @@ $type = $_GET['type'] ?? null;
 $records_per_page = 10;
 $current_page = max(1, isset($_GET['p']) ? (int)$_GET['p'] : 1);
 $total_pages = ceil($functions->phantrang('tbl_news', $type) / $records_per_page);
-$show_news = $functions->show_data('tbl_news', [
+$show_news = $functions->show_data([
+  'table' => 'tbl_news',
+  'type' => $type,
   'records_per_page' => $records_per_page,
   'current_page' => $current_page,
-  'type' => $type,
   'keyword' => $_GET['keyword'] ?? ''
 ]);
-$linkMulti = "index.php?page=deleteMulti&table=tbl_news&image=file&type=$type";
-$linkDelete = "index.php?page=delete&table=tbl_news&image=file&type=$type&id=";
+$linkMulti = "index.php?page=deleteMulti&table=tbl_news&type=$type";
+$linkDelete = "index.php?page=delete&table=tbl_news&type=$type&id=";
 $linkEdit = "index.php?page=news_form&type=$type&id=";
 $linkAdd = "index.php?page=news_form&type=$type";
 ?>
 <?php
-$name = $type;
+$convert_type = $functions->convert_type($type);
+$name = $convert_type['vi'];
 $breadcrumb = [
   ['label' => 'Bảng điều khiển', 'link' => '?page=dashboard'],
   ['label' => $name],
@@ -25,26 +27,7 @@ $breadcrumb = [
 include 'templates/breadcrumb.php';
 ?>
 <section class="content">
-  <div class="card-footer text-sm sticky-top">
-    <a class="btn btn-sm bg-gradient-primary text-white" href="<?= $linkAdd ?>" title="Thêm mới"><i
-        class="fas fa-plus mr-2"></i>Thêm mới</a>
-    <a class="btn btn-sm bg-gradient-danger text-white" id="delete-all" data-url="<?= $linkMulti ?>" title="Xóa tất cả"><i
-        class="far fa-trash-alt mr-2"></i>Xóa tất cả</a>
-
-    <div class="form-inline form-search d-inline-block align-middle ml-3">
-      <div class="input-group input-group-sm">
-        <input class="form-control form-control-navbar text-sm" type="search" id="keyword" placeholder="Tìm kiếm"
-          aria-label="Tìm kiếm" value=""
-          onkeypress="doEnter(event,'keyword','index.php?com=product&act=man_list&type=san-pham')" />
-        <div class="input-group-append bg-primary rounded-right">
-          <button class="btn btn-navbar text-white" type="button"
-            onclick="onSearch('keyword','index.php?com=product&act=man_list&type=san-pham')">
-            <i class="fas fa-search"></i>
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
+  <?php include 'templates/act_list.php'; ?>
   <div class="card card-primary card-outline text-sm mb-0">
     <div class="card-header">
       <h3 class="card-title">Danh sách tin tức</h3>
@@ -113,19 +96,15 @@ include 'templates/breadcrumb.php';
                   <!-- Checkbox Hiển thị, Nổi bật -->
                   <?php foreach (['hienthi', 'noibat'] as $attr): ?>
                     <td class="align-middle text-center">
-                      <div class="custom-control custom-checkbox my-checkbox">
-                        <input type="checkbox"
-                          class="custom-control-input show-checkbox"
-                          id="show-checkbox-<?= $attr ?>-<?= $id ?>"
-                          data-id="<?= $id ?>"
-                          data-table="tbl_news"
-                          data-attr="<?= $attr ?>"
-                          <?= (strpos($row['status'], $attr) !== false) ? 'checked' : '' ?> />
-                        <label for="show-checkbox-<?= $attr ?>-<?= $id ?>" class="custom-control-label"></label>
-                      </div>
+                      <label class="switch switch-success">
+                        <input type="checkbox" class="switch-input custom-control-input show-checkbox " id="show-checkbox-<?= $attr ?>-<?= $id ?>" data-table="tbl_news" data-id="<?= $id ?>" data-attr="<?= $attr ?>" <?= (strpos($row['status'], $attr) !== false) ? 'checked' : '' ?>>
+                        <span class="switch-toggle-slider">
+                          <span class="switch-on"><i class="fa-solid fa-check"></i></span>
+                          <span class="switch-off"><i class="fa-solid fa-xmark"></i></span>
+                        </span>
+                      </label>
                     </td>
                   <?php endforeach; ?>
-
                   <!-- Hành động -->
                   <td class="align-middle text-center text-md text-nowrap">
                     <a class="text-primary mr-2" href="<?= $linkEdit ?><?= $id ?>" title="Chỉnh sửa"><i class="fas fa-edit"></i></a>
@@ -145,7 +124,7 @@ include 'templates/breadcrumb.php';
   </div>
   <?php if ($total_pages > 1): ?>
     <div class="card-footer text-sm pb-0 mb-5">
-      <?= $functions->renderPagination($current_page, $total_pages, "index.php?page=$redirect_url&p="); ?>
+      <?= $functions->renderPagination($current_page, $total_pages, "index.php?page=$redirect_url&type=$type&p="); ?>
     </div>
   <?php endif; ?>
 </section>

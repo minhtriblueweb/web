@@ -100,7 +100,7 @@ include 'templates/breadcrumb.php';
                   <div class="photoUpload-zone w-25">
                     <div class="photoUpload-detail" id="photoUpload-preview">
                       <a data-fancybox href="">
-                        <img src="<?= empty($result['photo']) ? NO_IMG : BASE_ADMIN . UPLOADS . $result['photo']; ?>" alt="Alt Photo" class="rounded" />
+                        <img src="<?= empty($result['file']) ? NO_IMG : BASE_ADMIN . UPLOADS . $result['file']; ?>" alt="Alt Photo" class="rounded" />
                       </a>
                     </div>
                     <label class="photoUpload-file" id="photo-zone" for="file-zone">
@@ -116,19 +116,30 @@ include 'templates/breadcrumb.php';
                 </div>
               </div>
               <div class="form-group">
-                <div class="form-group d-inline-block mb-2 mr-2">
-                  <label for="hienthi-checkbox0" class="d-inline-block align-middle mb-0 mr-2">Hiển thị:</label>
-                  <div class="custom-control custom-checkbox d-inline-block align-middle">
-                    <input <?= $functions->is_checked('hienthi', $result ?? null, $id ?? null) ?> type="checkbox" class="custom-control-input hienthi-checkbox0" name="hienthi"
-                      id="hienthi-checkbox0" value="hienthi">
-                    <label for="hienthi-checkbox0" class="custom-control-label"></label>
+                <?php
+                $checkboxes = [
+                  'hienthi' => 'Hiển thị',
+                ];
+                ?>
+                <?php foreach ($checkboxes as $check => $label): ?>
+                  <div class="form-group d-inline-block mb-2 mr-2">
+                    <label for="<?= $check ?>-checkbox" class="d-inline-block align-middle mb-0 mr-2"><?= $label ?>:</label>
+                    <div class="custom-control custom-checkbox d-inline-block align-middle">
+                      <input <?= $functions->is_checked($check, $result ?? null, $id_child ?? null) ?>
+                        type="checkbox"
+                        class="custom-control-input <?= $check ?>-checkbox"
+                        name="<?= $check ?>"
+                        id="<?= $check ?>-checkbox"
+                        value="<?= $check ?>" />
+                      <label for="<?= $check ?>-checkbox" class="custom-control-label"></label>
+                    </div>
                   </div>
-                </div>
+                <?php endforeach; ?>
               </div>
               <div class="form-group">
                 <label for="numb0" class="d-inline-block align-middle mb-0 mr-2">Số thứ tự:</label>
                 <input type="number" class="form-control form-control-mini d-inline-block align-middle text-sm" min="0"
-                  name="numb" id="numb0" placeholder="Số thứ tự" value="<?= $_POST['numb'] ?? (!empty($id) ? $result['numb'] : '1') ?>">
+                  name="numb" id="numb0" placeholder="Số thứ tự" value="<?= $_POST['numb'] ?? (!empty($id_child) ? $result['numb'] : '1') ?>">
               </div>
             </div>
           </div>

@@ -23,7 +23,7 @@ $sidebarMenu = [
       [
         'title' => 'Sản phẩm',
         'link' => '?page=product_list',
-        'active' => ['?page=product_form', '?page=product_list', '?page=gallery_list', '?page=gallery_save']
+        'active' => ['?page=product_form', '?page=product_list', '?page=gallery_list', '?page=gallery_form']
       ],
     ]
   ],

@@ -70,6 +70,18 @@ include 'templates/breadcrumb.php';
                 </div>
               </div>
             </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-xl-4">
+        <div class="card card-primary card-outline text-sm">
+          <div class="card-header">
+            <h3 class="card-title">Thông tin</h3>
+            <div class="card-tools">
+              <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
+            </div>
+          </div>
+          <div class="card-body">
             <div class="form-group">
               <?php
               $checkboxes = [
@@ -99,8 +111,6 @@ include 'templates/breadcrumb.php';
             </div>
           </div>
         </div>
-      </div>
-      <div class="col-xl-4">
         <div class="card card-primary card-outline text-sm">
           <div class="card-header">
             <h3 class="card-title">Hình ảnh <?= $name ?></h3>

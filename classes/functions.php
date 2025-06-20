@@ -77,6 +77,9 @@ class functions
     if (!empty($options['id_cat'])) {
       $where[] = "`id_cat` = " . (int)$options['id_cat'];
     }
+    if (!empty($options['id_parent'])) {
+      $where[] = "`id_parent` = " . (int)$options['id_parent'];
+    }
     if (!empty($options['type'])) {
       $type = mysqli_real_escape_string($this->db->link, $options['type']);
       $where[] = "`type` = '$type'";
@@ -119,7 +122,7 @@ class functions
     }
     return 0;
   }
-  public function deleteMultiple($listid, $table, $imageColumn, $type = '', $id_parent = null)
+  public function deleteMultiple($listid, $table, $type = '', $id_parent = null)
   {
     $ids = array_filter(array_map('intval', explode(',', $listid)));
     if (empty($ids)) {
@@ -127,14 +130,14 @@ class functions
     }
 
     $idList = implode(',', $ids);
-    $querySelect = "SELECT id, `$imageColumn`" . ($table === 'tbl_gallery' ? ", id_parent" : "") . " FROM `$table` WHERE id IN ($idList)";
+    $querySelect = "SELECT id, file" . ($table === 'tbl_gallery' ? ", id_parent" : "") . " FROM `$table` WHERE id IN ($idList)";
     $resultSelect = $this->db->select($querySelect);
 
     $last_id_parent = 0;
     if ($resultSelect && $resultSelect->num_rows > 0) {
       while ($row = $resultSelect->fetch_assoc()) {
-        if (!empty($row[$imageColumn])) {
-          $filePath = 'uploads/' . $row[$imageColumn];
+        if (!empty($row['file'])) {
+          $filePath = 'uploads/' . $row['file'];
           if (file_exists($filePath)) {
             unlink($filePath);
           }
@@ -160,18 +163,16 @@ class functions
       $resultDelete
     );
   }
-  public function delete($id, $table, $imageColumn, $type = '', $id_parent = null)
+  public function delete($id, $table, $type = '', $id_parent = null)
   {
     $id = intval($id);
     $table = mysqli_real_escape_string($this->db->link, $table);
-    $imageColumn = mysqli_real_escape_string($this->db->link, $imageColumn);
-
-    $querySelect = "SELECT `$imageColumn`" . ($table === 'tbl_gallery' ? ", id_parent" : "") . " FROM `$table` WHERE id = $id";
+    $querySelect = "SELECT file" . ($table === 'tbl_gallery' ? ", id_parent" : "") . " FROM `$table` WHERE id = $id";
     $result = $this->db->select($querySelect);
     $row = ($result) ? $result->fetch_assoc() : null;
 
-    if ($row && !empty($row[$imageColumn])) {
-      $filePath = "uploads/" . $row[$imageColumn];
+    if ($row && !empty($row['file'])) {
+      $filePath = "uploads/" . $row['file'];
       if (file_exists($filePath)) {
         unlink($filePath);
       }

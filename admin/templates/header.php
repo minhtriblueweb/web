@@ -30,6 +30,7 @@
   <link href="./assets/fancybox5/fancybox.css" rel="stylesheet" />
   <link href="./assets/css/adminlte.css" rel="stylesheet" />
   <link href="./assets/css/adminlte-style.css" rel="stylesheet" />
+  <link href="./assets/css/thu.css" rel="stylesheet" />
 </head>
 
 <body class="sidebar-mini hold-transition text-sm">

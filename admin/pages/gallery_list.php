@@ -4,15 +4,15 @@ $redirect_url = $_GET['page'];
 if (isset($_GET['id']) && $_GET['id'] != NULL) {
   $id = $_GET['id'];
 }
-$get_id = $sanpham->get_id_sanpham($id);
-$get_gallery = $sanpham->get_gallery($id);
-if ($get_id) {
-  $result = $get_id->fetch_assoc();
+$get_id_sp = $functions->get_id('tbl_sanpham', $id);
+$get_gallery = $functions->show_data(['table' => 'tbl_gallery', 'id_parent' => $id]);
+if ($get_id_sp) {
+  $result = $get_id_sp->fetch_assoc();
 }
-$linkMulti = "index.php?page=deleteMulti&table=tbl_gallery&image=photo&id_parent=$id";
-$linkDelete = "index.php?page=delete&table=tbl_gallery&image=photo&id_parent=$id&id=";
-$linkGallery = "index.php?page=gallery_save&id=";
-$linkEdit = "index.php?page=gallery_save&id_child=";
+$linkMulti = "index.php?page=deleteMulti&table=tbl_gallery&id_parent=$id";
+$linkDelete = "index.php?page=delete&table=tbl_gallery&id_parent=$id&id=";
+$linkGallery = "index.php?page=gallery_form&id=";
+$linkEdit = "index.php?page=gallery_form&id_child=";
 ?>
 <?php
 $breadcrumb = [
@@ -24,7 +24,7 @@ include 'templates/breadcrumb.php';
 ?>
 <section class="content">
   <div class="card-footer text-sm sticky-top">
-    <a class="btn btn-sm bg-gradient-primary text-white" href="<?= $linkGallery ?><?= $result['id'] ?>"
+    <a class="btn btn-sm bg-gradient-primary text-white" href="<?= $linkGallery . $result['id'] ?>"
       title="Thêm mới"><i class="fas fa-plus mr-2"></i>Thêm mới</a>
     <a class="btn btn-sm bg-gradient-danger text-white" id="delete-all" data-url="<?= $linkMulti ?>" title="Xóa tất cả"><i
         class="far fa-trash-alt mr-2"></i>Xóa tất cả</a>
@@ -65,40 +65,53 @@ include 'templates/breadcrumb.php';
         </thead>
         <tbody>
           <?php if ($get_gallery): ?>
-            <?php while ($resule_gallery = $get_gallery->fetch_assoc()) : ?>
+            <?php while ($row = $get_gallery->fetch_assoc()): ?>
+              <?php $id = $row['id']; ?>
               <tr>
+                <!-- Checkbox chọn dòng -->
                 <td class="align-middle">
                   <div class="custom-control custom-checkbox my-checkbox">
-                    <input type="checkbox" class="custom-control-input select-checkbox"
-                      id="select-checkbox-<?= $resule_gallery['id'] ?>" value="<?= $resule_gallery['id'] ?>">
-                    <label for="select-checkbox-<?= $resule_gallery['id'] ?>" class="custom-control-label"></label>
+                    <input type="checkbox" class="custom-control-input select-checkbox" id="select-checkbox-<?= $id ?>" value="<?= $id ?>">
+                    <label for="select-checkbox-<?= $id ?>" class="custom-control-label"></label>
                   </div>
                 </td>
+
+                <!-- Số thứ tự -->
                 <td class="align-middle">
                   <input type="number" class="form-control form-control-mini m-auto update-numb" min="0"
-                    value="<?= $resule_gallery['numb'] ?>" data-id="<?= $resule_gallery['id'] ?>" data-table="tbl_gallery">
+                    value="<?= $row['numb'] ?>" data-id="<?= $id ?>" data-table="tbl_gallery">
                 </td>
+
+                <!-- Hình ảnh -->
                 <td class="align-middle text-center">
-                  <a href="<?= $linkEdit ?><?= $resule_gallery['id'] ?>">
+                  <a href="<?= $linkEdit . $id ?>">
                     <img class="rounded img-preview"
-                      src="<?= empty($resule_gallery['photo']) ? NO_IMG : BASE_ADMIN . UPLOADS . $resule_gallery['photo'] ?>">
+                      src="<?= empty($row['file']) ? NO_IMG : BASE_ADMIN . UPLOADS . $row['file'] ?>">
                   </a>
                 </td>
-                <td class="align-middle text-center">
-                  <div class="custom-control custom-checkbox my-checkbox">
-                    <input type="checkbox" data-type="hienthi" class="custom-control-input show-checkbox"
-                      id="show-checkbox-hienthi-<?= $resule_gallery['id'] ?>" data-table="tbl_gallery"
-                      data-id="<?= $resule_gallery['id'] ?>"
-                      data-attr="<?= ($resule_gallery['hienthi'] == 'hienthi') ? '' : 'hienthi' ?>"
-                      <?= $resule_gallery['hienthi'] == 'hienthi' ? 'checked' : '' ?> />
-                    <label for="show-checkbox-hienthi-<?= $resule_gallery['id'] ?>" class="custom-control-label"></label>
-                  </div>
-                </td>
+
+                <!-- Các checkbox trạng thái -->
+                <?php foreach (['hienthi'] as $attr): ?>
+                  <td class="align-middle text-center">
+                    <label class="switch switch-success mb-0">
+                      <input type="checkbox" class="switch-input custom-control-input show-checkbox"
+                        id="show-checkbox-<?= $attr ?>-<?= $id ?>"
+                        data-table="tbl_gallery"
+                        data-id="<?= $id ?>"
+                        data-attr="<?= $attr ?>"
+                        <?= (strpos($row['status'], $attr) !== false) ? 'checked' : '' ?>>
+                      <span class="switch-toggle-slider">
+                        <span class="switch-on"><i class="fa-solid fa-check"></i></span>
+                        <span class="switch-off"><i class="fa-solid fa-xmark"></i></span>
+                      </span>
+                    </label>
+                  </td>
+                <?php endforeach; ?>
+
+                <!-- Hành động -->
                 <td class="align-middle text-center text-md text-nowrap">
-                  <a class="text-primary mr-2" href="<?= $linkEdit ?><?= $resule_gallery['id'] ?>" title="Chỉnh sửa"><i
-                      class="fas fa-edit"></i></a>
-                  <a class="text-danger" id="delete-item" data-url="<?= $linkDelete ?><?= $resule_gallery['id'] ?>" title="Xóa"><i
-                      class="fas fa-trash-alt"></i></a>
+                  <a class="text-primary mr-2" href="<?= $linkEdit . $id ?>" title="Chỉnh sửa"><i class="fas fa-edit"></i></a>
+                  <a class="text-danger" id="delete-item" data-url="<?= $linkDelete . $id ?>" title="Xóa"><i class="fas fa-trash-alt"></i></a>
                 </td>
               </tr>
             <?php endwhile; ?>
@@ -108,6 +121,7 @@ include 'templates/breadcrumb.php';
             </tr>
           <?php endif; ?>
         </tbody>
+
       </table>
     </div>
   </div>

@@ -44,15 +44,24 @@ class sanpham
   {
     $id = mysqli_real_escape_string($this->db->link, $id);
     $id_parent = mysqli_real_escape_string($this->db->link, $id_parent);
-    $hienthi = mysqli_real_escape_string($this->db->link, $data['hienthi'] ?? 0);
-    $numb = mysqli_real_escape_string($this->db->link, $data['numb'] ?? 0);
+    $table = 'tbl_gallery';
+    $data_escaped = [];
+    $data_escaped['numb'] = mysqli_real_escape_string($this->db->link, $data['numb'] ?? 0);
+    $status_flags = ['hienthi'];
+    $status_values = [];
+    foreach ($status_flags as $flag) {
+      if (!empty($data[$flag])) {
+        $status_values[] = $flag;
+      }
+    }
+    $data_escaped['status'] = mysqli_real_escape_string($this->db->link, implode(',', $status_values));
     $thumb_filename = '';
     if (!empty($files['file']['name']) && !empty($files['file']['tmp_name'])) {
       $old_file_path = '';
-      $old = $this->db->select("SELECT photo FROM tbl_gallery WHERE id='$id'");
+      $old = $this->db->select("SELECT file FROM $table WHERE id='$id'");
       if ($old && $old->num_rows > 0) {
         $row = $old->fetch_assoc();
-        $old_file_path = 'uploads/' . $row['photo'];
+        $old_file_path = 'uploads/' . $row['file'];
       }
       $thumb_filename = $this->fn->Upload(
         ['file' => $files['file']],
@@ -64,15 +73,13 @@ class sanpham
       if (empty($thumb_filename)) {
         return "Lỗi upload file!";
       }
+      $data_escaped['file'] = mysqli_real_escape_string($this->db->link, $thumb_filename);
     }
-    $update_fields = [
-      "hienthi = '$hienthi'",
-      "numb = '$numb'"
-    ];
-    if (!empty($thumb_filename)) {
-      $update_fields[] = "photo = '" . mysqli_real_escape_string($this->db->link, $thumb_filename) . "'";
+    $update_fields = [];
+    foreach ($data_escaped as $field => $value) {
+      $update_fields[] = "`$field` = '$value'";
     }
-    $query = "UPDATE tbl_gallery SET " . implode(", ", $update_fields) . " WHERE id = '$id'";
+    $query = "UPDATE `$table` SET " . implode(", ", $update_fields) . " WHERE id = '$id'";
     $result = $this->db->update($query);
     if ($result) {
       $this->fn->transfer("Cập nhật hình ảnh thành công", "index.php?page=gallery_list&id=$id_parent");
@@ -84,11 +91,11 @@ class sanpham
   public function them_gallery($data, $files, $id_parent)
   {
     $id_parent = mysqli_real_escape_string($this->db->link, $id_parent);
-
+    $table = 'tbl_gallery';
     for ($i = 0; $i < 6; $i++) {
       $file_key = "file$i";
       if (!empty($files[$file_key]['name']) && $files[$file_key]['error'] == 0) {
-        // Gọi hàm Upload
+        // Upload ảnh
         $thumb_filename = $this->fn->Upload(
           ['file' => $files[$file_key]],
           '500x500x1',
@@ -97,21 +104,32 @@ class sanpham
           true
         );
         if (!empty($thumb_filename)) {
-          $fields = ['id_parent', 'photo', 'numb', 'hienthi'];
-          $values = [
-            "'" . $id_parent . "'",
-            "'" . mysqli_real_escape_string($this->db->link, $thumb_filename) . "'",
-            "'" . mysqli_real_escape_string($this->db->link, $data["numb$i"] ?? 0) . "'",
-            "'" . mysqli_real_escape_string($this->db->link, $data["hienthi$i"] ?? 0) . "'"
-          ];
+          $fields = ['id_parent', 'file', 'numb', 'status'];
+          $data_escaped = [];
+          $data_escaped['id_parent'] = "'" . $id_parent . "'";
+          $data_escaped['file'] = "'" . mysqli_real_escape_string($this->db->link, $thumb_filename) . "'";
+          $data_escaped['numb'] = "'" . mysqli_real_escape_string($this->db->link, $data["numb$i"] ?? 0) . "'";
+          $status_flags = ['hienthi'];
+          $status_values = [];
+          foreach ($status_flags as $flag) {
+            $flag_key = $flag . $i;
+            if (!empty($data[$flag_key])) {
+              $status_values[] = $flag;
+            }
+          }
+          $data_escaped['status'] = "'" . mysqli_real_escape_string($this->db->link, implode(',', $status_values)) . "'";
+          $field_names = array_map(fn($k) => "`$k`", array_keys($data_escaped));
+          $field_values = array_values($data_escaped);
 
-          $insert_query = "INSERT INTO tbl_gallery (" . implode(", ", $fields) . ") VALUES (" . implode(", ", $values) . ")";
-          $this->db->insert($insert_query);
+          $query = "INSERT INTO `$table` (" . implode(", ", $field_names) . ") VALUES (" . implode(", ", $field_values) . ")";
+          $this->db->insert($query);
         }
       }
     }
+
     $this->fn->transfer("Thêm hình ảnh thành công", "index.php?page=gallery_list&id=$id_parent");
   }
+
 
 
   public function get_img_gallery($id)

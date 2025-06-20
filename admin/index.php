@@ -8,7 +8,6 @@ if ($page === 'delete') {
   $functions->delete(
     $_GET['id'] ?? 0,
     $_GET['table'] ?? '',
-    $_GET['image'] ?? '',
     $_GET['type'] ?? '',
     $_GET['id_parent'] ?? null
   );
@@ -19,7 +18,6 @@ if ($page === 'deleteMulti') {
   $functions->deleteMultiple(
     $_GET['listid'] ?? '',
     $_GET['table'] ?? '',
-    $_GET['image'] ?? '',
     $_GET['type'] ?? '',
     $_GET['id_parent'] ?? null
   );

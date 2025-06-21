@@ -52,19 +52,19 @@ include 'templates/breadcrumb.php';
                 <div class="tab-content" id="custom-tabs-three-tabContent-lang">
                   <div class="tab-pane fade show active" id="tabs-lang-vi" role="tabpanel" aria-labelledby="tabs-lang">
                     <div class="form-group">
-                      <label for="namevi">Tiêu đề (vi):</label>
-                      <input type="text" class="form-control for-seo text-sm" name="namevi" id="namevi"
-                        placeholder="Tiêu đề (vi)" value="<?= $_POST['namevi'] ?? ($result['namevi'] ?? "") ?>" required>
+                      <label for="name">Tiêu đề (vi):</label>
+                      <input type="text" class="form-control for-seo text-sm" name="name" id="name"
+                        placeholder="Tiêu đề (vi)" value="<?= $_POST['name'] ?? ($result['name'] ?? "") ?>" required>
                     </div>
                     <div class="form-group">
-                      <label for="descvi">Mô tả (vi):</label>
-                      <textarea class="form-control for-seo text-sm" name="descvi" id="descvi" rows="5"
-                        placeholder="Mô tả"><?= $_POST['descvi'] ?? ($result['descvi'] ?? "") ?></textarea>
+                      <label for="desc">Mô tả (vi):</label>
+                      <textarea class="form-control for-seo text-sm" name="desc" id="desc" rows="5"
+                        placeholder="Mô tả"><?= $_POST['desc'] ?? ($result['desc'] ?? "") ?></textarea>
                     </div>
                     <div class="form-group">
-                      <label for="contentvi">Nội dung (vi):</label>
-                      <textarea class="form-control for-seo text-sm form-control-ckeditor" name="contentvi"
-                        id="contentvi" placeholder="Nội dung (vi)"><?= $_POST['contentvi'] ?? ($result['contentvi'] ?? "") ?></textarea>
+                      <label for="content">Nội dung (vi):</label>
+                      <textarea class="form-control for-seo text-sm form-control-ckeditor" name="content"
+                        id="content" placeholder="Nội dung (vi)"><?= $_POST['content'] ?? ($result['content'] ?? "") ?></textarea>
                     </div>
                   </div>
                 </div>

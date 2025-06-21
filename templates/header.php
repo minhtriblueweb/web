@@ -106,8 +106,8 @@
                 <?php while ($row_social = $show_social->fetch_assoc()): ?><a href="<?= $row_social['link'] ?>"
                     class="lazy hvr-icon-rotate" class="me-2">
                     <img width="20" height="20"
-                      src="<?= empty($row_social['file']) ? BASE_ADMIN . "assets/img/noimage.png" : BASE_ADMIN . UPLOADS . $row_social['file']; ?>"
-                      alt="<?= $row_social['name'] ?>" />
+                      src="<?= empty($row_social['file']) ? NO_IMG : BASE_ADMIN . UPLOADS . $row_social['file']; ?>"
+                      alt="<?= $row_social['namevi'] ?>" />
                   </a>
                 <?php endwhile; ?>
               <?php endif; ?>
@@ -134,13 +134,10 @@
           </div>
           <div class="box-hotline">
             <div class="hotline">
-              Hotline tư vấn:
-              <p>
-                <?= $hotline ?></p>
+              Hotline tư vấn:<p><?= $hotline ?></p>
             </div>
             <div class="hotline">
-              Giờ làm việc:
-              <p><?= $worktime ?></p>
+              Giờ làm việc:<p><?= $worktime ?></p>
             </div>
           </div>
         </div>

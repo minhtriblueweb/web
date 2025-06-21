@@ -27,26 +27,26 @@
               aria-labelledby="tabs-lang">
               <div class="form-gourp mb-0">
                 <label class="d-block">Đường dẫn mẫu (vi):<span class="pl-2 font-weight-normal"
-                    id="slugurlpreviewvi"><?= BASE ?><?php if (!empty($id)): ?><strong class="text-info"><?= $result['slugvi']; ?></strong><?php endif; ?></span></label>
+                    id="slugurlpreviewvi"><?= BASE ?><?php if (!empty($id)): ?><strong class="text-info"><?= $result['slug']; ?></strong><?php endif; ?></span></label>
                 <!-- Slug -->
-                <input type="text" class="form-control slug-input no-validate text-sm" name="slugvi" id="slugvi"
-                  placeholder="Đường dẫn (vi)" required value="<?= $_POST['slugvi'] ?? ($result['slugvi'] ?? "") ?>" />
+                <input type="text" class="form-control slug-input no-validate text-sm" name="slug" id="slug"
+                  placeholder="Đường dẫn (vi)" required value="<?= $_POST['slug'] ?? ($result['slug'] ?? "") ?>" />
                 <input type="hidden" id="slug-defaultvi" value="" />
                 <input type="hidden" class="slug-id" value="<?= !empty($id) ? $id : '' ?>" />
                 <input type="hidden" class="slug-table" value="<?= $table ?>" />
                 <input type="hidden" class="slug-copy" value="" />
-                <div id="slugvi-alert-wrapper" class="mt-2" style="min-height: 20px;">
-                  <p id="alert-slug-danger" class="alert-slugvi text-danger mb-0 d-none">
+                <div id="slug-alert-wrapper" class="mt-2" style="min-height: 20px;">
+                  <p id="alert-slug-danger" class="alert-slug text-danger mb-0 d-none">
                     <i class="fas fa-exclamation-triangle mr-1"></i>
                     <span>Đường dẫn đã tồn tại</span>
                   </p>
-                  <p id="alert-slug-success" class="alert-slugvi text-success mb-0 d-none">
+                  <p id="alert-slug-success" class="alert-slug text-success mb-0 d-none">
                     <i class="fa-solid fa-circle-check mr-1"></i>
                     <span>Đường dẫn hợp lệ.</span>
                   </p>
                 </div>
                 <?php if (!empty($message)): ?>
-                  <p class="alert-slugvi text-danger mt-2 mb-0" id="alert-slug-dangervi">
+                  <p class="alert-slug text-danger mt-2 mb-0" id="alert-slug-dangervi">
                     <i class="fas fa-exclamation-triangle mr-1"></i>
                     <span><?= $message ?></span>
                   </p>

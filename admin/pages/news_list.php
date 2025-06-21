@@ -55,8 +55,8 @@ include 'templates/breadcrumb.php';
             <?php if ($show_news): ?>
               <?php while ($row = $show_news->fetch_assoc()):
                 $id = $row['id'];
-                $name = $row['namevi'];
-                $slug = $row['slugvi'];
+                $name = $row['name'];
+                $slug = $row['slug'];
                 $imgSrc = !empty($row['file'])
                   ? BASE_ADMIN . UPLOADS . $row['file']
                   : NO_IMG;

@@ -10,12 +10,12 @@
       <a href="<?= $row_social['link'] ?>" class="floating-support__item" target="_blank">
         <div class="floating-support__item__icon">
           <img
-            src="<?= empty($row_social['file']) ? BASE_ADMIN . "assets/img/noimage.png" : BASE_ADMIN . UPLOADS . $row_social['file']; ?>"
+            src="<?= empty($row_social['file']) ? NO_IMG : BASE_ADMIN . UPLOADS . $row_social['file']; ?>"
             alt="<?= $row_social['name'] ?>" class="tada">
         </div>
         <div class="floating-support__item__content">
-          <p><b><?= $row_social['name'] ?></b></p>
-          <span><?= $row_social['desc'] ?></span>
+          <p><b><?= $row_social['namevi'] ?></b></p>
+          <span><?= $row_social['descvi'] ?></span>
         </div>
       </a>
     <?php endwhile; ?>

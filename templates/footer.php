@@ -7,13 +7,9 @@
             <img src="<?= $logo ?>" alt="<?= $web_name ?>" title="<?= $web_name ?>" style="width: 250px;" />
           </a>
         </div>
-        <p class="footer-company">
-          <?= $web_name ?>
-        </p>
+        <p class="footer-company"><?= $web_name ?></p>
         <div class="footer-info content-ck">
-          <p>
-            <span><?= $descvi ?></span>
-          </p>
+          <p><span><?= $descvi ?></span></p>
         </div>
         <div class="social">
           <p>KẾT NỐI VỚI CHÚNG TÔI</p>
@@ -26,8 +22,8 @@
             <?php while ($row_social = $show_social->fetch_assoc()): ?>
               <a class="hvr-icon-rotate" href="<?= $row_social['link'] ?>" target="_blank" class="me-2">
                 <img width="50" class="hvr-icon"
-                  src="<?= empty($row_social['file']) ? BASE_ADMIN . "assets/img/noimage.png" : BASE_ADMIN . UPLOADS . $row_social['file']; ?>"
-                  alt="<?= $row_social['name'] ?>" title="<?= $row_social['name'] ?>" />
+                  src="<?= empty($row_social['file']) ? NO_IMG : BASE_ADMIN . UPLOADS . $row_social['file']; ?>"
+                  alt="<?= $row_social['namevi'] ?>" title="<?= $row_social['namevi'] ?>" />
               </a>
             <?php endwhile; ?>
           <?php endif; ?>

@@ -50,7 +50,7 @@ include 'templates/breadcrumb.php';
           <?php if ($show_danhgia): ?>
             <?php while ($row = $show_danhgia->fetch_assoc()):
               $id       = $row['id'];
-              $name     = $row['namevi'];
+              $name     = $row['name'];
               $numb     = $row['numb'];
               $status   = $row['hienthi'] ?? $row['status'] ?? '';
               $imgSrc   = !empty($row['file']) ? BASE_ADMIN . UPLOADS . $row['file'] : NO_IMG;

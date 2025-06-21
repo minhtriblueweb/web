@@ -46,8 +46,8 @@ class social
 
   public function update_social($data, $files, $id)
   {
-    $namevi = mysqli_real_escape_string($this->db->link, $data['namevi']);
-    $descvi = mysqli_real_escape_string($this->db->link, $data['descvi']);
+    $name = mysqli_real_escape_string($this->db->link, $data['name']);
+    $desc = mysqli_real_escape_string($this->db->link, $data['desc']);
     $link = mysqli_real_escape_string($this->db->link, $data['link']);
     $hienthi = mysqli_real_escape_string($this->db->link, $data['hienthi']);
     $numb = mysqli_real_escape_string($this->db->link, $data['numb']);
@@ -68,7 +68,7 @@ class social
         }
       }
     }
-    $query = "UPDATE tbl_social SET name = '$namevi', `desc` = '$descvi',link='$link', hienthi = '$hienthi', numb = '$numb'";
+    $query = "UPDATE tbl_social SET name = '$name', `desc` = '$desc',link='$link', hienthi = '$hienthi', numb = '$numb'";
     if (!empty($unique_image)) {
       $query .= ", file = '$unique_image'";
     }

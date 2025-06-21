@@ -61,19 +61,19 @@ include 'templates/breadcrumb.php';
                 <div class="tab-content" id="custom-tabs-three-tabContent-lang">
                   <div class="tab-pane fade show active" id="tabs-lang-vi" role="tabpanel" aria-labelledby="tabs-lang">
                     <div class="form-group">
-                      <label for="namevi">Tiêu đề (vi):</label>
-                      <input type="text" class="form-control for-seo text-sm" name="namevi" id="namevi"
-                        placeholder="Tiêu đề (vi)" value="<?= $_POST['namevi'] ?? ($result['namevi'] ?? "") ?>" required>
+                      <label for="name">Tiêu đề (vi):</label>
+                      <input type="text" class="form-control for-seo text-sm" name="name" id="name"
+                        placeholder="Tiêu đề (vi)" value="<?= $_POST['name'] ?? ($result['name'] ?? "") ?>" required>
                     </div>
                     <div class="form-group">
-                      <label for="descvi">Mô tả (vi):</label>
-                      <textarea class="form-control for-seo text-sm form-control-ckeditor" name="descvi" id="descvi"
-                        rows="5" placeholder="Mô tả (vi)"><?= $_POST['descvi'] ?? ($result['descvi'] ?? "") ?></textarea>
+                      <label for="desc">Mô tả (vi):</label>
+                      <textarea class="form-control for-seo text-sm form-control-ckeditor" name="desc" id="desc"
+                        rows="5" placeholder="Mô tả (vi)"><?= $_POST['desc'] ?? ($result['desc'] ?? "") ?></textarea>
                     </div>
                     <div class="form-group">
-                      <label for="contentvi">Nội dung (vi):</label>
-                      <textarea class="form-control for-seo text-sm form-control-ckeditor" name="contentvi"
-                        id="contentvi" placeholder="Nội dung (vi)"><?= $_POST['contentvi'] ?? ($result['contentvi'] ?? "") ?></textarea>
+                      <label for="content">Nội dung (vi):</label>
+                      <textarea class="form-control for-seo text-sm form-control-ckeditor" name="content"
+                        id="content" placeholder="Nội dung (vi)"><?= $_POST['content'] ?? ($result['content'] ?? "") ?></textarea>
                     </div>
                   </div>
                 </div>
@@ -102,7 +102,7 @@ include 'templates/breadcrumb.php';
                     <?php while ($row = $show_danhmuc->fetch_assoc()): ?>
                       <option value="<?= $row['id'] ?>"
                         <?= (($_POST['id_list'] ?? ($result['id_list'] ?? '')) == $row['id']) ? 'selected' : '' ?>>
-                        <?= $row['namevi'] ?>
+                        <?= $row['name'] ?>
                       </option>
                     <?php endwhile; ?>
                   <?php endif; ?>
@@ -116,7 +116,7 @@ include 'templates/breadcrumb.php';
                   <?php if (!empty($id) && $show_danhmuc_c2): ?>
                     <?php while ($get_c2 = $show_danhmuc_c2->fetch_assoc()): ?>
                       <option value="<?= $get_c2['id'] ?>" <?= ($get_c2['id'] == $result['id_cat']) ? "selected" : ''; ?>>
-                        <?= $get_c2['namevi'] ?>
+                        <?= $get_c2['name'] ?>
                       </option>
                     <?php endwhile; ?>
                   <?php endif; ?>

@@ -34,7 +34,7 @@ include 'templates/breadcrumb.php';
         <option value="0">Chọn danh mục</option>
         <?php if ($show_danhmuc) : ?>
           <?php while ($resule_danhmuc = $show_danhmuc->fetch_assoc()) : ?>
-            <option value="<?= $resule_danhmuc['id'] ?>"><?= $resule_danhmuc['namevi'] ?></option>
+            <option value="<?= $resule_danhmuc['id'] ?>"><?= $resule_danhmuc['name'] ?></option>
           <?php endwhile; ?>
         <?php endif; ?>
       </select></div>
@@ -74,8 +74,8 @@ include 'templates/breadcrumb.php';
             <?php if ($show_sanpham): ?>
               <?php while ($row = $show_sanpham->fetch_assoc()):
                 $id = $row['id'];
-                $namevi = $row['namevi'];
-                $slugvi = $row['slugvi'];
+                $name = $row['name'];
+                $slug = $row['slug'];
                 $img = !empty($row['file'])
                   ? BASE_ADMIN . UPLOADS . $row['file']
                   : NO_IMG;
@@ -97,16 +97,16 @@ include 'templates/breadcrumb.php';
 
                   <!-- Ảnh sản phẩm -->
                   <td class="align-middle">
-                    <a href="<?= $linkEdit . $id ?>" title="<?= $namevi ?>">
-                      <img class="rounded img-preview" src="<?= $img ?>" alt="<?= $namevi ?>" />
+                    <a href="<?= $linkEdit . $id ?>" title="<?= $name ?>">
+                      <img class="rounded img-preview" src="<?= $img ?>" alt="<?= $name ?>" />
                     </a>
                   </td>
 
                   <!-- Tên sản phẩm -->
                   <td class="align-middle">
-                    <a class="text-dark text-break" href="<?= $linkEdit . $id ?>" title="<?= $namevi ?>"><?= $namevi ?></a>
+                    <a class="text-dark text-break" href="<?= $linkEdit . $id ?>" title="<?= $name ?>"><?= $name ?></a>
                     <div class="tool-action mt-2 w-clear">
-                      <a class="text-primary mr-3" href="<?= BASE . "$slugvi" ?>" target="_blank" title="Xem"><i class="far fa-eye mr-1"></i>View</a>
+                      <a class="text-primary mr-3" href="<?= BASE . "$slug" ?>" target="_blank" title="Xem"><i class="far fa-eye mr-1"></i>View</a>
                       <a class="text-info mr-3" href="<?= $linkEdit . $id ?>" title="Chỉnh sửa"><i class="far fa-edit mr-1"></i>Edit</a>
                       <a class="text-danger" id="delete-item" data-url="<?= $linkDelete . $id ?>" title="Xóa"><i class="far fa-trash-alt mr-1"></i>Delete</a>
                     </div>

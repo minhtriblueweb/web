@@ -51,7 +51,7 @@ include 'templates/breadcrumb.php';
             <?php if ($show_tieuchi): ?>
               <?php while ($row = $show_tieuchi->fetch_assoc()):
                 $id       = $row['id'];
-                $name     = $row['namevi'];
+                $name     = $row['name'];
                 $numb     = $row['numb'];
                 $status   = $row['status'] ?? '';
                 $imgSrc   = !empty($row['file']) ? BASE_ADMIN . UPLOADS . $row['file'] : NO_IMG;

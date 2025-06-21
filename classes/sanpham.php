@@ -149,14 +149,14 @@ class sanpham
     return $result;
   }
 
-  public function update_views_by_slug($slug)
+  public function update_ews_by_slug($slug)
   {
-    $query = "SELECT * FROM tbl_sanpham WHERE slugvi = '$slug'";
+    $query = "SELECT * FROM tbl_sanpham WHERE slug = '$slug'";
     $result = $this->db->select($query);
     if ($result && $result->num_rows > 0) {
       $product = $result->fetch_assoc();
-      $new_views = $product['views'] + 1;
-      $update_query = "UPDATE tbl_sanpham SET views = '$new_views' WHERE slugvi = '$slug'";
+      $new_ews = $product['ews'] + 1;
+      $update_query = "UPDATE tbl_sanpham SET ews = '$new_ews' WHERE slug = '$slug'";
       $this->db->update($update_query);
       return $product;
     }
@@ -167,10 +167,10 @@ class sanpham
   public function get_danhmuc_by_sanpham($id)
   {
     $query = "SELECT tbl_sanpham.*,
-        tbl_danhmuc.namevi AS dm_c1_name,
-        tbl_danhmuc.slugvi AS dm_c1_slug,
-        tbl_danhmuc_c2.namevi AS dm_c2_name,
-        tbl_danhmuc_c2.slugvi AS dm_c2_slug
+        tbl_danhmuc.name AS dm_c1_name,
+        tbl_danhmuc.slug AS dm_c1_slug,
+        tbl_danhmuc_c2.name AS dm_c2_name,
+        tbl_danhmuc_c2.slug AS dm_c2_slug
         FROM tbl_sanpham
         INNER JOIN tbl_danhmuc ON tbl_sanpham.id_list = tbl_danhmuc.id
         LEFT JOIN tbl_danhmuc_c2 ON tbl_sanpham.id_cat = tbl_danhmuc_c2.id
@@ -182,7 +182,7 @@ class sanpham
   public function get_sanpham_by_slug($slug)
   {
     $slug = mysqli_real_escape_string($this->db->link, $slug);
-    $query = "SELECT * FROM tbl_sanpham WHERE slugvi = '$slug' AND hienthi = 'hienthi' LIMIT 1";
+    $query = "SELECT * FROM tbl_sanpham WHERE slug = '$slug' AND hienthi = 'hienthi' LIMIT 1";
     $result = $this->db->select($query);
     return $result ? $result->fetch_assoc() : false;
   }
@@ -191,11 +191,11 @@ class sanpham
   {
     $id = mysqli_real_escape_string($this->db->link, $id);
     $table = mysqli_real_escape_string($this->db->link, $table);
-    $query = "SELECT namevi FROM `$table` WHERE id = '$id' LIMIT 1";
+    $query = "SELECT name FROM `$table` WHERE id = '$id' LIMIT 1";
     $result = $this->db->select($query);
     if ($result && $result->num_rows > 0) {
       $row = $result->fetch_assoc();
-      return $row['namevi'] ?? '';
+      return $row['name'] ?? '';
     }
     return '';
   }
@@ -203,19 +203,19 @@ class sanpham
   public function save_sanpham($data, $files, $id = null)
   {
     $fields = [
-      'slugvi',
-      'namevi',
+      'slug',
+      'name',
       'id_list',
       'id_cat',
       'regular_price',
       'sale_price',
       'discount',
       'code',
-      'descvi',
-      'contentvi',
-      'titlevi',
-      'keywordsvi',
-      'descriptionvi',
+      'desc',
+      'content',
+      'title',
+      'keywords',
+      'description',
       'numb'
     ];
     $table = 'tbl_sanpham';
@@ -231,7 +231,7 @@ class sanpham
       }
     }
     $data_escaped['status'] = mysqli_real_escape_string($this->db->link, implode(',', $status_values));
-    $slug_error = $this->fn->isSlugviDuplicated($data_escaped['slugvi'], $table, $id ?? '');
+    $slug_error = $this->fn->isSlugDuplicated($data_escaped['slug'], $table, $id ?? '');
     if ($slug_error) return $slug_error;
     $thumb_filename = '';
     $old_file_path = '';

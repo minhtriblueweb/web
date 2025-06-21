@@ -26,7 +26,7 @@ class tieuchi
 
   public function save_tieuchi($data, $files, $id = null)
   {
-    $fields = ['namevi', 'descvi', 'numb'];
+    $fields = ['name', 'desc', 'numb'];
     $table = 'tbl_tieuchi';
 
     // Escape dữ liệu đầu vào

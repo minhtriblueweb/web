@@ -44,7 +44,7 @@ include 'templates/breadcrumb.php';
   </div>
   <div class="card card-primary card-outline text-sm mb-0">
     <div class="card-header">
-      <h3 class="card-title">Danh sách Hình ảnh sản phẩm : <span class="text-info"><?= $result['namevi'] ?></span>
+      <h3 class="card-title">Danh sách Hình ảnh sản phẩm : <span class="text-info"><?= $result['name'] ?></span>
       </h3>
     </div>
     <div class="card-body table-responsive p-0">

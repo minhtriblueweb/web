@@ -19,7 +19,7 @@ class danhgia
 
   public function save_danhgia($data, $files, $id = null)
   {
-    $fields = ['namevi', 'addressvi', 'descvi', 'numb'];
+    $fields = ['name', 'address', 'desc', 'numb'];
     $table = 'tbl_danhgia';
 
     // Escape dữ liệu đầu vào

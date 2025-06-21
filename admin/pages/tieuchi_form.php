@@ -51,13 +51,13 @@ include 'templates/breadcrumb.php';
                   <div class="tab-pane fade show active" id="tabs-lang-vi" role="tabpanel" aria-labelledby="tabs-lang">
                     <div class="form-group">
                       <label for="name">Tiêu đề:</label>
-                      <input type="text" class="form-control for-seo text-sm" name="namevi" id="namevi"
-                        placeholder="Tiêu đề" value="<?= $_POST['namevi'] ?? ($result['namevi'] ?? "") ?>" required>
+                      <input type="text" class="form-control for-seo text-sm" name="name" id="name"
+                        placeholder="Tiêu đề" value="<?= $_POST['name'] ?? ($result['name'] ?? "") ?>" required>
                     </div>
                     <div class="form-group">
                       <label for="desc">Mô tả:</label>
-                      <textarea class="form-control for-seo text-sm" name="descvi" id="descvi" rows="5"
-                        placeholder="Mô tả"><?= $_POST['descvi'] ?? ($result['descvi'] ?? "") ?></textarea>
+                      <textarea class="form-control for-seo text-sm" name="desc" id="desc" rows="5"
+                        placeholder="Mô tả"><?= $_POST['desc'] ?? ($result['desc'] ?? "") ?></textarea>
                     </div>
                   </div>
                 </div>

@@ -22,14 +22,14 @@ class danhmuc
     $query = "
           SELECT
               c2.*,
-              c1.namevi AS name_lv1,
-              c1.slugvi AS slug_lv1,
-              c1.titlevi AS title_lv1,
-              c1.keywordsvi AS keywords_lv1,
-              c1.descriptionvi AS description_lv1
+              c1.name AS name_lv1,
+              c1.slug AS slug_lv1,
+              c1.title AS title_lv1,
+              c1.keywords AS keywords_lv1,
+              c1.description AS description_lv1
           FROM tbl_danhmuc_c2 c2
           JOIN tbl_danhmuc c1 ON c2.id_list = c1.id
-          WHERE c2.slugvi = '$slug'
+          WHERE c2.slug = '$slug'
           LIMIT 1
       ";
 
@@ -46,7 +46,7 @@ class danhmuc
   public function slug_exists_lv1($slug)
   {
     $slug = mysqli_real_escape_string($this->db->link, $slug);
-    $query = "SELECT id FROM tbl_danhmuc WHERE slugvi = '$slug' LIMIT 1";
+    $query = "SELECT id FROM tbl_danhmuc WHERE slug = '$slug' LIMIT 1";
     $result = $this->db->select($query);
     return $result ? true : false;
   }
@@ -57,13 +57,13 @@ class danhmuc
     $slug_lv2 = mysqli_real_escape_string($this->db->link, $slug_lv2);
 
     // Lấy ID của danh mục cấp 1 từ slug
-    $query_lv1 = "SELECT id FROM tbl_danhmuc WHERE slugvi = '$slug_lv1' LIMIT 1";
+    $query_lv1 = "SELECT id FROM tbl_danhmuc WHERE slug = '$slug_lv1' LIMIT 1";
     $result_lv1 = $this->db->select($query_lv1);
     if ($result_lv1 && $row_lv1 = $result_lv1->fetch_assoc()) {
       $id_list = $row_lv1['id'];
 
       // Kiểm tra danh mục cấp 2 trong danh mục cấp 1 đó
-      $query_lv2 = "SELECT id FROM tbl_danhmuc_c2 WHERE slugvi = '$slug_lv2' AND id_list = '$id_list' LIMIT 1";
+      $query_lv2 = "SELECT id FROM tbl_danhmuc_c2 WHERE slug = '$slug_lv2' AND id_list = '$id_list' LIMIT 1";
       $result_lv2 = $this->db->select($query_lv2);
       return $result_lv2 ? true : false;
     }
@@ -77,12 +77,12 @@ class danhmuc
     $query = "
         SELECT
             c2.*,
-            c1.slugvi AS slug_lv1,
-            c1.namevi AS name_lv1,
+            c1.slug AS slug_lv1,
+            c1.name AS name_lv1,
             c1.id AS id_list
         FROM tbl_danhmuc_c2 AS c2
         JOIN tbl_danhmuc AS c1 ON c2.id_list = c1.id
-        WHERE c2.slugvi = '$slug_lv2'
+        WHERE c2.slug = '$slug_lv2'
         LIMIT 1
     ";
 
@@ -98,7 +98,7 @@ class danhmuc
   public function get_danhmuc($slug)
   {
     $slug = mysqli_real_escape_string($this->db->link, $slug);
-    $query = "SELECT * FROM tbl_danhmuc WHERE slugvi = '$slug' LIMIT 1";
+    $query = "SELECT * FROM tbl_danhmuc WHERE slug = '$slug' LIMIT 1";
     $result = $this->db->select($query);
     return $result;
   }
@@ -106,7 +106,7 @@ class danhmuc
   public function get_danhmuc_or_404($slug, $table)
   {
     $slug = mysqli_real_escape_string($this->db->link, $slug);
-    $query = "SELECT * FROM $table WHERE slugvi = '$slug' LIMIT 1";
+    $query = "SELECT * FROM $table WHERE slug = '$slug' LIMIT 1";
     $result = $this->db->select($query);
     if ($result && $row = $result->fetch_assoc()) {
       return $row;
@@ -120,7 +120,7 @@ class danhmuc
   public function get_danhmuc_c2($slug)
   {
     $slug = mysqli_real_escape_string($this->db->link, $slug);
-    $query = "SELECT * FROM tbl_danhmuc_c2 WHERE slugvi = '$slug' LIMIT 1";
+    $query = "SELECT * FROM tbl_danhmuc_c2 WHERE slug = '$slug' LIMIT 1";
     $result = $this->db->select($query);
     return $result;
   }
@@ -148,10 +148,10 @@ class danhmuc
       $where[] = "`id_list` = $id_list";
     }
 
-    // 🔍 Tìm kiếm theo từ khóa trong namevi
+    // 🔍 Tìm kiếm theo từ khóa trong name
     if (!empty($options['keyword'])) {
       $keyword = mysqli_real_escape_string($this->db->link, $options['keyword']);
-      $where[] = "`namevi` LIKE '%$keyword%'";
+      $where[] = "`name` LIKE '%$keyword%'";
     }
 
     // Câu lệnh SELECT
@@ -174,7 +174,7 @@ class danhmuc
 
   public function save_danhmuc($data, $files, $id = null)
   {
-    $fields = ['slugvi', 'namevi', 'descvi', 'contentvi', 'titlevi', 'keywordsvi', 'descriptionvi', 'numb'];
+    $fields = ['slug', 'name', 'desc', 'content', 'title', 'keywords', 'description', 'numb'];
     $table = 'tbl_danhmuc';
     $data_escaped = [];
     foreach ($fields as $field) {
@@ -188,7 +188,7 @@ class danhmuc
       }
     }
     $data_escaped['status'] = mysqli_real_escape_string($this->db->link, implode(',', $status_values));
-    $slug_error = $this->fn->isSlugviDuplicated($data_escaped['slugvi'], $table, $id ?? '');
+    $slug_error = $this->fn->isSlugDuplicated($data_escaped['slug'], $table, $id ?? '');
     if ($slug_error) return $slug_error;
     $thumb_filename = '';
     $old_file_path = '';
@@ -227,7 +227,7 @@ class danhmuc
 
   public function save_danhmuc_c2($data, $files, $id = null)
   {
-    $fields = ['slugvi', 'namevi', 'id_list', 'titlevi', 'keywordsvi', 'descriptionvi', 'numb'];
+    $fields = ['slug', 'name', 'id_list', 'title', 'keywords', 'description', 'numb'];
     $table = 'tbl_danhmuc_c2';
     $data_escaped = [];
     foreach ($fields as $field) {
@@ -241,7 +241,7 @@ class danhmuc
       }
     }
     $data_escaped['status'] = mysqli_real_escape_string($this->db->link, implode(',', $status_values));
-    $slug_error = $this->fn->isSlugviDuplicated($data_escaped['slugvi'], $table, $id ?? '');
+    $slug_error = $this->fn->isSlugDuplicated($data_escaped['slug'], $table, $id ?? '');
     if ($slug_error) {
       return $slug_error;
     }

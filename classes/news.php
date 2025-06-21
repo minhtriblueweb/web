@@ -18,16 +18,16 @@ class news
   public function get_news_by_slug($slug)
   {
     $slug = mysqli_real_escape_string($this->db->link, $slug);
-    $query = "SELECT * FROM tbl_news WHERE slugvi = '$slug' LIMIT 1";
+    $query = "SELECT * FROM tbl_news WHERE slug = '$slug' LIMIT 1";
     $result = $this->db->select($query);
     return $result ? $result->fetch_assoc() : false;
   }
 
-  public function get_baiviet_by_slug_and_type($slug, $type)
+  public function get_baiet_by_slug_and_type($slug, $type)
   {
     $slug = mysqli_real_escape_string($this->db->link, $slug);
     $type = mysqli_real_escape_string($this->db->link, $type);
-    $query = "SELECT * FROM tbl_news WHERE slugvi = '$slug' AND type = '$type' LIMIT 1";
+    $query = "SELECT * FROM tbl_news WHERE slug = '$slug' AND type = '$type' LIMIT 1";
     $result = $this->db->select($query);
     return $result ? $result->fetch_assoc() : false;
   }
@@ -101,14 +101,14 @@ class news
     return $result;
   }
 
-  public function update_views_by_slug($slug)
+  public function update_ews_by_slug($slug)
   {
-    $query = "SELECT * FROM tbl_news WHERE slugvi = '$slug'";
+    $query = "SELECT * FROM tbl_news WHERE slug = '$slug'";
     $result = $this->db->select($query);
     if ($result && $result->num_rows > 0) {
       $product = $result->fetch_assoc();
-      $new_views = $product['views'] + 1;
-      $update_query = "UPDATE tbl_news SET views = '$new_views' WHERE slugvi = '$slug'";
+      $new_ews = $product['ews'] + 1;
+      $update_query = "UPDATE tbl_news SET ews = '$new_ews' WHERE slug = '$slug'";
       $this->db->update($update_query);
       return $product;
     }
@@ -119,10 +119,10 @@ class news
   public function get_danhmuc_by_tintuc($id)
   {
     $query = "SELECT tbl_news.*,
-        tbl_danhmuc.namevi AS danhmuc,
-        tbl_danhmuc.slugvi AS danhmuc_slugvi,
-        tbl_danhmuc_c2.namevi AS danhmuc_c2,
-        tbl_danhmuc_c2.slugvi AS danhmuc_c2_slugvi
+        tbl_danhmuc.name AS danhmuc,
+        tbl_danhmuc.slug AS danhmuc_slug,
+        tbl_danhmuc_c2.name AS danhmuc_c2,
+        tbl_danhmuc_c2.slug AS danhmuc_c2_slug
         FROM tbl_news
         INNER JOIN tbl_danhmuc ON tbl_news.id_list = tbl_danhmuc.id
         LEFT JOIN tbl_danhmuc_c2 ON tbl_news.id_cat = tbl_danhmuc_c2.id
@@ -133,7 +133,7 @@ class news
 
   public function get_news($slug)
   {
-    $query = "SELECT * FROM tbl_news WHERE slugvi = '$slug' AND hienthi = 'hienthi' LIMIT 1";
+    $query = "SELECT * FROM tbl_news WHERE slug = '$slug' AND hienthi = 'hienthi' LIMIT 1";
     $result = $this->db->select($query);
     return $result;
   }
@@ -158,13 +158,13 @@ class news
   public function save_news($data, $files, $id = null)
   {
     $fields = [
-      'slugvi',
-      'namevi',
-      'descvi',
-      'contentvi',
-      'titlevi',
-      'keywordsvi',
-      'descriptionvi',
+      'slug',
+      'name',
+      'desc',
+      'content',
+      'title',
+      'keywords',
+      'description',
       'numb',
       'type'
     ];
@@ -181,7 +181,7 @@ class news
       }
     }
     $data_escaped['status'] = mysqli_real_escape_string($this->db->link, implode(',', $status_values));
-    $slug_error = $this->fn->isSlugviDuplicated($data_escaped['slugvi'], $table, $id ?? '');
+    $slug_error = $this->fn->isSlugDuplicated($data_escaped['slug'], $table, $id ?? '');
     if ($slug_error) return $slug_error;
     $thumb_filename = '';
     $old_file_path = '';

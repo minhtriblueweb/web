@@ -53,7 +53,7 @@ include 'templates/breadcrumb.php';
             <?php if ($show_danhmuc && $show_danhmuc->num_rows > 0): ?>
               <?php while ($row = $show_danhmuc->fetch_assoc()):
                 $id = $row['id'];
-                $namevi = $row['namevi'];
+                $name = $row['name'];
                 $file = empty($row['file']) ? NO_IMG : BASE_ADMIN . UPLOADS . $row['file'];
               ?>
                 <tr>
@@ -75,15 +75,15 @@ include 'templates/breadcrumb.php';
 
                   <!-- Ảnh -->
                   <td class="align-middle">
-                    <a href="<?= $linkEdit . $id ?>" title="<?= $namevi ?>">
-                      <img src="<?= $file ?>" alt="<?= $namevi ?>" class="rounded img-preview" />
+                    <a href="<?= $linkEdit . $id ?>" title="<?= $name ?>">
+                      <img src="<?= $file ?>" alt="<?= $name ?>" class="rounded img-preview" />
                     </a>
                   </td>
 
                   <!-- Tên -->
                   <td class="align-middle">
-                    <a class="text-dark text-break" href="<?= $linkEdit . $id ?>" title="<?= $namevi ?>">
-                      <?= $namevi ?>
+                    <a class="text-dark text-break" href="<?= $linkEdit . $id ?>" title="<?= $name ?>">
+                      <?= $name ?>
                     </a>
                   </td>
 

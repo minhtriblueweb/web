@@ -18,10 +18,10 @@ class functions
   public function get_seo_data(array $data): array
   {
     return [
-      'title'       => !empty($data['titlevi']) ? htmlspecialchars($data['titlevi']) : (!empty($data['namevi']) ? htmlspecialchars($data['namevi']) : ''),
-      'keywords'    => !empty($data['keywordsvi']) ? htmlspecialchars($data['keywordsvi']) : '',
-      'description' => !empty($data['descriptionvi']) ? htmlspecialchars($data['descriptionvi']) : '',
-      'url'         => !empty($data['slugvi']) ? BASE . $data['slugvi'] : BASE,
+      'title'       => !empty($data['title']) ? htmlspecialchars($data['title']) : (!empty($data['name']) ? htmlspecialchars($data['name']) : ''),
+      'keywords'    => !empty($data['keywords']) ? htmlspecialchars($data['keywords']) : '',
+      'description' => !empty($data['description']) ? htmlspecialchars($data['description']) : '',
+      'url'         => !empty($data['slug']) ? BASE . $data['slug'] : BASE,
       'image'       => !empty($data['file']) ? BASE_ADMIN . UPLOADS . $data['file'] : '',
     ];
   }
@@ -86,7 +86,7 @@ class functions
     }
     if (!empty($options['keyword'])) {
       $keyword = mysqli_real_escape_string($this->db->link, $options['keyword']);
-      $where[] = "`namevi` LIKE '%$keyword%'";
+      $where[] = "`name` LIKE '%$keyword%'";
     }
     return $where;
   }
@@ -215,14 +215,14 @@ class functions
     if ($type === '') return '';
 
     $escapedType = mysqli_real_escape_string($this->db->link, $type);
-    $query = "SELECT langvi FROM tbl_type WHERE lang_define = '$escapedType' LIMIT 1";
+    $query = "SELECT lang FROM tbl_type WHERE lang_define = '$escapedType' LIMIT 1";
     $result = $this->db->select($query);
 
     if ($result && $row = $result->fetch_assoc()) {
-      $langvi = $row['langvi'];
+      $lang = $row['lang'];
       return [
-        'vi' => $langvi,
-        'slug' => $this->to_slug($langvi)
+        '' => $lang,
+        'slug' => $this->to_slug($lang)
       ];
     }
     return $type;
@@ -254,14 +254,14 @@ class functions
     return $default ? 'checked' : '';
   }
 
-  public function isSlugviDuplicated($slugvi, $table, $exclude_id)
+  public function isSlugDuplicated($slug, $table, $exclude_id)
   {
-    $slugvi = mysqli_real_escape_string($this->db->link, trim($slugvi));
+    $slug = mysqli_real_escape_string($this->db->link, trim($slug));
     $table = mysqli_real_escape_string($this->db->link, trim($table));
     $exclude_id = mysqli_real_escape_string($this->db->link, trim($exclude_id));
-    // ✅ Danh sách bảng có thể chứa slugvi
+    // ✅ Danh sách bảng có thể chứa slug
     $tables = ['tbl_danhmuc', 'tbl_danhmuc_c2', 'tbl_sanpham', 'tbl_news'];
-    // ❌ Danh sách slugvi KHÔNG ĐƯỢC sử dụng (trang tĩnh)
+    // ❌ Danh sách slug KHÔNG ĐƯỢC sử dụng (trang tĩnh)
     $reserved_slugs = [
       'lien-he',
       'tin-tuc',
@@ -274,17 +274,17 @@ class functions
       'dang-ky'
     ];
     // 🔒 Nếu slug nằm trong danh sách cấm → từ chối ngay
-    if (in_array($slugvi, $reserved_slugs)) {
+    if (in_array($slug, $reserved_slugs)) {
       return 'Đường dẫn đã tồn tại. Vui lòng chọn đường dẫn khác để tránh trùng lặp.';
     }
     // 🔁 Kiểm tra trùng trong bảng dữ liệu
     foreach ($tables as $tbl) {
-      // Bỏ qua nếu bảng không có cột slugvi
-      $check_column_query = "SHOW COLUMNS FROM `$tbl` LIKE 'slugvi'";
+      // Bỏ qua nếu bảng không có cột slug
+      $check_column_query = "SHOW COLUMNS FROM `$tbl` LIKE 'slug'";
       $check_column_result = $this->db->select($check_column_query);
       if (!$check_column_result || $check_column_result->num_rows == 0) continue;
       // Câu truy vấn kiểm tra slug
-      $check_slug_query = "SELECT slugvi FROM `$tbl` WHERE slugvi = '$slugvi'";
+      $check_slug_query = "SELECT slug FROM `$tbl` WHERE slug = '$slug'";
       if ($table === $tbl && is_numeric($exclude_id) && (int)$exclude_id > 0) {
         $check_slug_query .= " AND id != '$exclude_id'";
       }

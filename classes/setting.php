@@ -122,7 +122,7 @@ class setting
       'copyright',
       'introduction',
       'worktime',
-      'descvi',
+      'desc',
       'coords_iframe',
       'coords',
       'analytics',

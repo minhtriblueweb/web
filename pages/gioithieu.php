@@ -1,13 +1,13 @@
 <?php
 $get_gioithieu = $trangtinh->get_static('gioithieu');
 if ($get_gioithieu) {
-  $result_gioithieu = $get_gioithieu->fetch_assoc();
+  $row_gt = $get_gioithieu->fetch_assoc();
 }
-$seo['title'] = $result_gioithieu['titlevi'];
-$seo['keywords'] = $result_gioithieu['keywordsvi'];
-$seo['description'] = $result_gioithieu['descriptionvi'];
-$seo['url'] = $result_gioithieu['slugvi'];
-$seo['image'] = isset($result_gioithieu['file_name']) ? BASE_ADMIN . UPLOADS . $result_gioithieu['file_name'] : '';
+$seo['title'] = $row_gt['title'];
+$seo['keywords'] = $row_gt['keywords'];
+$seo['description'] = $row_gt['description'];
+$seo['url'] = $row_gt['slug'];
+$seo['image'] = isset($row_gt['file']) ? BASE_ADMIN . UPLOADS . $row_gt['file'] : '';
 ?>
 <div class="wrap-main wrap-home w-clear" style="background:#fff">
   <div class="breadCrumbs">
@@ -24,12 +24,12 @@ $seo['image'] = isset($result_gioithieu['file_name']) ? BASE_ADMIN . UPLOADS . $
   </div>
   <div class="wrap-product-list">
     <div class="title-list-hot mt-4">
-      <h2><?= $result_gioithieu['namevi'] ?></h2>
+      <h2><?= $row_gt['name'] ?></h2>
       <div class="animate-border bg-danger mt-1"></div>
     </div>
     <div class="wrap-content" style="background: unset;">
       <div class="row">
-        <?= $result_gioithieu['contentvi'] ?>
+        <?= $row_gt['content'] ?>
       </div>
     </div>
     <?php include ROOT . '/templates/tieuchi.php'; ?>

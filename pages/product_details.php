@@ -40,10 +40,10 @@ $sanpham_lienquan = $sanpham->sanpham_lienquan($id, $id_cat, $records_per_page, 
 $get_gallery = $sanpham->get_gallery($id);
 
 // SEO
-$seo['title'] = !empty($kg_sanpham['titlevi']) ? $kg_sanpham['titlevi'] : $kg_sanpham['namevi'];
+$seo['title'] = !empty($kg_sanpham['title']) ? $kg_sanpham['title'] : $kg_sanpham['name'];
 $seo['keywords'] = $kg_sanpham['keywordsvi'];
 $seo['description'] = $kg_sanpham['descriptionvi'];
-$seo['url'] = BASE . $kg_sanpham['slugvi'];
+$seo['url'] = BASE . $kg_sanpham['slug'];
 $seo['image'] = BASE_ADMIN . UPLOADS . $kg_sanpham['file'];
 ?>
 <div class="wrap-main wrap-home w-clear">
@@ -76,8 +76,8 @@ $seo['image'] = BASE_ADMIN . UPLOADS . $kg_sanpham['file'];
         <?php endif; ?>
 
         <li class="breadcrumb-item active">
-          <a class="text-decoration-none" href="<?= BASE . 'san-pham/' . $kg_sanpham['slugvi'] ?>">
-            <span><?= $kg_sanpham['namevi'] ?></span>
+          <a class="text-decoration-none" href="<?= BASE . $kg_sanpham['slug'] ?>">
+            <span><?= $kg_sanpham['name'] ?></span>
           </a>
         </li>
       </ol>
@@ -92,10 +92,10 @@ $seo['image'] = BASE_ADMIN . UPLOADS . $kg_sanpham['file'];
           <a id="Zoom-1" class="MagicZoom"
             data-options="zoomMode: magnifier; zoomPosition: inner; hint: off; rightClick: true; expandCaption: false; history: false;"
             href="<?= empty($kg_sanpham['file']) ? BASE_ADMIN . "assets/img/noimage.png" : BASE_ADMIN . UPLOADS . $kg_sanpham['file']; ?>"
-            title="<?= $kg_sanpham['namevi'] ?>">
+            title="<?= $kg_sanpham['name'] ?>">
             <img
               src="<?= empty($kg_sanpham['file']) ? BASE_ADMIN . "assets/img/noimage.png" : BASE_ADMIN . UPLOADS . $kg_sanpham['file']; ?>"
-              alt="<?= $kg_sanpham['namevi'] ?>" />
+              alt="<?= $kg_sanpham['name'] ?>" />
           </a>
         </div>
 
@@ -125,7 +125,7 @@ $seo['image'] = BASE_ADMIN . UPLOADS . $kg_sanpham['file'];
         <?php endif; ?>
       </div>
       <div class="right-pro-detail">
-        <p class="title-pro-detail mb-3"><?= $kg_sanpham['namevi'] ?></p>
+        <p class="title-pro-detail mb-3"><?= $kg_sanpham['name'] ?></p>
         <ul class="attr-pro-detail">
           <?php if (!empty($kg_sanpham['code'])): ?>
             <li>
@@ -210,8 +210,8 @@ $seo['image'] = BASE_ADMIN . UPLOADS . $kg_sanpham['file'];
       <div class="grid-product" data-aos="fade-up" data-aos-duration="1000">
         <?php while ($kg_sanpham_lienquan = $sanpham_lienquan->fetch_assoc()) : ?>
           <?php
-          $slug = $kg_sanpham_lienquan['slugvi'];
-          $name = $kg_sanpham_lienquan['namevi'];
+          $slug = $kg_sanpham_lienquan['slug'];
+          $name = $kg_sanpham_lienquan['name'];
           $img_src = empty($kg_sanpham_lienquan['file'])
             ? BASE_ADMIN . "assets/img/noimage.png"
             : BASE_ADMIN . UPLOADS . $kg_sanpham_lienquan['file'];
@@ -249,7 +249,7 @@ $seo['image'] = BASE_ADMIN . UPLOADS . $kg_sanpham['file'];
       </div>
 
       <div class="pagination-home w-100">
-        <?php // echo $pagination_html = $functions->renderPagination_index($current_page, $total_pages, $slug);
+        <?php // echo $pagination_html = $fn->renderPagination_index($current_page, $total_pages, $slug);
         ?>
       </div>
     <?php endif; ?>

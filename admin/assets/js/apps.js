@@ -851,64 +851,78 @@ function slugStatus(status) {
   });
 }
 
-function slugAlert(res) {
-  const defaultInvalidMsg = "Đường dẫn đã tồn tại.";
-  const defaultValidMsg = "Đường dẫn hợp lệ.";
-
-  if (res.status == 1) {
-    $("#alert-slug-danger").addClass("d-none");
-    $("#alert-slug-success").removeClass("d-none");
-    $("#alert-slug-success span").text(defaultValidMsg);
+var sluglang = 'vi,en';
+function slugAlert(res, lang = 'vi') {
+  const msgValid = "Đường dẫn hợp lệ.";
+  const msgInvalid = res.message || "Đường dẫn đã tồn tại.";
+  const $slugInput = $(`#slug${lang}`);
+  const $success = $(`#alert-slug-success${lang}`);
+  const $danger = $(`#alert-slug-danger${lang}`);
+  if ($slugInput.length === 0) return;
+  if (res.status === 1) {
+    $danger.addClass("d-none");
+    $success.removeClass("d-none").find("span").text(msgValid);
     $(".submit-check").prop("disabled", false);
-  } else if (res.status == 0) {
-    $("#alert-slug-success").addClass("d-none");
-    $("#alert-slug-danger").removeClass("d-none");
-
-    // Dùng message từ PHP nếu có
-    const msg = res.message && typeof res.message === "string" ? res.message : defaultInvalidMsg;
-    $("#alert-slug-danger span").text(msg);
-
+  } else if (res.status === 0) {
+    $success.addClass("d-none");
+    $danger.removeClass("d-none").find("span").text(msgInvalid);
     $(".submit-check").prop("disabled", true);
   } else {
-    $("#alert-slug-danger").addClass("d-none");
-    $("#alert-slug-success").addClass("d-none");
-    $(".submit-check").prop("disabled", true);
+    toggleSlugAlert(lang);
   }
 }
+function toggleSlugAlert(lang = 'vi') {
+  const $slugInput = $(`#slug${lang}`);
+  if ($slugInput.length === 0) return;
+  $(`#alert-slug-success${lang}`).addClass("d-none");
+  $(`#alert-slug-danger${lang}`).addClass("d-none");
+  $(".submit-check").prop("disabled", true);
+}
+function slugCheck(lang = 'vi') {
+  const slug = $(`#slug${lang}`).val();
+  const id = $(".slug-id").val();
+  const table = $(".slug-table").val();
 
-function slugCheck() {
-  var slug = $(".slug-input").val();
-  var id = $(".slug-id").val();
-  var table = $(".slug-table").val();
   if (slug) {
     $.ajax({
       url: "api/slug.php",
       type: "POST",
       dataType: "json",
-      data: { slug: slug, id: id, table: table },
+      data: {
+        slug: slug,
+        id: id,
+        table: table,
+        lang: lang
+      },
       success: function (res) {
-        slugAlert(res);
+        slugAlert(res, lang);
       }
     });
   } else {
-    $("#alert-slug-danger").addClass("d-none");
-    $("#alert-slug-success").addClass("d-none");
+    toggleSlugAlert(lang); // reset alert nếu không có slug
   }
 }
 
-
-let lastSlug = "";
+// Theo dõi thay đổi slug từng ngôn ngữ
+let lastSlug = {};
 setInterval(function () {
-  const currentSlug = $(".slug-input").val();
-  if (currentSlug !== lastSlug) {
-    lastSlug = currentSlug;
-    slugCheck(); // Gọi kiểm tra nếu slug thay đổi
-  }
+  const langs = sluglang.split(',');
+  langs.forEach(function (lang) {
+    const $input = $(`#slug${lang}`);
+    const current = $input.val();
+    if (lastSlug[lang] !== current) {
+      lastSlug[lang] = current;
+      slugCheck(lang);
+    }
+  });
 }, 500);
-$("#slugvi").on("blur", function () {
-  slugCheck();
-});
 
+// Kiểm tra lại khi blur (thoát khỏi ô input)
+sluglang.split(',').forEach(function (lang) {
+  $(`#slug${lang}`).on("blur", function () {
+    slugCheck(lang);
+  });
+});
 
 /* Reader image */
 function readImage(inputFile, elementPhoto) {
@@ -1571,14 +1585,8 @@ $(document).ready(function () {
   if ($(".submit-check").length) {
     $(".submit-check").click(function () {
       var formCheck = $(this).parents("form.validation-form");
-
-      /* Holdon */
       holdonOpen();
-
-      /* Check slug */
       slugCheck();
-
-      /* Elements */
       var flag = true;
       var slugs = "";
       var slugOffset = $(".card-slug");
@@ -1586,13 +1594,9 @@ $(document).ready(function () {
       var slugsError = $(".card-slug .text-danger").not(".d-none");
       var cardOffset = 0;
       var elementsInValid = $(".card :required:invalid");
-
-      /* Check if has slug vs name */
       if (slugsInValid.length || slugsError.length) {
         flag = false;
         slugs = slugsError.length ? slugsError : slugsInValid;
-
-        /* Check elements empty */
         slugs.each(function () {
           $this = $(this);
           var tabPane = $this.parents(".tab-pane");
@@ -1600,8 +1604,6 @@ $(document).ready(function () {
           $('.nav-tabs a[href="#' + tabPaneID + '"]').tab("show");
           return false;
         });
-
-        /* Scroll to error */
         setTimeout(function () {
           $("html,body").animate(
             { scrollTop: slugOffset.offset().top - 40 },

@@ -1,7 +1,7 @@
 <?php
 $records_per_page = 10;
 $current_page = max(1, (int)($_GET['page'] ?? 1));
-$total_pages = max(1, ceil($functions->phantrang('tbl_sanpham') / $records_per_page));
+$total_pages = max(1, ceil($fn->phantrang('tbl_sanpham') / $records_per_page));
 if ($current_page > $total_pages) {
   $current_page = $total_pages;
 }
@@ -32,9 +32,9 @@ $get_count_sp = $sanpham->count_sanpham();
           while ($row_dm = $dm->fetch_assoc()) {
         ?>
             <div class="item-list-noindex">
-              <a title="<?= $row_dm['namevi'] ?>" class="" href="<?= $row_dm['slugvi'] ?>">
+              <a title="<?= $row_dm['name'] ?>" class="" href="<?= $row_dm['slug'] ?>">
                 <h3 class="m-0">
-                  <?= $row_dm['namevi'] ?>
+                  <?= $row_dm['name'] ?>
                 </h3>
               </a>
             </div>
@@ -60,8 +60,8 @@ $get_count_sp = $sanpham->count_sanpham();
           data-cat="" data-item="" data-brand="" data-curpage="2" data-total="124">
           <?php while ($sp = $show_sanpham->fetch_assoc()) : ?>
             <?php
-            $slug = $sp['slugvi'];
-            $name = htmlspecialchars($sp['namevi']);
+            $slug = $sp['slug'];
+            $name = htmlspecialchars($sp['name']);
             $img = !empty($sp['file'])
               ? BASE_ADMIN . UPLOADS . $sp['file']
               : NO_IMG;
@@ -103,7 +103,7 @@ $get_count_sp = $sanpham->count_sanpham();
         </div>
       <?php endif ?>
       <div class="mt-3">
-        <?= $pagination_html = $functions->renderPagination_tc($current_page, $total_pages, BASE . 'san-pham/page-'); ?>
+        <?= $pagination_html = $fn->renderPagination_tc($current_page, $total_pages, BASE . 'san-pham/page-'); ?>
       </div>
 
     </div>

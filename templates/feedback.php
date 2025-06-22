@@ -19,7 +19,7 @@ if ($show_danhgia && $show_danhgia->num_rows > 0):
             <div class="content">
               <a class="scale-img hover-glass text-decoration-none" title="<?= $row_dg['name'] ?>"
                 style="width: 100px; height: 100px;">
-                <img class="circle-img" src="<?= empty($row_dg['file']) ? BASE_ADMIN . "assets/img/noimage.png" : BASE_ADMIN . UPLOADS . $row_dg['file']; ?>" />
+                <img class="circle-img" src="<?= empty($row_dg['file']) ? NO_IMG : BASE_ADMIN . UPLOADS . $row_dg['file']; ?>" />
               </a>
               <div class="title">
                 <h3 class="text-split"><?= $row_dg['name'] ?></h3>

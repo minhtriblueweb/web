@@ -31,17 +31,17 @@ $seo['image'] = '';
             <div class="col-6 col-sm-4" data-aos="fade-up" data-aos-duration="1000">
               <div class="item-service">
                 <div class="images">
-                  <a class="scale-img hover-glass text-decoration-none" href="<?= $resule_huongdanchoi['slugvi'] ?>"
-                    title="<?= $resule_huongdanchoi['namevi'] ?>">
+                  <a class="scale-img hover-glass text-decoration-none" href="<?= $resule_huongdanchoi['slug'] ?>"
+                    title="<?= $resule_huongdanchoi['name'] ?>">
                     <img class="w-100"
                       src="<?php echo empty($resule_huongdanchoi['file']) ? NO_IMG : BASE_ADMIN . UPLOADS . $resule_huongdanchoi['file']; ?>"
-                      alt="<?= $resule_huongdanchoi['namevi'] ?>" />
+                      alt="<?= $resule_huongdanchoi['name'] ?>" />
                   </a>
                 </div>
                 <div class="content">
                   <h3>
                     <a class="text-split"
-                      href="<?= $resule_huongdanchoi['slugvi'] ?>"><?= $resule_huongdanchoi['namevi'] ?></a>
+                      href="<?= $resule_huongdanchoi['slug'] ?>"><?= $resule_huongdanchoi['name'] ?></a>
                   </h3>
                 </div>
               </div>

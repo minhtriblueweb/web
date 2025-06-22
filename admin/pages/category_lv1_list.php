@@ -1,34 +1,33 @@
 <?php
 $redirect_url = $_GET['page'];
+$name_page = 'danh mục cấp 1';
+$table = 'tbl_danhmuc';
 $records_per_page = 10;
 $current_page = max(1, isset($_GET['p']) ? (int)$_GET['p'] : 1);
-$total_records = $functions->phantrang('tbl_danhmuc');
+$total_records = $fn->count_data(['table' => $table]);
 $total_pages = ceil($total_records / $records_per_page);
-$show_danhmuc = $functions->show_data([
-  'table' => 'tbl_danhmuc',
+$show_danhmuc = $fn->show_data([
+  'table' => $table,
   'records_per_page' => $records_per_page,
   'current_page' => $current_page,
   'keyword' => $_GET['keyword'] ?? ''
 ]);
-$name = 'danh mục cấp 1';
-$linkMulti = "index.php?page=deleteMulti&table=tbl_danhmuc";
-$linkDelete = "index.php?page=delete&table=tbl_danhmuc&id=";
+$linkMulti = "index.php?page=deleteMulti&table=$table";
+$linkDelete = "index.php?page=delete&table=$table&id=";
 $linkEdit = "index.php?page=category_lv1_form&id=";
 $linkAdd = "index.php?page=category_lv1_form";
 ?>
 <?php
 $breadcrumb = [
-  ['label' => 'Bảng điều khiển', 'link' => '?page=dashboard'],
-  ['label' => 'Danh mục'],
-  ['label' => 'Danh sách ' . $name]
+  ['label' => 'Bảng điều khiển', 'link' => 'index.php'],
+  ['label' => $name_page]
 ];
-include 'templates/breadcrumb.php';
-?>
+include 'templates/breadcrumb.php'; ?>
 <section class="content">
   <?php include 'templates/act_list.php'; ?>
   <div class="card card-primary card-outline text-sm mb-0">
     <div class="card-header">
-      <h3 class="card-title">Danh sách <?= $name ?></h3>
+      <h3 class="card-title">Danh sách <?= $name_page ?></h3>
     </div>
     <div class="card-body table-responsive p-0">
       <table class="table table-hover">
@@ -53,7 +52,7 @@ include 'templates/breadcrumb.php';
             <?php if ($show_danhmuc && $show_danhmuc->num_rows > 0): ?>
               <?php while ($row = $show_danhmuc->fetch_assoc()):
                 $id = $row['id'];
-                $name = $row['name'];
+                $name = $row['namevi'];
                 $file = empty($row['file']) ? NO_IMG : BASE_ADMIN . UPLOADS . $row['file'];
               ?>
                 <tr>
@@ -70,7 +69,7 @@ include 'templates/breadcrumb.php';
                   <td class="align-middle">
                     <input type="number" class="form-control form-control-mini m-auto update-numb"
                       min="0" value="<?= $row['numb'] ?>"
-                      data-id="<?= $id ?>" data-table="tbl_danhmuc" />
+                      data-id="<?= $id ?>" data-table="<?= $table ?>" />
                   </td>
 
                   <!-- Ảnh -->
@@ -91,7 +90,7 @@ include 'templates/breadcrumb.php';
                   <?php foreach (['hienthi', 'noibat'] as $attr): ?>
                     <td class="align-middle text-center">
                       <label class="switch switch-success">
-                        <input type="checkbox" class="switch-input custom-control-input show-checkbox" id="show-checkbox-<?= $attr ?>-<?= $id ?>" data-table="tbl_danhmuc" data-id="<?= $id ?>" data-attr="<?= $attr ?>" <?= (strpos($row['status'], $attr) !== false) ? 'checked' : '' ?>>
+                        <input type="checkbox" class="switch-input custom-control-input show-checkbox" id="show-checkbox-<?= $attr ?>-<?= $id ?>" data-table="<?= $table ?>" data-id="<?= $id ?>" data-attr="<?= $attr ?>" <?= (strpos($row['status'], $attr) !== false) ? 'checked' : '' ?>>
                         <span class="switch-toggle-slider">
                           <span class="switch-on"><i class="fa-solid fa-check"></i></span>
                           <span class="switch-off"><i class="fa-solid fa-xmark"></i></span>
@@ -123,7 +122,7 @@ include 'templates/breadcrumb.php';
   </div>
   <?php if ($total_pages > 1): ?>
     <div class="card-footer text-sm pb-0 mb-5">
-      <?= $functions->renderPagination($current_page, $total_pages, "index.php?page=$redirect_url&p="); ?>
+      <?= $fn->renderPagination($current_page, $total_pages, "index.php?page=$redirect_url&p="); ?>
     </div>
   <?php endif; ?>
 </section>

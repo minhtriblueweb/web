@@ -7,28 +7,27 @@ include_once($filepath . '/../helpers/format.php');
 class danhgia
 {
   private $db;
-  private $fm;
   private $fn;
 
   public function __construct()
   {
     $this->db = new Database();
-    $this->fn = new functions();
-    $this->fm = new Format();
+    $this->fn = new Functions();
   }
-
   public function save_danhgia($data, $files, $id = null)
   {
-    $fields = ['name', 'address', 'desc', 'numb'];
+    global $config;
     $table = 'tbl_danhgia';
-
-    // Escape dữ liệu đầu vào
+    $langs = array_keys($config['website']['lang']); // ['vi', 'en']
     $data_escaped = [];
-    foreach ($fields as $field) {
-      $data_escaped[$field] = !empty($data[$field]) ? mysqli_real_escape_string($this->db->link, $data[$field]) : "";
+    foreach ($langs as $lang) {
+      $fields_lang = ['name', 'address', 'desc'];
+      foreach ($fields_lang as $field) {
+        $key = $field . $lang;
+        $data_escaped[$key] = !empty($data[$key]) ? mysqli_real_escape_string($this->db->link, $data[$key]) : "";
+      }
     }
-
-    // Xử lý status (checkbox: hienthi)
+    $data_escaped['numb'] = !empty($data['numb']) ? (int)$data['numb'] : 0;
     $status_flags = ['hienthi'];
     $status_values = [];
     foreach ($status_flags as $flag) {
@@ -37,11 +36,8 @@ class danhgia
       }
     }
     $data_escaped['status'] = mysqli_real_escape_string($this->db->link, implode(',', $status_values));
-
-    // Xử lý ảnh (nếu có)
     $thumb_filename = '';
     $old_file_path = '';
-
     if (!empty($id)) {
       $old_file = $this->db->select("SELECT file FROM `$table` WHERE id = '" . (int)$id . "'");
       if ($old_file && $old_file->num_rows > 0) {

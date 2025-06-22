@@ -7,31 +7,28 @@ include_once($filepath . '/../helpers/format.php');
 class tieuchi
 {
   private $db;
-  private $fm;
   private $fn;
 
   public function __construct()
   {
     $this->db = new Database();
-    $this->fn = new functions();
-    $this->fm = new Format();
+    $this->fn = new Functions();
   }
-  public function get_id_tieuchi($id)
-  {
-    $id = mysqli_real_escape_string($this->db->link, $id);
-    $query = "SELECT * FROM tbl_tieuchi WHERE id = '$id' LIMIT 1";
-    $result = $this->db->select($query);
-    return $result;
-  }
-
   public function save_tieuchi($data, $files, $id = null)
   {
-    $fields = ['name', 'desc', 'numb'];
+    global $config;
+    $langs = array_keys($config['website']['lang']);
+    $fields_multi = ['name', 'desc'];
+    $fields_common = ['numb'];
     $table = 'tbl_tieuchi';
-
-    // Escape dữ liệu đầu vào
     $data_escaped = [];
-    foreach ($fields as $field) {
+    foreach ($langs as $lang) {
+      foreach ($fields_multi as $field) {
+        $key = $field . $lang;
+        $data_escaped[$key] = !empty($data[$key]) ? mysqli_real_escape_string($this->db->link, $data[$key]) : "";
+      }
+    }
+    foreach ($fields_common as $field) {
       $data_escaped[$field] = !empty($data[$field]) ? mysqli_real_escape_string($this->db->link, $data[$field]) : "";
     }
     $status_flags = ['hienthi'];

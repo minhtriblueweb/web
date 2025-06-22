@@ -12,7 +12,7 @@ class news
   public function __construct()
   {
     $this->db = new Database();
-    $this->fn = new functions();
+    $this->fn = new Functions();
   }
 
   public function get_news_by_slug($slug)
@@ -157,20 +157,19 @@ class news
 
   public function save_news($data, $files, $id = null)
   {
-    $fields = [
-      'slug',
-      'name',
-      'desc',
-      'content',
-      'title',
-      'keywords',
-      'description',
-      'numb',
-      'type'
-    ];
+    global $config;
+    $langs = array_keys($config['website']['lang']);
+    $fields_multi = ['slug', 'name', 'desc', 'content', 'title', 'keywords', 'description'];
+    $fields_common = ['type', 'numb'];
     $table = 'tbl_news';
     $data_escaped = [];
-    foreach ($fields as $field) {
+    foreach ($langs as $lang) {
+      foreach ($fields_multi as $field) {
+        $key = $field . $lang;
+        $data_escaped[$key] = !empty($data[$key]) ? mysqli_real_escape_string($this->db->link, $data[$key]) : "";
+      }
+    }
+    foreach ($fields_common as $field) {
       $data_escaped[$field] = !empty($data[$field]) ? mysqli_real_escape_string($this->db->link, $data[$field]) : "";
     }
     $status_flags = ['hienthi', 'noibat'];
@@ -181,8 +180,11 @@ class news
       }
     }
     $data_escaped['status'] = mysqli_real_escape_string($this->db->link, implode(',', $status_values));
-    $slug_error = $this->fn->isSlugDuplicated($data_escaped['slug'], $table, $id ?? '');
-    if ($slug_error) return $slug_error;
+    foreach ($langs as $lang) {
+      $slug_key = 'slug' . $lang;
+      $slug_error = $this->fn->isSlugDuplicated($data_escaped[$slug_key], $table, $id ?? '');
+      if ($slug_error) return $slug_error;
+    }
     $thumb_filename = '';
     $old_file_path = '';
     if (!empty($id)) {
@@ -192,7 +194,7 @@ class news
         $old_file_path = "uploads/" . $row['file'];
       }
     }
-    $thumb_filename = $this->fn->Upload($files, '391x215x1', [255, 255, 255, 0], $old_file_path, $watermark = false, $convert_webp = true);
+    $thumb_filename = $this->fn->Upload($files, '391x215x1', [255, 255, 255, 0], $old_file_path, false, true);
     if (!empty($id)) {
       $update_fields = [];
       foreach ($data_escaped as $field => $value) {
@@ -203,7 +205,7 @@ class news
       }
       $query = "UPDATE $table SET " . implode(", ", $update_fields) . " WHERE id = '" . (int)$id . "'";
       $result = $this->db->update($query);
-      $msg = $result ? "Cập nhật dữ liệu thành công" : "Cập nhật dữ liệu thất bại";
+      $msg = $result ? "Cập nhật tin tức thành công" : "Cập nhật tin tức thất bại";
     } else {
       $field_names = array_keys($data_escaped);
       $field_values = array_map(fn($v) => "'" . $v . "'", $data_escaped);
@@ -213,7 +215,7 @@ class news
       }
       $query = "INSERT INTO $table (" . implode(", ", $field_names) . ") VALUES (" . implode(", ", $field_values) . ")";
       $result = $this->db->insert($query);
-      $msg = $result ? "Thêm dữ liệu thành công" : "Thêm dữ liệu thất bại";
+      $msg = $result ? "Thêm tin tức thành công" : "Thêm tin tức thất bại";
     }
     $type_safe = preg_replace('/[^a-zA-Z0-9_-]/', '', $data_escaped['type']);
     $this->fn->transfer($msg, "index.php?page=news_list&type={$type_safe}", $result);

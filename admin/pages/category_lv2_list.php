@@ -1,27 +1,27 @@
 <?php
 $redirect_url = $_GET['page'];
 $records_per_page = 10;
+$name_page = 'danh mục cấp 2';
+$table = 'tbl_danhmuc_c2';
 $current_page = max(1, isset($_GET['p']) ? (int)$_GET['p'] : 1);
-$total_records = $functions->phantrang('tbl_danhmuc_c2');
+$total_records = $fn->count_data(['table' => $table]);
 $total_pages = ceil($total_records / $records_per_page);
-$show_danhmuc_c1 = $functions->show_data('tbl_danhmuc');
-$show_danhmuc_c2 = $functions->show_data([
-  'table' => 'tbl_danhmuc_c2',
+$show_danhmuc_c1 = $fn->show_data(['table' => 'tbl_danhmuc']);
+$show_danhmuc_c2 = $fn->show_data([
+  'table' => $table,
   'records_per_page' => $records_per_page,
   'current_page' => $current_page,
   'keyword' => $_GET['keyword'] ?? ''
 ]);
-$name = 'danh mục cấp 2';
-$linkMulti = "index.php?page=deleteMulti&table=tbl_danhmuc_c2";
-$linkDelete = "index.php?page=delete&table=tbl_danhmuc_c2&id=";
+$linkMulti = "index.php?page=deleteMulti&table=$table";
+$linkDelete = "index.php?page=delete&table=$table&id=";
 $linkEdit = "index.php?page=category_lv2_form&id=";
 $linkAdd = "index.php?page=category_lv2_form";
 ?>
 <?php
 $breadcrumb = [
-  ['label' => 'Bảng điều khiển', 'link' => '?page=dashboard'],
-  ['label' => 'Danh mục'],
-  ['label' => 'Danh sách ' . $name]
+  ['label' => 'Bảng điều khiển', 'link' => 'index.php'],
+  ['label' => $name_page]
 ];
 include 'templates/breadcrumb.php';
 ?>
@@ -36,9 +36,8 @@ include 'templates/breadcrumb.php';
           <option value="0">Chọn danh mục</option>
           <?php if ($show_danhmuc_c1 && $show_danhmuc_c1->num_rows > 0): ?>
             <?php while ($resule = $show_danhmuc_c1->fetch_assoc()): ?>
-              <option value="<?= $resule['id']; ?>" data-select2-id="<?= $resule['id']; ?>"
-                <?= (isset($id_list) && $id_list == $resule['id']) ? 'selected' : ''; ?>>
-                <?= $resule['name']; ?>
+              <option value="<?= $resule['id']; ?>" <?= (isset($id_list) && $id_list == $resule['id']) ? 'selected' : ''; ?>>
+                <?= $resule['namevi']; ?>
               </option>
             <?php endwhile; ?>
           <?php else: ?>
@@ -50,7 +49,7 @@ include 'templates/breadcrumb.php';
   </div>
   <div class="card card-primary card-outline text-sm mb-0">
     <div class="card-header">
-      <h3 class="card-title">Danh sách <?= $name ?></h3>
+      <h3 class="card-title">Danh sách <?= $name_page ?></h3>
     </div>
     <div class="card-body table-responsive p-0">
       <table class="table table-hover">
@@ -75,7 +74,7 @@ include 'templates/breadcrumb.php';
             <?php if ($show_danhmuc_c2):
               while ($row = $show_danhmuc_c2->fetch_assoc()):
                 $id = $row['id'];
-                $name = $row['name'];
+                $name = $row['namevi'];
                 $file = empty($row['file']) ? NO_IMG : BASE_ADMIN . UPLOADS . $row['file'];
             ?>
                 <tr>
@@ -91,19 +90,19 @@ include 'templates/breadcrumb.php';
                   <!-- Số thứ tự -->
                   <td class="align-middle">
                     <input type="number" class="form-control form-control-mini m-auto update-numb" min="0"
-                      value="<?= $row['numb'] ?>" data-id="<?= $id ?>" data-table="tbl_danhmuc_c2" />
+                      value="<?= $row['numb'] ?>" data-id="<?= $id ?>" data-table="<?= $table ?>" />
                   </td>
 
                   <!-- Ảnh -->
                   <td class="align-middle">
-                    <a href="<?= $linkEdit ?><?= $id ?>" title="<?= $name ?>">
+                    <a href="<?= $linkEdit . $id ?>" title="<?= $name ?>">
                       <img src="<?= $file ?>" class="rounded img-preview" alt="<?= $name ?>" />
                     </a>
                   </td>
 
                   <!-- Tên -->
                   <td class="align-middle">
-                    <a class="text-dark text-break" href="<?= $linkEdit ?><?= $id ?>" title="<?= $name ?>">
+                    <a class="text-dark text-break" href="<?= $linkEdit . $id ?>" title="<?= $name ?>">
                       <?= $name ?>
                     </a>
                   </td>
@@ -112,7 +111,7 @@ include 'templates/breadcrumb.php';
                   <?php foreach (['hienthi', 'noibat'] as $attr): ?>
                     <td class="align-middle text-center">
                       <label class="switch switch-success">
-                        <input type="checkbox" class="switch-input custom-control-input show-checkbox " id="show-checkbox-<?= $attr ?>-<?= $id ?>" data-table="tbl_danhmuc_c2" data-id="<?= $id ?>" data-attr="<?= $attr ?>" <?= (strpos($row['status'], $attr) !== false) ? 'checked' : '' ?>>
+                        <input type="checkbox" class="switch-input custom-control-input show-checkbox " id="show-checkbox-<?= $attr ?>-<?= $id ?>" data-table="<?= $table ?>" data-id="<?= $id ?>" data-attr="<?= $attr ?>" <?= (strpos($row['status'], $attr) !== false) ? 'checked' : '' ?>>
                         <span class="switch-toggle-slider">
                           <span class="switch-on"><i class="fa-solid fa-check"></i></span>
                           <span class="switch-off"><i class="fa-solid fa-xmark"></i></span>
@@ -124,10 +123,10 @@ include 'templates/breadcrumb.php';
 
                   <!-- Hành động -->
                   <td class="align-middle text-center text-md text-nowrap">
-                    <a class="text-primary mr-2" href="<?= $linkEdit ?><?= $id ?>" title="Chỉnh sửa">
+                    <a class="text-primary mr-2" href="<?= $linkEdit . $id ?>" title="Chỉnh sửa">
                       <i class="fas fa-edit"></i>
                     </a>
-                    <a class="text-danger" id="delete-item" data-url="<?= $linkDelete ?><?= $id ?>" title="Xóa">
+                    <a class="text-danger" id="delete-item" data-url="<?= $linkDelete . $id ?>" title="Xóa">
                       <i class="fas fa-trash-alt"></i>
                     </a>
                   </td>
@@ -145,7 +144,7 @@ include 'templates/breadcrumb.php';
   </div>
   <?php if ($total_pages > 1): ?>
     <div class="card-footer text-sm pb-0 mb-5">
-      <?= $functions->renderPagination($current_page, $total_pages, "index.php?page=$redirect_url&p="); ?>
+      <?= $fn->renderPagination($current_page, $total_pages, "index.php?page=$redirect_url&p="); ?>
     </div>
   <?php endif; ?>
 

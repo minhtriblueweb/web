@@ -1,7 +1,7 @@
 <?php
 $slug = $_GET['slug'] ?? '';
 $type = $_GET['type'] ?? '';
-$typeInfo = $functions->convert_type($type);
+$typeInfo = $fn->convert_type($type);
 if (empty($slug) || empty($type)) {
   http_response_code(404);
   include '404.php';
@@ -17,9 +17,9 @@ if (!$baiviet) {
 $relatedNews = $news->relatedNews($baiviet['id'], $type);
 
 
-$seo['title'] = !empty($baiviet['titlevi']) ? $baiviet['titlevi'] : $baiviet['namevi'];
-$seo['keywords'] = $baiviet['keywordsvi'];
-$seo['description'] = $baiviet['descriptionvi'];
+$seo['title'] = !empty($baiviet['title']) ? $baiviet['title'] : $baiviet['name'];
+$seo['keywords'] = $baiviet['keywords'];
+$seo['description'] = $baiviet['description'];
 $seo['url'] = BASE . $baiviet['slugvi'];
 $seo['image'] = BASE_ADMIN . UPLOADS . $baiviet['file'];
 ?>
@@ -35,7 +35,7 @@ $seo['image'] = BASE_ADMIN . UPLOADS . $baiviet['file'];
         </li>
         <li class="breadcrumb-item active">
           <a class="text-decoration-none"
-            href="<?= $baiviet['slugvi'] ?>"><span><?= $baiviet['namevi'] ?></span></a>
+            href="<?= $baiviet['slugvi'] ?>"><span><?= $baiviet['name'] ?></span></a>
         </li>
       </ol>
     </div>
@@ -44,7 +44,7 @@ $seo['image'] = BASE_ADMIN . UPLOADS . $baiviet['file'];
     <div class="row">
       <div class="col-lg-9 mb-3">
         <div class="title-list-hot p-2">
-          <h2 class=" text-start"><?= $baiviet['namevi'] ?></h2>
+          <h2 class=" text-start"><?= $baiviet['name'] ?></h2>
         </div>
         <div class="wrap-main wrap-template w-clear" style="margin: 0 auto !important;">
           <div class="wrap-toc">
@@ -70,13 +70,13 @@ $seo['image'] = BASE_ADMIN . UPLOADS . $baiviet['file'];
                   <div class="col-lg-12 col-md-6 col-12">
                     <div class="news-other d-flex flex-wrap">
                       <a class="scale-img text-decoration-none pic-news-other" href="<?= $kg_relatedNews['slugvi'] ?>"
-                        title="<?= $kg_relatedNews["namevi"] ?>">
+                        title="<?= $kg_relatedNews["name"] ?>">
                         <img class="w-100" src="<?= BASE_ADMIN . UPLOADS . $kg_relatedNews['file'] ?>"
-                          alt="<?= $kg_relatedNews["namevi"] ?>" title="<?= $kg_relatedNews["namevi"] ?>">
+                          alt="<?= $kg_relatedNews["name"] ?>" title="<?= $kg_relatedNews["name"] ?>">
                       </a>
                       <div class="info-news-other">
                         <a class="name-news-other text-decoration-none" href="<?= $kg_relatedNews['slugvi'] ?>"
-                          title="<?= $kg_relatedNews["namevi"] ?>"><?= $kg_relatedNews["namevi"] ?></a>
+                          title="<?= $kg_relatedNews["name"] ?>"><?= $kg_relatedNews["name"] ?></a>
                       </div>
                     </div>
                   </div>

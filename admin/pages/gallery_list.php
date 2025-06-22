@@ -1,24 +1,24 @@
 <?php
-$name = 'sản phẩm';
 $redirect_url = $_GET['page'];
+$table = 'tbl_gallery';
+$name_page = 'hình ảnh sản phẩm';
 if (isset($_GET['id']) && $_GET['id'] != NULL) {
   $id = $_GET['id'];
 }
-$get_id_sp = $functions->get_id('tbl_sanpham', $id);
-$get_gallery = $functions->show_data(['table' => 'tbl_gallery', 'id_parent' => $id]);
+$get_id_sp = $fn->get_id('tbl_sanpham', $id);
+$get_gallery = $fn->show_data(['table' => $table, 'id_parent' => $id]);
 if ($get_id_sp) {
   $result = $get_id_sp->fetch_assoc();
 }
-$linkMulti = "index.php?page=deleteMulti&table=tbl_gallery&id_parent=$id";
-$linkDelete = "index.php?page=delete&table=tbl_gallery&id_parent=$id&id=";
+$linkMulti = "index.php?page=deleteMulti&table=$table&id_parent=$id";
+$linkDelete = "index.php?page=delete&table=$table&id_parent=$id&id=";
 $linkGallery = "index.php?page=gallery_form&id=";
 $linkEdit = "index.php?page=gallery_form&id_child=";
 ?>
 <?php
 $breadcrumb = [
-  ['label' => 'Bảng điều khiển', 'link' => '?page=dashboard'],
-  ['label' =>  $name],
-  ['label' => 'Hình ảnh ' . $name]
+  ['label' => 'Bảng điều khiển', 'link' => 'index.php'],
+  ['label' => $name_page]
 ];
 include 'templates/breadcrumb.php';
 ?>
@@ -44,7 +44,7 @@ include 'templates/breadcrumb.php';
   </div>
   <div class="card card-primary card-outline text-sm mb-0">
     <div class="card-header">
-      <h3 class="card-title">Danh sách Hình ảnh sản phẩm : <span class="text-info"><?= $result['name'] ?></span>
+      <h3 class="card-title">Danh sách <?= $name_page ?> : <span class="text-info"><?= $result['namevi'] ?></span>
       </h3>
     </div>
     <div class="card-body table-responsive p-0">
@@ -79,7 +79,7 @@ include 'templates/breadcrumb.php';
                 <!-- Số thứ tự -->
                 <td class="align-middle">
                   <input type="number" class="form-control form-control-mini m-auto update-numb" min="0"
-                    value="<?= $row['numb'] ?>" data-id="<?= $id ?>" data-table="tbl_gallery">
+                    value="<?= $row['numb'] ?>" data-id="<?= $id ?>" data-table="<?= $table ?>">
                 </td>
 
                 <!-- Hình ảnh -->
@@ -121,7 +121,6 @@ include 'templates/breadcrumb.php';
             </tr>
           <?php endif; ?>
         </tbody>
-
       </table>
     </div>
   </div>

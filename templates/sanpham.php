@@ -23,19 +23,19 @@
       <?php if ($sp_all && $sp_all->num_rows > 0): ?>
         <div class="box-list" data-aos="fade-up" data-aos-duration="1000">
           <div class="title-list">
-            <h2><span class="text-split"><?= $danhmuc_lv1['namevi'] ?></span></h2>
+            <h2><span class="text-split"><?= $danhmuc_lv1['name'] ?></span></h2>
             <div class="box-tab-cat">
               <ul class="tab-cat" data-aos="fade-left" data-aos-duration="500">
                 <li><a href="#" class="tab-cat-link active" data-tab="tab-all-<?= $id_list ?>">Tất cả</a></li>
                 <?php if ($danhmuc_c2): ?>
                   <?php while ($dm_c2 = $danhmuc_c2->fetch_assoc()): ?>
                     <li>
-                      <a href="#" class="tab-cat-link" data-tab="tab-<?= $dm_c2['id'] ?>"><?= $dm_c2['namevi'] ?></a>
+                      <a href="#" class="tab-cat-link" data-tab="tab-<?= $dm_c2['id'] ?>"><?= $dm_c2['name'] ?></a>
                     </li>
                   <?php endwhile; ?>
                 <?php endif; ?>
               </ul>
-              <a class="viewlist" href="<?= $danhmuc_lv1['slugvi'] ?>">Xem tất cả</a>
+              <a class="viewlist" href="<?= $danhmuc_lv1['slug'] ?>">Xem tất cả</a>
             </div>
           </div>
 
@@ -44,15 +44,15 @@
             <div class="grid-product">
               <?php while ($sp = $sp_all->fetch_assoc()): ?>
                 <?php
-                $slug = $sp['slugvi'];
-                $name = htmlspecialchars($sp['namevi']);
+                $slug = $sp['slug'];
+                $name = htmlspecialchars($sp['name']);
                 $img = !empty($sp['file']) ? BASE_ADMIN . UPLOADS . $sp['file'] : NO_IMG;
                 $sale = $sp['sale_price'] ?? '';
                 $regular = $sp['regular_price'] ?? '';
                 $views = $sp['views'] ?? 0;
                 ?>
                 <div class="item-product">
-                  <a href="san-pham/<?= $slug ?>">
+                  <a href="<?= $slug ?>">
                     <div class="images"><img src="<?= $img ?>" alt="<?= $name ?>" title="<?= $name ?>" class="w-100" /></div>
                     <div class="content">
                       <div class="title">
@@ -101,15 +101,15 @@
                   <?php if ($sp_cat && $sp_cat->num_rows > 0): ?>
                     <?php while ($sp = $sp_cat->fetch_assoc()): ?>
                       <?php
-                      $slug = $sp['slugvi'];
-                      $name = htmlspecialchars($sp['namevi']);
+                      $slug = $sp['slug'];
+                      $name = htmlspecialchars($sp['name']);
                       $img = !empty($sp['file']) ? BASE_ADMIN . UPLOADS . $sp['file'] : NO_IMG;
                       $sale = $sp['sale_price'] ?? '';
                       $regular = $sp['regular_price'] ?? '';
                       $views = $sp['views'] ?? 0;
                       ?>
                       <div class="item-product">
-                        <a href="san-pham/<?= $slug ?>">
+                        <a href="<?= $slug ?>">
                           <div class="images"><img src="<?= $img ?>" alt="<?= $name ?>" title="<?= $name ?>" class="w-100" /></div>
                           <div class="content">
                             <div class="title">

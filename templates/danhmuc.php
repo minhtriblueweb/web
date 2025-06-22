@@ -10,8 +10,8 @@
         <div class="slick_product_list">
           <?php while ($dm = $show_danhmuc->fetch_assoc()): ?>
             <?php
-            $slug = $dm['slugvi'];
-            $name = $dm['namevi'];
+            $slug = $dm['slug'];
+            $name = $dm['name'];
             $imgSrc = !empty($dm['file']) ? BASE_ADMIN . UPLOADS . $dm['file'] : NO_IMG;
             ?>
             <a href="<?= $slug ?>" title="<?= $name ?>">

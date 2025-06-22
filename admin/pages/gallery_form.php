@@ -1,5 +1,7 @@
 <?php
 $id = $_GET['id'] ?? null;
+$name_page = 'hình ảnh sản phẩm';
+$redirectUrl = 'gallery_list&id=' . $id;
 $id_child = $_GET['id_child'] ?? null;
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add']) && $id) {
   $insert = $sanpham->them_gallery($_POST, $_FILES, $id);
@@ -17,12 +19,9 @@ if ($id_child) {
 
 ?>
 <?php
-$name = 'hình ảnh sản phẩm';
-$redirectUrl = 'gallery_list&id=' . $id;
 $breadcrumb = [
   ['label' => 'Bảng điều khiển', 'link' => 'index.php'],
-  ['label' => $name],
-  ['label' => !empty($id) ? 'Thêm mới ' . $name : 'Cập nhật ' . $name]
+  ['label' => !empty($id) ? 'Cập nhật ' . $name_page : 'Thêm mới ' . $name_page]
 ];
 include 'templates/breadcrumb.php';
 ?>
@@ -30,7 +29,7 @@ include 'templates/breadcrumb.php';
   <form class="validation-form" novalidate method="post" action="" enctype="multipart/form-data">
     <div class="card-footer text-sm sticky-top">
       <button type="submit" name="<?= !empty($id) ? "add" : "edit"; ?>"
-        class="btn btn-sm bg-gradient-primary submit-check" disabled>
+        class="btn btn-sm bg-gradient-primary">
         <i class="far fa-save mr-2"></i>Lưu
       </button>
       <a class="btn btn-sm bg-gradient-danger" href="index.php?page=<?= $redirectUrl ?>" title="Thoát"><i class="fas fa-sign-out-alt mr-2"></i>Thoát</a>
@@ -41,7 +40,7 @@ include 'templates/breadcrumb.php';
           <div class="col-sm-4 col-6">
             <div class="card card-primary card-outline text-sm">
               <div class="card-header">
-                <h3 class="card-title"><?= $name ?> <?= $i + 1; ?>: </h3>
+                <h3 class="card-title"><?= $name_page ?> <?= $i + 1; ?>: </h3>
                 <div class="card-tools">
                   <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
                 </div>
@@ -52,7 +51,7 @@ include 'templates/breadcrumb.php';
                     <p>Upload hình ảnh:</p>
                     <div class="photoUpload-zone w-100">
                       <div class="photoUpload-detail" id="photoUpload-preview<?= $i; ?>">
-                        <img class="rounded" src="./assets/img/noimage.png" alt="Alt Photo" />
+                        <img class="rounded" src="<?= NO_IMG ?>" alt="Alt Photo" />
                       </div>
                       <label class="photoUpload-file" id="photo-zone<?= $i; ?>" for="file-zone<?= $i; ?>">
                         <input type="file" name="file<?= $i; ?>" id="file-zone<?= $i; ?>" />
@@ -81,14 +80,12 @@ include 'templates/breadcrumb.php';
               </div>
             </div>
           </div>
-        <?php
-        }
-        ?>
+        <?php } ?>
       <?php else : ?>
         <div class="col-12">
           <div class="card card-primary card-outline text-sm">
             <div class="card-header">
-              <h3 class="card-title">Hình ảnh sản phẩm:</h3>
+              <h3 class="card-title"><?= $name_page ?>:</h3>
               <div class="card-tools">
                 <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
               </div>
@@ -125,7 +122,7 @@ include 'templates/breadcrumb.php';
                   <div class="form-group d-inline-block mb-2 mr-2">
                     <label for="<?= $check ?>-checkbox" class="d-inline-block align-middle mb-0 mr-2"><?= $label ?>:</label>
                     <div class="custom-control custom-checkbox d-inline-block align-middle">
-                      <input <?= $functions->is_checked($check, $result ?? null, $id_child ?? null) ?>
+                      <input <?= $fn->is_checked($check, $result ?? null, $id_child ?? null) ?>
                         type="checkbox"
                         class="custom-control-input <?= $check ?>-checkbox"
                         name="<?= $check ?>"
@@ -144,7 +141,6 @@ include 'templates/breadcrumb.php';
             </div>
           </div>
         </div>
-
       <?php endif; ?>
     </div>
   </form>

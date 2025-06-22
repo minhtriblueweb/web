@@ -12,10 +12,10 @@
 <!-- Js Config -->
 <script type="text/javascript">
   var PHP_VERSION = 80309;
-  var CONFIG_BASE = "<?php echo $config['base'] ?>";
+  var CONFIG_BASE = "<?= BASE ?>";
   var TOKEN = "4cfd9a6ec93f31ec5006af2f97389efa";
   var ADMIN = "admin";
-  var ASSET = "<?php echo $config['base'] ?>";
+  var ASSET = "<?php echo BASE ?>";
   var LINK_FILTER = "";
   var ID = 0;
   var COM = "";

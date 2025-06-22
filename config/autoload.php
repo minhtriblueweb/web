@@ -30,7 +30,8 @@ spl_autoload_register(function ($class) use ($baseDir) {
 
 // Khởi tạo sẵn các class hay dùng
 $db = new Database();
-$classes = ['functions', 'danhmuc', 'sanpham', 'slideshow', 'tieuchi', 'danhgia', 'setting', 'social', 'news', 'trangtinh', 'phuongthuctt'];
+$fn = new Functions();
+$classes = ['danhmuc', 'sanpham', 'slideshow', 'tieuchi', 'danhgia', 'setting', 'social', 'news', 'trangtinh', 'phuongthuctt'];
 foreach ($classes as $class) {
   if (class_exists($class)) {
     $$class = new $class();

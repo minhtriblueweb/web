@@ -1,25 +1,25 @@
 <?php
 $redirect_url = $_GET['page'];
 $records_per_page = 10;
+$name_page = 'đánh giá khách hàng';
+$table = 'tbl_danhgia';
 $current_page = max(1, isset($_GET['p']) ? (int)$_GET['p'] : 1);
-$total_pages = ceil($functions->phantrang('tbl_danhgia') / $records_per_page);
-$show_danhgia = $functions->show_data([
-  'table' => 'tbl_danhgia',
+$total_pages = ceil($fn->count_data(['table' => $table]) / $records_per_page);
+$show_danhgia = $fn->show_data([
+  'table' => $table,
   'records_per_page' => $records_per_page,
   'current_page' => $current_page,
   'keyword' => $_GET['keyword'] ?? ''
 ]);
-$linkMulti = "index.php?page=deleteMulti&table=tbl_danhgia&";
-$linkDelete = "index.php?page=delete&table=tbl_danhgia&&id=";
+$linkMulti = "index.php?page=deleteMulti&table=$table&";
+$linkDelete = "index.php?page=delete&table=$table&&id=";
 $linkEdit = "index.php?page=danhgia_form&id=";
 $linkAdd = "index.php?page=danhgia_form";
 ?>
 <?php
-$name = 'đánh giá khách hàng';
 $breadcrumb = [
-  ['label' => 'Bảng điều khiển', 'link' => '?page=dashboard'],
-  ['label' => $name],
-  ['label' => 'Danh sách ' . $name]
+  ['label' => 'Bảng điều khiển', 'link' => 'index.php'],
+  ['label' => $name_page]
 ];
 include 'templates/breadcrumb.php';
 ?>
@@ -27,7 +27,7 @@ include 'templates/breadcrumb.php';
   <?php include 'templates/act_list.php'; ?>
   <div class="card card-primary card-outline text-sm mb-0">
     <div class="card-header">
-      <h3 class="card-title">Danh sách <?= $name ?></h3>
+      <h3 class="card-title">Danh sách <?= $name_page ?></h3>
     </div>
     <div class="card-body table-responsive p-0">
       <table class="table table-hover">
@@ -50,9 +50,9 @@ include 'templates/breadcrumb.php';
           <?php if ($show_danhgia): ?>
             <?php while ($row = $show_danhgia->fetch_assoc()):
               $id       = $row['id'];
-              $name     = $row['name'];
+              $name     = $row['namevi'];
               $numb     = $row['numb'];
-              $status   = $row['hienthi'] ?? $row['status'] ?? '';
+              $status   = $row['status'] ?? '';
               $imgSrc   = !empty($row['file']) ? BASE_ADMIN . UPLOADS . $row['file'] : NO_IMG;
               $linkEditId    = $linkEdit . $id;
               $linkDeleteId  = $linkDelete . $id;
@@ -69,7 +69,7 @@ include 'templates/breadcrumb.php';
                 <!-- STT -->
                 <td class="align-middle">
                   <input type="number" class="form-control form-control-mini m-auto update-numb" min="0"
-                    value="<?= $numb ?>" data-id="<?= $id ?>" data-table="tbl_danhgia" />
+                    value="<?= $numb ?>" data-id="<?= $id ?>" data-table="<?= $table ?>" />
                 </td>
 
                 <!-- Ảnh -->
@@ -95,11 +95,10 @@ include 'templates/breadcrumb.php';
                   </div>
                 </td>
 
-                <!-- Trạng thái -->
                 <?php foreach (['hienthi'] as $attr): ?>
                   <td class="align-middle text-center">
                     <label class="switch switch-success">
-                      <input type="checkbox" class="switch-input custom-control-input show-checkbox " id="show-checkbox-<?= $attr ?>-<?= $id ?>" data-table="tbl_danhgia" data-id="<?= $id ?>" data-attr="<?= $attr ?>" <?= (strpos($row['status'], $attr) !== false) ? 'checked' : '' ?>>
+                      <input type="checkbox" class="switch-input custom-control-input show-checkbox " id="show-checkbox-<?= $attr ?>-<?= $id ?>" data-table="<?= $table ?>" data-id="<?= $id ?>" data-attr="<?= $attr ?>" <?= (strpos($row['status'], $attr) !== false) ? 'checked' : '' ?>>
                       <span class="switch-toggle-slider">
                         <span class="switch-on"><i class="fa-solid fa-check"></i></span>
                         <span class="switch-off"><i class="fa-solid fa-xmark"></i></span>

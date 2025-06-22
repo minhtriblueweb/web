@@ -1,21 +1,21 @@
 <?php
 $slug = $_GET['slug'] ?? '';
 
-if (empty($slug)) $functions->abort_404();
+if (empty($slug)) $fn->abort_404();
 
 // Lấy thông tin danh mục cấp 2 và cấp 1 (JOIN)
 $dm_c2 = $danhmuc->get_danhmuc_c2_with_parent_or_404($slug);
 // Cấp 1 (cha)
 $dm_c1 = [
-  'namevi' => $dm_c2['name_lv1'] ?? '',
-  'slugvi' => $dm_c2['slug_lv1'] ?? '',
-  'titlevi' => $dm_c2['title_lv1'] ?? '',
+  'name' => $dm_c2['name_lv1'] ?? '',
+  'slug' => $dm_c2['slug_lv1'] ?? '',
+  'title' => $dm_c2['title_lv1'] ?? '',
   'keywordsvi' => $dm_c2['keywords_lv1'] ?? '',
   'descriptionvi' => $dm_c2['description_lv1'] ?? ''
 ];
 // Sidebar: danh sách danh mục cấp 2 thuộc cùng cấp 1
 $id_list = (int)$dm_c2['id_list'];
-$list_danhmuc_c2 = $functions->show_data([
+$list_danhmuc_c2 = $fn->show_data([
   'table' => 'tbl_danhmuc_c2',
   'status' => 'hienthi',
   'id_list' => $id_list
@@ -25,7 +25,7 @@ $list_danhmuc_c2 = $functions->show_data([
 $records_per_page = 20;
 $current_page = max(1, (int)($_GET['page'] ?? 1));
 
-$total_records = $functions->count_data([
+$total_records = $fn->count_data([
   'table' => 'tbl_sanpham',
   'status' => 'hienthi',
   'id_cat' => $dm_c2['id']
@@ -33,7 +33,7 @@ $total_records = $functions->count_data([
 
 $total_pages = max(1, ceil($total_records / $records_per_page));
 
-$get_sp = $functions->show_data([
+$get_sp = $fn->show_data([
   'table' => 'tbl_sanpham',
   'status' => 'hienthi',
   'id_cat' => $dm_c2['id'],
@@ -41,7 +41,7 @@ $get_sp = $functions->show_data([
   'current_page' => $current_page
 ]);
 // SEO
-$seo = array_merge($seo, array_filter($functions->get_seo_data($dm_c2), fn($v) => $v !== null && $v !== ''));
+$seo = array_merge($seo, array_filter($fn->get_seo_data($dm_c2), fn($v) => $v !== null && $v !== ''));
 
 ?>
 
@@ -57,11 +57,11 @@ $seo = array_merge($seo, array_filter($functions->get_seo_data($dm_c2), fn($v) =
         </li>
         <li class="breadcrumb-item">
           <a class="text-decoration-none"
-            href="<?= $dm_c1['slugvi'] ?>"><span><?= $dm_c1['namevi'] ?></span></a>
+            href="<?= $dm_c1['slug'] ?>"><span><?= $dm_c1['name'] ?></span></a>
         </li>
         <li class="breadcrumb-item active">
           <a class="text-decoration-none"
-            href="<?= $dm_c2['slugvi'] ?>"><span><?= $dm_c2['namevi'] ?></span></a>
+            href="<?= $dm_c2['slug'] ?>"><span><?= $dm_c2['name'] ?></span></a>
         </li>
       </ol>
     </div>
@@ -73,8 +73,8 @@ $seo = array_merge($seo, array_filter($functions->get_seo_data($dm_c2), fn($v) =
         <div class="grid-list-no-index">
           <?php while ($dm_c2_item = $list_danhmuc_c2->fetch_assoc()): ?>
             <div class="item-list-noindex">
-              <a href="<?= $dm_c2_item['slugvi'] ?>">
-                <h3 class="m-0"><?= $dm_c2_item['namevi'] ?></h3>
+              <a href="<?= $dm_c2_item['slug'] ?>">
+                <h3 class="m-0"><?= $dm_c2_item['name'] ?></h3>
               </a>
             </div>
           <?php endwhile; ?>
@@ -87,7 +87,7 @@ $seo = array_merge($seo, array_filter($functions->get_seo_data($dm_c2), fn($v) =
   <div class="wrap-product-list">
     <div class="wrap-content" style="background: unset;">
       <div class="title-list-hot text-center">
-        <h2><?= $dm_c2['namevi'] ?></h2>
+        <h2><?= $dm_c2['name'] ?></h2>
         (<?= $total_records ?> sản phẩm)
       </div>
     </div>
@@ -100,8 +100,8 @@ $seo = array_merge($seo, array_filter($functions->get_seo_data($dm_c2), fn($v) =
           data-cat="" data-item="" data-brand="" data-curpage="2" data-total="124">
           <?php while ($sp = $get_sp->fetch_assoc()) : ?>
             <?php
-            $slug = $sp['slugvi'];
-            $name = htmlspecialchars($sp['namevi']);
+            $slug = $sp['slug'];
+            $name = htmlspecialchars($sp['name']);
             $img = !empty($sp['file'])
               ? BASE_ADMIN . UPLOADS . $sp['file']
               : NO_IMG;
@@ -143,7 +143,7 @@ $seo = array_merge($seo, array_filter($functions->get_seo_data($dm_c2), fn($v) =
         </div>
       <?php endif ?>
       <div class="mt-3">
-        <?= $pagination_html = $functions->renderPagination_tc($current_page, $total_pages, BASE . $dm_c2['slugvi'] . '/page-');
+        <?= $pagination_html = $fn->renderPagination_tc($current_page, $total_pages, BASE . $dm_c2['slug'] . '/page-');
         ?>
       </div>
     </div>

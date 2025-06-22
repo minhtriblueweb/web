@@ -8,7 +8,7 @@
               <div class="images">
                 <a class="hvr-icon" title="<?= $row['name'] ?>">
                   <img
-                    src="<?= empty($row['file']) ? BASE_ADMIN . "assets/img/noimage.png" : BASE_ADMIN . UPLOADS . $row['file'] ?>"
+                    src="<?= empty($row['file']) ? NO_IMG : BASE_ADMIN . UPLOADS . $row['file'] ?>"
                     width="40" height="40" />
                 </a>
                 <h3><span class="text-split"><?= $row['name'] ?></span></h3>

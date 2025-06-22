@@ -7,14 +7,12 @@ include_once($filepath . '/../helpers/format.php');
 class trangtinh
 {
   private $db;
-  private $fm;
-
+  private $fn;
   public function __construct()
   {
     $this->db = new Database();
-    $this->fm = new Format();
+    $this->fn = new Functions();
   }
-
   public function get_static($type)
   {
     $type = mysqli_real_escape_string($this->db->link, $type);
@@ -22,31 +20,42 @@ class trangtinh
     $result = $this->db->select($query);
     return $result;
   }
-
   public function update_static($data, $type, $id)
   {
-    $fields = ['slug', 'name', 'desc', 'content', 'title', 'keywords', 'description'];
-    foreach ($fields as $field) {
-      $$field = mysqli_real_escape_string($this->db->link, $data[$field] ?? '');
-    }
-    $id = mysqli_real_escape_string($this->db->link, $id);
+    global $config;
+    $langs = array_keys($config['website']['lang']);
+    $table = 'tbl_static';
+
+    $id = (int)$id;
     $type = mysqli_real_escape_string($this->db->link, $type);
-    $query = "UPDATE tbl_static SET
-                slug = '$slug',
-                name = '$name',
-                desc = '$desc',
-                content = '$content',
-                title = '$title',
-                keywords = '$keywords',
-                description = '$description'
-                WHERE type= '$type' AND id = '$id'";
-    $result = $this->db->update($query);
-    if ($result) {
-      header("Location: transfer.php?stt=success&url=$type");
-      exit();
-    } else {
-      return "Lỗi thao tác!";
+    $slug = mysqli_real_escape_string($this->db->link, $data['slug'] ?? '');
+
+    $update_fields = [];
+
+    if (!empty($slug)) {
+      $update_fields[] = "`slug` = '$slug'";
     }
+
+    foreach ($langs as $lang) {
+      foreach (['name', 'desc', 'content', 'title', 'keywords', 'description'] as $field) {
+        $key = $field . $lang;
+        if (isset($data[$key])) {
+          $value = mysqli_real_escape_string($this->db->link, $data[$key]);
+          $update_fields[] = "`$key` = '$value'";
+        }
+      }
+    }
+
+    $update_fields[] = "`update_at` = NOW()";
+
+    if (!empty($update_fields)) {
+      $query = "UPDATE `$table` SET " . implode(', ', $update_fields) . " WHERE `id` = '$id' AND `type` = '$type'";
+      $result = $this->db->update($query);
+    } else {
+      $result = false;
+    }
+    $msg = $result ? "Cập nhật dữ liệu thành công" : "Không có dữ liệu để cập nhật hoặc lỗi xảy ra";
+    $this->fn->transfer($msg, "index.php?page=static&type=" . $type, $result);
   }
 }
 

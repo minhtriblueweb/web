@@ -12,7 +12,7 @@ class sanpham
   public function __construct()
   {
     $this->db = new Database();
-    $this->fn = new functions();
+    $this->fn = new Functions();
   }
 
   public function total_pages_sanpham_lienquan($id, $id_cat, $limit)
@@ -42,8 +42,8 @@ class sanpham
 
   public function upload_gallery($data, $files, $id, $id_parent)
   {
-    $id = mysqli_real_escape_string($this->db->link, $id);
-    $id_parent = mysqli_real_escape_string($this->db->link, $id_parent);
+    $id = (int)$id;
+    $id_parent = (int)$id_parent;
     $table = 'tbl_gallery';
     $data_escaped = [];
     $data_escaped['numb'] = mysqli_real_escape_string($this->db->link, $data['numb'] ?? 0);
@@ -55,10 +55,9 @@ class sanpham
       }
     }
     $data_escaped['status'] = mysqli_real_escape_string($this->db->link, implode(',', $status_values));
-    $thumb_filename = '';
     if (!empty($files['file']['name']) && !empty($files['file']['tmp_name'])) {
       $old_file_path = '';
-      $old = $this->db->select("SELECT file FROM $table WHERE id='$id'");
+      $old = $this->db->select("SELECT file FROM `$table` WHERE id = '$id'");
       if ($old && $old->num_rows > 0) {
         $row = $old->fetch_assoc();
         $old_file_path = 'uploads/' . $row['file'];
@@ -66,9 +65,10 @@ class sanpham
       $thumb_filename = $this->fn->Upload(
         ['file' => $files['file']],
         '500x500x1',
-        [0, 0, 0, 127],
+        [255, 255, 255, 0],
         $old_file_path,
-        true
+        $watermark = true,
+        $convert_webp = true
       );
       if (empty($thumb_filename)) {
         return "Lỗi upload file!";
@@ -79,6 +79,7 @@ class sanpham
     foreach ($data_escaped as $field => $value) {
       $update_fields[] = "`$field` = '$value'";
     }
+    $update_fields[] = "`date_updated` = NOW()";
     $query = "UPDATE `$table` SET " . implode(", ", $update_fields) . " WHERE id = '$id'";
     $result = $this->db->update($query);
     if ($result) {
@@ -87,6 +88,7 @@ class sanpham
       return "Lỗi thao tác!";
     }
   }
+
 
   public function them_gallery($data, $files, $id_parent)
   {
@@ -99,9 +101,10 @@ class sanpham
         $thumb_filename = $this->fn->Upload(
           ['file' => $files[$file_key]],
           '500x500x1',
-          [0, 0, 0, 127],
+          [255, 255, 255, 0],
           '',
-          true
+          $watermark = true,
+          $convert_webp = true
         );
         if (!empty($thumb_filename)) {
           $fields = ['id_parent', 'file', 'numb', 'status'];
@@ -130,8 +133,6 @@ class sanpham
     $this->fn->transfer("Thêm hình ảnh thành công", "index.php?page=gallery_list&id=$id_parent");
   }
 
-
-
   public function get_img_gallery($id)
   {
     $id = mysqli_real_escape_string($this->db->link, $id);
@@ -149,7 +150,7 @@ class sanpham
     return $result;
   }
 
-  public function update_ews_by_slug($slug)
+  public function update_views_by_slug($slug)
   {
     $query = "SELECT * FROM tbl_sanpham WHERE slug = '$slug'";
     $result = $this->db->select($query);
@@ -191,36 +192,30 @@ class sanpham
   {
     $id = mysqli_real_escape_string($this->db->link, $id);
     $table = mysqli_real_escape_string($this->db->link, $table);
-    $query = "SELECT name FROM `$table` WHERE id = '$id' LIMIT 1";
+    $query = "SELECT namevi FROM `$table` WHERE id = '$id' LIMIT 1";
     $result = $this->db->select($query);
     if ($result && $result->num_rows > 0) {
       $row = $result->fetch_assoc();
-      return $row['name'] ?? '';
+      return $row['namevi'] ?? '';
     }
     return '';
   }
 
   public function save_sanpham($data, $files, $id = null)
   {
-    $fields = [
-      'slug',
-      'name',
-      'id_list',
-      'id_cat',
-      'regular_price',
-      'sale_price',
-      'discount',
-      'code',
-      'desc',
-      'content',
-      'title',
-      'keywords',
-      'description',
-      'numb'
-    ];
+    global $config;
+    $langs = array_keys($config['website']['lang']);
+    $fields_multi = ['slug', 'name', 'desc', 'content', 'title', 'keywords', 'description'];
+    $fields_common = ['id_list', 'id_cat', 'regular_price', 'sale_price', 'discount', 'code', 'type', 'numb'];
     $table = 'tbl_sanpham';
     $data_escaped = [];
-    foreach ($fields as $field) {
+    foreach ($langs as $lang) {
+      foreach ($fields_multi as $field) {
+        $key = $field . $lang;
+        $data_escaped[$key] = !empty($data[$key]) ? mysqli_real_escape_string($this->db->link, $data[$key]) : "";
+      }
+    }
+    foreach ($fields_common as $field) {
       $data_escaped[$field] = !empty($data[$field]) ? mysqli_real_escape_string($this->db->link, $data[$field]) : "";
     }
     $status_flags = ['hienthi', 'noibat', 'banchay'];
@@ -231,8 +226,11 @@ class sanpham
       }
     }
     $data_escaped['status'] = mysqli_real_escape_string($this->db->link, implode(',', $status_values));
-    $slug_error = $this->fn->isSlugDuplicated($data_escaped['slug'], $table, $id ?? '');
-    if ($slug_error) return $slug_error;
+    foreach ($langs as $lang) {
+      $slug_key = 'slug' . $lang;
+      $slug_error = $this->fn->isSlugDuplicated($data_escaped[$slug_key], $table, $id ?? '');
+      if ($slug_error) return $slug_error;
+    }
     $thumb_filename = '';
     $old_file_path = '';
     if (!empty($id)) {
@@ -242,7 +240,14 @@ class sanpham
         $old_file_path = "uploads/" . $row['file'];
       }
     }
-    $thumb_filename = $this->fn->Upload($files, '500x500x1', [0, 0, 0, 127], $old_file_path, $watermark = true, $convert_webp = true);
+    $thumb_filename = $this->fn->Upload(
+      $files,
+      '500x500x1',
+      [255, 255, 255, 0],
+      $old_file_path,
+      $watermark = true,
+      $convert_webp = true
+    );
     if (!empty($id)) {
       $update_fields = [];
       foreach ($data_escaped as $field => $value) {
@@ -251,8 +256,8 @@ class sanpham
       if (!empty($thumb_filename)) {
         $update_fields[] = "file = '$thumb_filename'";
       }
-      $query = "UPDATE $table SET " . implode(", ", $update_fields) . " WHERE id = '$id'";
-      $result = $this->db->update($query);
+      $update_query = "UPDATE $table SET " . implode(", ", $update_fields) . " WHERE id = '" . (int)$id . "'";
+      $result = $this->db->update($update_query);
       $msg = $result ? "Cập nhật sản phẩm thành công" : "Cập nhật sản phẩm thất bại";
     } else {
       $field_names = array_keys($data_escaped);
@@ -261,8 +266,8 @@ class sanpham
         $field_names[] = 'file';
         $field_values[] = "'" . $thumb_filename . "'";
       }
-      $query = "INSERT INTO $table (" . implode(", ", $field_names) . ") VALUES (" . implode(", ", $field_values) . ")";
-      $result = $this->db->insert($query);
+      $insert_query = "INSERT INTO $table (" . implode(", ", $field_names) . ") VALUES (" . implode(", ", $field_values) . ")";
+      $result = $this->db->insert($insert_query);
       $msg = $result ? "Thêm sản phẩm thành công" : "Thêm sản phẩm thất bại";
     }
     $this->fn->transfer($msg, "index.php?page=product_list", $result);

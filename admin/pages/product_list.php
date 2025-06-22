@@ -1,18 +1,20 @@
 <?php
 $redirect_url = $_GET['page'];
-$name = 'sản phẩm';
 $records_per_page = 10;
+$name_page = 'sản phẩm';
+$table = 'tbl_sanpham';
 $current_page = max(1, isset($_GET['p']) ? (int)$_GET['p'] : 1);
-$total_pages = ceil($functions->phantrang('tbl_sanpham') / $records_per_page);
-$show_sanpham = $functions->show_data([
-  'table' => 'tbl_sanpham',
+$total_records = $fn->count_data(['table' => $table]);
+$total_pages = ceil($total_records / $records_per_page);
+$show_sanpham = $fn->show_data([
+  'table' => $table,
   'records_per_page' => $records_per_page,
   'current_page' => $current_page,
   'keyword' => $_GET['keyword'] ?? ''
 ]);
-$show_danhmuc = $functions->show_data('tbl_danhmuc');
-$linkMulti = "index.php?page=deleteMulti&table=tbl_sanpham";
-$linkDelete = "index.php?page=delete&table=tbl_sanpham&id=";
+$show_danhmuc = $fn->show_data('tbl_danhmuc');
+$linkMulti = "index.php?page=deleteMulti&table=$table";
+$linkDelete = "index.php?page=delete&table=$table&id=";
 $linkEdit = "index.php?page=product_form&id=";
 $linkAdd = "index.php?page=product_form";
 $linkGalleryList = "index.php?page=gallery_list&id=";
@@ -20,9 +22,8 @@ $linkGallery = "index.php?page=gallery_form&id=";
 ?>
 <?php
 $breadcrumb = [
-  ['label' => 'Bảng điều khiển', 'link' => '?page=dashboard'],
-  ['label' => $name],
-  ['label' => 'Danh sách ' . $name]
+  ['label' => 'Bảng điều khiển', 'link' => 'index.php'],
+  ['label' => $name_page]
 ];
 include 'templates/breadcrumb.php';
 ?>
@@ -34,7 +35,7 @@ include 'templates/breadcrumb.php';
         <option value="0">Chọn danh mục</option>
         <?php if ($show_danhmuc) : ?>
           <?php while ($resule_danhmuc = $show_danhmuc->fetch_assoc()) : ?>
-            <option value="<?= $resule_danhmuc['id'] ?>"><?= $resule_danhmuc['name'] ?></option>
+            <option value="<?= $resule_danhmuc['id'] ?>"><?= $resule_danhmuc['namevi'] ?></option>
           <?php endwhile; ?>
         <?php endif; ?>
       </select></div>
@@ -45,7 +46,7 @@ include 'templates/breadcrumb.php';
   </div>
   <div class="card card-primary card-outline text-sm mb-0">
     <div class="card-header">
-      <h3 class="card-title">Danh sách <?= $name ?></h3>
+      <h3 class="card-title">Danh sách <?= $name_page ?></h3>
     </div>
     <div class="card-body table-responsive p-0">
       <table class="table table-hover">
@@ -74,8 +75,8 @@ include 'templates/breadcrumb.php';
             <?php if ($show_sanpham): ?>
               <?php while ($row = $show_sanpham->fetch_assoc()):
                 $id = $row['id'];
-                $name = $row['name'];
-                $slug = $row['slug'];
+                $name = $row['namevi'];
+                $slug = $row['slugvi'];
                 $img = !empty($row['file'])
                   ? BASE_ADMIN . UPLOADS . $row['file']
                   : NO_IMG;
@@ -92,7 +93,7 @@ include 'templates/breadcrumb.php';
                   <!-- Số thứ tự -->
                   <td class="align-middle">
                     <input type="number" class="form-control form-control-mini m-auto update-numb" min="0"
-                      value="<?= $row['numb'] ?>" data-id="<?= $id ?>" data-table="tbl_sanpham" />
+                      value="<?= $row['numb'] ?>" data-id="<?= $id ?>" data-table="<?= $table ?>" />
                   </td>
 
                   <!-- Ảnh sản phẩm -->
@@ -140,7 +141,7 @@ include 'templates/breadcrumb.php';
                   <?php foreach (['hienthi', 'noibat', 'banchay'] as $attr): ?>
                     <td class="align-middle text-center">
                       <label class="switch switch-success">
-                        <input type="checkbox" class="switch-input custom-control-input show-checkbox " id="show-checkbox-<?= $attr ?>-<?= $id ?>" data-table="tbl_sanpham" data-id="<?= $id ?>" data-attr="<?= $attr ?>" <?= (strpos($row['status'], $attr) !== false) ? 'checked' : '' ?>>
+                        <input type="checkbox" class="switch-input custom-control-input show-checkbox " id="show-checkbox-<?= $attr ?>-<?= $id ?>" data-table="<?= $table ?>" data-id="<?= $id ?>" data-attr="<?= $attr ?>" <?= (strpos($row['status'], $attr) !== false) ? 'checked' : '' ?>>
                         <span class="switch-toggle-slider">
                           <span class="switch-on"><i class="fa-solid fa-check"></i></span>
                           <span class="switch-off"><i class="fa-solid fa-xmark"></i></span>
@@ -168,7 +169,7 @@ include 'templates/breadcrumb.php';
   </div>
   <?php if ($total_pages > 1): ?>
     <div class="card-footer text-sm pb-0 mb-5">
-      <?= $functions->renderPagination($current_page, $total_pages, "index.php?page=$redirect_url&p="); ?>
+      <?= $fn->renderPagination($current_page, $total_pages, "index.php?page=$redirect_url&p="); ?>
     </div>
   <?php endif; ?>
 </section>

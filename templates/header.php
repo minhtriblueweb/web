@@ -86,7 +86,7 @@
       <li class="h-fn fn"><?= $web_name ?></li>
       <li class="h-org org"><?= $web_name ?></li>
       <li class="h-tel tel"><?= $hotline ?></li>
-      <li><a class="u-url ul" href="<?= $config['base'] ?>"><?= $config['base'] ?></a></li>
+      <li><a class="u-url ul" href="<?= BASE ?>"><?= BASE ?></a></li>
     </ul>
     <h1 class="hidden-seoh"><?= $web_name ?></h1>
     <div class="header">
@@ -107,7 +107,7 @@
                     class="lazy hvr-icon-rotate" class="me-2">
                     <img width="20" height="20"
                       src="<?= empty($row_social['file']) ? NO_IMG : BASE_ADMIN . UPLOADS . $row_social['file']; ?>"
-                      alt="<?= $row_social['namevi'] ?>" />
+                      alt="<?= $row_social['name'] ?>" />
                   </a>
                 <?php endwhile; ?>
               <?php endif; ?>

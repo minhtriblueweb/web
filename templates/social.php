@@ -14,8 +14,8 @@
             alt="<?= $row_social['name'] ?>" class="tada">
         </div>
         <div class="floating-support__item__content">
-          <p><b><?= $row_social['namevi'] ?></b></p>
-          <span><?= $row_social['descvi'] ?></span>
+          <p><b><?= $row_social['name'] ?></b></p>
+          <span><?= $row_social['desc'] ?></span>
         </div>
       </a>
     <?php endwhile; ?>

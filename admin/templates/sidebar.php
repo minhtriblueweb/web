@@ -64,18 +64,23 @@ $sidebarMenu = [
     'children' => [
       [
         'title' => 'Giới thiệu',
-        'link' => '?page=gioithieu',
-        'active' => ['?page=gioithieu']
+        'link' => '?page=static&type=gioithieu',
+        'active' => ['?page=static&type=gioithieu']
       ],
       [
         'title' => 'Liên hệ',
-        'link' => '?page=lienhe',
-        'active' => ['?page=lienhe']
+        'link' => '?page=static&type=lienhe',
+        'active' => ['?page=static&type=lienhe']
       ],
       [
         'title' => 'Mua hàng',
-        'link' => '?page=muahang',
-        'active' => ['?page=muahang']
+        'link' => '?page=static&type=muahang',
+        'active' => ['?page=static&type=muahang']
+      ],
+[
+        'title' => 'Footer',
+        'link' => '?page=static&type=footer',
+        'active' => ['?page=static&type=footer']
       ]
     ]
   ],
@@ -125,75 +130,5 @@ $sidebarMenu = [
 $currentPage = $_GET['page'] ?? '';
 $currentType = $_GET['type'] ?? '';
 ?>
-
-<aside class="main-sidebar sidebar-dark-primary elevation-4 text-sm">
-  <a class="brand-link" href="?page=dashboard">
-    <img class="brand-image" src="./assets/img/chuky.png" />
-  </a>
-  <!-- Sidebar -->
-  <div class="sidebar">
-    <nav class="mt-3">
-      <ul class="nav nav-pills nav-sidebar flex-column nav-child-indent text-sm" data-widget="treeview" role="menu" data-accordion="false">
-        <?php foreach ($sidebarMenu as $menu): ?>
-          <?php
-          $isActiveGroup = false;
-
-          if (!empty($menu['children'])) {
-            foreach ($menu['children'] as $child) {
-              foreach ($child['active'] as $activeItem) {
-                parse_str(ltrim($activeItem, '?'), $activeParams);
-                if (($activeParams['page'] ?? '') === $currentPage && ($activeParams['type'] ?? '') === $currentType) {
-                  $isActiveGroup = true;
-                  break 2;
-                }
-              }
-            }
-          } else {
-            foreach ($menu['active'] as $activeItem) {
-              parse_str(ltrim($activeItem, '?'), $activeParams);
-              if (($activeParams['page'] ?? '') === $currentPage && ($activeParams['type'] ?? '') === $currentType) {
-                $isActiveGroup = true;
-                break;
-              }
-            }
-          }
-          ?>
-          <li class="nav-item <?= !empty($menu['children']) ? 'has-treeview' : '' ?> <?= $isActiveGroup ? 'menu-open' : '' ?>">
-            <a class="nav-link <?= $isActiveGroup ? 'active' : '' ?>" href="<?= $menu['link'] ?? '#' ?>" title="<?= $menu['title'] ?>">
-              <i class="nav-icon text-sm <?= $menu['icon'] ?>"></i>
-              <p>
-                <?= $menu['title'] ?>
-                <?php if (!empty($menu['children'])): ?><i class="right fas fa-angle-left"></i><?php endif; ?>
-              </p>
-            </a>
-
-            <?php if (!empty($menu['children'])): ?>
-              <ul class="nav nav-treeview">
-                <?php foreach ($menu['children'] as $child): ?>
-                  <?php
-                  $isChildActive = false;
-                  foreach ($child['active'] as $activeItem) {
-                    parse_str(ltrim($activeItem, '?'), $activeParams);
-                    if (($activeParams['page'] ?? '') === $currentPage && ($activeParams['type'] ?? '') === $currentType) {
-                      $isChildActive = true;
-                      break;
-                    }
-                  }
-                  ?>
-                  <li class="nav-item">
-                    <a class="nav-link <?= $isChildActive ? 'active' : '' ?>" href="<?= $child['link'] ?>" title="<?= $child['title'] ?>">
-                      <i class="nav-icon text-sm far fa-caret-square-right"></i>
-                      <p><?= $child['title'] ?></p>
-                    </a>
-                  </li>
-                <?php endforeach; ?>
-              </ul>
-            <?php endif; ?>
-          </li>
-        <?php endforeach; ?>
-
-      </ul>
-    </nav>
-  </div>
-</aside>
+<aside class="main-sidebar sidebar-dark-primary elevation-4 text-sm"><a class="brand-link" href="?page=dashboard"><img class="brand-image" src="./assets/img/chuky.png" /></a><div class="sidebar"><nav class="mt-3"><ul class="nav nav-pills nav-sidebar flex-column nav-child-indent text-sm" data-widget="treeview" role="menu" data-accordion="false"><?php foreach ($sidebarMenu as $menu): ?><?php $isActiveGroup=false;if(!empty($menu['children'])){foreach($menu['children'] as $child){foreach($child['active'] as $activeItem){parse_str(ltrim($activeItem,'?'),$activeParams);if(($activeParams['page']??'')===$currentPage&&($activeParams['type']??'')===$currentType){$isActiveGroup=true;break 2;}}}}else{foreach($menu['active'] as $activeItem){parse_str(ltrim($activeItem,'?'),$activeParams);if(($activeParams['page']??'')===$currentPage&&($activeParams['type']??'')===$currentType){$isActiveGroup=true;break;}}} ?><li class="nav-item <?=!empty($menu['children'])?'has-treeview':''?> <?= $isActiveGroup?'menu-open':'' ?>"><a class="nav-link <?= $isActiveGroup?'active':'' ?>" href="<?= $menu['link']??'#' ?>" title="<?= $menu['title'] ?>"><i class="nav-icon text-sm <?= $menu['icon'] ?>"></i><p><?= $menu['title'] ?><?php if(!empty($menu['children'])):?><i class="right fas fa-angle-left"></i><?php endif; ?></p></a><?php if(!empty($menu['children'])):?><ul class="nav nav-treeview"><?php foreach($menu['children'] as $child): ?><?php $isChildActive=false;foreach($child['active'] as $activeItem){parse_str(ltrim($activeItem,'?'),$activeParams);if(($activeParams['page']??'')===$currentPage&&($activeParams['type']??'')===$currentType){$isChildActive=true;break;}} ?><li class="nav-item"><a class="nav-link <?= $isChildActive?'active':'' ?>" href="<?= $child['link'] ?>" title="<?= $child['title'] ?>"><i class="nav-icon text-sm far fa-caret-square-right"></i><p><?= $child['title'] ?></p></a></li><?php endforeach; ?></ul><?php endif; ?></li><?php endforeach; ?></ul></nav></div></aside>
 <div class="content-wrapper">

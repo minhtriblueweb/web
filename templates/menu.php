@@ -22,13 +22,13 @@
               $has_sub = ($danhmuc_lv2 && $danhmuc_lv2->num_rows > 0);
               ?>
               <li>
-                <a title="<?= $dm['namevi'] ?>" href="<?= $dm['slugvi'] ?>">
+                <a title="<?= $dm['name'] ?>" href="<?= $dm['slug'] ?>">
                   <span class="scale-img">
                     <img width="25"
                       src="<?= empty($dm['file']) ? NO_IMG : BASE_ADMIN . UPLOADS . $dm['file'] ?>"
-                      alt="<?= $dm['namevi'] ?>" title="<?= $dm['namevi'] ?>" />
+                      alt="<?= $dm['name'] ?>" title="<?= $dm['name'] ?>" />
                   </span>
-                  <?= $dm['namevi'] ?>
+                  <?= $dm['name'] ?>
                   <?= $has_sub ? '<i class="fa-solid fa-angle-right"></i>' : '' ?>
                 </a>
                 <?php if ($has_sub): ?>
@@ -37,9 +37,9 @@
                       <?php while ($dm2 = $danhmuc_lv2->fetch_assoc()): ?>
                         <li>
                           <a class="transition"
-                            title="<?= $dm2['namevi'] ?>"
-                            href="<?= $dm2['slugvi'] ?>">
-                            <?= $dm2['namevi'] ?>
+                            title="<?= $dm2['name'] ?>"
+                            href="<?= $dm2['slug'] ?>">
+                            <?= $dm2['name'] ?>
                           </a>
                         </li>
                       <?php endwhile; ?>
@@ -118,15 +118,15 @@
             $has_sub = ($menu_lv2 && $menu_lv2->num_rows > 0);
             ?>
             <li>
-              <a title="<?= $dm['namevi'] ?>" href="<?= $dm['slugvi'] ?>">
-                <?= $dm['namevi'] ?>
+              <a title="<?= $dm['name'] ?>" href="<?= $dm['slug'] ?>">
+                <?= $dm['name'] ?>
               </a>
               <?php if ($has_sub): ?>
                 <ul>
                   <?php while ($dm2 = $menu_lv2->fetch_assoc()): ?>
                     <li>
-                      <a title="<?= $dm2['namevi'] ?>" href="<?= $dm['slugvi'] ?>/<?= $dm2['slugvi'] ?>">
-                        <?= $dm2['namevi'] ?>
+                      <a title="<?= $dm2['name'] ?>" href="<?= $dm['slug'] ?>/<?= $dm2['slug'] ?>">
+                        <?= $dm2['name'] ?>
                       </a>
                     </li>
                   <?php endwhile; ?>

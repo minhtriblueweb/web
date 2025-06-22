@@ -1,11 +1,10 @@
 <?php
 $message = '';
-$name = 'đánh giá khách hàng';
+$name_page = 'đánh giá khách hàng';
 $table = "tbl_danhgia";
-$redirectUrl = 'danhgia_list';
 $id = $_GET['id'] ?? null;
 if (!empty($id)) {
-  $get_id = $functions->get_id($table, $id);
+  $get_id = $fn->get_id($table, $id);
   if ($get_id && $get_id->num_rows > 0) {
     $result = $get_id->fetch_assoc();
   }
@@ -14,12 +13,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && (isset($_POST['add']) || isset($_PO
   $message = $danhgia->save_danhgia($_POST, $_FILES, $id);
 }
 ?>
-<!-- Main content -->
 <?php
 $breadcrumb = [
   ['label' => 'Bảng điều khiển', 'link' => 'index.php'],
-  ['label' => $name, 'link' => $redirectUrl],
-  ['label' => !empty($id) ? 'Cập nhật ' . $name : 'Thêm mới ' . $name]
+  ['label' => !empty($id) ? 'Cập nhật ' . $name_page : 'Thêm mới ' . $name_page]
 ];
 include 'templates/breadcrumb.php';
 ?>
@@ -30,7 +27,7 @@ include 'templates/breadcrumb.php';
       <div class="col-xl-8">
         <div class="card card-primary card-outline text-sm">
           <div class="card-header">
-            <h3 class="card-title">Nội dung <?= $name ?></h3>
+            <h3 class="card-title">Nội dung <?= $name_page ?></h3>
             <div class="card-tools">
               <button type="button" class="btn btn-tool" data-card-widget="collapse"><i
                   class="fas fa-minus"></i></button>
@@ -40,31 +37,58 @@ include 'templates/breadcrumb.php';
             <div class="card card-primary card-outline card-outline-tabs">
               <div class="card-header p-0 border-bottom-0">
                 <ul class="nav nav-tabs" id="custom-tabs-three-tab-lang" role="tablist">
-                  <li class="nav-item">
-                    <a class="nav-link active" id="tabs-lang" data-toggle="pill" href="#tabs-lang-vi" role="tab"
-                      aria-controls="tabs-lang-vi" aria-selected="true">Tiếng Việt</a>
-                  </li>
+                  <?php foreach ($config['website']['lang'] as $k => $v) { ?>
+                    <li class="nav-item">
+                      <a class="nav-link <?= ($k == 'vi') ? 'active' : '' ?>"
+                        id="tabs-lang-article-<?= $k ?>"
+                        data-toggle="pill"
+                        href="#tabs-content-article-<?= $k ?>"
+                        role="tab"
+                        aria-controls="tabs-content-article-<?= $k ?>"
+                        aria-selected="<?= ($k == 'vi') ? 'true' : 'false' ?>">
+                        <?= $v ?>
+                      </a>
+                    </li>
+                  <?php } ?>
                 </ul>
               </div>
               <div class="card-body card-article">
                 <div class="tab-content" id="custom-tabs-three-tabContent-lang">
-                  <div class="tab-pane fade show active" id="tabs-lang-vi" role="tabpanel" aria-labelledby="tabs-lang">
-                    <div class="form-group">
-                      <label for="name">Tiêu đề:</label>
-                      <input type="text" class="form-control for-seo text-sm" name="name" id="name"
-                        placeholder="Tiêu đề" value="<?= $_POST['name'] ?? ($result['name'] ?? "") ?>" required>
+                  <?php foreach ($config['website']['lang'] as $k => $v) { ?>
+                    <div class="tab-pane fade show <?= ($k == 'vi') ? 'active' : '' ?>"
+                      id="tabs-content-article-<?= $k ?>"
+                      role="tabpanel"
+                      aria-labelledby="tabs-lang-article-<?= $k ?>">
+                      <!-- Tiêu đề -->
+                      <div class="form-group">
+                        <label for="name<?= $k ?>">Tiêu đề (<?= $k ?>):</label>
+                        <input type="text"
+                          class="form-control for-seo text-sm"
+                          name="name<?= $k ?>" id="name<?= $k ?>"
+                          placeholder="Tiêu đề (<?= $v ?>)"
+                          value="<?= $_POST['name' . $k] ?? ($result['name' . $k] ?? "") ?>"
+                          <?= ($k == 'vi') ? 'required' : '' ?>>
+                      </div>
+
+                      <!-- Địa chỉ -->
+                      <div class="form-group">
+                        <label for="address<?= $k ?>">Địa chỉ (<?= $k ?>):</label>
+                        <input type="text"
+                          class="form-control text-sm"
+                          name="address<?= $k ?>" id="address<?= $k ?>"
+                          placeholder="Địa chỉ (<?= $v ?>)"
+                          value="<?= $_POST['address' . $k] ?? ($result['address' . $k] ?? "") ?>">
+                      </div>
+
+                      <!-- Mô tả -->
+                      <div class="form-group">
+                        <label for="desc<?= $k ?>">Mô tả (<?= $k ?>):</label>
+                        <textarea class="form-control for-seo text-sm"
+                          name="desc<?= $k ?>" id="desc<?= $k ?>"
+                          rows="5" placeholder="Mô tả (<?= $v ?>)"><?= $_POST['desc' . $k] ?? ($result['desc' . $k] ?? "") ?></textarea>
+                      </div>
                     </div>
-                    <div class="form-group">
-                      <label for="address">Địa chỉ:</label>
-                      <input type="text" class="form-control text-sm" name="address" id="address" placeholder="Địa chỉ"
-                        value="<?= $_POST['address'] ?? ($result['address'] ?? "") ?>">
-                    </div>
-                    <div class="form-group">
-                      <label for="desc">Mô tả:</label>
-                      <textarea class="form-control for-seo text-sm" name="desc" id="desc" rows="5"
-                        placeholder="Mô tả"><?= $_POST['desc'] ?? ($result['desc'] ?? "") ?></textarea>
-                    </div>
-                  </div>
+                  <?php } ?>
                 </div>
               </div>
             </div>
@@ -102,7 +126,7 @@ include 'templates/breadcrumb.php';
     </div>
     <div class="card card-primary card-outline text-sm">
       <div class="card-header">
-        <h3 class="card-title">Thông tin <?= $name ?></h3>
+        <h3 class="card-title">Thông tin <?= $name_page ?></h3>
         <div class="card-tools">
           <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
         </div>
@@ -118,7 +142,7 @@ include 'templates/breadcrumb.php';
             <div class="form-group d-inline-block mb-2 mr-2">
               <label for="<?= $check ?>-checkbox" class="d-inline-block align-middle mb-0 mr-2"><?= $label ?>:</label>
               <div class="custom-control custom-checkbox d-inline-block align-middle">
-                <input <?= $functions->is_checked($check, $result ?? null, $id ?? null) ?>
+                <input <?= $fn->is_checked($check, $result ?? null, $id ?? null) ?>
                   type="checkbox"
                   class="custom-control-input <?= $check ?>-checkbox"
                   name="<?= $check ?>"

@@ -23,7 +23,7 @@
               <a class="hvr-icon-rotate" href="<?= $row_social['link'] ?>" target="_blank" class="me-2">
                 <img width="50" class="hvr-icon"
                   src="<?= empty($row_social['file']) ? NO_IMG : BASE_ADMIN . UPLOADS . $row_social['file']; ?>"
-                  alt="<?= $row_social['namevi'] ?>" title="<?= $row_social['namevi'] ?>" />
+                  alt="<?= $row_social['name'] ?>" title="<?= $row_social['name'] ?>" />
               </a>
             <?php endwhile; ?>
           <?php endif; ?>
@@ -38,8 +38,8 @@
               <?php if ($show_chinhsach): ?>
                 <?php while ($row_cs = $show_chinhsach->fetch_assoc()): ?>
                   <li>
-                    <a class="transition" href="<?= $row_cs['slugvi'] ?>"
-                      title="<?= $row_cs['namevi'] ?>"><?= $row_cs['namevi'] ?></a>
+                    <a class="transition" href="<?= $row_cs['slug'] ?>"
+                      title="<?= $row_cs['name'] ?>"><?= $row_cs['name'] ?></a>
                   </li>
                 <?php endwhile; ?>
               <?php endif; ?>
@@ -53,7 +53,7 @@
                 <?php while ($row_pt = $show_phuongthuctt->fetch_assoc()): ?>
                   <span class="ibank scale-img">
                     <img
-                      src="<?= empty($row_pt['file']) ? BASE_ADMIN . "assets/img/noimage.png" : BASE_ADMIN . UPLOADS . $row_pt['file']; ?>"
+                      src="<?= empty($row_pt['file']) ? NO_IMG : BASE_ADMIN . UPLOADS . $row_pt['file']; ?>"
                       alt="<?= $row_pt['name'] ?>" title="<?= $row_pt['name'] ?>" />
                   </span>
                 <?php endwhile; ?>

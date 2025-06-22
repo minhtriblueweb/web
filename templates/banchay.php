@@ -12,8 +12,8 @@ if ($sanpham_banchay && $sanpham_banchay->num_rows > 0): ?>
       <div class="slick-product slick-d-none">
         <?php
         while ($sp = $sanpham_banchay->fetch_assoc()):
-          $slug = $sp['slugvi'];
-          $name = htmlspecialchars($sp['namevi']);
+          $slug = $sp['slug'];
+          $name = htmlspecialchars($sp['name']);
           $img_url = BASE_ADMIN . UPLOADS . $sp['file'];
           $img = !empty($sp['file']) ? $img_url : NO_IMG;
           $sale = $sp['sale_price'] ?? '';

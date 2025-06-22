@@ -4,7 +4,7 @@ include_once($filepath . '/../lib/database.php');
 include_once($filepath . '/../helpers/format.php');
 ?>
 <?php
-class functions
+class Functions
 {
   private $db;
   private $fm;
@@ -34,6 +34,7 @@ class functions
       'tbl_danhmuc' => 'category_lv1_list',
       'tbl_danhmuc_c2' => 'category_lv2_list',
       'tbl_tieuchi' => 'tieuchi_list',
+      'tbl_danhgia' => 'danhgia_list',
     ];
 
     $page = $map[$table] ?? 'dashboard';
@@ -86,7 +87,7 @@ class functions
     }
     if (!empty($options['keyword'])) {
       $keyword = mysqli_real_escape_string($this->db->link, $options['keyword']);
-      $where[] = "`name` LIKE '%$keyword%'";
+      $where[] = "`namevi` LIKE '%$keyword%'";
     }
     return $where;
   }
@@ -191,10 +192,6 @@ class functions
       $delete_result
     );
   }
-
-
-
-
   function transfer($msg, $page = 'dashboard', $numb = true)
   {
     $_SESSION['transfer_data'] = [
@@ -215,13 +212,13 @@ class functions
     if ($type === '') return '';
 
     $escapedType = mysqli_real_escape_string($this->db->link, $type);
-    $query = "SELECT lang FROM tbl_type WHERE lang_define = '$escapedType' LIMIT 1";
+    $query = "SELECT langvi FROM tbl_type WHERE lang_define = '$escapedType' LIMIT 1";
     $result = $this->db->select($query);
 
     if ($result && $row = $result->fetch_assoc()) {
-      $lang = $row['lang'];
+      $lang = $row['langvi'];
       return [
-        '' => $lang,
+        'vi' => $lang,
         'slug' => $this->to_slug($lang)
       ];
     }
@@ -254,14 +251,13 @@ class functions
     return $default ? 'checked' : '';
   }
 
-  public function isSlugDuplicated($slug, $table, $exclude_id)
+  public function isSlugDuplicated($slug, $table, $exclude_id = '', $lang = 'vi')
   {
     $slug = mysqli_real_escape_string($this->db->link, trim($slug));
     $table = mysqli_real_escape_string($this->db->link, trim($table));
     $exclude_id = mysqli_real_escape_string($this->db->link, trim($exclude_id));
-    // ✅ Danh sách bảng có thể chứa slug
+    $lang = mysqli_real_escape_string($this->db->link, trim($lang));
     $tables = ['tbl_danhmuc', 'tbl_danhmuc_c2', 'tbl_sanpham', 'tbl_news'];
-    // ❌ Danh sách slug KHÔNG ĐƯỢC sử dụng (trang tĩnh)
     $reserved_slugs = [
       'lien-he',
       'tin-tuc',
@@ -273,18 +269,15 @@ class functions
       'dang-nhap',
       'dang-ky'
     ];
-    // 🔒 Nếu slug nằm trong danh sách cấm → từ chối ngay
     if (in_array($slug, $reserved_slugs)) {
-      return 'Đường dẫn đã tồn tại. Vui lòng chọn đường dẫn khác để tránh trùng lặp.';
+      return "Đường dẫn đã tồn tại. Vui lòng chọn đường dẫn khác để tránh trùng lặp.";
     }
-    // 🔁 Kiểm tra trùng trong bảng dữ liệu
     foreach ($tables as $tbl) {
-      // Bỏ qua nếu bảng không có cột slug
-      $check_column_query = "SHOW COLUMNS FROM `$tbl` LIKE 'slug'";
+      $slug_column = 'slug' . $lang;
+      $check_column_query = "SHOW COLUMNS FROM `$tbl` LIKE '$slug_column'";
       $check_column_result = $this->db->select($check_column_query);
       if (!$check_column_result || $check_column_result->num_rows == 0) continue;
-      // Câu truy vấn kiểm tra slug
-      $check_slug_query = "SELECT slug FROM `$tbl` WHERE slug = '$slug'";
+      $check_slug_query = "SELECT `$slug_column` FROM `$tbl` WHERE `$slug_column` = '$slug'";
       if ($table === $tbl && is_numeric($exclude_id) && (int)$exclude_id > 0) {
         $check_slug_query .= " AND id != '$exclude_id'";
       }
@@ -294,19 +287,17 @@ class functions
         return "Đường dẫn đã tồn tại. Vui lòng chọn đường dẫn khác để tránh trùng lặp.";
       }
     }
+
     return false;
   }
-
   private function applyOpacity($image, $opacity)
   {
     $opacity = max(0, min(100, $opacity));
     $w = imagesx($image);
     $h = imagesy($image);
-
     $tmp = imagecreatetruecolor($w, $h);
     imagealphablending($tmp, false);
     imagesavealpha($tmp, true);
-
     for ($x = 0; $x < $w; ++$x) {
       for ($y = 0; $y < $h; ++$y) {
         $rgba = imagecolorat($image, $x, $y);
@@ -317,24 +308,19 @@ class functions
         imagesetpixel($tmp, $x, $y, $newColor);
       }
     }
-
     return $tmp;
   }
-
   public function addWatermark($source_path, $destination_path)
   {
     $result = $this->db->select("SELECT * FROM tbl_watermark LIMIT 1");
     $row = $result ? $result->fetch_assoc() : null;
     if (!$row || empty($row['watermark'])) return false;
-
     $position = isset($row['position']) ? intval($row['position']) : 9;
     $opacity = isset($row['opacity']) ? floatval($row['opacity']) : 100;
     $offset_x = isset($row['offset_x']) ? intval($row['offset_x']) : 0;
     $offset_y = isset($row['offset_y']) ? intval($row['offset_y']) : 0;
-
     $watermark_path = 'uploads/' . $row['watermark'];
     if (!file_exists($watermark_path)) return false;
-
     $img_type = exif_imagetype($source_path);
     switch ($img_type) {
       case IMAGETYPE_JPEG:
@@ -350,19 +336,13 @@ class functions
         return false;
     }
     if (!$image) return false;
-
     $img_width = imagesx($image);
     $img_height = imagesy($image);
-
-    // Load watermark gốc
     $watermark_src = imagecreatefrompng($watermark_path);
     if (!$watermark_src) return false;
     imagesavealpha($watermark_src, true);
-
     $wm_orig_width = imagesx($watermark_src);
     $wm_orig_height = imagesy($watermark_src);
-
-    // Scale watermark
     $per = isset($row['per']) ? floatval($row['per']) : 2;
     $small_per = isset($row['small_per']) ? floatval($row['small_per']) : 3;
     $max_size = isset($row['max']) ? intval($row['max']) : 120;
@@ -380,19 +360,13 @@ class functions
       return false;
     }
     $target_wm_height = intval($wm_orig_height * ($target_wm_width / $wm_orig_width));
-
-    // Resize watermark
     $scaled_wm = imagecreatetruecolor($target_wm_width, $target_wm_height);
     imagealphablending($scaled_wm, false);
     imagesavealpha($scaled_wm, true);
     imagecopyresampled($scaled_wm, $watermark_src, 0, 0, 0, 0, $target_wm_width, $target_wm_height, $wm_orig_width, $wm_orig_height);
     imagedestroy($watermark_src);
-
-    // Áp dụng opacity
     $watermark = $this->applyOpacity($scaled_wm, $opacity);
     imagedestroy($scaled_wm);
-
-    // Tính vị trí
     $padding = 10;
     switch ($position) {
       case 1:
@@ -433,15 +407,9 @@ class functions
         $y = ($img_height - $target_wm_height) / 2;
         break;
     }
-
-    // Áp dụng offset từ config
     $x += $offset_x;
     $y += $offset_y;
-
-    // Dán watermark vào ảnh
     imagecopy($image, $watermark, $x, $y, 0, 0, $target_wm_width, $target_wm_height);
-
-    // Lưu ảnh đầu ra
     switch ($img_type) {
       case IMAGETYPE_JPEG:
         imagejpeg($image, $destination_path, 85);
@@ -453,27 +421,20 @@ class functions
         imagewebp($image, $destination_path, 80);
         break;
     }
-
     imagedestroy($image);
     imagedestroy($watermark);
     return true;
   }
-
   public function createFixedThumbnail($source_path, $thumb_name, $background = false, $add_watermark = false, $convert_webp = false)
   {
     if (!file_exists($source_path)) return false;
-
     if (!preg_match('/^(\d+)x(\d+)(x(\d+))?$/', $thumb_name, $matches)) return false;
-
     $thumb_width = (int)$matches[1];
     $thumb_height = (int)$matches[2];
     $zoom_crop = isset($matches[4]) ? (int)$matches[4] : 1;
-
     $image_info = getimagesize($source_path);
     if (!$image_info) return false;
-
     list($width_orig, $height_orig, $image_type) = $image_info;
-
     switch ($image_type) {
       case IMAGETYPE_JPEG:
         $image = imagecreatefromjpeg($source_path);
@@ -490,18 +451,12 @@ class functions
       default:
         return false;
     }
-
-    // Gốc là webp?
     $is_source_webp = ($image_type === IMAGETYPE_WEBP);
-
-    // Alpha hỗ trợ
     if (in_array($image_type, [IMAGETYPE_PNG, IMAGETYPE_WEBP])) {
       imagepalettetotruecolor($image);
       imagealphablending($image, true);
       imagesavealpha($image, true);
     }
-
-    // Tính toán crop
     $src_x = $src_y = 0;
     $src_w = $width_orig;
     $src_h = $height_orig;
@@ -509,7 +464,6 @@ class functions
     $dst_h = $thumb_height;
     $src_ratio = $width_orig / $height_orig;
     $dst_ratio = $thumb_width / $thumb_height;
-
     if ($zoom_crop == 2) {
       if ($src_ratio > $dst_ratio) $dst_h = intval($thumb_width / $src_ratio);
       else $dst_w = intval($thumb_height * $src_ratio);
@@ -525,10 +479,7 @@ class functions
       if ($src_ratio > $dst_ratio) $dst_h = intval($thumb_width / $src_ratio);
       else $dst_w = intval($thumb_height * $src_ratio);
     }
-
     $thumb = imagecreatetruecolor($thumb_width, $thumb_height);
-
-    // Fill nền
     if (is_array($background) && count($background) === 4 && $background[3] == 127 && ($convert_webp || $is_source_webp)) {
       imagealphablending($thumb, false);
       imagesavealpha($thumb, true);
@@ -543,21 +494,15 @@ class functions
       $bg_color = imagecolorallocate($thumb, 255, 255, 255);
       imagefill($thumb, 0, 0, $bg_color);
     }
-
     $dst_x = intval(($thumb_width - $dst_w) / 2);
     $dst_y = intval(($thumb_height - $dst_h) / 2);
     imagecopyresampled($thumb, $image, $dst_x, $dst_y, $src_x, $src_y, $dst_w, $dst_h, $src_w, $src_h);
-
-    // Tên file và đường dẫn
     $upload_dir = 'uploads/';
     if (!is_dir($upload_dir)) mkdir($upload_dir, 0777, true);
-
     $original_name = pathinfo($source_path, PATHINFO_FILENAME);
     $thumb_ext = ($convert_webp || $is_source_webp) ? 'webp' : $ext;
     $thumb_filename = $original_name . '_' . $thumb_name . '.' . $thumb_ext;
     $thumb_path = $upload_dir . $thumb_filename;
-
-    // Ghi file
     if ($convert_webp || $is_source_webp) {
       $success = imagewebp($thumb, $thumb_path, 100);
       if (!$success) {
@@ -571,19 +516,14 @@ class functions
     } else {
       $success = false;
     }
-
     if (!$success) return false;
-
     if ($add_watermark && method_exists($this, 'addWatermark')) {
       $this->addWatermark($thumb_path, $thumb_path);
     }
-
     imagedestroy($image);
     imagedestroy($thumb);
-
     return basename($thumb_path);
   }
-
   public function ImageUpload(
     $file_source_path,
     $original_name,
@@ -593,7 +533,6 @@ class functions
     $watermark = false,
     $convert_webp = false
   ) {
-    // Gọi tạo thumbnail, truyền watermark và convert_webp trực tiếp
     $thumb_filename = $this->createFixedThumbnail($file_source_path, $thumb_name, $background, $watermark, $convert_webp);
 
     if (!$thumb_filename) {
@@ -631,20 +570,6 @@ class functions
     }
     return '';
   }
-
-  public function phantrang($tbl, $type = null)
-  {
-    $tbl = mysqli_real_escape_string($this->db->link, $tbl);
-    $query = "SELECT COUNT(*) as total FROM `$tbl`";
-    if (!empty($type)) {
-
-      $type = mysqli_real_escape_string($this->db->link, $type);
-      $query .= " WHERE type = '$type'";
-    }
-    $result = $this->db->select($query);
-    return $result ? (int)$result->fetch_assoc()['total'] : 0;
-  }
-
   function renderPagination($current_page, $total_pages, $base_url = '?p=')
   {
     if ($total_pages <= 1) return '';
@@ -773,13 +698,5 @@ class functions
     $string = preg_replace('/(-)+/', '-', $string);
     $string = strtolower($string);
     return $string;
-  }
-
-  public function generateHash()
-  {
-    if (!isset($_SESSION['upload_hash'])) {
-      $_SESSION['upload_hash'] = bin2hex(random_bytes(16));
-    }
-    return $_SESSION['upload_hash'];
   }
 }

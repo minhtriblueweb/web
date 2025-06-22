@@ -24,16 +24,16 @@
             <div class="col-6 col-sm-3" data-aos="fade-up" data-aos-duration="1000">
               <div class="item-service">
                 <div class="images">
-                  <a class="scale-img hover-glass text-decoration-none" href="<?= $resule_tintuc['slugvi'] ?>"
-                    title="<?= $resule_tintuc['namevi'] ?>">
+                  <a class="scale-img hover-glass text-decoration-none" href="<?= $resule_tintuc['slug'] ?>"
+                    title="<?= $resule_tintuc['name'] ?>">
                     <img class="w-100"
                       src="<?php echo empty($resule_tintuc['file']) ? NO_IMG : BASE_ADMIN . UPLOADS . $resule_tintuc['file']; ?>"
-                      alt="<?= $resule_tintuc['namevi'] ?>" />
+                      alt="<?= $resule_tintuc['name'] ?>" />
                   </a>
                 </div>
                 <div class="content">
                   <h3>
-                    <a class="text-split" href="<?= $resule_tintuc['slugvi'] ?>"><?= $resule_tintuc['namevi'] ?></a>
+                    <a class="text-split" href="<?= $resule_tintuc['slug'] ?>"><?= $resule_tintuc['name'] ?></a>
                   </h3>
                 </div>
               </div>

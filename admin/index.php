@@ -5,7 +5,7 @@ Session::checkSession();
 $page = $_GET['page'] ?? 'dashboard';
 $page = preg_replace('/[^a-zA-Z0-9_-]/', '', basename($page));
 if ($page === 'delete') {
-  $functions->delete(
+  $fn->delete(
     $_GET['id'] ?? 0,
     $_GET['table'] ?? '',
     $_GET['type'] ?? '',
@@ -15,7 +15,7 @@ if ($page === 'delete') {
 }
 
 if ($page === 'deleteMulti') {
-  $functions->deleteMultiple(
+  $fn->deleteMultiple(
     $_GET['listid'] ?? '',
     $_GET['table'] ?? '',
     $_GET['type'] ?? '',

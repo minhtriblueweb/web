@@ -15,11 +15,11 @@
           while ($row_slider = $show_slideshow->fetch_assoc()):
         ?>
             <div class="slideshow-item" owl-item-animation>
-              <a class="slideshow-image" href="<?= $row_slider['link'] ?>" target="_blank" title="<?= $row_slider['namevi'] ?>">
+              <a class="slideshow-image" href="<?= $row_slider['link'] ?>" target="_blank" title="<?= $row_slider['name'] ?>">
                 <picture>
                   <img class="w-100"
                     src="<?= empty($row_slider['file']) ? NO_IMG : BASE_ADMIN . UPLOADS . $row_slider['file'] ?>"
-                    alt="<?= $row_slider['namevi'] ?>" title="<?= $row_slider['namevi'] ?>" />
+                    alt="<?= $row_slider['name'] ?>" title="<?= $row_slider['name'] ?>" />
                 </picture>
               </a>
             </div>

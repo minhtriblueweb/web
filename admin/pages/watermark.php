@@ -1,13 +1,13 @@
 <?php
 $get_watermark = $setting->get_watermark();
+$thumb_width = '300';
+$thumb_height = '120';
 if ($get_watermark) {
   $result = $get_watermark->fetch_assoc();
-  $no_img = BASE_ADMIN . "assets/img/noimage.png";
   $watermark_src = empty($result['watermark'])
-    ? BASE_ADMIN . "assets/img/noimage.png"
+    ? NO_IMG
     : BASE_ADMIN . "uploads/" . htmlspecialchars($result['watermark']);
 }
-
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['upload'])) {
   $update = $setting->update_watermark($_POST, $_FILES);
 }
@@ -39,7 +39,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['upload'])) {
       <div class="card-header">
         <h3 class="card-title">Chi tiết watermark</h3>
       </div>
-
       <div class="card-body">
         <div class="row">
           <div class="col-xl-4">
@@ -47,8 +46,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['upload'])) {
               <div class="upload-file">
                 <p>Upload hình ảnh:</p>
                 <label class="upload-file-label mb-2" for="file">
-                  <div class="upload-file-image rounded mb-3 preview-wrapper">
-                    <img src="<?= $watermark_src ?>" class="rounded img-upload" width="100">
+                  <div class="upload-file-image rounded mb-3">
+                    <div class="d-flex justify-content-center">
+                      <div class="d-flex justify-content-center">
+                        <div class="border rounded bg-white d-flex align-items-center justify-content-center" style="width:<?= $thumb_width ?>px; height:<?= $thumb_height ?>px;">
+                          <img src="<?= $watermark_src ?>" class="img-fluid" id="preview-image" style="max-height:100%; max-width:100%;" alt="Watermark">
+                        </div>
+                      </div>
+
+                    </div>
                   </div>
                   <div class="custom-file my-custom-file">
                     <input type="file" class="custom-file-input" name="watermark" id="file" lang="vi">
@@ -67,8 +73,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['upload'])) {
                   <label class="<?= ($i == $selected_position) ? 'active' : '' ?>">
                     <input type="radio" name="position" value="<?= $i ?>"
                       <?= ($i == $selected_position) ? 'checked' : '' ?>>
-                    <img class="rounded" onerror="this.src='<?= $no_img ?>';"
-                      src="<?= ($i == $selected_position) ? $watermark_src : $no_img ?>"
+                    <img class="rounded" onerror="this.src='<?= NO_IMG ?>';"
+                      src="<?= ($i == $selected_position) ? $watermark_src : NO_IMG ?>"
                       alt="Watermark Position <?= $i ?>">
                   </label>
                 <?php endfor; ?>
@@ -109,12 +115,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['upload'])) {
                 value="<?= $result['offset_y'] ?>" />
             </div>
             <div class="col-md-12 mt-2">
-              <p class="text-danger mb-0"><strong><i class="ti ti-exclamation-circle ms-1"></i> Lưu ý:</strong> Cần xóa
-                dữ liệu cache khi có sự thay đổi về giá trị của watermark</p>
+              <p class="text-danger mb-0"><strong><i class="ti ti-exclamation-circle ms-1"></i> Lưu ý:</strong> Cần xóa dữ liệu cache khi có sự thay đổi về giá trị của watermark</p>
             </div>
           </div>
         </div>
       </div>
     </div>
+    <input type="hidden" name="thumb_width" value="<?= $thumb_width ?>">
+    <input type="hidden" name="thumb_height" value="<?= $thumb_height ?>">
   </form>
 </section>

@@ -12,13 +12,13 @@ $sidebarMenu = [
     'children' => [
       [
         'title' => 'Danh mục cấp 1',
-        'link' => '?page=category_lv1_list',
-        'active' => ['?page=category_lv1_list', '?page=category_lv1_form']
+        'link' => '?page=danhmuc_c1_list',
+        'active' => ['?page=danhmuc_c1_list', '?page=danhmuc_c1_form']
       ],
       [
         'title' => 'Danh mục cấp 2',
-        'link' => '?page=category_lv2_list',
-        'active' => ['?page=category_lv2_list', '?page=category_lv2_form']
+        'link' => '?page=danhmuc_c2_list',
+        'active' => ['?page=danhmuc_c2_list', '?page=danhmuc_c2_form']
       ],
       [
         'title' => 'Sản phẩm',
@@ -77,7 +77,7 @@ $sidebarMenu = [
         'link' => '?page=static&type=muahang',
         'active' => ['?page=static&type=muahang']
       ],
-[
+      [
         'title' => 'Footer',
         'link' => '?page=static&type=footer',
         'active' => ['?page=static&type=footer']
@@ -90,8 +90,8 @@ $sidebarMenu = [
     'children' => [
       [
         'title' => 'Logo',
-        'link' => '?page=logo',
-        'active' => ['?page=logo']
+        'link' => '?page=setting_file&type=logo',
+        'active' => ['?page=setting_list&type=logo']
       ],
       [
         'title' => 'Watermark',
@@ -100,23 +100,23 @@ $sidebarMenu = [
       ],
       [
         'title' => 'Favicon',
-        'link' => '?page=favicon',
-        'active' => ['?page=favicon']
+        'link' => '?page=setting_file&type=favicon',
+        'active' => ['?page=setting_list&type=favicon']
       ],
       [
         'title' => 'Slideshow',
-        'link' => '?page=slideshow',
-        'active' => ['?page=slideshow', '?page=themslideshow', '?page=suaslideshow']
+        'link' => '?page=slideshow_list',
+        'active' => ['?page=slideshow_list', '?page=slideshow_form']
       ],
       [
         'title' => 'Social',
         'link' => '?page=social',
-        'active' => ['?page=social', '?page=themsocial', '?page=suasocial']
+        'active' => ['?page=social_list', '?page=social_form']
       ],
       [
         'title' => 'Phương thức thanh toán',
-        'link' => '?page=phuongthuctt',
-        'active' => ['?page=phuongthuctt', '?page=themphuongthuctt', '?page=suaphuongthuctt']
+        'link' => '?page=payment',
+        'active' => ['?page=payment_list', '?page=payment_porm']
       ]
     ]
   ],

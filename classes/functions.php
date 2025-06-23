@@ -27,16 +27,11 @@ class Functions
   }
   public function getRedirectPath($table, $params = [])
   {
-    $map = [
-      'tbl_news' => 'news_list',
-      'tbl_sanpham' => 'product_list',
-      'tbl_gallery' => 'gallery_list',
-      'tbl_danhmuc' => 'category_lv1_list',
-      'tbl_danhmuc_c2' => 'category_lv2_list',
-      'tbl_tieuchi' => 'tieuchi_list',
-      'tbl_danhgia' => 'danhgia_list',
-    ];
-
+    $map = [];
+    $tables = ['news', 'sanpham', 'gallery', 'danhmuc_c1', 'danhmuc_c2', 'tieuchi', 'danhgia', 'slideshow', 'setting', 'payment'];
+    foreach ($tables as $table) {
+      $map["tbl_{$table}"] = "{$table}_list";
+    }
     $page = $map[$table] ?? 'dashboard';
     $query = "index.php?page={$page}";
     if (!empty($params['type'])) {
@@ -257,21 +252,25 @@ class Functions
     $table = mysqli_real_escape_string($this->db->link, trim($table));
     $exclude_id = mysqli_real_escape_string($this->db->link, trim($exclude_id));
     $lang = mysqli_real_escape_string($this->db->link, trim($lang));
-    $tables = ['tbl_danhmuc', 'tbl_danhmuc_c2', 'tbl_sanpham', 'tbl_news'];
-    $reserved_slugs = [
-      'lien-he',
-      'tin-tuc',
-      'huong-dan-choi',
-      'san-pham',
-      'gioi-thieu',
-      'chinh-sach',
-      'mua-hang',
-      'dang-nhap',
-      'dang-ky'
-    ];
+    // $reserved_slugs = [
+    //   'lien-he',
+    //   'tin-tuc',
+    //   'huong-dan-choi',
+    //   'san-pham',
+    //   'gioi-thieu',
+    //   'chinh-sach',
+    //   'mua-hang',
+    //   'dang-nhap',
+    //   'dang-ky'
+    // ];
+    // if (in_array($slug, $reserved_slugs)) {
+    //   return "Đường dẫn đã tồn tại. Vui lòng chọn đường dẫn khác để tránh trùng lặp.";
+    // }
+    global $reserved_slugs;
     if (in_array($slug, $reserved_slugs)) {
       return "Đường dẫn đã tồn tại. Vui lòng chọn đường dẫn khác để tránh trùng lặp.";
     }
+    $tables = ['tbl_danhmuc_c1', 'tbl_danhmuc_c2', 'tbl_sanpham', 'tbl_news'];
     foreach ($tables as $tbl) {
       $slug_column = 'slug' . $lang;
       $check_column_query = "SHOW COLUMNS FROM `$tbl` LIKE '$slug_column'";
@@ -656,6 +655,25 @@ class Functions
     $pagination_html .= '</li>';
     $pagination_html .= '</ul>';
     return $pagination_html;
+  }
+
+  public function getImage($data = [])
+  {
+    $width = isset($data['width']) ? (int)$data['width'] : 300;
+    $height = isset($data['height']) ? (int)$data['height'] : 300;
+    $zc = isset($data['zc']) ? (int)$data['zc'] : 1;
+    $class = isset($data['class']) ? $data['class'] : '';
+    $image = isset($data['image']) ? $data['image'] : '';
+    $alt = isset($data['alt']) ? $data['alt'] : '';
+    $title = isset($data['title']) ? $data['title'] : $alt;
+    $thumbs = defined('THUMBS') ? THUMBS : 'thumbs';
+    $errorImg = 'assets/img/noimage.png';
+    if (empty($image)) {
+      $src = $errorImg;
+    } else {
+      $src = BASE_ADMIN . UPLOADS . $image;
+    }
+    return "<img src='{$src}' class='{$class}' width='{$width}' height='{$height}' alt='{$alt}' title='{$title}' onerror=\"this.src='{$errorImg}'\">";
   }
 
   public function to_slug($string)

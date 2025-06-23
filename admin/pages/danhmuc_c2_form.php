@@ -1,17 +1,17 @@
 <?php
 $message = '';
-$name_page = 'tin tức';
-$table = 'tbl_news';
+$name_page = 'danh mục cấp 2';
+$table = 'tbl_danhmuc_c2';
+$show_danhmuc = $fn->show_data(['table' => 'tbl_danhmuc']);
 $id = $_GET['id'] ?? null;
-$type = $_GET['type'] ?? null;
 if (!empty($id)) {
   $get_id = $fn->get_id($table, $id);
-  if ($get_id  && $get_id->num_rows > 0) {
+  if ($get_id && $get_id->num_rows > 0) {
     $result = $get_id->fetch_assoc();
   }
 }
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && (isset($_POST['add']) || isset($_POST['edit']))) {
-  $message = $news->save_news($_POST, $_FILES, $id);
+  $message = $danhmuc->save_danhmuc_c2($_POST, $_FILES, $id);
 }
 ?>
 <?php
@@ -99,6 +99,27 @@ include 'templates/breadcrumb.php';
       <div class="col-xl-4">
         <div class="card card-primary card-outline text-sm">
           <div class="card-header">
+            <h3 class="card-title">Chọn danh mục cấp 1</h3>
+          </div>
+          <div class="card-body">
+            <div class="form-group-category">
+              <select id="id_list" name="id_list" data-level="0" data-type="san-pham" data-table="#_product_cat"
+                data-child="id_cat" class="form-control select2 select-category">
+                <option value="0">Chọn danh mục</option>
+                <?php if ($show_danhmuc): ?>
+                  <?php while ($row = $show_danhmuc->fetch_assoc()): ?>
+                    <option value="<?= $row['id'] ?>"
+                      <?= (($_POST['id_list'] ?? ($result['id_list'] ?? '')) == $row['id']) ? 'selected' : '' ?>>
+                      <?= $row['namevi'] ?>
+                    </option>
+                  <?php endwhile; ?>
+                <?php endif; ?>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="card card-primary card-outline text-sm">
+          <div class="card-header">
             <h3 class="card-title">Hình ảnh <?= $name_page ?></h3>
             <div class="card-tools">
               <button type="button" class="btn btn-tool" data-card-widget="collapse"><i
@@ -108,8 +129,9 @@ include 'templates/breadcrumb.php';
           <div class="card-body">
             <div class="photoUpload-zone">
               <div class="photoUpload-detail" id="photoUpload-preview">
-                <img src="<?= empty($result['file']) ? NO_IMG : BASE_ADMIN . UPLOADS . $result['file']; ?>"
-                  class="rounded" alt="Alt Photo" />
+                <img class='rounded'
+                  src='<?= empty($result['file']) ? NO_IMG : BASE_ADMIN . UPLOADS . $result['file']; ?>'
+                  alt='Alt Photo' />
               </div>
               <label class="photoUpload-file" id="photo-zone" for="file-zone">
                 <input type="file" name="file" id="file-zone">
@@ -118,18 +140,16 @@ include 'templates/breadcrumb.php';
                 <p class="photoUpload-or">hoặc</p>
                 <p class="photoUpload-choose btn btn-sm bg-gradient-success">Chọn hình</p>
               </label>
-              <div class="photoUpload-dimension">
-                (.jpg|.gif|.png|.jpeg|.gif|.webp|.WEBP)
+              <div class="photoUpload-dimension">(.jpg|.gif|.png|.jpeg|.gif|.webp|.WEBP)
               </div>
             </div>
           </div>
         </div>
         <div class="card card-primary card-outline text-sm">
           <div class="card-header">
-            <h3 class="card-title">Thông tin <?= $name_page ?></h3>
+            <h3 class="card-title">Thông tin</h3>
             <div class="card-tools">
-              <button type="button" class="btn btn-tool" data-card-widget="collapse"><i
-                  class="fas fa-minus"></i></button>
+              <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
             </div>
           </div>
           <div class="card-body">
@@ -165,6 +185,5 @@ include 'templates/breadcrumb.php';
       </div>
     </div>
     <?php include 'templates/seo.php'; ?>
-    <input type="hidden" name="type" id="type" value="<?= $type ?>">
   </form>
 </section>

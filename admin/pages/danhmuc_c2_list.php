@@ -1,20 +1,22 @@
 <?php
 $redirect_url = $_GET['page'];
 $records_per_page = 10;
-$name_page = 'tiêu chí';
-$table = 'tbl_tieuchi';
+$name_page = 'danh mục cấp 2';
+$table = 'tbl_danhmuc_c2';
 $current_page = max(1, isset($_GET['p']) ? (int)$_GET['p'] : 1);
-$total_pages = ceil($fn->count_data(['table' => $table]) / $records_per_page);
-$show_tieuchi = $fn->show_data([
+$total_records = $fn->count_data(['table' => $table]);
+$total_pages = ceil($total_records / $records_per_page);
+$show_danhmuc_c1 = $fn->show_data(['table' => 'tbl_danhmuc_c1']);
+$show_danhmuc_c2 = $fn->show_data([
   'table' => $table,
   'records_per_page' => $records_per_page,
   'current_page' => $current_page,
   'keyword' => $_GET['keyword'] ?? ''
 ]);
-$linkMulti = "index.php?page=deleteMulti&table=$table&";
-$linkDelete = "index.php?page=delete&table=$table&&id=";
-$linkEdit = "index.php?page=tieuchi_form&id=";
-$linkAdd = "index.php?page=tieuchi_form";
+$linkMulti = "index.php?page=deleteMulti&table=$table";
+$linkDelete = "index.php?page=delete&table=$table&id=";
+$linkEdit = "index.php?page=danhmuc_c1_form&id=";
+$linkAdd = "index.php?page=danhmuc_c1_form";
 ?>
 <?php
 $breadcrumb = [
@@ -25,6 +27,26 @@ include 'templates/breadcrumb.php';
 ?>
 <section class="content">
   <?php include 'templates/act_list.php'; ?>
+  <div class="card-footer form-group-category text-sm bg-light row">
+    <div class="form-group col-xl-2 col-lg-3 col-md-4 col-sm-4 mb-2">
+      <form class="validation-form" novalidate method="post" action="">
+        <input class="btn btn-sm bg-gradient-info submit-check mb-3" type="submit" id="loc" value="Lọc danh mục"
+          name="loc" />
+        <select id="id_list" name="id_list" class="form-control filter-category select2">
+          <option value="0">Chọn danh mục</option>
+          <?php if ($show_danhmuc_c1 && $show_danhmuc_c1->num_rows > 0): ?>
+            <?php while ($resule = $show_danhmuc_c1->fetch_assoc()): ?>
+              <option value="<?= $resule['id']; ?>" <?= (isset($id_list) && $id_list == $resule['id']) ? 'selected' : ''; ?>>
+                <?= $resule['namevi']; ?>
+              </option>
+            <?php endwhile; ?>
+          <?php else: ?>
+            <option disabled>Không có danh mục</option>
+          <?php endif; ?>
+        </select>
+      </form>
+    </div>
+  </div>
   <div class="card card-primary card-outline text-sm mb-0">
     <div class="card-header">
       <h3 class="card-title">Danh sách <?= $name_page ?></h3>
@@ -41,62 +63,52 @@ include 'templates/breadcrumb.php';
             </th>
             <th class="align-middle text-center" width="10%">STT</th>
             <th class="align-middle">Hình</th>
-            <th class="align-middle" style="width:30%">Tiêu đề</th>
+            <th class="align-middle" style="width: 30%">Tiêu đề</th>
             <th class="align-middle text-center">Hiển thị</th>
+            <th class="align-middle text-center">Nổi bật</th>
             <th class="align-middle text-center">Thao tác</th>
           </tr>
         </thead>
-        <form action="" method="POST">
+        <form class="validation-form" novalidate method="post" action="">
           <tbody>
-            <?php if ($show_tieuchi): ?>
-              <?php while ($row = $show_tieuchi->fetch_assoc()):
-                $id       = $row['id'];
-                $name     = $row['namevi'];
-                $numb     = $row['numb'];
-                $status   = $row['status'] ?? '';
-                $imgSrc   = !empty($row['file']) ? BASE_ADMIN . UPLOADS . $row['file'] : NO_IMG;
-                $linkEditId  = $linkEdit . $id;
-                $linkDeleteId = $linkDelete . $id;
-              ?>
+            <?php if ($show_danhmuc_c2):
+              while ($row = $show_danhmuc_c2->fetch_assoc()):
+                $id = $row['id'];
+                $name = $row['namevi'];
+                $file = empty($row['file']) ? NO_IMG : BASE_ADMIN . UPLOADS . $row['file'];
+            ?>
                 <tr>
                   <!-- Checkbox chọn -->
                   <td class="align-middle">
                     <div class="custom-control custom-checkbox my-checkbox">
-                      <input type="checkbox" class="custom-control-input select-checkbox" id="select-checkbox-<?= $id ?>" value="<?= $id ?>" name="checkbox_id<?= $id ?>" />
+                      <input type="checkbox" class="custom-control-input select-checkbox"
+                        id="select-checkbox-<?= $id ?>" value="<?= $id ?>" name="checkbox_id<?= $id ?>" />
                       <label for="select-checkbox-<?= $id ?>" class="custom-control-label"></label>
                     </div>
                   </td>
 
-                  <!-- STT -->
+                  <!-- Số thứ tự -->
                   <td class="align-middle">
                     <input type="number" class="form-control form-control-mini m-auto update-numb" min="0"
-                      value="<?= $numb ?>" data-id="<?= $id ?>" data-table="<?= $table ?>" />
+                      value="<?= $row['numb'] ?>" data-id="<?= $id ?>" data-table="<?= $table ?>" />
                   </td>
 
                   <!-- Ảnh -->
                   <td class="align-middle">
-                    <a href="<?= $linkEditId ?>" title="<?= $name ?>">
-                      <img class="rounded img-preview" src="<?= $imgSrc ?>" alt="<?= $name ?>" />
+                    <a href="<?= $linkEdit . $id ?>" title="<?= $name ?>">
+                      <img src="<?= $file ?>" class="rounded img-preview" alt="<?= $name ?>" />
                     </a>
                   </td>
 
-                  <!-- Tên + tools -->
+                  <!-- Tên -->
                   <td class="align-middle">
-                    <a class="text-dark text-break" href="<?= $linkEditId ?>" title="<?= $name ?>"><?= $name ?></a>
-                    <div class="tool-action mt-2 w-clear">
-                      <a class="text-primary mr-3" href="<?= BASE . $slug ?>" target="_blank" title="Xem">
-                        <i class="far fa-eye mr-1"></i>View
-                      </a>
-                      <a class="text-info mr-3" href="<?= $linkEditId ?>" title="Chỉnh sửa">
-                        <i class="far fa-edit mr-1"></i>Edit
-                      </a>
-                      <a class="text-danger" id="delete-item" data-url="?del=<?= $id ?>" title="Xoá">
-                        <i class="far fa-trash-alt mr-1"></i>Delete
-                      </a>
-                    </div>
+                    <a class="text-dark text-break" href="<?= $linkEdit . $id ?>" title="<?= $name ?>">
+                      <?= $name ?>
+                    </a>
                   </td>
 
-                  <?php foreach (['hienthi'] as $attr): ?>
+                  <!-- Checkbox Hiển thị, Nổi bật -->
+                  <?php foreach (['hienthi', 'noibat'] as $attr): ?>
                     <td class="align-middle text-center">
                       <label class="switch switch-success">
                         <input type="checkbox" class="switch-input custom-control-input show-checkbox " id="show-checkbox-<?= $attr ?>-<?= $id ?>" data-table="<?= $table ?>" data-id="<?= $id ?>" data-attr="<?= $attr ?>" <?= (strpos($row['status'], $attr) !== false) ? 'checked' : '' ?>>
@@ -108,12 +120,13 @@ include 'templates/breadcrumb.php';
                     </td>
                   <?php endforeach; ?>
 
+
                   <!-- Hành động -->
                   <td class="align-middle text-center text-md text-nowrap">
-                    <a class="text-primary mr-2" href="<?= $linkEditId ?>" title="Chỉnh sửa">
+                    <a class="text-primary mr-2" href="<?= $linkEdit . $id ?>" title="Chỉnh sửa">
                       <i class="fas fa-edit"></i>
                     </a>
-                    <a class="text-danger" id="delete-item" data-url="<?= $linkDeleteId ?>" title="Xoá">
+                    <a class="text-danger" id="delete-item" data-url="<?= $linkDelete . $id ?>" title="Xóa">
                       <i class="fas fa-trash-alt"></i>
                     </a>
                   </td>
@@ -134,4 +147,5 @@ include 'templates/breadcrumb.php';
       <?= $fn->renderPagination($current_page, $total_pages, "index.php?page=$redirect_url&p="); ?>
     </div>
   <?php endif; ?>
+
 </section>

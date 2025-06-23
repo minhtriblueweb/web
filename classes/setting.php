@@ -14,7 +14,7 @@ class setting
   {
     $this->db = new Database();
     $this->fm = new Format();
-    $this->fn = new functions();
+    $this->fn = new Functions();
   }
 
   public function update_watermark($data, $files)
@@ -24,72 +24,102 @@ class setting
     foreach ($fields as $field) {
       $data_escaped[$field] = !empty($data[$field]) ? mysqli_real_escape_string($this->db->link, $data[$field]) : "";
     }
-    $file_name = $_FILES["watermark"]["name"];
-    $unique_image = "";
-    if (!empty($file_name)) {
-      $file_ext = strtolower(pathinfo($file_name, PATHINFO_EXTENSION));
-      $unique_image = substr(md5(time()), 0, 10) . '.' . $file_ext;
-      $uploaded_image = "uploads/" . $unique_image;
-      move_uploaded_file($_FILES["watermark"]["tmp_name"], $uploaded_image);
-      $del_file_query = "SELECT watermark FROM tbl_watermark WHERE id = 1";
-      $old_file = $this->db->select($del_file_query);
+    $width = isset($data['thumb_width']) ? (int)$data['thumb_width'] : 300;
+    $height = isset($data['thumb_height']) ? (int)$data['thumb_height'] : 120;
+    $thumb_size = "{$width}x{$height}x1";
+    $thumb_filename = '';
+    $old_file_path = '';
+    if (!empty($files['watermark']['name'])) {
+      $ext = strtolower(pathinfo($files['watermark']['name'], PATHINFO_EXTENSION));
+      if ($ext !== 'png') {
+        $this->fn->transfer("Vui lòng chọn file PNG để giữ nền trong suốt", "index.php?page=watermark", false);
+      }
+      $query = "SELECT `watermark` FROM tbl_watermark WHERE id = 1";
+      $old_file = $this->db->select($query);
       if ($old_file && $old_file->num_rows > 0) {
         $row = $old_file->fetch_assoc();
-        $old_file_path = "uploads/" . $row['watermark'];
-        if (file_exists($old_file_path) && !empty($row['watermark'])) {
-          unlink($old_file_path);
+        if (!empty($row['watermark'])) {
+          $old_file_path = "uploads/" . $row['watermark'];
         }
       }
+      $files['file'] = $files['watermark'];
+      $thumb_filename = $this->fn->Upload(
+        $files,
+        $thumb_size,
+        [0, 0, 0, 127],
+        '',
+        $watermark = false,
+        $convert_webp = false
+      );
+      if (!empty($thumb_filename) && !empty($old_file_path) && file_exists($old_file_path)) {
+        unlink($old_file_path);
+      }
     }
+
     $update_fields = [];
     foreach ($data_escaped as $field => $value) {
       $update_fields[] = "`$field` = '$value'";
     }
-    if (!empty($unique_image)) {
-      $update_fields[] = "watermark = '$unique_image'";
+    if (!empty($thumb_filename)) {
+      $update_fields[] = "`watermark` = '$thumb_filename'";
     }
+
     $update_query = "UPDATE tbl_watermark SET " . implode(", ", $update_fields) . " WHERE id = 1";
     $result = $this->db->update($update_query);
-    if ($result) {
-      $this->fn->transfer("Cập nhật hình ảnh thành công", "index.php?page=watermark", true);
-    } else {
-      $this->fn->transfer("Cập nhật hình ảnh thất bại", "index.php?page=watermark", false);
-    }
-  }
-  public function update_setting_item($item, $data, $files)
-  {
-    $unique_image = '';
-    if (!empty($files[$item]['name'])) {
-      $allowed_extensions = ['jpg', 'jpeg', 'png', 'gif'];  // Các loại file được phép
-      $file_ext = strtolower(pathinfo($files[$item]['name'], PATHINFO_EXTENSION));
-      if (in_array($file_ext, $allowed_extensions)) {
-        $unique_image = substr(md5(time()), 0, 10) . '.' . $file_ext;
-        if (move_uploaded_file($files[$item]['tmp_name'], "uploads/" . $unique_image)) {
-          $del_file_query = "SELECT `$item` FROM tbl_setting WHERE id=1";
-          $old_file = $this->db->select($del_file_query);
-          if ($old_file && $old_file->num_rows > 0) {
-            $rowData = $old_file->fetch_assoc();
-            $old_file_path = "uploads/" . $rowData[$item];
-            if (file_exists($old_file_path)) {
-              unlink($old_file_path);
-            }
-          }
-        } else {
-          return "Lỗi trong quá trình tải file lên!";
-        }
-      } else {
-        return "Loại file không hợp lệ! Chỉ chấp nhận các file JPG, JPEG, PNG và GIF.";
-      }
-    }
-    $query = "UPDATE tbl_setting SET `$item` = '$unique_image' WHERE id = 1";
-    $result = $this->db->update($query);
-    if ($result) {
-      header('Location: transfer.php?stt=success&url=' . $item);
-    } else {
-      return "Cập nhật cơ sở dữ liệu thất bại!";
-    }
+    $msg = $result ? "Cập nhật watermark thành công" : "Cập nhật watermark thất bại";
+
+    $this->fn->transfer($msg, "index.php?page=watermark", $result);
   }
 
+  public function update_setting_item($item, $data, $files)
+  {
+    $width = isset($data['thumb_width']) ? (int)$data['thumb_width'] : 300;
+    $height = isset($data['thumb_height']) ? (int)$data['thumb_height'] : 120;
+    $thumb_size = "{$width}x{$height}x1";
+    $thumb_filename = '';
+    $old_file_path = '';
+    $old_file_name = '';
+
+    if (!empty($files[$item]['name'])) {
+      $allowed_extensions = ['jpg', 'jpeg', 'png', 'gif'];
+      $ext = strtolower(pathinfo($files[$item]['name'], PATHINFO_EXTENSION));
+
+      if (!in_array($ext, $allowed_extensions)) {
+        $this->fn->transfer("File không hợp lệ! Chỉ chấp nhận JPG, JPEG, PNG, GIF", "index.php?page=setting_file&type={$item}", false);
+      }
+
+      // Lấy thông tin ảnh cũ (chưa xóa)
+      $query = "SELECT `$item` FROM tbl_setting WHERE id = 1";
+      $old_file = $this->db->select($query);
+      if ($old_file && $old_file->num_rows > 0) {
+        $row = $old_file->fetch_assoc();
+        $old_file_name = $row[$item] ?? '';
+        if (!empty($old_file_name)) {
+          $old_file_path = "uploads/" . $old_file_name;
+        }
+      }
+      $files['file'] = $files[$item];
+      $thumb_filename = $this->fn->Upload(
+        $files,
+        $thumb_size,
+        [0, 0, 0, 127],
+        '',
+        $watermark = false,
+        $convert_webp = false
+      );
+      if (!empty($thumb_filename) && !empty($old_file_path) && file_exists($old_file_path)) {
+        unlink($old_file_path);
+      }
+    }
+    if (!empty($thumb_filename)) {
+      $update_query = "UPDATE tbl_setting SET `$item` = '$thumb_filename' WHERE id = 1";
+      $result = $this->db->update($update_query);
+      $msg = $result ? "Cập nhật thành công" : "Cập nhật thất bại";
+      $this->fn->transfer($msg, "index.php?page=setting_file&type={$item}", $result);
+    } else {
+      $this->fn->transfer("Không có ảnh được tải lên", "index.php?page=setting_file&type={$item}", false);
+    }
+  }
   public function get_setting_item($item)
   {
     $query = "SELECT `$item` FROM tbl_setting WHERE id = '1' LIMIT 1";
@@ -142,10 +172,11 @@ class setting
     $query = "UPDATE tbl_setting SET " . implode(', ', $updates) . " WHERE id =1";
 
     $result = $this->db->update($query);
+    $msg = $result ? "Cập nhật thành công" : "Cập nhật thất bại";
     if ($result) {
-      header('Location: transfer.php?stt=success&url=setting');
+      $this->fn->transfer($msg, "index.php?page=setting", $result);
     } else {
-      return "Lỗi thao tác!";
+      $this->fn->transfer($msg, "index.php?page=setting", $result);
     }
   }
 }

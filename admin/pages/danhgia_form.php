@@ -65,7 +65,7 @@ include 'templates/breadcrumb.php';
                         <input type="text"
                           class="form-control for-seo text-sm"
                           name="name<?= $k ?>" id="name<?= $k ?>"
-                          placeholder="Tiêu đề (<?= $v ?>)"
+                          placeholder="Tiêu đề (<?= $k ?>)"
                           value="<?= $_POST['name' . $k] ?? ($result['name' . $k] ?? "") ?>"
                           <?= ($k == 'vi') ? 'required' : '' ?>>
                       </div>
@@ -76,7 +76,7 @@ include 'templates/breadcrumb.php';
                         <input type="text"
                           class="form-control text-sm"
                           name="address<?= $k ?>" id="address<?= $k ?>"
-                          placeholder="Địa chỉ (<?= $v ?>)"
+                          placeholder="Địa chỉ (<?= $k ?>)"
                           value="<?= $_POST['address' . $k] ?? ($result['address' . $k] ?? "") ?>">
                       </div>
 
@@ -85,7 +85,7 @@ include 'templates/breadcrumb.php';
                         <label for="desc<?= $k ?>">Mô tả (<?= $k ?>):</label>
                         <textarea class="form-control for-seo text-sm"
                           name="desc<?= $k ?>" id="desc<?= $k ?>"
-                          rows="5" placeholder="Mô tả (<?= $v ?>)"><?= $_POST['desc' . $k] ?? ($result['desc' . $k] ?? "") ?></textarea>
+                          rows="5" placeholder="Mô tả (<?= $k ?>)"><?= $_POST['desc' . $k] ?? ($result['desc' . $k] ?? "") ?></textarea>
                       </div>
                     </div>
                   <?php } ?>

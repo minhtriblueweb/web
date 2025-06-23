@@ -75,7 +75,7 @@ include 'templates/breadcrumb.php';
                         <input type="text"
                           class="form-control for-seo text-sm"
                           name="name<?= $k ?>" id="name<?= $k ?>"
-                          placeholder="Tiêu đề (<?= $v ?>)"
+                          placeholder="Tiêu đề (<?= $k ?>)"
                           value="<?= $_POST['name' . $k] ?? ($result['name' . $k] ?? '') ?>"
                           <?= ($k == 'vi') ? 'required' : '' ?> />
                       </div>
@@ -85,7 +85,7 @@ include 'templates/breadcrumb.php';
                         <label for="desc<?= $k ?>">Mô tả (<?= $k ?>):</label>
                         <textarea class="form-control for-seo text-sm form-control-ckeditor"
                           name="desc<?= $k ?>" id="desc<?= $k ?>"
-                          rows="4" placeholder="Mô tả (<?= $v ?>)"><?= $_POST['desc' . $k] ?? ($result['desc' . $k] ?? '') ?></textarea>
+                          rows="4" placeholder="Mô tả (<?= $k ?>)"><?= $_POST['desc' . $k] ?? ($result['desc' . $k] ?? '') ?></textarea>
                       </div>
 
                       <!-- Nội dung -->
@@ -93,7 +93,7 @@ include 'templates/breadcrumb.php';
                         <label for="content<?= $k ?>">Nội dung (<?= $k ?>):</label>
                         <textarea class="form-control for-seo text-sm form-control-ckeditor"
                           name="content<?= $k ?>" id="content<?= $k ?>"
-                          placeholder="Nội dung (<?= $v ?>)"><?= $_POST['content' . $k] ?? ($result['content' . $k] ?? '') ?></textarea>
+                          placeholder="Nội dung (<?= $k ?>)"><?= $_POST['content' . $k] ?? ($result['content' . $k] ?? '') ?></textarea>
                       </div>
                     </div>
                   <?php } ?>

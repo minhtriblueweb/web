@@ -1,7 +1,7 @@
 <?php
 $redirect_url = $_GET['page'];
 $type = $_GET['type'];
-$name_page = 'giới thiệu';
+$name_page = $fn->convert_type($type)['vi'];
 $get_gioithieu = $trangtinh->get_static($type);
 if ($get_gioithieu) {
   $result = $get_gioithieu->fetch_assoc();
@@ -64,7 +64,7 @@ include 'templates/breadcrumb.php';
                     <input type="text"
                       class="form-control for-seo text-sm"
                       name="name<?= $k ?>" id="name<?= $k ?>"
-                      placeholder="Tiêu đề (<?= $v ?>)"
+                      placeholder="Tiêu đề (<?= $k ?>)"
                       value="<?= $_POST['name' . $k] ?? ($result['name' . $k] ?? '') ?>"
                       <?= ($k == 'vi') ? 'required' : '' ?> />
                   </div>
@@ -73,7 +73,7 @@ include 'templates/breadcrumb.php';
                     <label for="content<?= $k ?>">Nội dung (<?= $k ?>):</label>
                     <textarea class="form-control for-seo text-sm form-control-ckeditor"
                       name="content<?= $k ?>" id="content<?= $k ?>"
-                      placeholder="Nội dung (<?= $v ?>)"><?= $_POST['content' . $k] ?? ($result['content' . $k] ?? '') ?></textarea>
+                      placeholder="Nội dung (<?= $k ?>)"><?= $_POST['content' . $k] ?? ($result['content' . $k] ?? '') ?></textarea>
                   </div>
                 </div>
               <?php } ?>
@@ -82,7 +82,11 @@ include 'templates/breadcrumb.php';
         </div>
       </div>
     </div>
-    <?php include 'templates/seo.php'; ?>
+    <?php
+    if ($type == 'gioithieu' || $type == 'muahang') {
+      include 'templates/seo.php';
+    }
+    ?>
     <input type="hidden" name="type" id="type" value="<?= $type ?>">
   </form>
 </section>

@@ -34,14 +34,14 @@
             <div class="tab-pane fade show <?= ($k == 'vi') ? 'active' : '' ?>" id="tabs-sluglang-<?= $k ?>"
               role="tabpanel" aria-labelledby="tabs-lang-<?= $k ?>">
               <div class="form-group mb-0">
-                <label class="d-block">Đường dẫn mẫu (vi):<span class="pl-2 font-weight-normal"
+                <label class="d-block">Đường dẫn mẫu (<?= $k ?>):<span class="pl-2 font-weight-normal"
                     id="slugurlpreviewvi"><?= BASE ?><?php if (!empty($id)): ?><strong class="text-info"><?= $result['slug' . $k]; ?></strong><?php endif; ?></span></label>
 
                 <!-- Input Slug -->
                 <input type="text"
                   class="form-control slug-input no-validate text-sm for-seo"
                   name="slug<?= $k ?>" id="slug<?= $k ?>"
-                  placeholder="Đường dẫn (<?= $v ?>)"
+                  placeholder="Đường dẫn (<?= $k ?>)"
                   value="<?= $_POST['slug' . $k] ?? ($result['slug' . $k] ?? "") ?>"
                   <?= ($k == 'vi') ? 'required' : '' ?> />
                 <!-- Hidden Default -->

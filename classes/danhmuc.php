@@ -178,7 +178,7 @@ class danhmuc
     $langs = array_keys($config['website']['lang']);
     $fields_multi = ['slug', 'name', 'desc', 'content', 'title', 'keywords', 'description'];
     $fields_common = ['numb'];
-    $table = 'tbl_danhmuc';
+    $table = 'tbl_danhmuc_c1';
     $data_escaped = [];
     foreach ($langs as $lang) {
       foreach ($fields_multi as $field) {
@@ -241,7 +241,7 @@ class danhmuc
       $result = $this->db->insert($insert_query);
       $msg = $result ? "Thêm danh mục thành công" : "Thêm danh mục thất bại";
     }
-    $this->fn->transfer($msg, "index.php?page=category_lv1_list", $result);
+    $this->fn->transfer($msg, $this->fn->getRedirectPath($table), $result);
   }
   public function save_danhmuc_c2($data, $files, $id = null)
   {
@@ -313,7 +313,7 @@ class danhmuc
       $result = $this->db->insert($insert_query);
       $msg = $result ? "Thêm danh mục thành công" : "Thêm danh mục thất bại";
     }
-    $this->fn->transfer($msg, "index.php?page=category_lv2_list", $result);
+    $this->fn->transfer($msg, $this->fn->getRedirectPath($table), $result);
   }
 }
 

@@ -79,16 +79,20 @@ class sanpham
     foreach ($data_escaped as $field => $value) {
       $update_fields[] = "`$field` = '$value'";
     }
-    $update_fields[] = "`date_updated` = NOW()";
-    $query = "UPDATE `$table` SET " . implode(", ", $update_fields) . " WHERE id = '$id'";
-    $result = $this->db->update($query);
-    if ($result) {
-      $this->fn->transfer("Cập nhật hình ảnh thành công", "index.php?page=gallery_list&id=$id_parent");
-    } else {
-      return "Lỗi thao tác!";
+    if (!empty($update_fields)) {
+      $query = "UPDATE `$table` SET " . implode(", ", $update_fields) . " WHERE id = '$id'";
+      $result = $this->db->update($query);
     }
+    $redirectPath = $this->fn->getRedirectPath([
+      'table' => $table,
+      'id_parent' => $id_parent
+    ]);
+    $this->fn->transfer(
+      $result ? "Cập nhật hình ảnh thành công" : "Cập nhật hình ảnh thất bại!",
+      $redirectPath,
+      $result
+    );
   }
-
 
   public function them_gallery($data, $files, $id_parent)
   {
@@ -125,12 +129,19 @@ class sanpham
           $field_values = array_values($data_escaped);
 
           $query = "INSERT INTO `$table` (" . implode(", ", $field_names) . ") VALUES (" . implode(", ", $field_values) . ")";
-          $this->db->insert($query);
+          $result = $this->db->insert($query);
         }
       }
     }
-
-    $this->fn->transfer("Thêm hình ảnh thành công", "index.php?page=gallery_list&id=$id_parent");
+    $redirectPath = $this->fn->getRedirectPath([
+      'table' => $table,
+      'id_parent' => $id_parent
+    ]);
+    $this->fn->transfer(
+      $query ? "Cập nhật hình ảnh thành công" : "Cập nhật hình ảnh thất bại!",
+      $redirectPath,
+      $result
+    );
   }
 
   public function get_img_gallery($id)
@@ -152,12 +163,12 @@ class sanpham
 
   public function update_views_by_slug($slug)
   {
-    $query = "SELECT * FROM tbl_sanpham WHERE slug = '$slug'";
+    $query = "SELECT * FROM tbl_sanpham WHERE slugvi = '$slug'";
     $result = $this->db->select($query);
     if ($result && $result->num_rows > 0) {
       $product = $result->fetch_assoc();
-      $new_ews = $product['ews'] + 1;
-      $update_query = "UPDATE tbl_sanpham SET ews = '$new_ews' WHERE slug = '$slug'";
+      $new_views = $product['views'] + 1;
+      $update_query = "UPDATE tbl_sanpham SET views = '$new_views' WHERE slugvi = '$slug'";
       $this->db->update($update_query);
       return $product;
     }
@@ -168,12 +179,12 @@ class sanpham
   public function get_danhmuc_by_sanpham($id)
   {
     $query = "SELECT tbl_sanpham.*,
-        tbl_danhmuc.name AS dm_c1_name,
-        tbl_danhmuc.slug AS dm_c1_slug,
-        tbl_danhmuc_c2.name AS dm_c2_name,
-        tbl_danhmuc_c2.slug AS dm_c2_slug
+        tbl_danhmuc_c1.namevi AS dm_c1_name,
+        tbl_danhmuc_c1.slugvi AS dm_c1_slug,
+        tbl_danhmuc_c2.namevi AS dm_c2_name,
+        tbl_danhmuc_c2.slugvi AS dm_c2_slug
         FROM tbl_sanpham
-        INNER JOIN tbl_danhmuc ON tbl_sanpham.id_list = tbl_danhmuc.id
+        INNER JOIN tbl_danhmuc_c1 ON tbl_sanpham.id_list = tbl_danhmuc_c1.id
         LEFT JOIN tbl_danhmuc_c2 ON tbl_sanpham.id_cat = tbl_danhmuc_c2.id
         WHERE tbl_sanpham.id = '$id'";
     $result = $this->db->select($query);
@@ -183,10 +194,11 @@ class sanpham
   public function get_sanpham_by_slug($slug)
   {
     $slug = mysqli_real_escape_string($this->db->link, $slug);
-    $query = "SELECT * FROM tbl_sanpham WHERE slug = '$slug' AND hienthi = 'hienthi' LIMIT 1";
+    $query = "SELECT * FROM tbl_sanpham WHERE slugvi = '$slug' AND FIND_IN_SET('hienthi', status) LIMIT 1";
     $result = $this->db->select($query);
     return $result ? $result->fetch_assoc() : false;
   }
+
 
   public function get_name_danhmuc($id, $table)
   {
@@ -270,7 +282,7 @@ class sanpham
       $result = $this->db->insert($insert_query);
       $msg = $result ? "Thêm sản phẩm thành công" : "Thêm sản phẩm thất bại";
     }
-    $this->fn->transfer($msg, "index.php?page=product_list", $result);
+    $this->fn->transfer($msg, $this->fn->getRedirectPath(['table' => $table]), $result);
   }
 }
 ?>

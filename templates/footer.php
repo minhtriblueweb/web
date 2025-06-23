@@ -9,12 +9,12 @@
         </div>
         <p class="footer-company"><?= $web_name ?></p>
         <div class="footer-info content-ck">
-          <p><span><?= $descvi ?></span></p>
+          <p><span><?= ($get = $trangtinh->get_static('footer')) && ($row = $get->fetch_assoc()) ? $row['contentvi'] : ''; ?></span></p>
         </div>
         <div class="social">
           <p>KẾT NỐI VỚI CHÚNG TÔI</p>
           <?php
-          $show_social = $functions->show_data([
+          $show_social = $fn->show_data([
             'table' => 'tbl_social',
             'status' => 'hienthi'
           ]); ?>
@@ -23,7 +23,7 @@
               <a class="hvr-icon-rotate" href="<?= $row_social['link'] ?>" target="_blank" class="me-2">
                 <img width="50" class="hvr-icon"
                   src="<?= empty($row_social['file']) ? NO_IMG : BASE_ADMIN . UPLOADS . $row_social['file']; ?>"
-                  alt="<?= $row_social['name'] ?>" title="<?= $row_social['name'] ?>" />
+                  alt="<?= $row_social['namevi'] ?>" title="<?= $row_social['namevi'] ?>" />
               </a>
             <?php endwhile; ?>
           <?php endif; ?>
@@ -34,12 +34,17 @@
           <div class="footer-policy">
             <p class="footer-title">Chính sách hỗ trợ</p>
             <ul class="footer-ul">
-              <?php $show_chinhsach = $functions->show_data('tbl_news', ['status' => 'hienthi,noibat', 'type' => 'chinhsach']); ?>
+              <?php $show_chinhsach = $fn->show_data([
+                'table' => 'tbl_news',
+                'status' => 'hienthi,noibat',
+                'type' => 'chinhsach'
+              ]);
+              ?>
               <?php if ($show_chinhsach): ?>
                 <?php while ($row_cs = $show_chinhsach->fetch_assoc()): ?>
                   <li>
-                    <a class="transition" href="<?= $row_cs['slug'] ?>"
-                      title="<?= $row_cs['name'] ?>"><?= $row_cs['name'] ?></a>
+                    <a class="transition" href="<?= $row_cs['slugvi'] ?>"
+                      title="<?= $row_cs['namevi'] ?>"><?= $row_cs['namevi'] ?></a>
                   </li>
                 <?php endwhile; ?>
               <?php endif; ?>
@@ -48,13 +53,16 @@
           <div class="footer-policy">
             <p class="footer-title">PHƯƠNG THỨC THANH TOÁN</p>
             <div class="ibank-wrapper">
-              <?php $show_phuongthuctt = $phuongthuctt->show_phuongthuctt("hienthi"); ?>
+              <?php $show_phuongthuctt = $fn->show_data([
+                'table' => 'tbl_payment',
+                'status' => 'hienthi',
+              ]); ?>
               <?php if ($show_phuongthuctt): ?>
                 <?php while ($row_pt = $show_phuongthuctt->fetch_assoc()): ?>
                   <span class="ibank scale-img">
                     <img
                       src="<?= empty($row_pt['file']) ? NO_IMG : BASE_ADMIN . UPLOADS . $row_pt['file']; ?>"
-                      alt="<?= $row_pt['name'] ?>" title="<?= $row_pt['name'] ?>" />
+                      alt="<?= $row_pt['namevi'] ?>" title="<?= $row_pt['namevi'] ?>" />
                   </span>
                 <?php endwhile; ?>
               <?php endif; ?>
@@ -64,14 +72,16 @@
         <div class="box-policy">
           <div class="footer-policy">
             <p class="footer-title">HỖ TRỢ KHÁCH HÀNG</p>
-            <?= $client_support ?>
+            <?= ($get = $trangtinh->get_static('hotrokhachhang')) && ($row = $get->fetch_assoc()) ? $row['contentvi'] : '';
+            ?>
           </div>
         </div>
         <div class="box-policy">
           <div class="footer-policy">
             <p class="footer-title">HỖ TRỢ 24/7</p>
             <div class="footer-info content-ck">
-              <?= $support ?>
+              <?= ($get = $trangtinh->get_static('hotro247')) && ($row = $get->fetch_assoc()) ? $row['contentvi'] : '';
+              ?>
             </div>
           </div>
           <div class="footer-newsletter">

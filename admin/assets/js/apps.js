@@ -851,6 +851,7 @@ function slugStatus(status) {
   });
 }
 
+let lastSlugStatus = {};
 var sluglang = 'vi,en';
 function slugAlert(res, lang = 'vi') {
   const msgValid = "Đường dẫn hợp lệ.";
@@ -858,31 +859,40 @@ function slugAlert(res, lang = 'vi') {
   const $slugInput = $(`#slug${lang}`);
   const $success = $(`#alert-slug-success${lang}`);
   const $danger = $(`#alert-slug-danger${lang}`);
+
   if ($slugInput.length === 0) return;
+
   if (res.status === 1) {
     $danger.addClass("d-none");
     $success.removeClass("d-none").find("span").text(msgValid);
-    $(".submit-check").prop("disabled", false);
+    lastSlugStatus[lang] = true;
   } else if (res.status === 0) {
     $success.addClass("d-none");
     $danger.removeClass("d-none").find("span").text(msgInvalid);
-    $(".submit-check").prop("disabled", true);
+    lastSlugStatus[lang] = false;
   } else {
+    lastSlugStatus[lang] = false;
     toggleSlugAlert(lang);
+    return;
   }
+
+  // ✅ Chỉ cần 'vi' hợp lệ là bật nút
+  $(".submit-check").prop("disabled", lastSlugStatus['vi'] !== true);
 }
+
 function toggleSlugAlert(lang = 'vi') {
   const $slugInput = $(`#slug${lang}`);
   if ($slugInput.length === 0) return;
   $(`#alert-slug-success${lang}`).addClass("d-none");
   $(`#alert-slug-danger${lang}`).addClass("d-none");
-  $(".submit-check").prop("disabled", true);
+  lastSlugStatus[lang] = false;
+  const allValid = Object.values(lastSlugStatus).every(status => status === true);
+  $(".submit-check").prop("disabled", !allValid);
 }
 function slugCheck(lang = 'vi') {
   const slug = $(`#slug${lang}`).val();
   const id = $(".slug-id").val();
   const table = $(".slug-table").val();
-
   if (slug) {
     $.ajax({
       url: "api/slug.php",
@@ -896,14 +906,12 @@ function slugCheck(lang = 'vi') {
       },
       success: function (res) {
         slugAlert(res, lang);
-      }
+      },
     });
   } else {
     toggleSlugAlert(lang); // reset alert nếu không có slug
   }
 }
-
-// Theo dõi thay đổi slug từng ngôn ngữ
 let lastSlug = {};
 setInterval(function () {
   const langs = sluglang.split(',');
@@ -916,13 +924,21 @@ setInterval(function () {
     }
   });
 }, 500);
-
-// Kiểm tra lại khi blur (thoát khỏi ô input)
 sluglang.split(',').forEach(function (lang) {
-  $(`#slug${lang}`).on("blur", function () {
-    slugCheck(lang);
+  $(`#name${lang}`).on('input change paste keyup blur', function () {
+    const nameVal = $(this).val();
+    const newSlug = slugConvert(nameVal);
+    const $slug = $(`#slug${lang}`);
+    const oldSlug = $slug.val();
+
+    $slug.val(newSlug); // gán dù giống hay khác
+
+    // ✅ Luôn gọi slugCheck để đảm bảo kiểm tra lại
+    lastSlug[lang] = null; // reset để tránh bị chặn bởi setInterval
+    slugCheck(lang);       // bắt buộc gọi kiểm tra lại
   });
 });
+
 
 /* Reader image */
 function readImage(inputFile, elementPhoto) {
@@ -2430,7 +2446,7 @@ $(document).ready(function () {
       config.entities_latin = false;
       config.entities_greek = false;
       config.basicEntities = false;
-      config.contentsCss = [CONFIG_BASE + ADMIN + "/ck/contents.css"];
+      // config.contentsCss = [CONFIG_BASE + ADMIN + "/ck/contents.css"];
       config.extraPlugins =
         "image2,codemirror,texttransform,copyformatting,html5audio,flash,youtube,wordcount,tableresize,widget,lineutils,clipboard,dialog,dialogui,widgetselection,lineheight,video,videodetector";
       config.line_height = "1;1.1;1.2;1.3;1.4;1.5;2;2.5;3;3.5;4;4.5;5";

@@ -3,10 +3,10 @@ $get_lienhe = $trangtinh->get_static('lienhe');
 if ($get_lienhe) {
   $result_lienhe = $get_lienhe->fetch_assoc();
 }
-$seo['title'] = $result_lienhe['title'];
-$seo['keywords'] = $result_lienhe['keywords'];
-$seo['description'] = $result_lienhe['description'];
-$seo['url'] = $result_lienhe['slug'];
+$seo['title'] = $result_lienhe['titlevi'];
+$seo['keywords'] = $result_lienhe['keywordsvi'];
+$seo['description'] = $result_lienhe['descriptionvi'];
+$seo['url'] = $result_lienhe['slugvi'] ?? '';
 $seo['image'] = isset($result_lienhe['file']) ? BASE_ADMIN . UPLOADS . $result_lienhe['file'] : '';
 ?>
 <div class="wrap-main wrap-home w-clear" style="background:#fff">
@@ -32,7 +32,7 @@ $seo['image'] = isset($result_lienhe['file']) ? BASE_ADMIN . UPLOADS . $result_l
       <div class="content-main">
         <div class="contact-article row">
           <div class="contact-text col-lg-6 mb-3" data-aos="fade-right" data-aos-duration="1000">
-            <?= $result_lienhe['content'] ?></div>
+            <?= $result_lienhe['contentvi'] ?></div>
           <form data-aos="fade-left" data-aos-duration="1000" class="contact-form validation-contact col-lg-6 mb-3"
             novalidate="" method="post" action="" enctype="multipart/form-data">
             <div class="social">
@@ -77,7 +77,7 @@ $seo['image'] = isset($result_lienhe['file']) ? BASE_ADMIN . UPLOADS . $result_l
             <input type="reset" class="btn btn-secondary" value="Nhập lại">
           </form>
         </div>
-        <div class="contact-map"><?= isset($result_setting['coords_iframe']) ? $result_setting['coords_iframe'] : ''; ?>
+        <div class="contact-map"><?= $coords_iframe ?>
         </div>
       </div>
     </div>

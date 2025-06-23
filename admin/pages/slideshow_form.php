@@ -50,7 +50,7 @@ include 'templates/breadcrumb.php';
                 </p>
               </label>
               <div class="photoUpload-dimension">
-                Width: 510 px - Height: 350 px
+                Width: <?= $thumb_width ?> px - Height: <?= $thumb_height ?> px
                 (.jpg|.gif|.png|.jpeg|.gif|.webp|.WEBP)
               </div>
             </div>

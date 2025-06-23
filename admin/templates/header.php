@@ -13,8 +13,7 @@
   <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet" />
 
   <!-- Css Files -->
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" rel="stylesheet" />
-  <link href="./assets/css/animate.min.css" rel="stylesheet" />
+  <link href="./assets/fontawesome611/all.css" rel="stylesheet" />
   <link href="./assets/confirm/confirm.css" rel="stylesheet" />
   <link href="./assets/select2/select2.css" rel="stylesheet" />
   <link href="./assets/sumoselect/sumoselect.css" rel="stylesheet" />
@@ -30,7 +29,6 @@
   <link href="./assets/fancybox5/fancybox.css" rel="stylesheet" />
   <link href="./assets/css/adminlte.css" rel="stylesheet" />
   <link href="./assets/css/adminlte-style.css" rel="stylesheet" />
-  <link href="./assets/css/thu.css" rel="stylesheet" />
 </head>
 
 <body class="sidebar-mini hold-transition text-sm">
@@ -102,3 +100,145 @@
         </li>
       </ul>
     </nav>
+    <?php
+    $sidebarMenu = [
+      [
+        'title' => 'Bảng điều khiển',
+        'icon' => 'fas fa-tachometer-alt',
+        'link' => '?page=dashboard',
+        'active' => ['?page=dashboard', 'index.php'],
+      ],
+      [
+        'title' => 'Sản phẩm',
+        'icon' => 'fas fa-boxes',
+        'children' => [
+          [
+            'title' => 'Danh mục cấp 1',
+            'link' => '?page=danhmuc_c1_list',
+            'active' => ['?page=danhmuc_c1_list', '?page=danhmuc_c1_form']
+          ],
+          [
+            'title' => 'Danh mục cấp 2',
+            'link' => '?page=danhmuc_c2_list',
+            'active' => ['?page=danhmuc_c2_list', '?page=danhmuc_c2_form']
+          ],
+          [
+            'title' => 'Sản phẩm',
+            'link' => '?page=sanpham_list',
+            'active' => ['?page=sanpham_form', '?page=sanpham_list', '?page=gallery_list', '?page=gallery_form']
+          ],
+        ]
+      ],
+      [
+        'title' => 'Danh sách bài viết',
+        'icon' => 'far fa-newspaper',
+        'children' => [
+          [
+            'title' => 'Tin tức',
+            'link' => '?page=news_list&type=tintuc',
+            'active' => ['?page=news_list&type=tintuc', '?page=news_form&type=tintuc']
+          ],
+          [
+            'title' => 'Chính sách',
+            'link' => '?page=news_list&type=chinhsach',
+            'active' => ['?page=news_list&type=chinhsach', '?page=news_form&type=chinhsach']
+          ],
+          [
+            'title' => 'Tiêu chí',
+            'link' => '?page=tieuchi_list',
+            'active' => ['?page=tieuchi_list', '?page=tieuchi_form']
+          ],
+          [
+            'title' => 'Đánh giá khách hàng',
+            'link' => '?page=danhgia_list',
+            'active' => ['?page=danhgia_list', '?page=danhgia_form']
+          ],
+          [
+            'title' => 'Hướng dẫn chơi',
+            'link' => '?page=news_list&type=huongdanchoi',
+            'active' => ['?page=news_list&type=huongdanchoi', '?page=news_form&type=huongdanchoi']
+          ],
+        ]
+      ],
+      [
+        'title' => 'Quản lý trang tĩnh',
+        'icon' => 'fas fa-bookmark',
+        'children' => [
+          [
+            'title' => 'Giới thiệu',
+            'link' => '?page=static_list&type=gioithieu',
+            'active' => ['?page=static_list&type=gioithieu']
+          ],
+          [
+            'title' => 'Liên hệ',
+            'link' => '?page=static_list&type=lienhe',
+            'active' => ['?page=static_list&type=lienhe']
+          ],
+          [
+            'title' => 'Mua hàng',
+            'link' => '?page=static_list&type=muahang',
+            'active' => ['?page=static_list&type=muahang']
+          ],
+          [
+            'title' => 'Footer',
+            'link' => '?page=static_list&type=footer',
+            'active' => ['?page=static_list&type=footer']
+          ],
+          [
+            'title' => 'Hỗ trợ khách hàng',
+            'link' => '?page=static_list&type=hotrokhachhang',
+            'active' => ['?page=static_list&type=hotrokhachhang']
+          ],
+          [
+            'title' => 'Hỗ trợ 24/7',
+            'link' => '?page=static_list&type=hotro247',
+            'active' => ['?page=static_list&type=hotro247']
+          ]
+        ]
+      ],
+      [
+        'title' => 'Quản lý hình ảnh - video',
+        'icon' => 'fas fa-photo-video',
+        'children' => [
+          [
+            'title' => 'Logo',
+            'link' => '?page=setting_list&type=logo',
+            'active' => ['?page=setting_list&type=logo']
+          ],
+          [
+            'title' => 'Watermark',
+            'link' => '?page=watermark',
+            'active' => ['?page=watermark']
+          ],
+          [
+            'title' => 'Favicon',
+            'link' => '?page=setting_list&type=favicon',
+            'active' => ['?page=setting_list&type=favicon']
+          ],
+          [
+            'title' => 'Slideshow',
+            'link' => '?page=slideshow_list',
+            'active' => ['?page=slideshow_list', '?page=slideshow_form']
+          ],
+          [
+            'title' => 'Social',
+            'link' => '?page=social_list',
+            'active' => ['?page=social_list', '?page=social_form']
+          ],
+          [
+            'title' => 'Phương thức thanh toán',
+            'link' => '?page=payment_list',
+            'active' => ['?page=payment_list', '?page=payment_form']
+          ]
+        ]
+      ],
+      [
+        'title' => 'Thiết lập thông tin',
+        'icon' => 'fas fa-cogs',
+        'link' => '?page=setting_list',
+        'active' => ['?page=setting_list']
+      ]
+    ];
+    $currentPage = $_GET['page'] ?? '';
+    $currentType = $_GET['type'] ?? '';
+    ?>

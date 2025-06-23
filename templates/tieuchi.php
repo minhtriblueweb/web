@@ -1,4 +1,4 @@
-<?php if ($tieuchi = $functions->show_data('tbl_tieuchi', ['status' => 'hienthi'])): ?>
+<?php if ($tieuchi = $fn->show_data('tbl_tieuchi', ['status' => 'hienthi'])): ?>
   <div class="wrap-criterion">
     <div class="wrap-content">
       <div class="slick-criterion slick-d-none">

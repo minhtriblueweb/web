@@ -4,9 +4,9 @@
     <div class="menu-bar-left">
       <p class="title">DANH MỤC SẢN PHẨM</p>
       <?php
-      $danhmuc_lv1 = $functions->show_data([
-        'table' => 'tbl_danhmuc',
-        'status' => 'hienthi'
+      $danhmuc_lv1 = $fn->show_data([
+        'table' => 'tbl_danhmuc_c1',
+        'status' => 'hienthi,noibat'
       ]);
       ?>
       <?php if ($danhmuc_lv1 && $danhmuc_lv1->num_rows > 0): ?>
@@ -14,7 +14,7 @@
           <ul>
             <?php while ($dm = $danhmuc_lv1->fetch_assoc()): ?>
               <?php
-              $danhmuc_lv2 = $functions->show_data([
+              $danhmuc_lv2 = $fn->show_data([
                 'table' => 'tbl_danhmuc_c2',
                 'status' => 'hienthi',
                 'id_list' => $dm['id']
@@ -22,13 +22,13 @@
               $has_sub = ($danhmuc_lv2 && $danhmuc_lv2->num_rows > 0);
               ?>
               <li>
-                <a title="<?= $dm['name'] ?>" href="<?= $dm['slug'] ?>">
+                <a title="<?= $dm['namevi'] ?>" href="<?= $dm['slugvi'] ?>">
                   <span class="scale-img">
                     <img width="25"
                       src="<?= empty($dm['file']) ? NO_IMG : BASE_ADMIN . UPLOADS . $dm['file'] ?>"
-                      alt="<?= $dm['name'] ?>" title="<?= $dm['name'] ?>" />
+                      alt="<?= $dm['namevi'] ?>" title="<?= $dm['namevi'] ?>" />
                   </span>
-                  <?= $dm['name'] ?>
+                  <?= $dm['namevi'] ?>
                   <?= $has_sub ? '<i class="fa-solid fa-angle-right"></i>' : '' ?>
                 </a>
                 <?php if ($has_sub): ?>
@@ -37,9 +37,9 @@
                       <?php while ($dm2 = $danhmuc_lv2->fetch_assoc()): ?>
                         <li>
                           <a class="transition"
-                            title="<?= $dm2['name'] ?>"
-                            href="<?= $dm2['slug'] ?>">
-                            <?= $dm2['name'] ?>
+                            title="<?= $dm2['namevi'] ?>"
+                            href="<?= $dm2['slugvi'] ?>">
+                            <?= $dm2['namevi'] ?>
                           </a>
                         </li>
                       <?php endwhile; ?>
@@ -101,8 +101,8 @@
     <li>
       <a class="transition" href="san-pham" title="Sản phẩm">Sản phẩm</a>
       <?php
-      $menu_lv1 = $functions->show_data([
-        'table' => 'tbl_danhmuc',
+      $menu_lv1 = $fn->show_data([
+        'table' => 'tbl_danhmuc_c1',
         'status' => 'hienthi'
       ]);
       ?>
@@ -110,7 +110,7 @@
         <ul>
           <?php while ($dm = $menu_lv1->fetch_assoc()): ?>
             <?php
-            $menu_lv2 = $functions->show_data([
+            $menu_lv2 = $fn->show_data([
               'table' => 'tbl_danhmuc_c2',
               'status' => 'hienthi',
               'id_list' => $dm['id']
@@ -118,15 +118,15 @@
             $has_sub = ($menu_lv2 && $menu_lv2->num_rows > 0);
             ?>
             <li>
-              <a title="<?= $dm['name'] ?>" href="<?= $dm['slug'] ?>">
-                <?= $dm['name'] ?>
+              <a title="<?= $dm['namevi'] ?>" href="<?= $dm['slugvi'] ?>">
+                <?= $dm['namevi'] ?>
               </a>
               <?php if ($has_sub): ?>
                 <ul>
                   <?php while ($dm2 = $menu_lv2->fetch_assoc()): ?>
                     <li>
-                      <a title="<?= $dm2['name'] ?>" href="<?= $dm['slug'] ?>/<?= $dm2['slug'] ?>">
-                        <?= $dm2['name'] ?>
+                      <a title="<?= $dm2['namevi'] ?>" href="<?= $dm2['slugvi'] ?>">
+                        <?= $dm2['namevi'] ?>
                       </a>
                     </li>
                   <?php endwhile; ?>

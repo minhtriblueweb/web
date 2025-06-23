@@ -98,7 +98,7 @@
             <div class="social-header">
               <p>Kết nối :</p>
               <?php
-              $show_social = $functions->show_data([
+              $show_social = $fn->show_data([
                 'table' => 'tbl_social',
                 'status' => 'hienthi'
               ]); ?>
@@ -107,7 +107,7 @@
                     class="lazy hvr-icon-rotate" class="me-2">
                     <img width="20" height="20"
                       src="<?= empty($row_social['file']) ? NO_IMG : BASE_ADMIN . UPLOADS . $row_social['file']; ?>"
-                      alt="<?= $row_social['name'] ?>" />
+                      alt="<?= $row_social['namevi'] ?>" />
                   </a>
                 <?php endwhile; ?>
               <?php endif; ?>

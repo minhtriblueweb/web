@@ -18,7 +18,7 @@ class news
   public function get_news_by_slug($slug)
   {
     $slug = mysqli_real_escape_string($this->db->link, $slug);
-    $query = "SELECT * FROM tbl_news WHERE slug = '$slug' LIMIT 1";
+    $query = "SELECT * FROM tbl_news WHERE slugvi = '$slug' LIMIT 1";
     $result = $this->db->select($query);
     return $result ? $result->fetch_assoc() : false;
   }
@@ -27,7 +27,7 @@ class news
   {
     $slug = mysqli_real_escape_string($this->db->link, $slug);
     $type = mysqli_real_escape_string($this->db->link, $type);
-    $query = "SELECT * FROM tbl_news WHERE slug = '$slug' AND type = '$type' LIMIT 1";
+    $query = "SELECT * FROM tbl_news WHERE slugvi = '$slug' AND type = '$type' LIMIT 1";
     $result = $this->db->select($query);
     return $result ? $result->fetch_assoc() : false;
   }
@@ -115,7 +115,6 @@ class news
     return false;
   }
 
-
   public function get_danhmuc_by_tintuc($id)
   {
     $query = "SELECT tbl_news.*,
@@ -127,30 +126,6 @@ class news
         INNER JOIN tbl_danhmuc ON tbl_news.id_list = tbl_danhmuc.id
         LEFT JOIN tbl_danhmuc_c2 ON tbl_news.id_cat = tbl_danhmuc_c2.id
         WHERE tbl_news.id = '$id'";
-    $result = $this->db->select($query);
-    return $result;
-  }
-
-  public function get_news($slug)
-  {
-    $query = "SELECT * FROM tbl_news WHERE slug = '$slug' AND hienthi = 'hienthi' LIMIT 1";
-    $result = $this->db->select($query);
-    return $result;
-  }
-  public function show_news($records_per_page, $current_page, $hienthi = '', $type = '')
-  {
-    $type = mysqli_real_escape_string($this->db->link, $type);
-    $hienthi = mysqli_real_escape_string($this->db->link, $hienthi);
-    $records_per_page = (int)$records_per_page;
-    $current_page = (int)$current_page;
-    $offset = ($current_page - 1) * $records_per_page;
-
-    if (!empty($hienthi)) {
-      $query = "SELECT * FROM tbl_news WHERE hienthi = '$hienthi' AND type = '$type' ORDER BY numb ASC";
-    } else {
-      $query = "SELECT * FROM tbl_news WHERE type = '$type' ORDER BY numb, id DESC LIMIT $records_per_page OFFSET $offset";
-    }
-
     $result = $this->db->select($query);
     return $result;
   }
@@ -205,7 +180,7 @@ class news
       }
       $query = "UPDATE $table SET " . implode(", ", $update_fields) . " WHERE id = '" . (int)$id . "'";
       $result = $this->db->update($query);
-      $msg = $result ? "Cập nhật tin tức thành công" : "Cập nhật tin tức thất bại";
+      $msg = $result ? "Cập nhật dữ liệu thành công" : "Cập nhật dữ liệu thất bại";
     } else {
       $field_names = array_keys($data_escaped);
       $field_values = array_map(fn($v) => "'" . $v . "'", $data_escaped);
@@ -215,10 +190,14 @@ class news
       }
       $query = "INSERT INTO $table (" . implode(", ", $field_names) . ") VALUES (" . implode(", ", $field_values) . ")";
       $result = $this->db->insert($query);
-      $msg = $result ? "Thêm tin tức thành công" : "Thêm tin tức thất bại";
+      $msg = $result ? "Thêm dữ liệu thành công" : "Thêm dữ liệu thất bại";
     }
     $type_safe = preg_replace('/[^a-zA-Z0-9_-]/', '', $data_escaped['type']);
-    $this->fn->transfer($msg, "index.php?page=news_list&type={$type_safe}", $result);
+    $redirectPath = $this->fn->getRedirectPath([
+      'table' => $table,
+      'type' => $type_safe
+    ]);
+    $this->fn->transfer($msg, $redirectPath, $result);
   }
 }
 ?>

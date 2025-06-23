@@ -7,7 +7,7 @@
         data-animations="animate__fadeInDown, animate__backInUp, animate__rollIn, animate__backInRight, animate__zoomInUp, animate__backInLeft, animate__rotateInDownLeft, animate__backInDown, animate__zoomInDown, animate__fadeInUp, animate__zoomIn"
         data-nav="1" data-navcontainer=".control-slideshow">
         <?php
-        $show_slideshow = $functions->show_data([
+        $show_slideshow = $fn->show_data([
           'table' => 'tbl_slideshow',
           'status' => 'hienthi'
         ]);
@@ -15,11 +15,11 @@
           while ($row_slider = $show_slideshow->fetch_assoc()):
         ?>
             <div class="slideshow-item" owl-item-animation>
-              <a class="slideshow-image" href="<?= $row_slider['link'] ?>" target="_blank" title="<?= $row_slider['name'] ?>">
+              <a class="slideshow-image" href="<?= $row_slider['link'] ?>" target="_blank" title="<?= $row_slider['namevi'] ?>">
                 <picture>
                   <img class="w-100"
                     src="<?= empty($row_slider['file']) ? NO_IMG : BASE_ADMIN . UPLOADS . $row_slider['file'] ?>"
-                    alt="<?= $row_slider['name'] ?>" title="<?= $row_slider['name'] ?>" />
+                    alt="<?= $row_slider['namevi'] ?>" title="<?= $row_slider['namevi'] ?>" />
                 </picture>
               </a>
             </div>

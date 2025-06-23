@@ -3,6 +3,7 @@ $get_setting = $setting->get_setting();
 if ($get_setting) {
   $row_st = $get_setting->fetch_assoc();
 }
+$coords_iframe   = $row_st['coords_iframe'];
 
 // SEO mặc định
 $default_seo = [

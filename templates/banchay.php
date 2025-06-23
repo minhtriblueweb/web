@@ -1,5 +1,5 @@
 <?php
-$sanpham_banchay = $functions->show_data([
+$sanpham_banchay = $fn->show_data([
   'table' => 'tbl_sanpham',
   'status' => 'hienthi,banchay'
 ]);
@@ -12,8 +12,8 @@ if ($sanpham_banchay && $sanpham_banchay->num_rows > 0): ?>
       <div class="slick-product slick-d-none">
         <?php
         while ($sp = $sanpham_banchay->fetch_assoc()):
-          $slug = $sp['slug'];
-          $name = htmlspecialchars($sp['name']);
+          $slug = $sp['slugvi'];
+          $name = htmlspecialchars($sp['namevi']);
           $img_url = BASE_ADMIN . UPLOADS . $sp['file'];
           $img = !empty($sp['file']) ? $img_url : NO_IMG;
           $sale = $sp['sale_price'] ?? '';
@@ -22,7 +22,7 @@ if ($sanpham_banchay && $sanpham_banchay->num_rows > 0): ?>
         ?>
           <div>
             <div class="item-product">
-              <a href="san-pham/<?= $slug ?>">
+              <a href="<?= $slug ?>">
                 <div class="images">
                   <img class="w-100" src="<?= $img ?>" alt="<?= $name ?>" loading="lazy" />
                 </div>

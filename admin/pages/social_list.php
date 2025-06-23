@@ -1,11 +1,11 @@
 <?php
 $redirect_url = $_GET['page'];
 $records_per_page = 10;
-$name_page = 'slideshow';
-$table = 'tbl_slideshow';
+$name_page = 'social';
+$table = 'tbl_social';
 $current_page = max(1, isset($_GET['p']) ? (int)$_GET['p'] : 1);
 $total_pages = ceil($fn->count_data(['table' => $table]) / $records_per_page);
-$show_slideshow = $fn->show_data([
+$show_social = $fn->show_data([
   'table' => $table,
   'records_per_page' => $records_per_page,
   'current_page' => $current_page,
@@ -13,8 +13,8 @@ $show_slideshow = $fn->show_data([
 ]);
 $linkMulti = "index.php?page=deleteMulti&table=$table&";
 $linkDelete = "index.php?page=delete&table=$table&id=";
-$linkEdit = "index.php?page=slideshow_form&id=";
-$linkAdd = "index.php?page=slideshow_form";
+$linkEdit = "index.php?page=social_form&id=";
+$linkAdd = "index.php?page=social_form";
 ?>
 <?php
 $breadcrumb = [
@@ -48,27 +48,24 @@ include 'templates/breadcrumb.php';
           </tr>
         </thead>
         <tbody>
-          <?php if ($show_slideshow):
-            while ($row = $show_slideshow->fetch_assoc()):
+          <?php if ($show_social):
+            while ($row = $show_social->fetch_assoc()):
               $id = $row['id'];
               $name     = $row['namevi'];
-              $numb     = $row['numb'];
               $link     = $row['link'];
+              $numb     = $row['numb'];
               $status   = $row['status'] ?? '';
               $imgSrc   = !empty($row['file']) ? BASE_ADMIN . UPLOADS . $row['file'] : NO_IMG;
               $linkEditId  = $linkEdit . $id;
               $linkDeleteId = $linkDelete . $id;
           ?>
               <tr>
-                <!-- Checkbox chọn nhiều -->
                 <td class="align-middle">
                   <div class="custom-control custom-checkbox my-checkbox">
                     <input type="checkbox" class="custom-control-input select-checkbox" id="select-checkbox-<?= $id ?>" value="<?= $id ?>">
                     <label for="select-checkbox-<?= $id ?>" class="custom-control-label"></label>
                   </div>
                 </td>
-
-                <!-- Số thứ tự -->
                 <td class="align-middle">
                   <input type="number" class="form-control form-control-mini m-auto update-numb" min="0"
                     value="<?= $numb ?>" data-id="<?= $id ?>" data-table="<?= $table ?>">
@@ -83,11 +80,9 @@ include 'templates/breadcrumb.php';
                     <?= $name ?>
                   </a>
                 </td>
-                <!-- Link -->
                 <td class="align-middle">
                   <?= $link ?>
                 </td>
-                <!-- Hiển thị -->
                 <?php foreach (['hienthi'] as $attr): ?>
                   <td class="align-middle text-center">
                     <label class="switch switch-success">
@@ -99,7 +94,6 @@ include 'templates/breadcrumb.php';
                     </label>
                   </td>
                 <?php endforeach; ?>
-                <!-- Hành động -->
                 <td class="align-middle text-center text-md text-nowrap">
                   <a class="text-primary mr-2" href="<?= $linkEditId ?>" title="Chỉnh sửa">
                     <i class="fas fa-edit"></i>

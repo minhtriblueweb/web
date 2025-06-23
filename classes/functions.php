@@ -25,14 +25,15 @@ class Functions
       'image'       => !empty($data['file']) ? BASE_ADMIN . UPLOADS . $data['file'] : '',
     ];
   }
-  public function getRedirectPath($table, $params = [])
+  public function getRedirectPath($params = [])
   {
     $map = [];
-    $tables = ['news', 'sanpham', 'gallery', 'danhmuc_c1', 'danhmuc_c2', 'tieuchi', 'danhgia', 'slideshow', 'setting', 'payment'];
-    foreach ($tables as $table) {
-      $map["tbl_{$table}"] = "{$table}_list";
+    $tables = ['news', 'sanpham', 'gallery', 'danhmuc_c1', 'danhmuc_c2', 'tieuchi', 'danhgia', 'slideshow', 'setting', 'payment', 'static', 'social'];
+    foreach ($tables as $tbl) {
+      $map["tbl_{$tbl}"] = "{$tbl}_list";
     }
-    $page = $map[$table] ?? 'dashboard';
+    $tableKey = $params['table'] ?? '';
+    $page = $map[$tableKey] ?? 'dashboard';
     $query = "index.php?page={$page}";
     if (!empty($params['type'])) {
       $query .= "&type=" . urlencode($params['type']);
@@ -40,9 +41,9 @@ class Functions
     if (!empty($params['id_parent'])) {
       $query .= "&id=" . (int)$params['id_parent'];
     }
-
     return $query;
   }
+
   public function get_id($table, $id)
   {
     $table = mysqli_real_escape_string($this->db->link, $table);
@@ -138,21 +139,18 @@ class Functions
             unlink($filePath);
           }
         }
-
         if ($table === 'tbl_gallery') {
           $last_id_parent = $row['id_parent'];
         }
       }
     }
-
     $queryDelete = "DELETE FROM `$table` WHERE id IN ($idList)";
     $resultDelete = $this->db->delete($queryDelete);
-
-    $redirectPath = $this->getRedirectPath($table, [
+    $redirectPath = $this->getRedirectPath([
+      'table' => $table,
       'type' => $type,
       'id_parent' => $table === 'tbl_gallery' ? $last_id_parent : $id_parent
     ]);
-
     $this->transfer(
       $resultDelete ? "Xóa dữ liệu thành công!" : "Xóa dữ liệu thất bại!",
       $redirectPath,
@@ -166,21 +164,18 @@ class Functions
     $querySelect = "SELECT file" . ($table === 'tbl_gallery' ? ", id_parent" : "") . " FROM `$table` WHERE id = $id";
     $result = $this->db->select($querySelect);
     $row = ($result) ? $result->fetch_assoc() : null;
-
     if ($row && !empty($row['file'])) {
       $filePath = "uploads/" . $row['file'];
       if (file_exists($filePath)) {
         unlink($filePath);
       }
     }
-
     $delete_result = $this->db->delete("DELETE FROM `$table` WHERE id = $id");
-
-    $redirectPath = $this->getRedirectPath($table, [
+    $redirectPath = $this->getRedirectPath([
+      'table' => $table,
       'type' => $type,
       'id_parent' => $table === 'tbl_gallery' ? ($id_parent ?? $row['id_parent'] ?? 0) : $id_parent
     ]);
-
     $this->transfer(
       $delete_result ? "Xóa dữ liệu thành công!" : "Xóa dữ liệu thất bại!",
       $redirectPath,
@@ -252,24 +247,24 @@ class Functions
     $table = mysqli_real_escape_string($this->db->link, trim($table));
     $exclude_id = mysqli_real_escape_string($this->db->link, trim($exclude_id));
     $lang = mysqli_real_escape_string($this->db->link, trim($lang));
-    // $reserved_slugs = [
-    //   'lien-he',
-    //   'tin-tuc',
-    //   'huong-dan-choi',
-    //   'san-pham',
-    //   'gioi-thieu',
-    //   'chinh-sach',
-    //   'mua-hang',
-    //   'dang-nhap',
-    //   'dang-ky'
-    // ];
-    // if (in_array($slug, $reserved_slugs)) {
-    //   return "Đường dẫn đã tồn tại. Vui lòng chọn đường dẫn khác để tránh trùng lặp.";
-    // }
-    global $reserved_slugs;
+    $reserved_slugs = [
+      'lien-he',
+      'tin-tuc',
+      'huong-dan-choi',
+      'san-pham',
+      'gioi-thieu',
+      'chinh-sach',
+      'mua-hang',
+      'dang-nhap',
+      'dang-ky'
+    ];
     if (in_array($slug, $reserved_slugs)) {
       return "Đường dẫn đã tồn tại. Vui lòng chọn đường dẫn khác để tránh trùng lặp.";
     }
+    // global $reserved_slugs;
+    // if (in_array($slug, $reserved_slugs)) {
+    //   return "Đường dẫn đã tồn tại. Vui lòng chọn đường dẫn khác để tránh trùng lặp.";
+    // }
     $tables = ['tbl_danhmuc_c1', 'tbl_danhmuc_c2', 'tbl_sanpham', 'tbl_news'];
     foreach ($tables as $tbl) {
       $slug_column = 'slug' . $lang;
@@ -281,6 +276,7 @@ class Functions
         $check_slug_query .= " AND id != '$exclude_id'";
       }
       $check_slug_query .= " LIMIT 1";
+      // file_put_contents('log_sql_query.txt', $check_slug_query . PHP_EOL, FILE_APPEND);
       $result = $this->db->select($check_slug_query);
       if ($result && $result->num_rows > 0) {
         return "Đường dẫn đã tồn tại. Vui lòng chọn đường dẫn khác để tránh trùng lặp.";
@@ -297,16 +293,25 @@ class Functions
     $tmp = imagecreatetruecolor($w, $h);
     imagealphablending($tmp, false);
     imagesavealpha($tmp, true);
+
     for ($x = 0; $x < $w; ++$x) {
       for ($y = 0; $y < $h; ++$y) {
         $rgba = imagecolorat($image, $x, $y);
         $alpha = ($rgba & 0x7F000000) >> 24;
         $alpha = 127 - ((127 - $alpha) * ($opacity / 100));
+
         $color = imagecolorsforindex($image, $rgba);
-        $newColor = imagecolorallocatealpha($tmp, $color['red'], $color['green'], $color['blue'], $alpha);
+        $newColor = imagecolorallocatealpha(
+          $tmp,
+          (int)round($color['red']),
+          (int)round($color['green']),
+          (int)round($color['blue']),
+          (int)round($alpha)
+        );
         imagesetpixel($tmp, $x, $y, $newColor);
       }
     }
+
     return $tmp;
   }
   public function addWatermark($source_path, $destination_path)

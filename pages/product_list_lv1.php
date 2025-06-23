@@ -8,7 +8,7 @@ if (empty($slug)) {
 }
 
 // Lấy thông tin danh mục cấp 1
-$kg_danhmuc = $danhmuc->get_danhmuc_or_404($slug, 'tbl_danhmuc');
+$kg_danhmuc = $danhmuc->get_danhmuc_or_404($slug, 'tbl_danhmuc_c1');
 $id_list = $kg_danhmuc['id'];
 
 // Lấy danh mục cấp 2
@@ -40,10 +40,10 @@ $get_sp = $fn->show_data([
   'current_page' => $current_page
 ]);
 
-$seo['title'] = !empty($kg_danhmuc['title']) ? $kg_danhmuc['title'] : $kg_danhmuc['name'];
-$seo['keywords'] = $kg_danhmuc['keywords'];
+$seo['title'] = !empty($kg_danhmuc['titlevi']) ? $kg_danhmuc['titlevi'] : $kg_danhmuc['namevi'];
+$seo['keywords'] = $kg_danhmuc['keywordsvi'];
 $seo['description'] = $kg_danhmuc['descriptionvi'];
-$seo['url'] = BASE . $kg_danhmuc['slug'];
+$seo['url'] = BASE . $kg_danhmuc['slugvi'];
 $seo['image'] = BASE_ADMIN . UPLOADS . $kg_danhmuc['file'];
 ?>
 <div class="wrap-main wrap-home w-clear">
@@ -58,7 +58,7 @@ $seo['image'] = BASE_ADMIN . UPLOADS . $kg_danhmuc['file'];
         </li>
         <li class="breadcrumb-item active">
           <a class="text-decoration-none"
-            href="<?= $kg_danhmuc['slug'] ?>"><span><?= $kg_danhmuc['name'] ?></span></a>
+            href="<?= $kg_danhmuc['slugvi'] ?>"><span><?= $kg_danhmuc['namevi'] ?></span></a>
         </li>
       </ol>
     </div>
@@ -68,10 +68,10 @@ $seo['image'] = BASE_ADMIN . UPLOADS . $kg_danhmuc['file'];
     <div class="wrap-content" style="background: unset;">
       <?php if ($get_danhmuc_c2 && $get_danhmuc_c2->num_rows > 0) : ?>
         <div class="grid-list-no-index">
-          <?php while ($result_danhmuc_c2 = $get_danhmuc_c2->fetch_assoc()) : ?>
+          <?php while ($row_dm_c2 = $get_danhmuc_c2->fetch_assoc()) : ?>
             <div class="item-list-noindex">
-              <a href="<?= $result_danhmuc_c2['slug'] ?>">
-                <h3 class="m-0"><?= $result_danhmuc_c2['name'] ?></h3>
+              <a href="<?= $row_dm_c2['slugvi'] ?>">
+                <h3 class="m-0"><?= $row_dm_c2['namevi'] ?></h3>
               </a>
             </div>
           <?php endwhile; ?>
@@ -90,8 +90,8 @@ $seo['image'] = BASE_ADMIN . UPLOADS . $kg_danhmuc['file'];
           data-cat="" data-item="" data-brand="" data-curpage="2" data-total="124">
           <?php while ($sp = $get_sp->fetch_assoc()) : ?>
             <?php
-            $slug = $sp['slug'];
-            $name = htmlspecialchars($sp['name']);
+            $slug = $sp['slugvi'];
+            $name = htmlspecialchars($sp['namevi']);
             $img = !empty($sp['file'])
               ? BASE_ADMIN . UPLOADS . $sp['file']
               : NO_IMG;
@@ -100,7 +100,7 @@ $seo['image'] = BASE_ADMIN . UPLOADS . $kg_danhmuc['file'];
             $views = $sp['views'] ?? 0;
             ?>
             <div class="item-product" data-aos="fade-up" data-aos-duration="1000">
-              <a href="san-pham/<?= $slug ?>">
+              <a href="<?= $slug ?>">
                 <div class="images">
                   <img src="<?= $img ?>" alt="<?= $name ?>" title="<?= $name ?>" class="w-100" loading="lazy" />
                 </div>
@@ -138,7 +138,7 @@ $seo['image'] = BASE_ADMIN . UPLOADS . $kg_danhmuc['file'];
         </div>
       <?php endif ?>
       <div class="mt-3">
-        <?= $pagination_html = $fn->renderPagination_tc($current_page, $total_pages, BASE . $kg_danhmuc['slug'] . '/page-');
+        <?= $pagination_html = $fn->renderPagination_tc($current_page, $total_pages, BASE . $kg_danhmuc['slugvi'] . '/page-');
         ?>
       </div>
       <?php if (!empty($kg_danhmuc['contentvi'])): ?>

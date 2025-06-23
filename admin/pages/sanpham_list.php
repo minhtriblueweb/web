@@ -12,11 +12,11 @@ $show_sanpham = $fn->show_data([
   'current_page' => $current_page,
   'keyword' => $_GET['keyword'] ?? ''
 ]);
-$show_danhmuc = $fn->show_data('tbl_danhmuc');
+$show_danhmuc = $fn->show_data('tbl_danhmuc_c1');
 $linkMulti = "index.php?page=deleteMulti&table=$table";
 $linkDelete = "index.php?page=delete&table=$table&id=";
-$linkEdit = "index.php?page=product_form&id=";
-$linkAdd = "index.php?page=product_form";
+$linkEdit = "index.php?page=sanpham_form&id=";
+$linkAdd = "index.php?page=sanpham_form";
 $linkGalleryList = "index.php?page=gallery_list&id=";
 $linkGallery = "index.php?page=gallery_form&id=";
 ?>
@@ -107,7 +107,7 @@ include 'templates/breadcrumb.php';
                   <td class="align-middle">
                     <a class="text-dark text-break" href="<?= $linkEdit . $id ?>" title="<?= $name ?>"><?= $name ?></a>
                     <div class="tool-action mt-2 w-clear">
-                      <a class="text-primary mr-3" href="<?= BASE . "$slug" ?>" target="_blank" title="Xem"><i class="far fa-eye mr-1"></i>View</a>
+                      <a class="text-primary mr-3" href="<?= BASE . $slug ?>" target="_blank" title="Xem"><i class="far fa-eye mr-1"></i>View</a>
                       <a class="text-info mr-3" href="<?= $linkEdit . $id ?>" title="Chỉnh sửa"><i class="far fa-edit mr-1"></i>Edit</a>
                       <a class="text-danger" id="delete-item" data-url="<?= $linkDelete . $id ?>" title="Xóa"><i class="far fa-trash-alt mr-1"></i>Delete</a>
                     </div>
@@ -130,7 +130,7 @@ include 'templates/breadcrumb.php';
 
                   <!-- Danh mục cấp 1 -->
                   <td class="align-middle">
-                    <?= $sanpham->get_name_danhmuc($row['id_list'], 'tbl_danhmuc') ?>
+                    <?= $sanpham->get_name_danhmuc($row['id_list'], 'tbl_danhmuc_c1') ?>
                   </td>
 
                   <!-- Danh mục cấp 2 -->

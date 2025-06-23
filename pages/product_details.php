@@ -34,16 +34,23 @@ $current_page = max(1, (int)($_GET['page'] ?? 1));
 $total_records = $sanpham->total_pages_sanpham_lienquan($id, $id_cat, 1);
 $total_pages = max(1, ceil($total_records / $records_per_page));
 
-$sanpham_lienquan = $sanpham->sanpham_lienquan($id, $id_cat, $records_per_page, $current_page);
+$sanpham_lienquan = $fn->show_data([
+  'table' => 'tbl_sanpham',
+  'status' => 'hienthi',
+  'id' => $id,
+  'id_cat' => $id_cat,
+  'records_per_page' => $records_per_page,
+  'current_page' => $current_page
+]);
 
 // Hình ảnh liên quan
 $get_gallery = $sanpham->get_gallery($id);
 
 // SEO
-$seo['title'] = !empty($kg_sanpham['title']) ? $kg_sanpham['title'] : $kg_sanpham['name'];
+$seo['title'] = !empty($kg_sanpham['titlevi']) ? $kg_sanpham['titlevi'] : $kg_sanpham['namevi'];
 $seo['keywords'] = $kg_sanpham['keywordsvi'];
 $seo['description'] = $kg_sanpham['descriptionvi'];
-$seo['url'] = BASE . $kg_sanpham['slug'];
+$seo['url'] = BASE . $kg_sanpham['slugvi'];
 $seo['image'] = BASE_ADMIN . UPLOADS . $kg_sanpham['file'];
 ?>
 <div class="wrap-main wrap-home w-clear">
@@ -76,8 +83,8 @@ $seo['image'] = BASE_ADMIN . UPLOADS . $kg_sanpham['file'];
         <?php endif; ?>
 
         <li class="breadcrumb-item active">
-          <a class="text-decoration-none" href="<?= BASE . $kg_sanpham['slug'] ?>">
-            <span><?= $kg_sanpham['name'] ?></span>
+          <a class="text-decoration-none" href="<?= BASE . $kg_sanpham['slugvi'] ?>">
+            <span><?= $kg_sanpham['namevi'] ?></span>
           </a>
         </li>
       </ol>
@@ -92,10 +99,10 @@ $seo['image'] = BASE_ADMIN . UPLOADS . $kg_sanpham['file'];
           <a id="Zoom-1" class="MagicZoom"
             data-options="zoomMode: magnifier; zoomPosition: inner; hint: off; rightClick: true; expandCaption: false; history: false;"
             href="<?= empty($kg_sanpham['file']) ? BASE_ADMIN . "assets/img/noimage.png" : BASE_ADMIN . UPLOADS . $kg_sanpham['file']; ?>"
-            title="<?= $kg_sanpham['name'] ?>">
+            title="<?= $kg_sanpham['namevi'] ?>">
             <img
               src="<?= empty($kg_sanpham['file']) ? BASE_ADMIN . "assets/img/noimage.png" : BASE_ADMIN . UPLOADS . $kg_sanpham['file']; ?>"
-              alt="<?= $kg_sanpham['name'] ?>" />
+              alt="<?= $kg_sanpham['namevi'] ?>" />
           </a>
         </div>
 
@@ -125,7 +132,7 @@ $seo['image'] = BASE_ADMIN . UPLOADS . $kg_sanpham['file'];
         <?php endif; ?>
       </div>
       <div class="right-pro-detail">
-        <p class="title-pro-detail mb-3"><?= $kg_sanpham['name'] ?></p>
+        <p class="title-pro-detail mb-3"><?= $kg_sanpham['namevi'] ?></p>
         <ul class="attr-pro-detail">
           <?php if (!empty($kg_sanpham['code'])): ?>
             <li>
@@ -162,18 +169,21 @@ $seo['image'] = BASE_ADMIN . UPLOADS . $kg_sanpham['file'];
         </div>
       </div>
       <div class="policy-detail">
-        <?php $show_tieuchi = $tieuchi->show_tieuchi_index();
+        <?php $show_tieuchi = $fn->show_data([
+          'table' => 'tbl_tieuchi',
+          'status' => 'hienthi',
+        ]);
         if ($show_tieuchi): ?>
-          <?php while ($result_tieuchi = $show_tieuchi->fetch_assoc()): ?>
+          <?php while ($row_tc = $show_tieuchi->fetch_assoc()): ?>
             <div class="list-policy">
               <div class="i-policy">
-                <a class="scale-img hover-glass text-decoration-none" href="" title="<?= $result_tieuchi['name'] ?>">
+                <a class="scale-img hover-glass text-decoration-none" href="" title="<?= $row_tc['namevi'] ?>">
                   <img
-                    src="<?= empty($result_tieuchi['file']) ? BASE_ADMIN . "assets/img/noimage.png" : BASE_ADMIN . UPLOADS . $result_tieuchi['file']; ?>"
-                    alt="<?= $result_tieuchi['name'] ?>" width="40" height="40">
+                    src="<?= empty($row_tc['file']) ? NO_IMG : BASE_ADMIN . UPLOADS . $row_tc['file']; ?>"
+                    alt="<?= $row_tc['namevi'] ?>" width="40" height="40">
                 </a>
                 <div class="content">
-                  <h3 class="text-split" title="<?= $result_tieuchi['name'] ?>"><?= $result_tieuchi['name'] ?></h3>
+                  <h3 class="text-split" title="<?= $row_tc['namevi'] ?>"><?= $row_tc['namevi'] ?></h3>
                 </div>
               </div>
             </div>
@@ -208,16 +218,16 @@ $seo['image'] = BASE_ADMIN . UPLOADS . $kg_sanpham['file'];
         <h2>Sản phẩm cùng loại</h2>
       </div>
       <div class="grid-product" data-aos="fade-up" data-aos-duration="1000">
-        <?php while ($kg_sanpham_lienquan = $sanpham_lienquan->fetch_assoc()) : ?>
+        <?php while ($row_lq = $sanpham_lienquan->fetch_assoc()) : ?>
           <?php
-          $slug = $kg_sanpham_lienquan['slug'];
-          $name = $kg_sanpham_lienquan['name'];
-          $img_src = empty($kg_sanpham_lienquan['file'])
-            ? BASE_ADMIN . "assets/img/noimage.png"
-            : BASE_ADMIN . UPLOADS . $kg_sanpham_lienquan['file'];
-          $views = !empty($kg_sanpham_lienquan['views']) ? $kg_sanpham_lienquan['views'] : 0;
-          $sale_price = $kg_sanpham_lienquan['sale_price'];
-          $regular_price = $kg_sanpham_lienquan['regular_price'];
+          $slug = $row_lq['slugvi'];
+          $name = $row_lq['namevi'];
+          $img_src = empty($row_lq['file'])
+            ? NO_IMG
+            : BASE_ADMIN . UPLOADS . $row_lq['file'];
+          $views = !empty($row_lq['views']) ? $row_lq['views'] : 0;
+          $sale_price = $row_lq['sale_price'];
+          $regular_price = $row_lq['regular_price'];
           ?>
           <div class="item-product">
             <a class="text-decoration-none" href="san-pham/<?= $slug ?>" title="<?= htmlspecialchars($name) ?>">

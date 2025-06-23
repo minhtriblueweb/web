@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Máy chủ: 127.0.0.1
--- Thời gian đã tạo: Th6 23, 2025 lúc 12:01 PM
+-- Thời gian đã tạo: Th6 23, 2025 lúc 10:03 PM
 -- Phiên bản máy phục vụ: 10.4.32-MariaDB
 -- Phiên bản PHP: 8.2.12
 
@@ -196,8 +196,8 @@ CREATE TABLE `tbl_danhmuc_c1` (
 
 INSERT INTO `tbl_danhmuc_c1` (`id`, `slugvi`, `slugen`, `namevi`, `nameen`, `descvi`, `descen`, `contentvi`, `contenten`, `titlevi`, `titleen`, `keywordsvi`, `keywordsen`, `descriptionvi`, `descriptionen`, `file`, `status`, `numb`, `date_created`, `date_updated`) VALUES
 (2, 'rubik-co-ban', '', 'Rubik Cơ bản', '', '', '', '', '', '', '', '', '', '', '', '', 'hienthi,noibat', 1, '2025-06-22 11:52:48', '2025-06-22 11:52:48'),
-(3, 'rubik-bien-the', '', 'Rubik biến thể', '', '', '', '', '', '', '', '', '', '', '', '', 'hienthi,noibat', 1, '2025-06-22 11:52:57', '2025-06-22 11:52:57'),
-(4, 'rubik-nang-cao', '', 'Rubik nâng cao', '', '', '', '', '', '', '', '', '', '', '', '65d26bad61_50x50x1.webp', 'hienthi,noibat', 1, '2025-06-22 11:53:04', '2025-06-23 13:17:47');
+(3, 'rubik-bien-the', '', 'Rubik biến thể', '', '', '', '', '', '', '', '', '', '', '', '672ad5f0ba_50x50x1.jpg', 'hienthi,noibat', 1, '2025-06-22 11:52:57', '2025-06-23 23:15:10'),
+(4, 'rubik-nang-cao', 'rubik-nang-cao', 'Rubik nâng cao', 'Rubik nâng cao', '', '', '<p>MÁY LẠNH SAMSUNG INVERTER 2.5 HP AR24CYFCAWKNSV</p>\r\n', '', '', '', '', '', '', '', 'ff2e2b3bc1_50x50x1.jpg', 'hienthi,noibat', 1, '2025-06-22 11:53:04', '2025-06-24 02:05:47');
 
 -- --------------------------------------------------------
 
@@ -234,9 +234,9 @@ CREATE TABLE `tbl_danhmuc_c2` (
 --
 
 INSERT INTO `tbl_danhmuc_c2` (`id`, `slugvi`, `slugen`, `namevi`, `nameen`, `descvi`, `descen`, `contentvi`, `contenten`, `id_list`, `file`, `titlevi`, `titleen`, `keywordsvi`, `keywordsen`, `descriptionvi`, `descriptionen`, `status`, `numb`, `date_created`, `date_updated`) VALUES
-(2, 'rubik-2x2x2', '', 'Rubik 2x2x2', '', '', '', '', '', 2, '', '', '', '', '', '', '', 'hienthi,noibat', 1, '2025-06-22 12:06:59', '2025-06-22 12:06:59'),
-(3, 'rubik-3x3x3', '', 'Rubik 3x3x3', '', '', '', '', '', 2, '9915020166_02-1-.jpg', '', '', '', '', '', '', 'hienthi,noibat', 1, '2025-06-22 12:07:31', '2025-06-22 23:48:03'),
-(6, 'u', '', 'u', '', '', '', '', '', 0, 'b4d479a8a43c1962402d.jpg', '', '', '', '', '', '', 'hienthi,noibat', 1, '2025-06-22 23:48:30', '2025-06-22 23:48:30');
+(2, 'rubik-2x2x2', '', 'Rubik 2x2x2', '', '', '', '', '', 2, '', 'Rubik 2x2x2', '', 'Rubik 2x2x2', '', '', '', 'hienthi,noibat', 1, '2025-06-22 12:06:59', '2025-06-24 02:44:06'),
+(3, 'rubik-3x3x3', '', 'Rubik 3x3x3', '', '', '', '', '', 2, '15a86f17bd_100x100x1.jpg', 'Rubik 3x3x3 trọn gói ', '', 'Rubik 3x3x3', '', '', '', 'hienthi,noibat', 1, '2025-06-22 12:07:31', '2025-06-24 02:48:01'),
+(6, 'rubik-5x5x5', '', 'rubik 5x5x5', '', '', '', '', '', 2, '621588876d_100x100x1.jpg', '', '', '', '', '', '', 'hienthi,noibat', 1, '2025-06-22 23:48:30', '2025-06-23 23:01:14');
 
 -- --------------------------------------------------------
 
@@ -981,66 +981,65 @@ CREATE TABLE `tbl_gallery` (
   `file` varchar(255) DEFAULT NULL,
   `numb` int(11) DEFAULT 0,
   `status` varchar(255) NOT NULL,
-  `date_updated` datetime DEFAULT NULL
+  `date_created` datetime DEFAULT current_timestamp(),
+  `date_updated` datetime DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Đang đổ dữ liệu cho bảng `tbl_gallery`
 --
 
-INSERT INTO `tbl_gallery` (`id`, `id_parent`, `file`, `numb`, `status`, `date_updated`) VALUES
-(41, 25, 'eb6a95bf21.jpg', 2, 'hienthi', NULL),
-(39, 10, '8bec2dbdcc.jpg', 1, 'hienthi', NULL),
-(38, 11, '542d119eec.jpg', 4, 'hienthi', NULL),
-(37, 11, '553e9b1895.jpg', 3, 'hienthi', NULL),
-(36, 11, 'ed035c64a7.jpg', 2, 'hienthi', NULL),
-(35, 11, '727c07f63d.jpg', 1, 'hienthi', NULL),
-(30, 21, 'b7108af3b3.jpg', 1, 'hienthi', NULL),
-(31, 21, 'c5437e7ccc.jpg', 2, 'hienthi', NULL),
-(32, 8, '184549ae03.jpg', 1, 'hienthi', NULL),
-(40, 25, '7a4522de55.jpg', 1, 'hienthi', NULL),
-(34, 8, '7e34432dd1.jpg', 3, 'hienthi', NULL),
-(42, 25, '549e31013d.jpg', 3, 'hienthi', NULL),
-(43, 26, 'a330667bc3.jpg', 1, 'hienthi', NULL),
-(44, 28, '807935eaa3.jpg', 1, 'hienthi', NULL),
-(45, 28, '342c9431a2.jpg', 2, 'hienthi', NULL),
-(47, 28, '9227db42ec.jpg', 1, 'hienthi', NULL),
-(48, 28, '6b95fc3a8b.jpg', 2, 'hienthi', NULL),
-(49, 28, 'be5bf9286b.jpg', 3, 'hienthi', NULL),
-(50, 28, 'f8538a15c5.jpg', 4, 'hienthi', NULL),
-(51, 32, 'd63dc682a6.jpg', 1, 'hienthi', NULL),
-(52, 32, '914ad1a427.jpg', 2, 'hienthi', NULL),
-(53, 32, '562fabd45c.jpg', 3, 'hienthi', NULL),
-(54, 34, '7458d100d1.jpg', 1, 'hienthi', NULL),
-(55, 34, 'ac0094c308.jpg', 3, 'hienthi', NULL),
-(56, 39, 'f14ded4bd1.webp', 1, 'hienthi', NULL),
-(57, 39, '75f81328a1.webp', 2, 'hienthi', NULL),
-(58, 39, '64dd6814a4.webp', 3, 'hienthi', NULL),
-(59, 40, '1fb32aed56.jpg', 1, 'hienthi', NULL),
-(60, 41, 'd2732e271d.jpg', 1, 'hienthi', NULL),
-(61, 41, 'f24bc95278.webp', 2, 'hienthi', NULL),
-(62, 43, '08bc0fea2f.webp', 1, 'hienthi', NULL),
-(63, 43, '2a7dd126a9.webp', 2, 'hienthi', NULL),
-(64, 43, '53c3bb7232.webp', 3, 'hienthi', NULL),
-(65, 43, 'dbf10545f7.webp', 4, 'hienthi', NULL),
-(120, 123, 'cf93519920_500x500x1.webp', 2, 'hienthi', NULL),
-(119, 123, 'ad0a613b0c_500x500x1.webp', 1, 'hienthi', NULL),
-(118, 123, '2483ab28e8_500x500x1.webp', 3, 'hienthi', NULL),
-(117, 123, 'c5f366fbed_500x500x1.webp', 1, 'hienthi', NULL),
-(116, 123, 'd7a2269f01_500x500x1.webp', 5, 'hienthi', NULL),
-(114, 123, '28219939b1_500x500x1.webp', 2, 'hienthi', NULL),
-(115, 123, 'c77680dc3f_500x500x1.webp', 4, 'hienthi', NULL),
-(121, 123, 'fbd8c31732_500x500x1.webp', 3, 'hienthi', NULL),
-(122, 123, '3e06b3234f_500x500x1.webp', 4, 'hienthi', NULL),
-(123, 123, '31b69540e8_500x500x1.webp', 5, 'hienthi', NULL),
-(124, 123, '8de53fb2a9_500x500x1.webp', 1, 'hienthi', NULL),
-(125, 123, '8a2e9c8fe8_500x500x1.webp', 2, 'hienthi', NULL),
-(126, 123, '1f6a9b8413_500x500x1.webp', 1, 'hienthi', NULL),
-(127, 123, '113e077f00_500x500x1.webp', 1, 'hienthi', NULL),
-(128, 123, 'f9eee5f370_500x500x1.webp', 2, 'hienthi', NULL),
-(129, 123, 'c115b43fcb_500x500x1.webp', 3, 'hienthi', NULL),
-(131, 124, 'a16592f805_500x500x1.jpg', 7, 'hienthi', NULL),
-(132, 124, '588ba4502a_500x500x1.jpg', 3, 'hienthi', NULL);
+INSERT INTO `tbl_gallery` (`id`, `id_parent`, `file`, `numb`, `status`, `date_created`, `date_updated`) VALUES
+(41, 25, 'eb6a95bf21.jpg', 2, 'hienthi', '2025-06-23 23:22:36', '2025-06-23 23:22:36'),
+(39, 10, '8bec2dbdcc.jpg', 1, 'hienthi', '2025-06-23 23:22:36', '2025-06-23 23:22:36'),
+(38, 11, '542d119eec.jpg', 4, 'hienthi', '2025-06-23 23:22:36', '2025-06-23 23:22:36'),
+(37, 11, '553e9b1895.jpg', 3, 'hienthi', '2025-06-23 23:22:36', '2025-06-23 23:22:36'),
+(36, 11, 'ed035c64a7.jpg', 2, 'hienthi', '2025-06-23 23:22:36', '2025-06-23 23:22:36'),
+(35, 11, '727c07f63d.jpg', 1, 'hienthi', '2025-06-23 23:22:36', '2025-06-23 23:22:36'),
+(30, 21, 'b7108af3b3.jpg', 1, 'hienthi', '2025-06-23 23:22:36', '2025-06-23 23:22:36'),
+(31, 21, 'c5437e7ccc.jpg', 2, 'hienthi', '2025-06-23 23:22:36', '2025-06-23 23:22:36'),
+(40, 25, '7a4522de55.jpg', 1, 'hienthi', '2025-06-23 23:22:36', '2025-06-23 23:22:36'),
+(42, 25, '549e31013d.jpg', 3, 'hienthi', '2025-06-23 23:22:36', '2025-06-23 23:22:36'),
+(43, 26, 'a330667bc3.jpg', 1, 'hienthi', '2025-06-23 23:22:36', '2025-06-23 23:22:36'),
+(44, 28, '807935eaa3.jpg', 1, 'hienthi', '2025-06-23 23:22:36', '2025-06-23 23:22:36'),
+(45, 28, '342c9431a2.jpg', 2, 'hienthi', '2025-06-23 23:22:36', '2025-06-23 23:22:36'),
+(47, 28, '9227db42ec.jpg', 1, 'hienthi', '2025-06-23 23:22:36', '2025-06-23 23:22:36'),
+(48, 28, '6b95fc3a8b.jpg', 2, 'hienthi', '2025-06-23 23:22:36', '2025-06-23 23:22:36'),
+(49, 28, 'be5bf9286b.jpg', 3, 'hienthi', '2025-06-23 23:22:36', '2025-06-23 23:22:36'),
+(50, 28, 'f8538a15c5.jpg', 4, 'hienthi', '2025-06-23 23:22:36', '2025-06-23 23:22:36'),
+(51, 32, 'd63dc682a6.jpg', 1, 'hienthi', '2025-06-23 23:22:36', '2025-06-23 23:22:36'),
+(52, 32, '914ad1a427.jpg', 2, 'hienthi', '2025-06-23 23:22:36', '2025-06-23 23:22:36'),
+(53, 32, '562fabd45c.jpg', 3, 'hienthi', '2025-06-23 23:22:36', '2025-06-23 23:22:36'),
+(54, 34, '7458d100d1.jpg', 1, 'hienthi', '2025-06-23 23:22:36', '2025-06-23 23:22:36'),
+(55, 34, 'ac0094c308.jpg', 3, 'hienthi', '2025-06-23 23:22:36', '2025-06-23 23:22:36'),
+(56, 39, 'f14ded4bd1.webp', 1, 'hienthi', '2025-06-23 23:22:36', '2025-06-23 23:22:36'),
+(57, 39, '75f81328a1.webp', 2, 'hienthi', '2025-06-23 23:22:36', '2025-06-23 23:22:36'),
+(58, 39, '64dd6814a4.webp', 3, 'hienthi', '2025-06-23 23:22:36', '2025-06-23 23:22:36'),
+(59, 40, '1fb32aed56.jpg', 1, 'hienthi', '2025-06-23 23:22:36', '2025-06-23 23:22:36'),
+(60, 41, 'd2732e271d.jpg', 1, 'hienthi', '2025-06-23 23:22:36', '2025-06-23 23:22:36'),
+(61, 41, 'f24bc95278.webp', 2, 'hienthi', '2025-06-23 23:22:36', '2025-06-23 23:22:36'),
+(62, 43, '08bc0fea2f.webp', 1, 'hienthi', '2025-06-23 23:22:36', '2025-06-23 23:22:36'),
+(63, 43, '2a7dd126a9.webp', 2, 'hienthi', '2025-06-23 23:22:36', '2025-06-23 23:22:36'),
+(64, 43, '53c3bb7232.webp', 3, 'hienthi', '2025-06-23 23:22:36', '2025-06-23 23:22:36'),
+(65, 43, 'dbf10545f7.webp', 4, 'hienthi', '2025-06-23 23:22:36', '2025-06-23 23:22:36'),
+(120, 123, 'cf93519920_500x500x1.webp', 2, 'hienthi', '2025-06-23 23:22:36', '2025-06-23 23:22:36'),
+(119, 123, 'ad0a613b0c_500x500x1.webp', 1, 'hienthi', '2025-06-23 23:22:36', '2025-06-23 23:22:36'),
+(118, 123, '2483ab28e8_500x500x1.webp', 3, 'hienthi', '2025-06-23 23:22:36', '2025-06-23 23:22:36'),
+(117, 123, 'c5f366fbed_500x500x1.webp', 1, 'hienthi', '2025-06-23 23:22:36', '2025-06-23 23:22:36'),
+(116, 123, 'd7a2269f01_500x500x1.webp', 5, 'hienthi', '2025-06-23 23:22:36', '2025-06-23 23:22:36'),
+(114, 123, '28219939b1_500x500x1.webp', 2, 'hienthi', '2025-06-23 23:22:36', '2025-06-23 23:22:36'),
+(115, 123, 'c77680dc3f_500x500x1.webp', 4, 'hienthi', '2025-06-23 23:22:36', '2025-06-23 23:22:36'),
+(121, 123, 'fbd8c31732_500x500x1.webp', 3, 'hienthi', '2025-06-23 23:22:36', '2025-06-23 23:22:36'),
+(122, 123, '3e06b3234f_500x500x1.webp', 4, 'hienthi', '2025-06-23 23:22:36', '2025-06-23 23:22:36'),
+(123, 123, '31b69540e8_500x500x1.webp', 5, 'hienthi', '2025-06-23 23:22:36', '2025-06-23 23:22:36'),
+(124, 123, '8de53fb2a9_500x500x1.webp', 1, 'hienthi', '2025-06-23 23:22:36', '2025-06-23 23:22:36'),
+(125, 123, '8a2e9c8fe8_500x500x1.webp', 2, 'hienthi', '2025-06-23 23:22:36', '2025-06-23 23:22:36'),
+(126, 123, '1f6a9b8413_500x500x1.webp', 1, 'hienthi', '2025-06-23 23:22:36', '2025-06-23 23:22:36'),
+(127, 123, '113e077f00_500x500x1.webp', 1, 'hienthi', '2025-06-23 23:22:36', '2025-06-23 23:22:36'),
+(128, 123, 'f9eee5f370_500x500x1.webp', 2, 'hienthi', '2025-06-23 23:22:36', '2025-06-23 23:22:36'),
+(129, 123, 'c115b43fcb_500x500x1.webp', 3, 'hienthi', '2025-06-23 23:22:36', '2025-06-23 23:22:36'),
+(131, 124, 'a16592f805_500x500x1.jpg', 7, 'hienthi', '2025-06-23 23:22:36', '2025-06-23 23:22:36'),
+(132, 124, '588ba4502a_500x500x1.jpg', 3, 'hienthi', '2025-06-23 23:22:36', '2025-06-23 23:22:36');
 
 -- --------------------------------------------------------
 
@@ -1078,38 +1077,45 @@ CREATE TABLE `tbl_news` (
 --
 
 INSERT INTO `tbl_news` (`id`, `slugvi`, `slugen`, `namevi`, `nameen`, `descvi`, `descen`, `contentvi`, `contenten`, `titlevi`, `titleen`, `keywordsvi`, `keywordsen`, `descriptionvi`, `descriptionen`, `file`, `status`, `numb`, `views`, `type`, `created_at`, `updated_at`) VALUES
-(1, 'aaaaaaaaaaaaaaaa', '', 'aaaaaaaaaaaaaaaa', '', '', '', '', '', 'yyyyyy', '', 'yyyyyy', '', '', '', 'cae8c0b7e7_391x215x1.webp', 'hienthi,noibat', 1, 0, 'tintuc', '2025-06-22 23:20:23', '2025-06-23 00:01:11'),
-(2, 'yyyyy', '', 'yyyyy', '', '', '', '', '', '', '', '', '', '', '', '', 'hienthi,noibat', 1, 0, 'tintuc', '2025-06-23 00:26:48', '2025-06-23 00:26:48');
+(1, 'aaaaaaaaaaaaaaaa', '', 'aaaaaaaaaaaaaaaa', '', '', '', '', '', 'yyyyyy', '', 'yyyyyy', '', '', '', '2d3976b5ce_391x215x1.webp', 'hienthi,noibat', 1, 0, 'tintuc', '2025-06-22 23:20:23', '2025-06-24 00:07:48'),
+(2, 'yyyyy', '', 'yyyyy', '', 'yyyyy', '', '', '', '', '', '', '', '', '', '2c9b18a8f0_391x215x1.webp', 'hienthi,noibat', 1, 0, 'tintuc', '2025-06-23 00:26:48', '2025-06-24 01:49:05'),
+(3, 'ttttttttttttttt', '', 'ttttttttttttttt', '', '', '', '', '', '', '', '', '', '', '', '3d1e680e42_391x215x1.webp', 'hienthi,noibat', 1, 0, 'chinhsach', '2025-06-24 00:08:00', '2025-06-24 00:08:00'),
+(4, 'oooooooooo', '', 'oooooooooo', '', '', '', '', '', '', '', '', '', '', '', '', 'hienthi,noibat', 1, 0, 'huongdanchoi', '2025-06-24 00:10:47', '2025-06-24 00:10:59');
 
 -- --------------------------------------------------------
 
 --
--- Cấu trúc bảng cho bảng `tbl_phuongthuctt`
+-- Cấu trúc bảng cho bảng `tbl_payment`
 --
 
-CREATE TABLE `tbl_phuongthuctt` (
+CREATE TABLE `tbl_payment` (
   `id` int(11) NOT NULL,
-  `name` text NOT NULL,
-  `content` text NOT NULL,
+  `namevi` text NOT NULL,
+  `contenten` text NOT NULL,
+  `nameen` text NOT NULL,
+  `contentvi` text NOT NULL,
   `file` text NOT NULL,
-  `hienthi` varchar(60) NOT NULL,
-  `numb` int(20) NOT NULL
+  `status` text NOT NULL,
+  `numb` int(20) NOT NULL,
+  `options` text NOT NULL,
+  `created_at` datetime DEFAULT current_timestamp(),
+  `updated_at` datetime DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Đang đổ dữ liệu cho bảng `tbl_phuongthuctt`
+-- Đang đổ dữ liệu cho bảng `tbl_payment`
 --
 
-INSERT INTO `tbl_phuongthuctt` (`id`, `name`, `content`, `file`, `hienthi`, `numb`) VALUES
-(1, 'ACB', '<p>4070977</p>\r\n', 'd120c69dc1.png', 'hienthi', 1),
-(2, 'techcombank', '<p>techcombank</p>\r\n', 'e2fe03d6af.png', 'hienthi', 1),
-(4, 'timo', '', 'f9f68bfc02.png', 'hienthi', 1),
-(5, 'agribank', '', 'b4666eb0d4.png', 'hienthi', 1),
-(6, 'Vietcombank.', '', 'ad883f221e.jpg', 'hienthi', 1),
-(7, 'OCB', '', '517cce1842.png', 'hienthi', 1),
-(8, 'Ngân hàng Xây dựng – CB', '', '4f495854b6.webp', 'hienthi', 1),
-(9, 'Ngân hàng Dầu Khí Toàn Cầu – GPBank', '', '8c3db888fd.webp', 'hienthi', 1),
-(10, 'Ngân hàng Đại Dương – Oceanbank', '', 'f4975c0836.webp', 'hienthi', 1);
+INSERT INTO `tbl_payment` (`id`, `namevi`, `contenten`, `nameen`, `contentvi`, `file`, `status`, `numb`, `options`, `created_at`, `updated_at`) VALUES
+(1, 'ACB', '', '', '<p>4070977</p>\r\n', 'd120c69dc1.png', 'hienthi', 1, '', '2025-06-24 00:52:01', '2025-06-24 00:52:01'),
+(2, 'techcombank', '', '', '<p>techcombank</p>\r\n', 'e2fe03d6af.png', 'hienthi', 1, '', '2025-06-24 00:52:01', '2025-06-24 00:52:01'),
+(4, 'timo', '', '', '', 'f9f68bfc02.png', 'hienthi', 1, '', '2025-06-24 00:52:01', '2025-06-24 00:52:01'),
+(5, 'agribank', '', '', '', 'de8da46867_72x40x1.webp', 'hienthi', 1, '{\"w\":72,\"h\":40}', '2025-06-24 00:52:01', '2025-06-24 01:17:23'),
+(6, 'Vietcombank.', '', '', '', 'ad883f221e.jpg', 'hienthi', 1, '', '2025-06-24 00:52:01', '2025-06-24 00:52:01'),
+(7, 'OCB', '', '', '', '517cce1842.png', 'hienthi', 1, '', '2025-06-24 00:52:01', '2025-06-24 00:52:01'),
+(8, 'Ngân hàng Xây dựng – CB', '', '', '', '4f495854b6.webp', 'hienthi', 1, '', '2025-06-24 00:52:01', '2025-06-24 00:52:01'),
+(9, 'Ngân hàng Dầu Khí Toàn Cầu – GPBank', '', '', '', '8c3db888fd.webp', 'hienthi', 1, '', '2025-06-24 00:52:01', '2025-06-24 00:59:37'),
+(10, 'Ngân hàng Đại Dương – Oceanbank', '', '', '', 'f4975c0836.webp', 'hienthi', 1, '', '2025-06-24 00:52:01', '2025-06-24 01:19:01');
 
 -- --------------------------------------------------------
 
@@ -1153,8 +1159,8 @@ CREATE TABLE `tbl_sanpham` (
 --
 
 INSERT INTO `tbl_sanpham` (`id`, `slugvi`, `slugen`, `namevi`, `nameen`, `descvi`, `descen`, `contentvi`, `contenten`, `titlevi`, `titleen`, `keywordsvi`, `keywordsen`, `descriptionvi`, `descriptionen`, `file`, `id_list`, `id_cat`, `regular_price`, `sale_price`, `discount`, `code`, `type`, `status`, `numb`, `views`, `date_created`, `date_updated`) VALUES
-(1, 'may-lanh-samsung-inverter-25-hp-ar24cyfcawknsv', '', 'MÁY LẠNH SAMSUNG INVERTER 2.5 HP AR24CYFCAWKNSV', '', '', '', '<p>kkkkkkkkkkkkkkkk</p>\r\n', '', 'MÁY LẠNH SAMSUNG INVERTER 2.5 HP AR24CYFCAWKNSV', '', 'MÁY LẠNH SAMSUNG INVERTER 2.5 HP AR24CYFCAWKNSV', '', 'kkkkkkkkkkkkkkkk', '', 'abb074e448_500x500x1.webp', 2, 3, '400,000', '360,000', 10, 'SP006831 ', 'sanpham', 'hienthi,banchay,noibat', 1, 0, '2025-06-22 13:34:50', '2025-06-22 23:08:26'),
-(8, 'uu', '', 'uu', '', '', '', '', '', '', '', '', '', '', '', '0nhacto-38-.webp', 0, 0, '', '', 0, '', 'sanpham', 'hienthi,noibat,banchay', 1, 0, '2025-06-22 23:55:42', '2025-06-22 23:55:42');
+(1, 'may-lanh-samsung-inverter-25-hp-ar24cyfcawknsv', '', 'MÁY LẠNH SAMSUNG INVERTER 2.5 HP AR24CYFCAWKNSV', '', '<p>MÁY LẠNH SAMSUNG INVERTER 2.5 HP AR24CYFCAWKNSV</p>\r\n', '', '<p>MÁY LẠNH SAMSUNG INVERTER 2.5 HP AR24CYFCAWKNSV</p>\r\n', '', 'MÁY LẠNH SAMSUNG INVERTER 2.5 HP AR24CYFCAWKNSV', '', 'MÁY LẠNH SAMSUNG INVERTER 2.5 HP AR24CYFCAWKNSV', '', 'kkkkkkkkkkkkkkkk', '', '21f2406448_500x500x1.webp', 2, 3, '400,000', '360,000', 10, 'SP006831 ', 'sanpham', 'hienthi,noibat,banchay', 1, 6, '2025-06-22 13:34:50', '2025-06-24 03:03:09'),
+(8, 'uu', '', 'uu', '', '', '', '', '', '', '', '', '', '', '', 'f7d2a8b43a_500x500x1.webp', 2, 6, '', '', 0, '', 'sanpham', 'hienthi,noibat,banchay', 1, 0, '2025-06-22 23:55:42', '2025-06-23 23:29:10');
 
 -- --------------------------------------------------------
 
@@ -1172,24 +1178,22 @@ CREATE TABLE `tbl_setting` (
   `copyright` varchar(255) DEFAULT NULL,
   `introduction` text DEFAULT NULL,
   `worktime` varchar(100) DEFAULT NULL,
-  `descvi` text DEFAULT NULL,
+  `desc` text DEFAULT NULL,
   `coords_iframe` text DEFAULT NULL,
   `coords` text NOT NULL,
   `analytics` text DEFAULT NULL,
   `headjs` text DEFAULT NULL,
   `bodyjs` text DEFAULT NULL,
   `logo` varchar(255) DEFAULT NULL,
-  `favicon` varchar(255) NOT NULL,
-  `support` text DEFAULT NULL,
-  `client_support` text NOT NULL
+  `favicon` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Đang đổ dữ liệu cho bảng `tbl_setting`
 --
 
-INSERT INTO `tbl_setting` (`id`, `email`, `hotline`, `web_name`, `link_googlemaps`, `fanpage`, `copyright`, `introduction`, `worktime`, `descvi`, `coords_iframe`, `coords`, `analytics`, `headjs`, `bodyjs`, `logo`, `favicon`, `support`, `client_support`) VALUES
-(1, 'minhtri.blueweb@gmail.com', '0328 732 834', 'Thế Giới Rubik TMT', 'https://maps.app.goo.gl/QBCDJLNAcySUtTiGA', 'https://www.facebook.com/profile.php?id=100090056894070', 'Bản quyền thuộc Minh Trí Rubik. Design by Minh Trí BlueWeb', 'Chào mừng các bạn đến với website của Minh Trí Rubik', '8h - 17h', 'Sản phẩm của Rubik TMT đa dạng về mẫu mã, từ những viên Rubik cổ điển đến các phiên bản hiện đại với nhiều hình dạng và kích thước khác nhau. Chúng tôi cam kết cung cấp những sản phẩm được sản xuất với công nghệ tiên tiến, đảm bảo an toàn và thân thiện với người dùng.', '<iframe src=\"https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d489.7908536223631!2d106.63337394536576!3d10.86272739886291!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x317529f4163891e3%3A0xeaf1734b54adb3f!2zxJDGsOG7nW5nIFRo4buLIE3GsOG7nWkvMThhIEjhurttIDI2MCwgS2h1IFBo4buRIDNBLCBRdeG6rW4gMTIsIEjhu5MgQ2jDrSBNaW5oLCBWaeG7h3QgTmFt!5e0!3m2!1svi!2s!4v1749044597447!5m2!1svi!2s\" width=\"600\" height=\"450\" style=\"border:0;\" allowfullscreen=\"\" loading=\"lazy\" referrerpolicy=\"no-referrer-when-downgrade\"></iframe>', '10.86276948472411, 106.63364911149097', '<!-- Google tag (gtag.js) -->\r\n<script async src=\"https://www.googletagmanager.com/gtag/js?id=G-XKMLLRQBJ9\"></script>\r\n<script>\r\n  window.dataLayer = window.dataLayer || [];\r\n  function gtag(){dataLayer.push(arguments);}\r\n  gtag(\'js\', new Date());\r\n\r\n  gtag(\'config\', \'G-XKMLLRQBJ9\');\r\n</script>', '', '', 'ade0194b20_300x120x1.png', '25f50996fd_48x48x1.png', '<p><strong>CSKH</strong>: 0328 732 834</p>\r\n\r\n<p><strong>Mua hàng</strong>: 0328 732 834</p>\r\n\r\n<p><strong>Hỗ trợ kỹ thuật</strong>: 0328 732 834</p>\r\n\r\n<p><strong>Giờ làm việc</strong> : 8:00 - 17:00 ( Thứ 2 - Thứ 7)</p>\r\n', '<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">Giới thiệu</span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">Liên hệ</span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">Hướng dẫn đổi trả</span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">Vận chuyển và giao nhận</span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">Cam kết bảo mật thông tin</span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">Đơn vị thiết kế website</span></span></p>\r\n');
+INSERT INTO `tbl_setting` (`id`, `email`, `hotline`, `web_name`, `link_googlemaps`, `fanpage`, `copyright`, `introduction`, `worktime`, `desc`, `coords_iframe`, `coords`, `analytics`, `headjs`, `bodyjs`, `logo`, `favicon`) VALUES
+(1, 'minhtri.blueweb@gmail.com', '0328 732 834', 'Thế Giới Rubik TMT', 'https://maps.app.goo.gl/QBCDJLNAcySUtTiGA', 'https://www.facebook.com/profile.php?id=100090056894070', 'Bản quyền thuộc Minh Trí Rubik. Design by Minh Trí BlueWeb', 'Chào mừng các bạn đến với website của Minh Trí Rubik', '8h - 17h', 'Sản phẩm của Rubik TMT đa dạng về mẫu mã, từ những viên Rubik cổ điển đến các phiên bản hiện đại với nhiều hình dạng và kích thước khác nhau. Chúng tôi cam kết cung cấp những sản phẩm được sản xuất với công nghệ tiên tiến, đảm bảo an toàn và thân thiện với người dùng.', '<iframe src=\"https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d489.7908536223631!2d106.63337394536576!3d10.86272739886291!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x317529f4163891e3%3A0xeaf1734b54adb3f!2zxJDGsOG7nW5nIFRo4buLIE3GsOG7nWkvMThhIEjhurttIDI2MCwgS2h1IFBo4buRIDNBLCBRdeG6rW4gMTIsIEjhu5MgQ2jDrSBNaW5oLCBWaeG7h3QgTmFt!5e0!3m2!1svi!2s!4v1749044597447!5m2!1svi!2s\" width=\"600\" height=\"450\" style=\"border:0;\" allowfullscreen=\"\" loading=\"lazy\" referrerpolicy=\"no-referrer-when-downgrade\"></iframe>', '10.86276948472411, 106.63364911149097', '<!-- Google tag (gtag.js) -->\r\n<script async src=\"https://www.googletagmanager.com/gtag/js?id=G-XKMLLRQBJ9\"></script>\r\n<script>\r\n  window.dataLayer = window.dataLayer || [];\r\n  function gtag(){dataLayer.push(arguments);}\r\n  gtag(\'js\', new Date());\r\n\r\n  gtag(\'config\', \'G-XKMLLRQBJ9\');\r\n</script>', '', '', 'ade0194b20_300x120x1.png', '25f50996fd_48x48x1.png');
 
 -- --------------------------------------------------------
 
@@ -1215,9 +1219,9 @@ CREATE TABLE `tbl_slideshow` (
 --
 
 INSERT INTO `tbl_slideshow` (`id`, `file`, `link`, `status`, `numb`, `namevi`, `nameen`, `options`, `created_at`, `updated_at`) VALUES
-(4, '6592935cfd_1366x600x1.webp', 'https://www.tiktok.com/@minhtriweb', 'hienthi', '2', 'Cuối Đường Kỉ Niệm', '', '', '2025-06-23 14:15:45', '2025-06-23 15:40:01'),
+(4, '6592935cfd_1366x600x1.webp', 'https://www.tiktok.com/@minhtriweb', 'hienthi', '2', 'Cuối Đường Kỉ Niệm', '', '', '2025-06-23 14:15:45', '2025-06-24 00:01:46'),
 (5, 'a9e146e37c_1366x600x1.webp', 'https://www.youtube.com/watch?v=i0O5o9ajx5kkkkk', 'hienthi', '1', 'Tròn Thương (Thanh Phương) - Chế Linh', '', '', '2025-06-23 14:15:45', '2025-06-23 15:39:54'),
-(10, 'bfc7fc6ddc_1366x600x1.webp', 'kkkkkkkkkkkkkkk', 'hienthi', '1', 'kkkkkkkkkkk', '', '{\"w\":1366,\"h\":600}', '2025-06-23 15:40:14', '2025-06-23 15:40:14');
+(10, '82d5d0ac93_1366x600x1.webp', '', 'hienthi', '1', 'kkkkkkkkkkk', '', '', '2025-06-23 15:40:14', '2025-06-24 00:17:52');
 
 -- --------------------------------------------------------
 
@@ -1227,23 +1231,28 @@ INSERT INTO `tbl_slideshow` (`id`, `file`, `link`, `status`, `numb`, `namevi`, `
 
 CREATE TABLE `tbl_social` (
   `id` int(11) NOT NULL,
-  `name` text NOT NULL,
-  `desc` text NOT NULL,
+  `namevi` text NOT NULL,
+  `nameen` text NOT NULL,
+  `descen` text NOT NULL,
+  `descvi` text NOT NULL,
   `link` text NOT NULL,
   `file` text NOT NULL,
   `status` varchar(255) NOT NULL,
-  `numb` int(20) NOT NULL
+  `numb` int(20) NOT NULL,
+  `options` text NOT NULL,
+  `created_at` datetime DEFAULT current_timestamp(),
+  `updated_at` datetime DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Đang đổ dữ liệu cho bảng `tbl_social`
 --
 
-INSERT INTO `tbl_social` (`id`, `name`, `desc`, `link`, `file`, `status`, `numb`) VALUES
-(2, 'Fanpage', 'Minh Trí', 'https://www.facebook.com/minhtri150920/', '12a27790a8.png', 'hienthi', 1),
-(3, 'Tiktok', 'Minhtriweb', 'https://www.tiktok.com/@minhtriweb', '5c74b0d4f9.png', 'hienthi', 1),
-(4, 'Hotline', '( 8h - 20h )', 'tel:0328732834', '6542d5468c.png', 'hienthi', 1),
-(5, 'Chat Zalo', '0789720722', 'https://zalo.me/0328732834', '96faf4bf67.png', 'hienthi', 1);
+INSERT INTO `tbl_social` (`id`, `namevi`, `nameen`, `descen`, `descvi`, `link`, `file`, `status`, `numb`, `options`, `created_at`, `updated_at`) VALUES
+(2, 'Fanpage', '', '', 'Minh Trí', 'https://www.facebook.com/minhtri150920/', '12a27790a8.png', 'hienthi', 1, '', '2025-06-24 00:44:11', '2025-06-24 00:44:11'),
+(3, 'Tiktok', '', '', 'Minhtriweb', 'https://www.tiktok.com/@minhtriweb', '5c74b0d4f9.png', 'hienthi', 1, '', '2025-06-24 00:44:11', '2025-06-24 00:44:11'),
+(4, 'Hotline', '', '', '( 8h - 20h )', 'tel:0328732834', '6542d5468c.png', 'hienthi', 1, '', '2025-06-24 00:44:11', '2025-06-24 00:44:11'),
+(5, 'Chat Zalo', '', '', '0789720722', 'https://zalo.me/0328732834', '0c539a1cce_30x30x1.webp', 'hienthi', 1, '{\"w\":30,\"h\":30}', '2025-06-24 00:44:11', '2025-06-24 00:44:50');
 
 -- --------------------------------------------------------
 
@@ -1277,10 +1286,12 @@ CREATE TABLE `tbl_static` (
 --
 
 INSERT INTO `tbl_static` (`id`, `file`, `slug`, `contentvi`, `contenten`, `descvi`, `descen`, `namevi`, `nameen`, `type`, `titlevi`, `titleen`, `keywordsvi`, `keywordsen`, `descriptionvi`, `descriptionen`, `create_at`, `update_at`) VALUES
-(1, '', '', '<h2><span style=\"color:#e74c3c;\"><span style=\"font-size:20px;\"><strong>GIỚI THIỆU VỀ THẾ GIỚI RUBIK TMT</strong></span></span></h2>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\"><strong>Thế Giới Rubik TMT</strong> là địa chỉ uy tín chuyên cung cấp các loại rubik chất lượng cao tại TP. Hồ Chí Minh, phục vụ đa dạng nhu cầu từ người mới bắt đầu đến các cuber chuyên nghiệp. Với phương châm \"Chất lượng – Uy tín – Giá tốt\", chúng tôi luôn nỗ lực mang đến cho khách hàng những sản phẩm chính hãng, đa dạng mẫu mã và trải nghiệm mua sắm thuận tiện nhất.</span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">Dù mới gia nhập sân chơi Rubik chưa lâu nhưng <strong>Rubik TMT </strong>đã phát triển nhanh chóng và chạm đến lòng tin của khách hàng bằng những sản phẩm chất lượng, trải nghiệm mua sắm tối ưu và những giải đấu chuyên nghiệp với quy mô hàng đầu tại Việt Nam. <strong>Rubik TMT</strong> không chỉ hướng đến chất lượng sản phẩm tốt nhất, nâng cao chất lượng dịch vụ chăm sóc khách hàng mà còn mong muốn phát triển cộng đồng Rubik tại Việt Nam ngày càng lớn mạnh.</span></span></p>\r\n\r\n<p style=\"text-align:center\"><img alt=\"\" src=\"/web/admin/uploads/filemanager/files/z6674286067753_b4a77a9d52a04643a64494aa97eb5600.jpg\" width=\"600\" /></p>\r\n\r\n<h2><span style=\"color:#e74c3c;\"><span style=\"font-size:20px;\"><strong>Rubik TMT LÀ AI?</strong></span></span></h2>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\"><strong>Rubik TMT</strong> là nhà phân phối đồ chơi trí tuệ Rubik hàng đầu Việt Nam. Chúng tôi cam kết mang lại những sản phẩm chính hãng với giá thành phải chăng cùng trải nghiệm mua sắm tuyệt vời.</span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\"><strong>Rubik TMT</strong> là đối tác trực tiếp với các thương hiệu Speedcube hàng đầu thế giới như Gan, Moyu, Qiyi,...</span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\"><strong>Rubik TMT</strong> hân hạnh là nhà tài trợ chính, đồng hành cùng các thí sinh cuber trong các giải đấu quy mô hàng đầu tại Việt Nam.</span></span></p>\r\n\r\n<h2><span style=\"color:#e74c3c;\"><span style=\"font-size:20px;\"><strong>GIÁ TRỊ CỐT LÕI</strong></span></span></h2>\r\n\r\n<h3><strong><span style=\"line-height:2;\"><span style=\"font-size:16px;\">SẢN PHẨM CHẤT LƯỢNG</span></span></strong></h3>\r\n\r\n<ul>\r\n	<li><span style=\"line-height:2;\"><span style=\"font-size:16px;\">Chúng tôi luôn cố gắng mang đến những sản phẩm chính hãng, chất lượng với nguồn gốc xuất sứ rõ ràng cùng mức giá phải chăng nhất</span></span></li>\r\n</ul>\r\n\r\n<h3><span style=\"line-height:2;\"><span style=\"font-size:16px;\"><strong>HƯỚNG ĐẾN NGƯỜI DÙNG</strong></span></span></h3>\r\n\r\n<ul>\r\n	<li><span style=\"line-height:2;\"><span style=\"font-size:16px;\"><strong>Rubik TMT</strong> luôn đặt khách hàng làm trung tâm của dịch vụ bán hàng, đặt mình vào vị thế của người dùng để mang lại những dịch vụ và trải nghiệm tốt nhất</span></span></li>\r\n</ul>\r\n\r\n<h3><strong><span style=\"line-height:2;\"><span style=\"font-size:16px;\">PHÁT TRIỂN CỘNG ĐỒNG</span></span></strong></h3>\r\n\r\n<ul>\r\n	<li><span style=\"line-height:2;\"><span style=\"font-size:16px;\">Chúng tôi hướng đến mục đích xây dựng và phát triển cộng đồng Speedcubing Việt Nam ngày càng lớn mạnh.</span></span></li>\r\n</ul>\r\n\r\n<h2><span style=\"color:#e74c3c;\"><span style=\"font-size:20px;\"><strong>CHÚNG TÔI CUNG CẤP ĐẦY ĐỦ CÁC DÒNG RUBIK PHỔ BIẾN:</strong></span></span></h2>\r\n\r\n<ul>\r\n	<li><span style=\"line-height:2;\"><span style=\"font-size:16px;\">Rubik 2x2x2 – Phù hợp cho người mới làm quen với rubik</span></span></li>\r\n	<li><span style=\"line-height:2;\"><span style=\"font-size:16px;\">Rubik 3x3x3 – Mẫu rubik kinh điển và phổ biến nhất hiện nay</span></span></li>\r\n	<li><span style=\"line-height:2;\"><span style=\"font-size:16px;\">Rubik 4x4x4, 5x5x5, 6x6x6 – Dành cho những ai yêu thích thử thách và nâng cao kỹ năng giải rubik</span></span></li>\r\n</ul>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">Ngoài ra, <strong>Thế Giới Rubik TMT</strong> còn cập nhật thường xuyên các dòng rubik cao cấp, rubik thi đấu, phụ kiện rubik và combo khuyến mãi hấp dẫn.</span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">Liên hệ ngay với <strong>Thế Giới Rubik TMT</strong> để được tư vấn và lựa chọn sản phẩm phù hợp nhất với bạn!</span></span></p>\r\n\r\n<section style=\"width: 100%;background: rgba(231, 246, 255, 0.58);border: 5px dashed rgb(224, 12, 61);padding: 10px;margin-bottom: 10px;text-align: center;font: 500 16px / 1.6 Arial;color: rgb(0, 65, 118);line-height: 1.2;\">\r\n<p><span style=\"font-size:20px;\"><strong>THẾ GIỚI RUBIK TMT</strong></span></p>\r\n------------------\r\n\r\n<p><strong>Website</strong> : www.minhtrirubik.vn</p>\r\n\r\n<p><strong>Email</strong> : minhtri.blueweb@gmail.com</p>\r\n\r\n<p><strong>Địa chỉ</strong> : 152/18, Dương Thị Mười, P.Tân Thới Hiệp, Quận 12, TpHCM</p>\r\n\r\n<div style=\"width: 100%; margin-top: 30px; margin-bottom: 30px; text-align: center;\"><a href=\"https://zalo.me/0328732834\" style=\"padding:20px 40px;background:#e00c3d;color:#fff;text-decoration:none!important;border-radius:10px;border:2px dashed #fefa04\"><strong>0328 732 834 (Mr. Trí)</strong></a></div>\r\n</section>\r\n', '', '', NULL, 'Giới thiệu', '', 'gioithieu', 'Giới thiệu - Rubik TMT', '', 'Rubik TMT', '', 'Sản phẩm của Rubik TMT đa dạng về mẫu mã, từ những viên Rubik cổ điển đến các phiên bản hiện đại với nhiều hình dạng và kích thước khác nhau. Chúng tôi cam kết cung cấp những sản phẩm được sản xuất với công nghệ tiên tiến, đảm bảo an toàn và thân thiện với người dùng.', '', '2025-06-23 01:24:57', '2025-06-23 01:36:34'),
-(2, '', '', '<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">Địa chỉ mua rubik và địa chỉ bán rubik chính hãng tại Việt Nam. Đại lý bán rubik xịn chính hãng được ủy quyền phân phối Rubik. Tìm mua rubik ở đâu</span></span></p>\r\n\r\n<div>\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\"> Chúng tôi chấp nhận các hình thức mua hàng sau: </span></span></p>\r\n\r\n<ul>\r\n	<li><span style=\"line-height:2;\"><span style=\"font-size:16px;\">Mua hàng qua mạng.</span></span></li>\r\n	<li><span style=\"line-height:2;\"><span style=\"font-size:16px;\">Mua hàng qua  nhắn tin điện thoại.</span></span></li>\r\n	<li><span style=\"line-height:2;\"><span style=\"font-size:16px;\">Mua hàng qua chat online Y!M, MSN, Skype ...</span></span></li>\r\n	<li><span style=\"line-height:2;\"><span style=\"font-size:16px;\">Mua hàng trực tiếp tại các các cửa hàng của Cty. Địa chỉ mua Rubik, địa chỉ bán Rubik như sau</span></span></li>\r\n</ul>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">MUA HÀNG TRỰC TIẾP </span></span></p>\r\n\r\n<div>\r\n<div>\r\n<div>\r\n<div>\r\n<div>\r\n<div>\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">RUBIK TMT</span></span></p>\r\n\r\n<div>\r\n<div>\r\n<div>\r\n<div>\r\n<div>\r\n<div>\r\n<div>\r\n<div>\r\n<div><span style=\"line-height:2;\"><span style=\"font-size:16px;\">-VPĐD HN :Tầng 6, Royal Tea, Số 6 Dương Đình Nghệ, Cầu Giấy, Hà Nội (gần sân golf, cạnh tòa Elegaz Trần Phú)</span></span></div>\r\n\r\n<div><span style=\"line-height:2;\"><span style=\"font-size:16px;\">-Hà Nội : Kiot 16 Tòa Nhà Sông Hồng, Ngõ 163 Thái Hà, Đống Đa, Hà Nội</span></span></div>\r\n\r\n<div><span style=\"line-height:2;\"><span style=\"font-size:16px;\">-Hồ Chí Minh : Lầu 5, Số 696 Điện Biên Phủ, P.10, Q.10, Hồ Chí Minh</span></span></div>\r\n\r\n<div><span style=\"line-height:2;\"><span style=\"font-size:16px;\">Email: info@rubikstore.vn</span></span></div>\r\n\r\n<div>\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">Tel : 02466863684 - 02437327549 - 0836561578 - 0903244145</span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">Các điểm đại lý bán lẻ trên toàn quốc : </span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">✅   HÀ NỘI :</span></span></p>\r\n\r\n<div data-block=\"true\" data-editor=\"lpld\" data-offset-key=\"7714b-0-0\"><span style=\"line-height:2;\"><span style=\"font-size:16px;\">Q. Đống Đa</span></span></div>\r\n\r\n<div data-block=\"true\" data-editor=\"lpld\" data-offset-key=\"e46rt-0-0\">\r\n<div data-offset-key=\"e46rt-0-0\">\r\n<div data-offset-key=\"e46rt-0-0\"><span style=\"line-height:2;\"><span style=\"font-size:16px;\">*  Kiot 16 Tòa Nhà Sông Hồng,Ngõ 163 Thái Hà,Đống Đa - 02466863684</span></span></div>\r\n\r\n<div data-offset-key=\"e46rt-0-0\"><span style=\"line-height:2;\"><span style=\"font-size:16px;\">*  Trí Đức, 524 Đường Láng, Hà Nội</span></span></div>\r\n</div>\r\n</div>\r\n\r\n<div data-block=\"true\" data-editor=\"lpld\" data-offset-key=\"65mru-0-0\">\r\n<div data-offset-key=\"65mru-0-0\"><span style=\"line-height:2;\"><span style=\"font-size:16px;\">*  Tràng An, Số 304 Phố Văn Chương, Khâm Thiên</span></span></div>\r\n</div>\r\n\r\n<div data-block=\"true\" data-editor=\"lpld\" data-offset-key=\"3unqp-0-0\">\r\n<div data-offset-key=\"3unqp-0-0\"><span style=\"line-height:2;\"><span style=\"font-size:16px;\">Q. Hoàn Kiếm</span></span></div>\r\n</div>\r\n\r\n<div data-block=\"true\" data-editor=\"lpld\" data-offset-key=\"1beh2-0-0\">\r\n<div data-offset-key=\"1beh2-0-0\"><span style=\"line-height:2;\"><span style=\"font-size:16px;\">* NS Tràng Tiền,Số 44 Phố Tràng Tiền-02439363093</span></span></div>\r\n</div>\r\n\r\n<div data-block=\"true\" data-editor=\"lpld\" data-offset-key=\"9j0gi-0-0\">\r\n<div data-offset-key=\"9j0gi-0-0\"><span style=\"line-height:2;\"><span style=\"font-size:16px;\">Q. Thanh Xuân</span></span></div>\r\n</div>\r\n\r\n<div data-block=\"true\" data-editor=\"lpld\" data-offset-key=\"e7gvk-0-0\">\r\n<div data-offset-key=\"e7gvk-0-0\"><span style=\"line-height:2;\"><span style=\"font-size:16px;\">* Tiện Lợi,Tầng 1,Tòa 17T9,Đ.Nguyễn Thị Thập,KĐT Trung Hòa Nhân Chính</span></span></div>\r\n</div>\r\n\r\n<div data-block=\"true\" data-editor=\"lpld\" data-offset-key=\"dtfvv-0-0\">\r\n<div data-offset-key=\"dtfvv-0-0\"><span style=\"line-height:2;\"><span style=\"font-size:16px;\">* Tràng An, Số 219 Khương Trung, Quận Thanh Xuân, Hà Nội</span></span></div>\r\n</div>\r\n\r\n<div data-block=\"true\" data-editor=\"lpld\" data-offset-key=\"507a6-0-0\">\r\n<div data-offset-key=\"507a6-0-0\"><span style=\"line-height:2;\"><span style=\"font-size:16px;\">Q. Cầu Giấy</span></span></div>\r\n</div>\r\n\r\n<div data-block=\"true\" data-editor=\"lpld\" data-offset-key=\"er0s5-0-0\">\r\n<div data-offset-key=\"er0s5-0-0\"><span style=\"line-height:2;\"><span style=\"font-size:16px;\">* Tầng 6, OceanKids - Royal Tea, Số 6 Dương Đình Nghệ, Cầu Giấy, Hà Nội (gần sân golf Dương Đình Nghệ,cạnh tòa Elegaz) - 0886933298</span></span></div>\r\n</div>\r\n\r\n<div data-block=\"true\" data-editor=\"lpld\" data-offset-key=\"p9pa-0-0\">\r\n<div data-offset-key=\"p9pa-0-0\"><span style=\"line-height:2;\"><span style=\"font-size:16px;\">Q. Hà Đông</span></span></div>\r\n</div>\r\n\r\n<div data-block=\"true\" data-editor=\"lpld\" data-offset-key=\"cfpn9-0-0\">\r\n<div data-offset-key=\"cfpn9-0-0\"><span style=\"line-height:2;\"><span style=\"font-size:16px;\">Phố Ngô Thì Nhậm: NS Tràng An,CT1 Đường Ngô Thì Nhậm</span></span></div>\r\n\r\n<div data-offset-key=\"cfpn9-0-0\">\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">Nam Định :</span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">-Hiệu sách Nhân Dân, 164 Hoàng Văn Thụ - Phan Đình Phùng - Tp. Nam Định - Tỉnh Nam Định - Số ĐT: 0228 3860 338</span></span></p>\r\n</div>\r\n</div>\r\n\r\n<div data-block=\"true\" data-editor=\"lpld\" data-offset-key=\"10amr-0-0\">\r\n<div data-offset-key=\"10amr-0-0\"><span style=\"line-height:2;\"><span style=\"font-size:16px;\">HẢI PHÒNG :</span></span></div>\r\n</div>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">-Nhà Sách Rubik - Số 71 Trần Nguyên Hãn, Lê Chân, Tp Hải Phòng - ĐT: 02253857368</span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">ĐÀ NẴNG : 32 Núi Thành,Hải Châu,TP. Đà Nẵng-ĐT:0905085127</span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">HUẾ :Số 1 Trương Định, Vĩnh Ninh, Tp. Huế, Huế - Số ĐT: 0234 3932 545</span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">HỒ CHÍ MINH</span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">*Q.10 : Lầu 5, Số 696 Điện Biên Phủ, P.10, Q.10, HCM - 0903244145</span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">ĐỒNG NAI</span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">*Tomomi, Số 368, đường 30/4, phường trung dũng, Tp Biên Hòa,Tỉnh Đồng Nai<br />\r\nSố ĐT: 0942277999</span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">VŨNG TÀU</span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">* 83A, Lê Lai, Phường 1, TP. Vũng Tàu, T. Bà Rịa - Vũng Tàu - ĐT : 0643858546</span></span></p>\r\n\r\n<p> </p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">✅CÁC CƠ SỞ KHÁC  : <a data-ft=\"{\" tn=\"\">https://goo.gl/W9sMXa</a></span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\"> -Hệ thống siêu thị đồ chơi Funny Land</span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\"> -Hệ thống nhà sách ADC Book</span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\"> -Hệ thống nhà sách Phương Nam</span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\"> -Hệ thống nhà sách Fahasa miền bắc</span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\"> -Hệ thống nhà sách Trí Đức</span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\"> -Hệ thống nhà sách Cá chép</span></span></p>\r\n</div>\r\n</div>\r\n</div>\r\n</div>\r\n</div>\r\n</div>\r\n</div>\r\n</div>\r\n</div>\r\n</div>\r\n</div>\r\n</div>\r\n\r\n<div>\r\n<div>\r\n<div>\r\n<div>\r\n<div>\r\n<div>\r\n<div>\r\n<div>\r\n<div>\r\n<div>\r\n<div>\r\n<div>\r\n<div>\r\n<p> </p>\r\n</div>\r\n</div>\r\n</div>\r\n</div>\r\n</div>\r\n</div>\r\n</div>\r\n</div>\r\n</div>\r\n</div>\r\n</div>\r\n</div>\r\n</div>\r\n</div>\r\n</div>\r\n</div>\r\n\r\n<div>\r\n<div>\r\n<div><span style=\"line-height:2;\"><span style=\"font-size:16px;\">MUA HÀNG ONLINE </span></span></div>\r\n</div>\r\n</div>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">Các bước mua hàng qua mạng:</span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">Bước 1:  <a href=\"https://rubikstore.vn/register.html\">Đăng ký</a> hoặc <a href=\"https://rubikstore.vn/login.html\">Đăng nhập</a> (có thể bỏ qua bước này nếu bạn muốn mua hàng không cần đăng ký, việc đăng ký sẽ thuận tiện hơn cho bạn khi mua hàng các lần sau cũng như nhận được các thông tin mới nhất)<br />\r\nBước 2: Chọn sản phẩm trên website và đặt mua bằng cách click vào nút \"Mua hàng\"</span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\"> Bước 3: Nhập thông tin đơn hàng</span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">  1. Xem thông tin giỏ hàng:</span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">- Hệ thống sẽ hiển thị các thông tin về sản phẩm bạn đã đặt mua như tên sản phẩm, giá tiền, số lượng... Bạn có thể thay đổi số lượng hàng hoá bằng cách nhập vào ô \"Số lượng\" và click vào nút \"Cập nhật đơn hàng\"</span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">- Muốn mua thêm sản phẩm khác, click vào nút \"Tiếp tục mua hàng\" và thêm sản phẩm vào giỏ hàng. Nếu muốn tạm ngưng việc mua hàng, click vào nút \"Xoá đơn hàng\"<br />\r\n<br />\r\n2. Điền thông tin đặt hàng:<br />\r\n<br />\r\n- Điền đầy đủ thông tin để mua hàng (tên, điện thoại, email, địa chỉ...) Nếu đã có tài khoản thông tin sẽ tự động được điền vào<br />\r\n- Nếu muốn nhận hàng nơi khác, click vào \"Nhận hàng nơi khác\" và điền đầy đủ thông tin.</span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">  3. Chọn hình thức thanh toán:</span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">- Hiện chúng tôi đang triển khai 2 hình thức thanh toán gồm: thu tiền mặt khi giao hàng hoặc chuyển khoản online qua tài khoản ngân hàng</span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">Chúng tôi chấp nhận các hình thức thanh toán sau:</span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">- Thanh toán tiền mặt khi giao hàng tận nơi (COD) </span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">- Thanh toán qua chuyển khoản ngân hàng hoặc máy ATM <br />\r\n1. Thanh toán tiền mặt khi giao hàng tận nơi (COD)<br />\r\n<br />\r\nNhân viên của chúng tôi sẽ liên hệ trước và giao hàng đến tận nơi theo yêu cầu của quý khách. Sau khi nhận được sản phẩm đã đặt hàng, quý khách thanh toán cho nhân viên giao hàng với số tiền ghi trong hoá đơn kèm theo (ÁP DỤNG TRÊN TOÀN QUỐC)<br />\r\n2. Thanh toán qua chuyển khoản ngân hàng hoặc máy ATM<br />\r\nQuý khách đến bất kỳ chi nhánh hoặc máy ATM nào thuộc mạng lưới ngân hàng trên toàn quốc để chuyển tiền vào một trong những Tài Khoản dưới đây (Quý khách có hoặc không có tài khoản ngân hàng đều thực hiện được việc chuyển khoản, vui lòng liên hệ qua số Hotline: 0903244145 trước và sau khi chuyển tiền)</span></span></p>\r\n\r\n<p><br />\r\n<span style=\"line-height:2;\"><span style=\"font-size:16px;\">* Dành cho khách hàng là cá nhân (chúng tôi sẽ nhận được thanh toán trong vòng 10p đến 30p)<br />\r\nNgân hàng TechComBank Hà Nội <br />\r\nSố TK : 19031729253018 <br />\r\nChủ tài khoản : Nghiêm Thị Thúy</span></span></p>\r\n\r\n<p> </p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">* Dành cho khách hàng là tổ chức, doanh nghiệp</span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">Ngân hàng Ngoại Thương - Hà Nội ( Vietcombank )</span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">Số TK : 0541000243993 - Chi nhánh Chương Dương<br />\r\nChủ tài khoản : RUBIK TMT</span></span></p>\r\n</div>\r\n', '', '', NULL, 'Hướng dẫn mua hàng', '', 'muahang', 'Hướng dẫn mua hàng', '', 'Hướng dẫn mua hàng', '', 'Địa chỉ mua rubik và địa chỉ bán rubik chính hãng tại Việt Nam. Đại lý bán rubik xịn chính hãng được ủy quyền phân phối Rubik. Tìm mua rubik ở đâu  Chúng tôi', '', '2025-06-23 01:24:57', '2025-06-23 10:27:25'),
-(3, '', '', '<p>Sản phẩm của Rubik TMT đa dạng về mẫu mã, từ những viên Rubik cổ điển đến các phiên bản hiện đại với nhiều hình dạng và kích thước khác nhau. Chúng tôi cam kết cung cấp những sản phẩm được sản xuất với công nghệ tiên tiến, đảm bảo an toàn và thân thiện với người dùng.</p>\r\n', '', '', NULL, 'Footer', 'Footer', 'footer', '', '', '', '', '', '', '2025-06-23 01:24:57', '2025-06-23 10:39:20'),
-(4, '', '', '<div class=\"social\">\r\n<p>THẾ GIỚI RUBIK TMT</p>\r\n</div>\r\n\r\n<table class=\"table table-borderless table-sm\" style=\"font-size: 16px\">\r\n	<tbody>\r\n		<tr style=\"vertical-align: middle\">\r\n			<td>\r\n			<h3 style=\"font-size: 16px; font-weight: bold; margin: 0\">Địa chỉ</h3>\r\n			</td>\r\n			<td>:</td>\r\n			<td>152/18, Dương Thị Mười, P.Tân Thới Hiệp, Quận 12, TpHCM</td>\r\n		</tr>\r\n		<tr style=\"vertical-align: middle\">\r\n			<td>\r\n			<h3 class=\"text-nowrap\" style=\"font-size: 16px; font-weight: bold; margin: 0\">Mở cửa</h3>\r\n			</td>\r\n			<td>:</td>\r\n			<td>8h – 17h</td>\r\n		</tr>\r\n		<tr style=\"vertical-align: middle\">\r\n			<td>\r\n			<h3 style=\"font-size: 16px; font-weight: bold; margin: 0\">Điện thoại</h3>\r\n			</td>\r\n			<td>:</td>\r\n			<td><strong><span style=\"color:#e74c3c;\">0328 732 834</span></strong></td>\r\n		</tr>\r\n		<tr style=\"vertical-align: middle\">\r\n			<td>\r\n			<h3 style=\"font-size: 16px; font-weight: bold; margin: 0\">Email</h3>\r\n			</td>\r\n			<td>:</td>\r\n			<td>minhtri.blueweb@gmail.com</td>\r\n		</tr>\r\n		<tr style=\"vertical-align: middle\">\r\n			<td>\r\n			<h3 style=\"font-size: 16px; font-weight: bold; margin: 0\">Website</h3>\r\n			</td>\r\n			<td>:</td>\r\n			<td>www.minhtrirubik.vn</td>\r\n		</tr>\r\n	</tbody>\r\n</table>\r\n\r\n<div class=\"social\">\r\n<p>KẾT NỐI VỚI CHÚNG TÔI</p>\r\n<a class=\"hvr-icon-rotate\" href=\"https://www.facebook.com/minhtri150920/\" target=\"_blank\"><img alt=\"Fanpage\" class=\"hvr-icon\" src=\"https://rubikblue.42web.io/admin/uploads/12a27790a8.png\" title=\"Fanpage\" width=\"50\" /> </a> <a class=\"hvr-icon-rotate\" href=\"https://www.tiktok.com/@minhtriweb\" target=\"_blank\"> <img alt=\"Tiktok\" class=\"hvr-icon\" src=\"https://rubikblue.42web.io/admin/uploads/5c74b0d4f9.png\" title=\"Tiktok\" width=\"50\" /> </a> <a class=\"hvr-icon-rotate\" href=\"tel:0328732834\" target=\"_blank\"> <img alt=\"Hotline\" class=\"hvr-icon\" src=\"https://rubikblue.42web.io/admin/uploads/6542d5468c.png\" title=\"Hotline\" width=\"50\" /> </a> <a class=\"hvr-icon-rotate\" href=\"https://zalo.me/0328732834\" target=\"_blank\"> <img alt=\"Chat Zalo\" class=\"hvr-icon\" src=\"https://rubikblue.42web.io/admin/uploads/96faf4bf67.png\" title=\"Chat Zalo\" width=\"50\" /> </a></div>\r\n', '', '', NULL, 'Liên hệ', 'About Us', 'lienhe', 'Liên hệ - THẾ GIỚI RUBIK TMT', NULL, 'THẾ GIỚI RUBIK TMT', NULL, 'Sản phẩm của Rubik TMT đa dạng về mẫu mã, từ những viên Rubik cổ điển đến các phiên bản hiện đại với nhiều hình dạng và kích thước khác nhau. Chúng tôi cam kết cung cấp những sản phẩm được sản xuất với công nghệ tiên tiến, đảm bảo an toàn và thân thiện với người dùng.', NULL, '2025-06-23 01:24:57', '2025-06-23 10:38:59');
+(1, '', '', '<h2><span style=\"color:#e74c3c;\"><span style=\"font-size:20px;\"><strong>GIỚI THIỆU VỀ THẾ GIỚI RUBIK TMT</strong></span></span></h2>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\"><strong>Thế Giới Rubik TMT</strong> là địa chỉ uy tín chuyên cung cấp các loại rubik chất lượng cao tại TP. Hồ Chí Minh, phục vụ đa dạng nhu cầu từ người mới bắt đầu đến các cuber chuyên nghiệp. Với phương châm \"Chất lượng – Uy tín – Giá tốt\", chúng tôi luôn nỗ lực mang đến cho khách hàng những sản phẩm chính hãng, đa dạng mẫu mã và trải nghiệm mua sắm thuận tiện nhất.</span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">Dù mới gia nhập sân chơi Rubik chưa lâu nhưng <strong>Rubik TMT </strong>đã phát triển nhanh chóng và chạm đến lòng tin của khách hàng bằng những sản phẩm chất lượng, trải nghiệm mua sắm tối ưu và những giải đấu chuyên nghiệp với quy mô hàng đầu tại Việt Nam. <strong>Rubik TMT</strong> không chỉ hướng đến chất lượng sản phẩm tốt nhất, nâng cao chất lượng dịch vụ chăm sóc khách hàng mà còn mong muốn phát triển cộng đồng Rubik tại Việt Nam ngày càng lớn mạnh.</span></span></p>\r\n\r\n<p style=\"text-align:center\"><img alt=\"\" src=\"/web/admin/uploads/filemanager/files/z6674286067753_b4a77a9d52a04643a64494aa97eb5600.jpg\" width=\"600\" /></p>\r\n\r\n<h2><span style=\"color:#e74c3c;\"><span style=\"font-size:20px;\"><strong>Rubik TMT LÀ AI?</strong></span></span></h2>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\"><strong>Rubik TMT</strong> là nhà phân phối đồ chơi trí tuệ Rubik hàng đầu Việt Nam. Chúng tôi cam kết mang lại những sản phẩm chính hãng với giá thành phải chăng cùng trải nghiệm mua sắm tuyệt vời.</span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\"><strong>Rubik TMT</strong> là đối tác trực tiếp với các thương hiệu Speedcube hàng đầu thế giới như Gan, Moyu, Qiyi,...</span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\"><strong>Rubik TMT</strong> hân hạnh là nhà tài trợ chính, đồng hành cùng các thí sinh cuber trong các giải đấu quy mô hàng đầu tại Việt Nam.</span></span></p>\r\n\r\n<h2><span style=\"color:#e74c3c;\"><span style=\"font-size:20px;\"><strong>GIÁ TRỊ CỐT LÕI</strong></span></span></h2>\r\n\r\n<h3><strong><span style=\"line-height:2;\"><span style=\"font-size:16px;\">SẢN PHẨM CHẤT LƯỢNG</span></span></strong></h3>\r\n\r\n<ul>\r\n	<li><span style=\"line-height:2;\"><span style=\"font-size:16px;\">Chúng tôi luôn cố gắng mang đến những sản phẩm chính hãng, chất lượng với nguồn gốc xuất sứ rõ ràng cùng mức giá phải chăng nhất</span></span></li>\r\n</ul>\r\n\r\n<h3><span style=\"line-height:2;\"><span style=\"font-size:16px;\"><strong>HƯỚNG ĐẾN NGƯỜI DÙNG</strong></span></span></h3>\r\n\r\n<ul>\r\n	<li><span style=\"line-height:2;\"><span style=\"font-size:16px;\"><strong>Rubik TMT</strong> luôn đặt khách hàng làm trung tâm của dịch vụ bán hàng, đặt mình vào vị thế của người dùng để mang lại những dịch vụ và trải nghiệm tốt nhất</span></span></li>\r\n</ul>\r\n\r\n<h3><strong><span style=\"line-height:2;\"><span style=\"font-size:16px;\">PHÁT TRIỂN CỘNG ĐỒNG</span></span></strong></h3>\r\n\r\n<ul>\r\n	<li><span style=\"line-height:2;\"><span style=\"font-size:16px;\">Chúng tôi hướng đến mục đích xây dựng và phát triển cộng đồng Speedcubing Việt Nam ngày càng lớn mạnh.</span></span></li>\r\n</ul>\r\n\r\n<h2><span style=\"color:#e74c3c;\"><span style=\"font-size:20px;\"><strong>CHÚNG TÔI CUNG CẤP ĐẦY ĐỦ CÁC DÒNG RUBIK PHỔ BIẾN:</strong></span></span></h2>\r\n\r\n<ul>\r\n	<li><span style=\"line-height:2;\"><span style=\"font-size:16px;\">Rubik 2x2x2 – Phù hợp cho người mới làm quen với rubik</span></span></li>\r\n	<li><span style=\"line-height:2;\"><span style=\"font-size:16px;\">Rubik 3x3x3 – Mẫu rubik kinh điển và phổ biến nhất hiện nay</span></span></li>\r\n	<li><span style=\"line-height:2;\"><span style=\"font-size:16px;\">Rubik 4x4x4, 5x5x5, 6x6x6 – Dành cho những ai yêu thích thử thách và nâng cao kỹ năng giải rubik</span></span></li>\r\n</ul>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">Ngoài ra, <strong>Thế Giới Rubik TMT</strong> còn cập nhật thường xuyên các dòng rubik cao cấp, rubik thi đấu, phụ kiện rubik và combo khuyến mãi hấp dẫn.</span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">Liên hệ ngay với <strong>Thế Giới Rubik TMT</strong> để được tư vấn và lựa chọn sản phẩm phù hợp nhất với bạn!</span></span></p>\r\n\r\n<section style=\"width: 100%;background: rgba(231, 246, 255, 0.58);border: 5px dashed rgb(224, 12, 61);padding: 10px;margin-bottom: 10px;text-align: center;font: 500 16px / 1.6 Arial;color: rgb(0, 65, 118);line-height: 1.2;\">\r\n<p><span style=\"font-size:20px;\"><strong>THẾ GIỚI RUBIK TMT</strong></span></p>\r\n------------------\r\n\r\n<p><strong>Website</strong> : www.minhtrirubik.vn</p>\r\n\r\n<p><strong>Email</strong> : minhtri.blueweb@gmail.com</p>\r\n\r\n<p><strong>Địa chỉ</strong> : 152/18, Dương Thị Mười, P.Tân Thới Hiệp, Quận 12, TpHCM</p>\r\n\r\n<div style=\"width: 100%; margin-top: 30px; margin-bottom: 30px; text-align: center;\"><a href=\"https://zalo.me/0328732834\" style=\"padding:20px 40px;background:#e00c3d;color:#fff;text-decoration:none!important;border-radius:10px;border:2px dashed #fefa04\"><strong>0328 732 834 (Mr. Trí)</strong></a></div>\r\n</section>\r\n', '', '', NULL, 'Giới thiệu', '', 'gioithieu', 'Giới thiệu - Rubik TMT', '', 'Rubik TMT', '', 'Sản phẩm của Rubik TMT đa dạng về mẫu mã, từ những viên Rubik cổ điển đến các phiên bản hiện đại với nhiều hình dạng và kích thước khác nhau. Chúng tôi cam kết cung cấp những sản phẩm được sản xuất với công nghệ tiên tiến, đảm bảo an toàn và thân thiện với người dùng.', '', '2025-06-23 01:24:57', '2025-06-24 00:15:06'),
+(2, '', '', '<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">Địa chỉ mua rubik và địa chỉ bán rubik chính hãng tại Việt Nam. Đại lý bán rubik xịn chính hãng được ủy quyền phân phối Rubik. Tìm mua rubik ở đâu</span></span></p>\r\n\r\n<div>\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\"> Chúng tôi chấp nhận các hình thức mua hàng sau: </span></span></p>\r\n\r\n<ul>\r\n	<li><span style=\"line-height:2;\"><span style=\"font-size:16px;\">Mua hàng qua mạng.</span></span></li>\r\n	<li><span style=\"line-height:2;\"><span style=\"font-size:16px;\">Mua hàng qua  nhắn tin điện thoại.</span></span></li>\r\n	<li><span style=\"line-height:2;\"><span style=\"font-size:16px;\">Mua hàng qua chat online Y!M, MSN, Skype ...</span></span></li>\r\n	<li><span style=\"line-height:2;\"><span style=\"font-size:16px;\">Mua hàng trực tiếp tại các các cửa hàng của Cty. Địa chỉ mua Rubik, địa chỉ bán Rubik như sau</span></span></li>\r\n</ul>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">MUA HÀNG TRỰC TIẾP </span></span></p>\r\n\r\n<div>\r\n<div>\r\n<div>\r\n<div>\r\n<div>\r\n<div>\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">RUBIK TMT</span></span></p>\r\n\r\n<div>\r\n<div>\r\n<div>\r\n<div>\r\n<div>\r\n<div>\r\n<div>\r\n<div>\r\n<div><span style=\"line-height:2;\"><span style=\"font-size:16px;\">-VPĐD HN :Tầng 6, Royal Tea, Số 6 Dương Đình Nghệ, Cầu Giấy, Hà Nội (gần sân golf, cạnh tòa Elegaz Trần Phú)</span></span></div>\r\n\r\n<div><span style=\"line-height:2;\"><span style=\"font-size:16px;\">-Hà Nội : Kiot 16 Tòa Nhà Sông Hồng, Ngõ 163 Thái Hà, Đống Đa, Hà Nội</span></span></div>\r\n\r\n<div><span style=\"line-height:2;\"><span style=\"font-size:16px;\">-Hồ Chí Minh : Lầu 5, Số 696 Điện Biên Phủ, P.10, Q.10, Hồ Chí Minh</span></span></div>\r\n\r\n<div><span style=\"line-height:2;\"><span style=\"font-size:16px;\">Email: info@rubikstore.vn</span></span></div>\r\n\r\n<div>\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">Tel : 02466863684 - 02437327549 - 0836561578 - 0903244145</span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">Các điểm đại lý bán lẻ trên toàn quốc : </span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">✅   HÀ NỘI :</span></span></p>\r\n\r\n<div data-block=\"true\" data-editor=\"lpld\" data-offset-key=\"7714b-0-0\"><span style=\"line-height:2;\"><span style=\"font-size:16px;\">Q. Đống Đa</span></span></div>\r\n\r\n<div data-block=\"true\" data-editor=\"lpld\" data-offset-key=\"e46rt-0-0\">\r\n<div data-offset-key=\"e46rt-0-0\">\r\n<div data-offset-key=\"e46rt-0-0\"><span style=\"line-height:2;\"><span style=\"font-size:16px;\">*  Kiot 16 Tòa Nhà Sông Hồng,Ngõ 163 Thái Hà,Đống Đa - 02466863684</span></span></div>\r\n\r\n<div data-offset-key=\"e46rt-0-0\"><span style=\"line-height:2;\"><span style=\"font-size:16px;\">*  Trí Đức, 524 Đường Láng, Hà Nội</span></span></div>\r\n</div>\r\n</div>\r\n\r\n<div data-block=\"true\" data-editor=\"lpld\" data-offset-key=\"65mru-0-0\">\r\n<div data-offset-key=\"65mru-0-0\"><span style=\"line-height:2;\"><span style=\"font-size:16px;\">*  Tràng An, Số 304 Phố Văn Chương, Khâm Thiên</span></span></div>\r\n</div>\r\n\r\n<div data-block=\"true\" data-editor=\"lpld\" data-offset-key=\"3unqp-0-0\">\r\n<div data-offset-key=\"3unqp-0-0\"><span style=\"line-height:2;\"><span style=\"font-size:16px;\">Q. Hoàn Kiếm</span></span></div>\r\n</div>\r\n\r\n<div data-block=\"true\" data-editor=\"lpld\" data-offset-key=\"1beh2-0-0\">\r\n<div data-offset-key=\"1beh2-0-0\"><span style=\"line-height:2;\"><span style=\"font-size:16px;\">* NS Tràng Tiền,Số 44 Phố Tràng Tiền-02439363093</span></span></div>\r\n</div>\r\n\r\n<div data-block=\"true\" data-editor=\"lpld\" data-offset-key=\"9j0gi-0-0\">\r\n<div data-offset-key=\"9j0gi-0-0\"><span style=\"line-height:2;\"><span style=\"font-size:16px;\">Q. Thanh Xuân</span></span></div>\r\n</div>\r\n\r\n<div data-block=\"true\" data-editor=\"lpld\" data-offset-key=\"e7gvk-0-0\">\r\n<div data-offset-key=\"e7gvk-0-0\"><span style=\"line-height:2;\"><span style=\"font-size:16px;\">* Tiện Lợi,Tầng 1,Tòa 17T9,Đ.Nguyễn Thị Thập,KĐT Trung Hòa Nhân Chính</span></span></div>\r\n</div>\r\n\r\n<div data-block=\"true\" data-editor=\"lpld\" data-offset-key=\"dtfvv-0-0\">\r\n<div data-offset-key=\"dtfvv-0-0\"><span style=\"line-height:2;\"><span style=\"font-size:16px;\">* Tràng An, Số 219 Khương Trung, Quận Thanh Xuân, Hà Nội</span></span></div>\r\n</div>\r\n\r\n<div data-block=\"true\" data-editor=\"lpld\" data-offset-key=\"507a6-0-0\">\r\n<div data-offset-key=\"507a6-0-0\"><span style=\"line-height:2;\"><span style=\"font-size:16px;\">Q. Cầu Giấy</span></span></div>\r\n</div>\r\n\r\n<div data-block=\"true\" data-editor=\"lpld\" data-offset-key=\"er0s5-0-0\">\r\n<div data-offset-key=\"er0s5-0-0\"><span style=\"line-height:2;\"><span style=\"font-size:16px;\">* Tầng 6, OceanKids - Royal Tea, Số 6 Dương Đình Nghệ, Cầu Giấy, Hà Nội (gần sân golf Dương Đình Nghệ,cạnh tòa Elegaz) - 0886933298</span></span></div>\r\n</div>\r\n\r\n<div data-block=\"true\" data-editor=\"lpld\" data-offset-key=\"p9pa-0-0\">\r\n<div data-offset-key=\"p9pa-0-0\"><span style=\"line-height:2;\"><span style=\"font-size:16px;\">Q. Hà Đông</span></span></div>\r\n</div>\r\n\r\n<div data-block=\"true\" data-editor=\"lpld\" data-offset-key=\"cfpn9-0-0\">\r\n<div data-offset-key=\"cfpn9-0-0\"><span style=\"line-height:2;\"><span style=\"font-size:16px;\">Phố Ngô Thì Nhậm: NS Tràng An,CT1 Đường Ngô Thì Nhậm</span></span></div>\r\n\r\n<div data-offset-key=\"cfpn9-0-0\">\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">Nam Định :</span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">-Hiệu sách Nhân Dân, 164 Hoàng Văn Thụ - Phan Đình Phùng - Tp. Nam Định - Tỉnh Nam Định - Số ĐT: 0228 3860 338</span></span></p>\r\n</div>\r\n</div>\r\n\r\n<div data-block=\"true\" data-editor=\"lpld\" data-offset-key=\"10amr-0-0\">\r\n<div data-offset-key=\"10amr-0-0\"><span style=\"line-height:2;\"><span style=\"font-size:16px;\">HẢI PHÒNG :</span></span></div>\r\n</div>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">-Nhà Sách Rubik - Số 71 Trần Nguyên Hãn, Lê Chân, Tp Hải Phòng - ĐT: 02253857368</span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">ĐÀ NẴNG : 32 Núi Thành,Hải Châu,TP. Đà Nẵng-ĐT:0905085127</span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">HUẾ :Số 1 Trương Định, Vĩnh Ninh, Tp. Huế, Huế - Số ĐT: 0234 3932 545</span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">HỒ CHÍ MINH</span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">*Q.10 : Lầu 5, Số 696 Điện Biên Phủ, P.10, Q.10, HCM - 0903244145</span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">ĐỒNG NAI</span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">*Tomomi, Số 368, đường 30/4, phường trung dũng, Tp Biên Hòa,Tỉnh Đồng Nai<br />\r\nSố ĐT: 0942277999</span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">VŨNG TÀU</span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">* 83A, Lê Lai, Phường 1, TP. Vũng Tàu, T. Bà Rịa - Vũng Tàu - ĐT : 0643858546</span></span></p>\r\n\r\n<p> </p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">✅CÁC CƠ SỞ KHÁC  : <a data-ft=\"{\" tn=\"\">https://goo.gl/W9sMXa</a></span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\"> -Hệ thống siêu thị đồ chơi Funny Land</span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\"> -Hệ thống nhà sách ADC Book</span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\"> -Hệ thống nhà sách Phương Nam</span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\"> -Hệ thống nhà sách Fahasa miền bắc</span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\"> -Hệ thống nhà sách Trí Đức</span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\"> -Hệ thống nhà sách Cá chép</span></span></p>\r\n</div>\r\n</div>\r\n</div>\r\n</div>\r\n</div>\r\n</div>\r\n</div>\r\n</div>\r\n</div>\r\n</div>\r\n</div>\r\n</div>\r\n\r\n<div>\r\n<div>\r\n<div>\r\n<div>\r\n<div>\r\n<div>\r\n<div>\r\n<div>\r\n<div>\r\n<div>\r\n<div>\r\n<div>\r\n<div>\r\n<p> </p>\r\n</div>\r\n</div>\r\n</div>\r\n</div>\r\n</div>\r\n</div>\r\n</div>\r\n</div>\r\n</div>\r\n</div>\r\n</div>\r\n</div>\r\n</div>\r\n</div>\r\n</div>\r\n</div>\r\n\r\n<div>\r\n<div>\r\n<div><span style=\"line-height:2;\"><span style=\"font-size:16px;\">MUA HÀNG ONLINE </span></span></div>\r\n</div>\r\n</div>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">Các bước mua hàng qua mạng:</span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">Bước 1:  <a href=\"https://rubikstore.vn/register.html\">Đăng ký</a> hoặc <a href=\"https://rubikstore.vn/login.html\">Đăng nhập</a> (có thể bỏ qua bước này nếu bạn muốn mua hàng không cần đăng ký, việc đăng ký sẽ thuận tiện hơn cho bạn khi mua hàng các lần sau cũng như nhận được các thông tin mới nhất)<br />\r\nBước 2: Chọn sản phẩm trên website và đặt mua bằng cách click vào nút \"Mua hàng\"</span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\"> Bước 3: Nhập thông tin đơn hàng</span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">  1. Xem thông tin giỏ hàng:</span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">- Hệ thống sẽ hiển thị các thông tin về sản phẩm bạn đã đặt mua như tên sản phẩm, giá tiền, số lượng... Bạn có thể thay đổi số lượng hàng hoá bằng cách nhập vào ô \"Số lượng\" và click vào nút \"Cập nhật đơn hàng\"</span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">- Muốn mua thêm sản phẩm khác, click vào nút \"Tiếp tục mua hàng\" và thêm sản phẩm vào giỏ hàng. Nếu muốn tạm ngưng việc mua hàng, click vào nút \"Xoá đơn hàng\"<br />\r\n<br />\r\n2. Điền thông tin đặt hàng:<br />\r\n<br />\r\n- Điền đầy đủ thông tin để mua hàng (tên, điện thoại, email, địa chỉ...) Nếu đã có tài khoản thông tin sẽ tự động được điền vào<br />\r\n- Nếu muốn nhận hàng nơi khác, click vào \"Nhận hàng nơi khác\" và điền đầy đủ thông tin.</span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">  3. Chọn hình thức thanh toán:</span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">- Hiện chúng tôi đang triển khai 2 hình thức thanh toán gồm: thu tiền mặt khi giao hàng hoặc chuyển khoản online qua tài khoản ngân hàng</span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">Chúng tôi chấp nhận các hình thức thanh toán sau:</span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">- Thanh toán tiền mặt khi giao hàng tận nơi (COD) </span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">- Thanh toán qua chuyển khoản ngân hàng hoặc máy ATM <br />\r\n1. Thanh toán tiền mặt khi giao hàng tận nơi (COD)<br />\r\n<br />\r\nNhân viên của chúng tôi sẽ liên hệ trước và giao hàng đến tận nơi theo yêu cầu của quý khách. Sau khi nhận được sản phẩm đã đặt hàng, quý khách thanh toán cho nhân viên giao hàng với số tiền ghi trong hoá đơn kèm theo (ÁP DỤNG TRÊN TOÀN QUỐC)<br />\r\n2. Thanh toán qua chuyển khoản ngân hàng hoặc máy ATM<br />\r\nQuý khách đến bất kỳ chi nhánh hoặc máy ATM nào thuộc mạng lưới ngân hàng trên toàn quốc để chuyển tiền vào một trong những Tài Khoản dưới đây (Quý khách có hoặc không có tài khoản ngân hàng đều thực hiện được việc chuyển khoản, vui lòng liên hệ qua số Hotline: 0903244145 trước và sau khi chuyển tiền)</span></span></p>\r\n\r\n<p><br />\r\n<span style=\"line-height:2;\"><span style=\"font-size:16px;\">* Dành cho khách hàng là cá nhân (chúng tôi sẽ nhận được thanh toán trong vòng 10p đến 30p)<br />\r\nNgân hàng TechComBank Hà Nội <br />\r\nSố TK : 19031729253018 <br />\r\nChủ tài khoản : Nghiêm Thị Thúy</span></span></p>\r\n\r\n<p> </p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">* Dành cho khách hàng là tổ chức, doanh nghiệp</span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">Ngân hàng Ngoại Thương - Hà Nội ( Vietcombank )</span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">Số TK : 0541000243993 - Chi nhánh Chương Dương<br />\r\nChủ tài khoản : RUBIK TMT</span></span></p>\r\n</div>\r\n', '', '', NULL, 'Hướng dẫn mua hàng', '', 'muahang', 'Hướng dẫn mua hàng', '', 'Hướng dẫn mua hàng', '', 'Địa chỉ mua rubik và địa chỉ bán rubik chính hãng tại Việt Nam. Đại lý bán rubik xịn chính hãng được ủy quyền phân phối Rubik. Tìm mua rubik ở đâu  Chúng tôi', '', '2025-06-23 01:24:57', '2025-06-24 00:17:10'),
+(3, '', '', '<p>Sản phẩm của Rubik TMT đa dạng về mẫu mã, từ những viên Rubik cổ điển đến các phiên bản hiện đại với nhiều hình dạng và kích thước khác nhau. Chúng tôi cam kết cung cấp những sản phẩm được sản xuất với công nghệ tiên tiến, đảm bảo an toàn và thân thiện với người dùng.</p>\r\n', '', '', NULL, 'Footer', 'Footer', 'footer', '', '', '', '', '', '', '2025-06-23 01:24:57', '2025-06-24 00:17:13'),
+(4, '', '', '<div class=\"social\">\r\n<p>THẾ GIỚI RUBIK TMT</p>\r\n</div>\r\n\r\n<table class=\"table table-borderless table-sm\" style=\"font-size: 16px\">\r\n	<tbody>\r\n		<tr style=\"vertical-align: middle\">\r\n			<td>\r\n			<h3 style=\"font-size: 16px; font-weight: bold; margin: 0\">Địa chỉ</h3>\r\n			</td>\r\n			<td>:</td>\r\n			<td>152/18, Dương Thị Mười, P.Tân Thới Hiệp, Quận 12, TpHCM</td>\r\n		</tr>\r\n		<tr style=\"vertical-align: middle\">\r\n			<td>\r\n			<h3 class=\"text-nowrap\" style=\"font-size: 16px; font-weight: bold; margin: 0\">Mở cửa</h3>\r\n			</td>\r\n			<td>:</td>\r\n			<td>8h – 17h</td>\r\n		</tr>\r\n		<tr style=\"vertical-align: middle\">\r\n			<td>\r\n			<h3 style=\"font-size: 16px; font-weight: bold; margin: 0\">Điện thoại</h3>\r\n			</td>\r\n			<td>:</td>\r\n			<td><strong><span style=\"color:#e74c3c;\">0328 732 834</span></strong></td>\r\n		</tr>\r\n		<tr style=\"vertical-align: middle\">\r\n			<td>\r\n			<h3 style=\"font-size: 16px; font-weight: bold; margin: 0\">Email</h3>\r\n			</td>\r\n			<td>:</td>\r\n			<td>minhtri.blueweb@gmail.com</td>\r\n		</tr>\r\n		<tr style=\"vertical-align: middle\">\r\n			<td>\r\n			<h3 style=\"font-size: 16px; font-weight: bold; margin: 0\">Website</h3>\r\n			</td>\r\n			<td>:</td>\r\n			<td>www.minhtrirubik.vn</td>\r\n		</tr>\r\n	</tbody>\r\n</table>\r\n\r\n<div class=\"social\">\r\n<p>KẾT NỐI VỚI CHÚNG TÔI</p>\r\n<a class=\"hvr-icon-rotate\" href=\"https://www.facebook.com/minhtri150920/\" target=\"_blank\"><img alt=\"Fanpage\" class=\"hvr-icon\" src=\"https://rubikblue.42web.io/admin/uploads/12a27790a8.png\" title=\"Fanpage\" width=\"50\" /> </a> <a class=\"hvr-icon-rotate\" href=\"https://www.tiktok.com/@minhtriweb\" target=\"_blank\"> <img alt=\"Tiktok\" class=\"hvr-icon\" src=\"https://rubikblue.42web.io/admin/uploads/5c74b0d4f9.png\" title=\"Tiktok\" width=\"50\" /> </a> <a class=\"hvr-icon-rotate\" href=\"tel:0328732834\" target=\"_blank\"> <img alt=\"Hotline\" class=\"hvr-icon\" src=\"https://rubikblue.42web.io/admin/uploads/6542d5468c.png\" title=\"Hotline\" width=\"50\" /> </a> <a class=\"hvr-icon-rotate\" href=\"https://zalo.me/0328732834\" target=\"_blank\"> <img alt=\"Chat Zalo\" class=\"hvr-icon\" src=\"https://rubikblue.42web.io/admin/uploads/96faf4bf67.png\" title=\"Chat Zalo\" width=\"50\" /> </a></div>\r\n', '', '', NULL, 'Liên hệ', 'About Us', 'lienhe', 'Liên hệ - THẾ GIỚI RUBIK TMT', NULL, 'THẾ GIỚI RUBIK TMT', NULL, 'Sản phẩm của Rubik TMT đa dạng về mẫu mã, từ những viên Rubik cổ điển đến các phiên bản hiện đại với nhiều hình dạng và kích thước khác nhau. Chúng tôi cam kết cung cấp những sản phẩm được sản xuất với công nghệ tiên tiến, đảm bảo an toàn và thân thiện với người dùng.', NULL, '2025-06-23 01:24:57', '2025-06-24 00:15:10'),
+(5, NULL, NULL, '<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">Giới thiệu</span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">Liên hệ</span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">Hướng dẫn đổi trả</span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">Vận chuyển và giao nhận</span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">Cam kết bảo mật thông tin</span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">Đơn vị thiết kế website</span></span></p>\r\n', '', NULL, NULL, 'Hỗ trợ khách hàng', '', 'hotrokhachhang', NULL, NULL, NULL, NULL, NULL, NULL, '2025-06-24 01:43:55', '2025-06-24 01:46:18'),
+(8, NULL, NULL, '<p><strong>CSKH</strong>: 0328 732 834</p>\r\n\r\n<p><strong>Mua hàng</strong>: 0328 732 834</p>\r\n\r\n<p><strong>Hỗ trợ kỹ thuật</strong>: 0328 732 834</p>\r\n\r\n<p><strong>Giờ làm việc</strong> : 8:00 - 17:00 ( Thứ 2 - Thứ 7)</p>\r\n', '', NULL, NULL, 'Hỗ trợ 24/7', '', 'hotro247', NULL, NULL, NULL, NULL, NULL, NULL, '2025-06-24 01:43:59', '2025-06-24 01:46:42');
 
 -- --------------------------------------------------------
 
@@ -1522,7 +1533,10 @@ INSERT INTO `tbl_type` (`id`, `lang_define`, `langvi`, `langen`, `numb`) VALUES
 (350, 'lienkethuuich', 'Liên kết hữu ích', 'Useful Link', 0),
 (351, 'mangxahoi', 'Social', 'Mạng xã hội', 0),
 (352, 'logo', 'logo', NULL, 0),
-(353, 'favicon', 'favicon', NULL, 0);
+(353, 'favicon', 'favicon', NULL, 0),
+(354, 'payment', 'phương thức thanh toán', NULL, 0),
+(355, 'hotrokhachhang', 'Hỗ trợ khách hàng', NULL, 0),
+(356, 'hotro247', 'Hỗ trợ 24/7', NULL, 0);
 
 -- --------------------------------------------------------
 
@@ -12251,9 +12265,9 @@ ALTER TABLE `tbl_news`
   ADD PRIMARY KEY (`id`);
 
 --
--- Chỉ mục cho bảng `tbl_phuongthuctt`
+-- Chỉ mục cho bảng `tbl_payment`
 --
-ALTER TABLE `tbl_phuongthuctt`
+ALTER TABLE `tbl_payment`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -12354,19 +12368,19 @@ ALTER TABLE `tbl_district`
 -- AUTO_INCREMENT cho bảng `tbl_gallery`
 --
 ALTER TABLE `tbl_gallery`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=163;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=176;
 
 --
 -- AUTO_INCREMENT cho bảng `tbl_news`
 --
 ALTER TABLE `tbl_news`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
--- AUTO_INCREMENT cho bảng `tbl_phuongthuctt`
+-- AUTO_INCREMENT cho bảng `tbl_payment`
 --
-ALTER TABLE `tbl_phuongthuctt`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+ALTER TABLE `tbl_payment`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT cho bảng `tbl_sanpham`
@@ -12390,13 +12404,13 @@ ALTER TABLE `tbl_slideshow`
 -- AUTO_INCREMENT cho bảng `tbl_social`
 --
 ALTER TABLE `tbl_social`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT cho bảng `tbl_static`
 --
 ALTER TABLE `tbl_static`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT cho bảng `tbl_tieuchi`
@@ -12408,7 +12422,7 @@ ALTER TABLE `tbl_tieuchi`
 -- AUTO_INCREMENT cho bảng `tbl_type`
 --
 ALTER TABLE `tbl_type`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=354;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=357;
 
 --
 -- AUTO_INCREMENT cho bảng `tbl_ward`

@@ -45,9 +45,7 @@ class trangtinh
         }
       }
     }
-
     $update_fields[] = "`update_at` = NOW()";
-
     if (!empty($update_fields)) {
       $query = "UPDATE `$table` SET " . implode(', ', $update_fields) . " WHERE `id` = '$id' AND `type` = '$type'";
       $result = $this->db->update($query);
@@ -55,7 +53,11 @@ class trangtinh
       $result = false;
     }
     $msg = $result ? "Cập nhật dữ liệu thành công" : "Không có dữ liệu để cập nhật hoặc lỗi xảy ra";
-    $this->fn->transfer($msg, "index.php?page=static&type=" . $type, $result);
+    $redirectPath = $this->fn->getRedirectPath([
+      'table' => $table,
+      'type' => $type
+    ]);
+    $this->fn->transfer($msg, $redirectPath, $result);
   }
 }
 

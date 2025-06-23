@@ -158,26 +158,22 @@ class setting
       'analytics',
       'headjs',
       'bodyjs',
-      'support',
-      'client_support',
-      'position'
     ];
 
     $updates = [];
     foreach ($fields as $field) {
       $value = mysqli_real_escape_string($this->db->link, $data[$field]);
-      $updates[] = "$field = '$value'";
+      $updates[] = "`$field` = '$value'";
     }
 
     $query = "UPDATE tbl_setting SET " . implode(', ', $updates) . " WHERE id =1";
 
     $result = $this->db->update($query);
-    $msg = $result ? "Cập nhật thành công" : "Cập nhật thất bại";
-    if ($result) {
-      $this->fn->transfer($msg, "index.php?page=setting", $result);
-    } else {
-      $this->fn->transfer($msg, "index.php?page=setting", $result);
-    }
+    $msg = $result ? "Cập nhật dữ liệu thành công" : "Không có dữ liệu để cập nhật hoặc lỗi xảy ra";
+    $redirectPath = $this->fn->getRedirectPath([
+      'table' => 'tbl_setting',
+    ]);
+    $this->fn->transfer($msg, $redirectPath, $result);
   }
 }
 

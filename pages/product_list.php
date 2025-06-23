@@ -1,12 +1,18 @@
 <?php
 $records_per_page = 10;
 $current_page = max(1, (int)($_GET['page'] ?? 1));
-$total_pages = max(1, ceil($fn->phantrang('tbl_sanpham') / $records_per_page));
+$total_records = $fn->count_data([
+  'table' => 'tbl_sanpham',
+  'status' => 'hienthi',
+]);
+$total_pages = max(1, ceil($total_records / $records_per_page));
 if ($current_page > $total_pages) {
   $current_page = $total_pages;
 }
-$show_sanpham = $sanpham->show_sanpham_pagination($records_per_page, $current_page, 'hienthi', $id_list = '', $id_cat = '', $limit = '');
-$get_count_sp = $sanpham->count_sanpham();
+$show_sanpham = $fn->show_data([
+  'table' => 'tbl_sanpham',
+  'status' => 'hienthi',
+]);
 ?>
 <div class="wrap-main wrap-home w-clear">
   <div class="breadCrumbs">
@@ -27,14 +33,17 @@ $get_count_sp = $sanpham->count_sanpham();
 
       <div class="grid-list-no-index">
         <?php
-        $dm = $danhmuc->show_danhmuc_index('hienthi');
+        $dm = $fn->show_data([
+          'table' => 'tbl_danhmuc_c1',
+          'status' => 'hienthi,noibat'
+        ]);
         if ($dm) {
           while ($row_dm = $dm->fetch_assoc()) {
         ?>
             <div class="item-list-noindex">
-              <a title="<?= $row_dm['name'] ?>" class="" href="<?= $row_dm['slug'] ?>">
+              <a title="<?= $row_dm['namevi'] ?>" class="" href="<?= $row_dm['slugvi'] ?>">
                 <h3 class="m-0">
-                  <?= $row_dm['name'] ?>
+                  <?= $row_dm['namevi'] ?>
                 </h3>
               </a>
             </div>
@@ -48,7 +57,7 @@ $get_count_sp = $sanpham->count_sanpham();
     <div class="wrap-content" style="background: unset;">
       <div class="title-list-hot text-center">
         <h2>Sản Phẩm</h2>
-        (<?= $get_count_sp ?> sản phẩm)
+        (<?= $total_records ?> sản phẩm)
       </div>
     </div>
   </div>
@@ -60,8 +69,8 @@ $get_count_sp = $sanpham->count_sanpham();
           data-cat="" data-item="" data-brand="" data-curpage="2" data-total="124">
           <?php while ($sp = $show_sanpham->fetch_assoc()) : ?>
             <?php
-            $slug = $sp['slug'];
-            $name = htmlspecialchars($sp['name']);
+            $slug = $sp['slugvi'];
+            $namevi = htmlspecialchars($sp['namevi']);
             $img = !empty($sp['file'])
               ? BASE_ADMIN . UPLOADS . $sp['file']
               : NO_IMG;
@@ -72,11 +81,11 @@ $get_count_sp = $sanpham->count_sanpham();
             <div class="item-product" data-aos="fade-up" data-aos-duration="1000">
               <a href="<?= $slug ?>">
                 <div class="images">
-                  <img src="<?= $img ?>" alt="<?= $name ?>" title="<?= $name ?>" class="w-100" loading="lazy" />
+                  <img src="<?= $img ?>" alt="<?= $namevi ?>" title="<?= $namevi ?>" class="w-100" loading="lazy" />
                 </div>
                 <div class="content">
                   <div class="title">
-                    <h3><?= $name ?></h3>
+                    <h3><?= $namevi ?></h3>
                     <p class="price-product">
                       <?php if (!empty($sale) && !empty($regular)): ?>
                         <span class="price-new"><?= $sale ?>₫</span>

@@ -7,141 +7,86 @@ include_once($filepath . '/../helpers/format.php');
 class social
 {
   private $db;
-  private $fm;
+  private $fn;
 
   public function __construct()
   {
     $this->db = new Database();
-    $this->fm = new Format();
+    $this->fn = new Functions();
   }
-
-  public function xoanhieu_social($listid)
+  public function save_social($data, $files, $id = null)
   {
-    // Lấy danh sách các file cần xóa trước khi xóa bản ghi
-    $del_file_query = "SELECT file FROM tbl_social WHERE id IN ($listid)";
-    $old_files = $this->db->select($del_file_query);
+    global $config;
+    $langs = array_keys($config['website']['lang']);
+    $fields_multi = ['name', 'desc'];
+    $fields_common = ['link', 'numb'];
+    $table = 'tbl_social';
 
-    // Xóa các file trên hệ thống
-    if ($old_files) {
-      while ($rowData = $old_files->fetch_assoc()) {
-        $old_file_path = "uploads/" . $rowData['file'];
-        if (file_exists($old_file_path)) {
-          unlink($old_file_path);  // Xóa file nếu tồn tại
-        }
+    $data_escaped = [];
+    foreach ($langs as $lang) {
+      foreach ($fields_multi as $field) {
+        $key = $field . $lang;
+        $data_escaped[$key] = !empty($data[$key]) ? mysqli_real_escape_string($this->db->link, $data[$key]) : "";
       }
     }
-
-    // Xóa bản ghi trong cơ sở dữ liệu
-    $query = "DELETE FROM tbl_social WHERE id IN ($listid)";
-    $result = $this->db->delete($query);
-
-    // Kiểm tra kết quả
-    if ($result) {
-      header('Location: transfer.php?stt=success&url=social');
-    } else {
-      return "Lỗi thao tác!";
+    foreach ($fields_common as $field) {
+      $data_escaped[$field] = !empty($data[$field]) ? mysqli_real_escape_string($this->db->link, $data[$field]) : "";
     }
-  }
 
+    $status_flags = ['hienthi'];
+    $status_values = [];
+    foreach ($status_flags as $flag) {
+      if (!empty($data[$flag])) {
+        $status_values[] = $flag;
+      }
+    }
+    $data_escaped['status'] = mysqli_real_escape_string($this->db->link, implode(',', $status_values));
 
-  public function update_social($data, $files, $id)
-  {
-    $name = mysqli_real_escape_string($this->db->link, $data['name']);
-    $desc = mysqli_real_escape_string($this->db->link, $data['desc']);
-    $link = mysqli_real_escape_string($this->db->link, $data['link']);
-    $hienthi = mysqli_real_escape_string($this->db->link, $data['hienthi']);
-    $numb = mysqli_real_escape_string($this->db->link, $data['numb']);
-    $unique_image = '';
-    if (!empty($files['file']['name'])) {
-      $file_ext = strtolower(pathinfo($files['file']['name'], PATHINFO_EXTENSION));
-      $unique_image = substr(md5(time()), 0, 10) . '.' . $file_ext;
-      move_uploaded_file($files['file']['tmp_name'], "uploads/" . $unique_image);
-
-      // Xóa file cũ nếu có
-      $del_file_query = "SELECT file FROM tbl_social WHERE id='$id'";
-      $old_file = $this->db->select($del_file_query);
+    $thumb_filename = '';
+    $old_file_path = '';
+    if (!empty($id)) {
+      $old_file = $this->db->select("SELECT file FROM $table WHERE id = '" . (int)$id . "'");
       if ($old_file && $old_file->num_rows > 0) {
-        $rowData = $old_file->fetch_assoc();
-        $old_file_path = "uploads/" . $rowData['file'];
-        if (file_exists($old_file_path)) {
-          unlink($old_file_path);
-        }
+        $row = $old_file->fetch_assoc();
+        $old_file_path = "uploads/" . $row['file'];
       }
     }
-    $query = "UPDATE tbl_social SET name = '$name', `desc` = '$desc',link='$link', hienthi = '$hienthi', numb = '$numb'";
-    if (!empty($unique_image)) {
-      $query .= ", file = '$unique_image'";
+    $width = isset($data['thumb_width']) ? (int)$data['thumb_width'] : '';
+    $height = isset($data['thumb_height']) ? (int)$data['thumb_height'] : '';
+    $thumb_size = $width . 'x' . $height . 'x1';
+    $thumb_filename = $this->fn->Upload($files, $thumb_size, [255, 255, 255, 0], $old_file_path, false, true);
+    $data_escaped['options'] = '';
+    if (!empty($thumb_filename)) {
+      $options = [
+        'w' => $width,
+        'h' => $height
+      ];
+      $data_escaped['options'] = json_encode($options);
     }
-    $query .= " WHERE id = '$id'";
-    $result = $this->db->update($query);
-    if ($result) {
-      header('Location: transfer.php?stt=success&url=social');
-    } else {
-      return "Lỗi thao tác!";
-    }
-  }
-
-
-  public function get_id_social($id)
-  {
-    $id = mysqli_real_escape_string($this->db->link, $id);
-    $query = "SELECT * FROM tbl_social WHERE id = '$id' LIMIT 1";
-    $result = $this->db->select($query);
-    return $result;
-  }
-
-  public function del_social($id)
-  {
-    $query = "SELECT file FROM tbl_social WHERE id='$id'";
-    $delta = $this->db->select($query);
-    $file = $delta ? $delta->fetch_assoc()['file'] : null;
-
-    if ($file) {
-      $filePath = "uploads/" . $file;
-      if (file_exists($filePath)) {
-        unlink($filePath);
+    if (!empty($id)) {
+      $update_fields = [];
+      foreach ($data_escaped as $field => $value) {
+        $update_fields[] = "`$field` = '$value'";
       }
-    }
-    $result = $this->db->delete("DELETE FROM tbl_social WHERE id = '$id'");
-    if ($result) {
-      header('Location: transfer.php?stt=' . urlencode("success") . '&url=' . urlencode("social"));
+      if (!empty($thumb_filename)) {
+        $update_fields[] = "`file` = '$thumb_filename'";
+      }
+      $query = "UPDATE `$table` SET " . implode(", ", $update_fields) . " WHERE id = '" . (int)$id . "'";
+      $result = $this->db->update($query);
+      $msg = $result ? "Cập nhật social thành công" : "Cập nhật social thất bại";
     } else {
-      return "Lỗi thao tác !";
+      $field_names = array_map(fn($k) => "`$k`", array_keys($data_escaped));
+      $field_values = array_map(fn($v) => "'" . $v . "'", $data_escaped);
+      if (!empty($thumb_filename)) {
+        $field_names[] = '`file`';
+        $field_values[] = "'" . $thumb_filename . "'";
+      }
+      $query = "INSERT INTO `$table` (" . implode(", ", $field_names) . ") VALUES (" . implode(", ", $field_values) . ")";
+      $result = $this->db->insert($query);
+      $msg = $result ? "Thêm social thành công" : "Thêm social thất bại";
     }
-  }
-
-
-  public function show_social($hienthi = '')
-  {
-    $query = "SELECT * FROM tbl_social ";
-    if (!empty($hienthi)) {
-      $query .= "WHERE hienthi = '$hienthi' ";
-    }
-    $query .= "ORDER BY numb ASC";
-    $result = $this->db->select($query);
-    return $result;
-  }
-
-
-  public function insert_social($data, $files)
-  {
-    $name = mysqli_real_escape_string($this->db->link, $data['name']);
-    $desc = mysqli_real_escape_string($this->db->link, $data['desc']);
-    $link = mysqli_real_escape_string($this->db->link, $data['link']);
-    $hienthi = mysqli_real_escape_string($this->db->link, $data['hienthi']);
-    $numb = mysqli_real_escape_string($this->db->link, $data['numb']);
-    $unique_image = '';
-    if (!empty($files['file']['name'])) {
-      $file_ext = strtolower(pathinfo($files['file']['name'], PATHINFO_EXTENSION));
-      $unique_image = substr(md5(time()), 0, 10) . '.' . $file_ext;
-      move_uploaded_file($files['file']['tmp_name'], "uploads/" . $unique_image);
-    }
-    $query = "INSERT INTO tbl_social(name, `desc`,link, hienthi, numb, file) VALUES('$name', '$desc','$link', '$hienthi', '$numb', '$unique_image')";
-    if ($this->db->insert($query)) {
-      header('Location: transfer.php?stt=success&url=social');
-    } else {
-      return "Lỗi thao tác!";
-    }
+    $redirectPath = $this->fn->getRedirectPath(['table' => $table]);
+    $this->fn->transfer($msg, $redirectPath, $result);
   }
 }
 

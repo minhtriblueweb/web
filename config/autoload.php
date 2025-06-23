@@ -1,14 +1,11 @@
 <?php
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
-
-ob_start();
-
 // Gọi file cấu hình chính
 $baseDir = dirname(__DIR__);
 require_once $baseDir . '/config/config.php';
 
-// Các thư viện lõi
+// Các thư viện
 require_once $baseDir . '/lib/database.php';
 require_once $baseDir . '/lib/session.php';
 require_once $baseDir . '/helpers/format.php';
@@ -27,7 +24,7 @@ $db = new Database();
 $fn = new Functions();
 
 // Khởi tạo sẵn các class hay dùng
-$classes = ['danhmuc', 'sanpham', 'slideshow', 'tieuchi', 'danhgia', 'setting', 'social', 'news', 'trangtinh', 'phuongthuctt'];
+$classes = ['danhmuc', 'sanpham', 'slideshow', 'tieuchi', 'danhgia', 'setting', 'social', 'news', 'trangtinh', 'payment'];
 foreach ($classes as $class) {
   if (class_exists($class)) {
     $$class = new $class();

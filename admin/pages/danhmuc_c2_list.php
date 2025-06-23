@@ -15,8 +15,8 @@ $show_danhmuc_c2 = $fn->show_data([
 ]);
 $linkMulti = "index.php?page=deleteMulti&table=$table";
 $linkDelete = "index.php?page=delete&table=$table&id=";
-$linkEdit = "index.php?page=danhmuc_c1_form&id=";
-$linkAdd = "index.php?page=danhmuc_c1_form";
+$linkEdit = "index.php?page=danhmuc_c2_form&id=";
+$linkAdd = "index.php?page=danhmuc_c2_form";
 ?>
 <?php
 $breadcrumb = [

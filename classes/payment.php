@@ -4,7 +4,7 @@ include_once($filepath . '/../lib/database.php');
 include_once($filepath . '/../helpers/format.php');
 ?>
 <?php
-class danhgia
+class payment
 {
   private $db;
   private $fn;
@@ -14,20 +14,25 @@ class danhgia
     $this->db = new Database();
     $this->fn = new Functions();
   }
-  public function save_danhgia($data, $files, $id = null)
+  public function save_payment($data, $files, $id = null)
   {
     global $config;
-    $table = 'tbl_danhgia';
-    $langs = array_keys($config['website']['lang']); // ['vi', 'en']
+    $langs = array_keys($config['website']['lang']);
+    $fields_multi = ['name', 'content'];
+    $fields_common = ['numb'];
+    $table = 'tbl_payment';
+
     $data_escaped = [];
     foreach ($langs as $lang) {
-      $fields_lang = ['name', 'address', 'desc'];
-      foreach ($fields_lang as $field) {
+      foreach ($fields_multi as $field) {
         $key = $field . $lang;
         $data_escaped[$key] = !empty($data[$key]) ? mysqli_real_escape_string($this->db->link, $data[$key]) : "";
       }
     }
-    $data_escaped['numb'] = !empty($data['numb']) ? (int)$data['numb'] : 0;
+    foreach ($fields_common as $field) {
+      $data_escaped[$field] = !empty($data[$field]) ? mysqli_real_escape_string($this->db->link, $data[$field]) : "";
+    }
+
     $status_flags = ['hienthi'];
     $status_values = [];
     foreach ($status_flags as $flag) {
@@ -36,16 +41,28 @@ class danhgia
       }
     }
     $data_escaped['status'] = mysqli_real_escape_string($this->db->link, implode(',', $status_values));
+
     $thumb_filename = '';
     $old_file_path = '';
     if (!empty($id)) {
-      $old_file = $this->db->select("SELECT file FROM `$table` WHERE id = '" . (int)$id . "'");
+      $old_file = $this->db->select("SELECT file FROM $table WHERE id = '" . (int)$id . "'");
       if ($old_file && $old_file->num_rows > 0) {
         $row = $old_file->fetch_assoc();
         $old_file_path = "uploads/" . $row['file'];
       }
     }
-    $thumb_filename = $this->fn->Upload($files, '100x100x1', [255, 255, 255, 0], $old_file_path, false, true);
+    $width = isset($data['thumb_width']) ? (int)$data['thumb_width'] : '';
+    $height = isset($data['thumb_height']) ? (int)$data['thumb_height'] : '';
+    $thumb_size = $width . 'x' . $height . 'x1';
+    $thumb_filename = $this->fn->Upload($files, $thumb_size, [255, 255, 255, 0], $old_file_path, false, true);
+    $data_escaped['options'] = '';
+    if (!empty($thumb_filename)) {
+      $options = [
+        'w' => $width,
+        'h' => $height
+      ];
+      $data_escaped['options'] = json_encode($options);
+    }
     if (!empty($id)) {
       $update_fields = [];
       foreach ($data_escaped as $field => $value) {
@@ -72,4 +89,5 @@ class danhgia
     $this->fn->transfer($msg, $redirectPath, $result);
   }
 }
+
 ?>

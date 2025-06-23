@@ -5,7 +5,7 @@
   </div>
   <div class="card-body card-slug">
     <?php if (!empty($id)) : ?>
-      <label for="slugchange" class="d-inline-block align-middle text-info mb-0 mr-2">Thay đổi đường dẫn theo tiêu đề mới:</label>
+      <label for="slugchange" class="d-inline-block align-middle text-info mb-2 mr-2">Thay đổi đường dẫn theo tiêu đề mới:</label>
       <div class="custom-control custom-checkbox d-inline-block align-middle">
         <input type="checkbox" class="custom-control-input" name="slugchange" id="slugchange">
         <label for="slugchange" class="custom-control-label"></label>
@@ -26,16 +26,18 @@
           <?php } ?>
         </ul>
       </div>
-
       <!-- Tab Content -->
       <div class="card-body">
         <div class="tab-content" id="custom-tabs-three-tabContent-lang">
+          <input type="hidden" class="slug-id" value="<?= !empty($id) ? $id : '' ?>" />
+          <input type="hidden" class="slug-table" value="<?= $table ?>" />
+          <input type="hidden" class="slug-copy" value="" />
           <?php foreach ($config['website']['lang'] as $k => $v) { ?>
             <div class="tab-pane fade show <?= ($k == 'vi') ? 'active' : '' ?>" id="tabs-sluglang-<?= $k ?>"
               role="tabpanel" aria-labelledby="tabs-lang-<?= $k ?>">
               <div class="form-group mb-0">
                 <label class="d-block">Đường dẫn mẫu (<?= $k ?>):<span class="pl-2 font-weight-normal"
-                    id="slugurlpreviewvi"><?= BASE ?><?php if (!empty($id)): ?><strong class="text-info"><?= $result['slug' . $k]; ?></strong><?php endif; ?></span></label>
+                    id="slugurlpreview<?= $k ?>"><?= BASE ?><?php if (!empty($id)): ?><strong class="text-info"><?= $result['slug' . $k]; ?></strong><?php endif; ?></span></label>
 
                 <!-- Input Slug -->
                 <input type="text"
@@ -46,14 +48,11 @@
                   <?= ($k == 'vi') ? 'required' : '' ?> />
                 <!-- Hidden Default -->
                 <input type="hidden" id="slug-default<?= $k ?>" value="<?= $_POST['slug' . $k] ?? ($result['slug' . $k] ?? "") ?>">
-                <input type="hidden" class="slug-id" value="<?= !empty($id) ? $id : '' ?>" />
-                <input type="hidden" class="slug-table" value="<?= $table ?>" />
-                <input type="hidden" class="slug-copy" value="" />
                 <!-- Alert -->
                 <div id="slug-alert-wrapper" class="mt-2" style="min-height: 20px;">
                   <p id="alert-slug-danger<?= $k ?>" class="alert-slug text-danger mb-0 d-none">
                     <i class="fas fa-exclamation-triangle mr-1"></i>
-                    <span>Đường dẫn đã tồn tại</span>
+                    <span>Đường dẫn đã tồn tại.</span>
                   </p>
                   <p id="alert-slug-success<?= $k ?>" class="alert-slug text-success mb-0 d-none">
                     <i class="fa-solid fa-circle-check mr-1"></i>

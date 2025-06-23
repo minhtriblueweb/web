@@ -1,5 +1,5 @@
 <?php
-$baseDir = dirname(__DIR__); // trỏ về thư mục gốc "web"
+$baseDir = dirname(__DIR__); // trỏ về thư mục gốc
 
 // Định nghĩa đường dẫn
 define('ROOT', $baseDir);

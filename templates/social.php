@@ -1,7 +1,7 @@
 <div class="floating-support" data-aos="fade-left" data-aos-anchor="#example-anchor" data-aos-offset="500"
   data-aos-duration="500">
   <?php
-  $show_social = $functions->show_data([
+  $show_social = $fn->show_data([
     'table' => 'tbl_social',
     'status' => 'hienthi'
   ]); ?>
@@ -11,11 +11,11 @@
         <div class="floating-support__item__icon">
           <img
             src="<?= empty($row_social['file']) ? NO_IMG : BASE_ADMIN . UPLOADS . $row_social['file']; ?>"
-            alt="<?= $row_social['name'] ?>" class="tada">
+            alt="<?= $row_social['namevi'] ?>" class="tada">
         </div>
         <div class="floating-support__item__content">
-          <p><b><?= $row_social['name'] ?></b></p>
-          <span><?= $row_social['desc'] ?></span>
+          <p><b><?= $row_social['namevi'] ?></b></p>
+          <span><?= $row_social['descvi'] ?></span>
         </div>
       </a>
     <?php endwhile; ?>

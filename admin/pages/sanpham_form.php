@@ -2,7 +2,7 @@
 $message = '';
 $name_page = 'sản phẩm';
 $table = 'tbl_sanpham';
-$show_danhmuc = $fn->show_data(['table' => 'tbl_danhmuc']);
+$show_danhmuc = $fn->show_data(['table' => 'tbl_danhmuc_c1']);
 $id = $_GET['id'] ?? null;
 if (!empty($id)) {
   $get_id = $fn->get_id($table, $id);

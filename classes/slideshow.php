@@ -85,8 +85,8 @@ class slideshow
       $result = $this->db->insert($query);
       $msg = $result ? "Thêm slideshow thành công" : "Thêm slideshow thất bại";
     }
-
-    $this->fn->transfer($msg, "index.php?page=slideshow_list", $result);
+    $redirectPath = $this->fn->getRedirectPath(['table' => $table]);
+    $this->fn->transfer($msg, $redirectPath, $result);
   }
 }
 

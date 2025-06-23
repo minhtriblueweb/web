@@ -2,19 +2,20 @@
 $redirect_url = $_GET['page'];
 $type = $_GET['type'] ?? null;
 $convert_type = $fn->convert_type($type);
+$table = 'tbl_news';
 $name_page = $convert_type['vi'];
 $records_per_page = 10;
 $current_page = max(1, isset($_GET['p']) ? (int)$_GET['p'] : 1);
-$total_pages = ceil($fn->count_data(['table' => 'tbl_news', 'type' => $type]) / $records_per_page);
+$total_pages = ceil($fn->count_data(['table' => $table, 'type' => $type]) / $records_per_page);
 $show_news = $fn->show_data([
-  'table' => 'tbl_news',
+  'table' => $table,
   'type' => $type,
   'records_per_page' => $records_per_page,
   'current_page' => $current_page,
   'keyword' => $_GET['keyword'] ?? ''
 ]);
-$linkMulti = "index.php?page=deleteMulti&table=tbl_news&type=$type";
-$linkDelete = "index.php?page=delete&table=tbl_news&type=$type&id=";
+$linkMulti = "index.php?page=deleteMulti&table=$table&type=$type";
+$linkDelete = "index.php?page=delete&table=$table&type=$type&id=";
 $linkEdit = "index.php?page=news_form&type=$type&id=";
 $linkAdd = "index.php?page=news_form&type=$type";
 ?>

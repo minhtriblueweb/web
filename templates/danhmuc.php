@@ -1,4 +1,4 @@
-<?php if ($show_danhmuc = $functions->show_data([
+<?php if ($show_danhmuc = $fn->show_data([
   'table' => 'tbl_danhmuc_c2',
   'status' => 'hienthi,noibat'
 ])): ?> <?php if ($show_danhmuc->num_rows > 0): ?>
@@ -10,8 +10,8 @@
         <div class="slick_product_list">
           <?php while ($dm = $show_danhmuc->fetch_assoc()): ?>
             <?php
-            $slug = $dm['slug'];
-            $name = $dm['name'];
+            $slug = $dm['slugvi'];
+            $name = $dm['namevi'];
             $imgSrc = !empty($dm['file']) ? BASE_ADMIN . UPLOADS . $dm['file'] : NO_IMG;
             ?>
             <a href="<?= $slug ?>" title="<?= $name ?>">

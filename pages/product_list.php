@@ -1,17 +1,16 @@
 <?php
-$records_per_page = 10;
-$current_page = max(1, (int)($_GET['page'] ?? 1));
+$records_per_page = 20;
+$current_page = max(1, isset($_GET['page']) ? (int)$_GET['page'] : 1);
 $total_records = $fn->count_data([
   'table' => 'tbl_sanpham',
   'status' => 'hienthi',
 ]);
-$total_pages = max(1, ceil($total_records / $records_per_page));
-if ($current_page > $total_pages) {
-  $current_page = $total_pages;
-}
+$total_pages = ceil($total_records / $records_per_page);
 $show_sanpham = $fn->show_data([
   'table' => 'tbl_sanpham',
   'status' => 'hienthi',
+  'records_per_page' => $records_per_page,
+  'current_page' => $current_page,
 ]);
 ?>
 <div class="wrap-main wrap-home w-clear">
@@ -112,9 +111,8 @@ $show_sanpham = $fn->show_data([
         </div>
       <?php endif ?>
       <div class="mt-3">
-        <?= $pagination_html = $fn->renderPagination_tc($current_page, $total_pages, BASE . 'san-pham/page-'); ?>
+        <?= $fn->renderPagination_tc($current_page, $total_pages, BASE . 'san-pham/page-'); ?>
       </div>
-
     </div>
   </div>
 </div>

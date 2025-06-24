@@ -14,6 +14,18 @@ class Functions
     $this->db = new Database();
     $this->fm = new Format();
   }
+
+  function renderSelectOptions($result, string $valueKey = 'id', string $labelKey = 'namevi', int|string $selectedId = 0): void
+  {
+    if ($result instanceof mysqli_result && $result->num_rows > 0) {
+      while ($row = $result->fetch_assoc()) {
+        $selected = ($row[$valueKey] == $selectedId) ? 'selected' : '';
+        echo '<option value="' . htmlspecialchars($row[$valueKey]) . '" ' . $selected . '>' . htmlspecialchars($row[$labelKey]) . '</option>';
+      }
+    } else {
+      echo '<option disabled>Không có danh mục</option>';
+    }
+  }
   public function getRedirectPath($params = [])
   {
     $map = [];
@@ -631,15 +643,23 @@ class Functions
 
     return $filename;
   }
-  function renderPagination($current_page, $total_pages, $base_url = '?p=')
+  function renderPagination($current_page, $total_pages, $base_url = 'index.php')
   {
     if ($total_pages <= 1) return '';
+
+    // Lấy tất cả các tham số GET hiện tại (trừ 'p')
+    $queryParams = $_GET;
+    unset($queryParams['p']);
+
+    // Tạo query string từ các tham số hiện tại
+    $queryString = http_build_query($queryParams);
+    $queryString = $queryString ? $queryString . '&' : '';
 
     $html = '<ul class="pagination flex-wrap justify-content-center mb-0">';
     $html .= '<li class="page-item"><a class="page-link">Trang ' . $current_page . ' / ' . $total_pages . '</a></li>';
 
     if ($current_page > 1) {
-      $html .= '<li class="page-item"><a class="page-link" href="' . $base_url . ($current_page - 1) . '">Trước</a></li>';
+      $html .= '<li class="page-item"><a class="page-link" href="' . $base_url . '?' . $queryString . 'p=' . ($current_page - 1) . '">Trước</a></li>';
     }
 
     $range = 2;
@@ -650,7 +670,7 @@ class Functions
       ) {
         $active_class = ($i == $current_page) ? 'active' : '';
         $html .= '<li class="page-item ' . $active_class . '">';
-        $html .= '<a class="page-link" href="' . $base_url . $i . '">' . $i . '</a>';
+        $html .= '<a class="page-link" href="' . $base_url . '?' . $queryString . 'p=' . $i . '">' . $i . '</a>';
         $html .= '</li>';
       } elseif (
         ($i == 3 && $current_page - $range > 4) ||
@@ -661,19 +681,16 @@ class Functions
     }
 
     if ($current_page < $total_pages) {
-      $html .= '<li class="page-item"><a class="page-link" href="' . $base_url . ($current_page + 1) . '">Tiếp</a></li>';
-      $html .= '<li class="page-item"><a class="page-link" href="' . $base_url . $total_pages . '">Cuối</a></li>';
+      $html .= '<li class="page-item"><a class="page-link" href="' . $base_url . '?' . $queryString . 'p=' . ($current_page + 1) . '">Tiếp</a></li>';
+      $html .= '<li class="page-item"><a class="page-link" href="' . $base_url . '?' . $queryString . 'p=' . $total_pages . '">Cuối</a></li>';
     }
 
     $html .= '</ul>';
     return $html;
   }
-
   function renderPagination_tc($current_page, $total_pages, $base_url)
   {
-    if ($total_pages <= 1) {
-      return '';
-    }
+    if ($total_pages <= 1) return '';
     $pagination_html = '<ul class="pagination flex-wrap justify-content-center mb-0">';
     if ($current_page > 1) {
       $pagination_html .= '<li class="page-item">';

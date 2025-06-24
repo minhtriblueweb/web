@@ -1,18 +1,26 @@
 <?php
 $redirect_url = $_GET['page'];
-$records_per_page = 10;
 $name_page = 'danh mục cấp 2';
+// phân trang
+$records_per_page = 10;
 $table = 'tbl_danhmuc_c2';
 $current_page = max(1, isset($_GET['p']) ? (int)$_GET['p'] : 1);
-$total_records = $fn->count_data(['table' => $table]);
+$total_records = $fn->count_data([
+  'table' => $table,
+  'id_list' => $_GET['id_list'] ?? '',
+  'keyword' => $_GET['keyword'] ?? ''
+]);
 $total_pages = ceil($total_records / $records_per_page);
-$show_danhmuc_c1 = $fn->show_data(['table' => 'tbl_danhmuc_c1']);
+// lọc danh mục cấp 2
 $show_danhmuc_c2 = $fn->show_data([
   'table' => $table,
+  'id_list' => $_GET['id_list'] ?? '',
   'records_per_page' => $records_per_page,
   'current_page' => $current_page,
   'keyword' => $_GET['keyword'] ?? ''
 ]);
+$show_danhmuc_c1 = $fn->show_data(['table' => 'tbl_danhmuc_c1']);
+// Link
 $linkMulti = "index.php?page=deleteMulti&table=$table";
 $linkDelete = "index.php?page=delete&table=$table&id=";
 $linkEdit = "index.php?page=danhmuc_c2_form&id=";
@@ -29,18 +37,13 @@ include 'templates/breadcrumb.php';
   <?php include 'templates/act_list.php'; ?>
   <div class="card-footer form-group-category text-sm bg-light row">
     <div class="form-group col-xl-2 col-lg-3 col-md-4 col-sm-4 mb-2">
-      <form class="validation-form" novalidate method="post" action="">
-        <select id="filter-id-list" class="form-control filter-category select2">
-          <option value="0">Chọn danh mục</option>
-          <?php if ($show_danhmuc_c1 && $show_danhmuc_c1->num_rows > 0): ?>
-            <?php while ($resule = $show_danhmuc_c1->fetch_assoc()): ?>
-              <option value="<?= $resule['id']; ?>" <?= (isset($id_list) && $id_list == $resule['id']) ? 'selected' : ''; ?>><?= $resule['namevi']; ?></option>
-            <?php endwhile; ?>
-          <?php else: ?>
-            <option disabled>Không có danh mục</option>
-          <?php endif; ?>
-        </select>
-      </form>
+      <select id="id_list" name="id_list" onchange="onchangeCategory($(this))" class="form-control filter-category select2 " data-select2-id="id_list" tabindex="-1" aria-hidden="true">
+        <option value="0">Chọn danh mục</option>
+        <?php
+        $id_list_selected = (int)($_GET['id_list'] ?? 0);
+        $fn->renderSelectOptions($show_danhmuc_c1, 'id', 'namevi', $id_list_selected);
+        ?>
+      </select>
     </div>
   </div>
   <form class="validation-form" novalidate method="post" action="">
@@ -138,10 +141,7 @@ include 'templates/breadcrumb.php';
       </div>
     </div>
   </form>
-  <?php if ($total_pages > 1): ?>
-    <div class="card-footer text-sm pb-0 mb-5">
-      <?= $fn->renderPagination($current_page, $total_pages, "index.php?page=$redirect_url&p="); ?>
-    </div>
-  <?php endif; ?>
-
+  <div class="card-footer text-sm pb-0 mb-5">
+    <?= $fn->renderPagination($current_page, $total_pages); ?>
+  </div>
 </section>

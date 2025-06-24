@@ -41,7 +41,6 @@ function filterCategory(url) {
   if ($(".filter-category").length > 0 && url != "") {
     var id = "";
     var value = 0;
-
     $(".filter-category").each(function () {
       id = $(this).attr("id");
       if (id) {
@@ -54,12 +53,10 @@ function filterCategory(url) {
   }
   return url;
 }
-
 function onchangeCategory(obj) {
   var name = "";
   var keyword = $("#keyword").val();
   var url = LINK_FILTER;
-
   obj
     .parents(".form-group")
     .nextAll()
@@ -69,7 +66,6 @@ function onchangeCategory(obj) {
         $(this).find(".filter-category").val(0);
       }
     });
-
   url = filterCategory(url);
 
   if (keyword) {

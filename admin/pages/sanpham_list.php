@@ -1,18 +1,34 @@
 <?php
 $redirect_url = $_GET['page'];
-$records_per_page = 10;
 $name_page = 'sản phẩm';
 $table = 'tbl_sanpham';
+// cấp 1
+$show_danhmuc_c1 = $fn->show_data([
+  'table' => 'tbl_danhmuc_c1'
+]);
+// cấp 2
+$show_danhmuc_c2 = $fn->show_data([
+  'table' => 'tbl_danhmuc_c2',
+  'id_list' => $_GET['id_list'] ?? '',
+]);
+// phân trang
+$records_per_page = 10;
 $current_page = max(1, isset($_GET['p']) ? (int)$_GET['p'] : 1);
-$total_records = $fn->count_data(['table' => $table]);
+$total_records = $fn->count_data([
+  'table' => $table,
+  'id_list' => $_GET['id_list'] ?? '',
+  'id_cat' => $_GET['id_cat'] ?? '',
+  'keyword' => $_GET['keyword'] ?? ''
+]);
 $total_pages = ceil($total_records / $records_per_page);
 $show_sanpham = $fn->show_data([
   'table' => $table,
+  'id_list' => $_GET['id_list'] ?? '',
+  'id_cat' => $_GET['id_cat'] ?? '',
   'records_per_page' => $records_per_page,
   'current_page' => $current_page,
   'keyword' => $_GET['keyword'] ?? ''
 ]);
-$show_danhmuc = $fn->show_data('tbl_danhmuc_c1');
 $linkMulti = "index.php?page=deleteMulti&table=$table";
 $linkDelete = "index.php?page=delete&table=$table&id=";
 $linkEdit = "index.php?page=sanpham_form&id=";
@@ -30,19 +46,24 @@ include 'templates/breadcrumb.php';
 <section class="content">
   <?php include 'templates/act_list.php'; ?>
   <div class="card-footer form-group-category text-sm bg-light row">
-    <div class="form-group col-xl-2 col-lg-3 col-md-4 col-sm-4 mb-2"><select id="id_list" name="id_list"
-        .onchange="onchangeCategory($(this))" class="form-control filter-category select2">
+    <div class="form-group col-xl-2 col-lg-3 col-md-4 col-sm-4 mb-2">
+      <select id="id_list" name="id_list" class="form-control filter-category select2" onchange="onchangeCategory($(this))">
         <option value="0">Chọn danh mục</option>
-        <?php if ($show_danhmuc) : ?>
-          <?php while ($resule_danhmuc = $show_danhmuc->fetch_assoc()) : ?>
-            <option value="<?= $resule_danhmuc['id'] ?>"><?= $resule_danhmuc['namevi'] ?></option>
-          <?php endwhile; ?>
-        <?php endif; ?>
-      </select></div>
-    <div class="form-group col-xl-2 col-lg-3 col-md-4 col-sm-4 mb-2"><select id="id_cat" name="id_cat"
-        .onchange="onchangeCategory($(this))" class="form-control filter-category select2">
-        <option value="0">Chọn danh mục cấp 2</option>
-      </select></div>
+        <?php
+        $id_list_selected = (int)($_GET['id_list'] ?? 0);
+        $fn->renderSelectOptions($show_danhmuc_c1, 'id', 'namevi', $id_list_selected);
+        ?>
+      </select>
+    </div>
+    <div class="form-group col-xl-2 col-lg-3 col-md-4 col-sm-4 mb-2">
+      <select id="id_cat" name="id_cat" class="form-control filter-category select2" onchange="onchangeCategory($(this))">
+        <option value="0">Chọn danh mục</option>
+        <?php
+        $id_cat_selected = (int)($_GET['id_cat'] ?? 0);
+        $fn->renderSelectOptions($show_danhmuc_c2, 'id', 'namevi', $id_cat_selected);
+        ?>
+      </select>
+    </div>
   </div>
   <div class="card card-primary card-outline text-sm mb-0">
     <div class="card-header">
@@ -167,9 +188,7 @@ include 'templates/breadcrumb.php';
       </table>
     </div>
   </div>
-  <?php if ($total_pages > 1): ?>
-    <div class="card-footer text-sm pb-0 mb-5">
-      <?= $fn->renderPagination($current_page, $total_pages, "index.php?page=$redirect_url&p="); ?>
-    </div>
-  <?php endif; ?>
+  <div class="card-footer text-sm pb-0 mb-5">
+    <?= $fn->renderPagination($current_page, $total_pages); ?>
+  </div>
 </section>

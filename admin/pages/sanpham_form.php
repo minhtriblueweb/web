@@ -5,7 +5,7 @@ $table = 'tbl_sanpham';
 $thumb_width = '500';
 $thumb_height = '500';
 $thumb_zc = '1';
-$show_danhmuc = $fn->show_data(['table' => 'tbl_danhmuc_c1']);
+$show_danhmuc_c1 = $fn->show_data(['table' => 'tbl_danhmuc_c1']);
 $id = $_GET['id'] ?? null;
 $result = [];
 if (!empty($id)) {
@@ -123,28 +123,15 @@ include 'templates/breadcrumb.php';
                 <select id="id_list" name="id_list" data-level="0" data-type="san-pham" data-table="tbl_danhmuc_c2"
                   data-child="id_cat" class="form-control select2 select-category">
                   <option value="0">Chọn danh mục</option>
-                  <?php if ($show_danhmuc): ?>
-                    <?php while ($row = $show_danhmuc->fetch_assoc()): ?>
-                      <option value="<?= $row['id'] ?>"
-                        <?= (($_POST['id_list'] ?? ($result['id_list'] ?? '')) == $row['id']) ? 'selected' : '' ?>>
-                        <?= $row['namevi'] ?>
-                      </option>
-                    <?php endwhile; ?>
-                  <?php endif; ?>
+                  <?php $fn->renderSelectOptions($show_danhmuc_c1); ?>
                 </select>
               </div>
               <div class="form-group col-xl-6 col-sm-4">
                 <label class="d-block" for="id_cat">Danh mục cấp 2:</label>
-                <select id="id_cat" name="id_cat" data-level="1" data-type="san-pham" data-table="" data-child="id_item"
+                <select id="id_cat" name="id_cat" data-level="1" data-type="san-pham" data-table="" data-child=""
                   class="form-control select2 select-category">
                   <option value="0">Chọn danh mục</option>
-                  <?php if (!empty($id) && $show_danhmuc_c2): ?>
-                    <?php while ($get_c2 = $show_danhmuc_c2->fetch_assoc()): ?>
-                      <option value="<?= $get_c2['id'] ?>" <?= ($get_c2['id'] == $result['id_cat']) ? "selected" : ''; ?>>
-                        <?= $get_c2['namevi'] ?>
-                      </option>
-                    <?php endwhile; ?>
-                  <?php endif; ?>
+                  <?php $fn->renderSelectOptions($show_danhmuc_c2); ?>
                 </select>
               </div>
             </div>

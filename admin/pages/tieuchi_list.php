@@ -129,9 +129,7 @@ include 'templates/breadcrumb.php';
       </table>
     </div>
   </div>
-  <?php if ($total_pages > 1): ?>
-    <div class="card-footer text-sm pb-0 mb-5">
-      <?= $fn->renderPagination($current_page, $total_pages, "index.php?page=$redirect_url&p="); ?>
-    </div>
-  <?php endif; ?>
+  <div class="card-footer text-sm pb-0 mb-5">
+    <?= $fn->renderPagination($current_page, $total_pages); ?>
+  </div>
 </section>

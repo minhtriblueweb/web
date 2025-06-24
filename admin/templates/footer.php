@@ -16,7 +16,7 @@
   var TOKEN = "4cfd9a6ec93f31ec5006af2f97389efa";
   var ADMIN = "admin";
   var ASSET = "<?php echo BASE ?>";
-  var LINK_FILTER = "";
+  var LINK_FILTER = "<?= $_SERVER['PHP_SELF'] . '?page=' . ($_GET['page'] ?? '') ?>";
   var ID = 0;
   var COM = "";
   var ACT = "";

@@ -3,6 +3,10 @@ $message = '';
 $name_page = 'tiêu chí';
 $table = 'tbl_tieuchi';
 $id = $_GET['id'] ?? null;
+$thumb_width = '40';
+$thumb_height = '40';
+$thumb_zc = '1';
+$result = [];
 if (!empty($id)) {
   $get_id = $fn->get_id($table, $id);
   if ($get_id) {
@@ -144,6 +148,7 @@ include 'templates/breadcrumb.php';
                 <p class="photoUpload-choose btn btn-sm bg-gradient-success">Chọn hình</p>
               </label>
               <div class="photoUpload-dimension">
+                Width: <?= $thumb_width ?> px - Height: <?= $thumb_height ?> px
                 (.jpg|.gif|.png|.jpeg|.gif|.webp|.WEBP)
               </div>
             </div>
@@ -151,5 +156,8 @@ include 'templates/breadcrumb.php';
         </div>
       </div>
     </div>
+    <input type="hidden" name="thumb_width" value="<?= $thumb_width ?>">
+    <input type="hidden" name="thumb_height" value="<?= $thumb_height ?>">
+    <input type="hidden" name="thumb_zc" value="<?= $thumb_zc ?>">
   </form>
 </section>

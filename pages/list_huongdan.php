@@ -1,4 +1,9 @@
 <?php
+$show_huongdanchoi = $fn->show_data([
+  'table' => 'tbl_news',
+  'status' => 'hienthi',
+  'type'   => 'huongdanchoi'
+]);
 $seo['title'] = 'Hướng dẫn chơi';
 $seo['keywords'] = '';
 $seo['description'] = '';
@@ -25,23 +30,22 @@ $seo['image'] = '';
     </div>
     <div class="wrap-content" style="background: unset;">
       <div class="row">
-        <?php $show_huongdanchoi = $news->show_news_by_type('huongdanchoi', 'hienthi'); ?>
         <?php if ($show_huongdanchoi): ?>
-          <?php while ($resule_huongdanchoi = $show_huongdanchoi->fetch_assoc()) : ?>
+          <?php while ($row = $show_huongdanchoi->fetch_assoc()) : ?>
             <div class="col-6 col-sm-4" data-aos="fade-up" data-aos-duration="1000">
               <div class="item-service">
                 <div class="images">
-                  <a class="scale-img hover-glass text-decoration-none" href="<?= $resule_huongdanchoi['slug'] ?>"
-                    title="<?= $resule_huongdanchoi['name'] ?>">
+                  <a class="scale-img hover-glass text-decoration-none" href="<?= $row['slugvi'] ?>"
+                    title="<?= $row['namevi'] ?>">
                     <img class="w-100"
-                      src="<?php echo empty($resule_huongdanchoi['file']) ? NO_IMG : BASE_ADMIN . UPLOADS . $resule_huongdanchoi['file']; ?>"
-                      alt="<?= $resule_huongdanchoi['name'] ?>" />
+                      src="<?php echo empty($row['file']) ? NO_IMG : BASE_ADMIN . UPLOADS . $row['file']; ?>"
+                      alt="<?= $row['namevi'] ?>" />
                   </a>
                 </div>
                 <div class="content">
                   <h3>
                     <a class="text-split"
-                      href="<?= $resule_huongdanchoi['slug'] ?>"><?= $resule_huongdanchoi['name'] ?></a>
+                      href="<?= $row['slugvi'] ?>"><?= $row['namevi'] ?></a>
                   </h3>
                 </div>
               </div>

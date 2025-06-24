@@ -53,8 +53,15 @@ class payment
     }
     $width = isset($data['thumb_width']) ? (int)$data['thumb_width'] : '';
     $height = isset($data['thumb_height']) ? (int)$data['thumb_height'] : '';
-    $thumb_size = $width . 'x' . $height . 'x1';
-    $thumb_filename = $this->fn->Upload($files, $thumb_size, [255, 255, 255, 0], $old_file_path, false, true);
+    $thumb_size = $width . 'x' . $height . 'x2';
+    $thumb_filename = $this->fn->Upload([
+      'file' => $files['file'],
+      'background' => [255, 255, 255, 0],
+      'custom_name' => $data_escaped['namevi'],
+      'thumb' => $thumb_size,
+      'old_file_path' => $old_file_path,
+
+    ]);
     $data_escaped['options'] = '';
     if (!empty($thumb_filename)) {
       $options = [

@@ -2,8 +2,12 @@
 $message = '';
 $name_page = 'sản phẩm';
 $table = 'tbl_sanpham';
+$thumb_width = '500';
+$thumb_height = '500';
+$thumb_zc = '1';
 $show_danhmuc = $fn->show_data(['table' => 'tbl_danhmuc_c1']);
 $id = $_GET['id'] ?? null;
+$result = [];
 if (!empty($id)) {
   $get_id = $fn->get_id($table, $id);
   if ($get_id) {
@@ -244,7 +248,9 @@ include 'templates/breadcrumb.php';
                 <p class="photoUpload-or">hoặc</p>
                 <p class="photoUpload-choose btn btn-sm bg-gradient-success">Chọn hình</p>
               </label>
-              <div class="photoUpload-dimension">Width: 540 px - Height: 540 px (.jpg|.gif|.png|.jpeg|.gif|.webp|.WEBP)
+              <div class="photoUpload-dimension">
+                Width: <?= $thumb_width ?> px - Height: <?= $thumb_height ?> px
+                (.jpg|.gif|.png|.jpeg|.gif|.webp|.WEBP)
               </div>
             </div>
           </div>
@@ -283,7 +289,10 @@ include 'templates/breadcrumb.php';
     </div>
     */
     ?>
-    <input type="hidden" name="type" id="type" value="sanpham">
     <?php include 'templates/seo.php'; ?>
+    <input type="hidden" name="type" value="sanpham">
+    <input type="hidden" name="thumb_width" value="<?= $thumb_width ?>">
+    <input type="hidden" name="thumb_height" value="<?= $thumb_height ?>">
+    <input type="hidden" name="thumb_zc" value="<?= $thumb_zc ?>">
   </form>
 </section>

@@ -4,6 +4,10 @@ $name_page = 'tin tức';
 $table = 'tbl_news';
 $id = $_GET['id'] ?? null;
 $type = $_GET['type'] ?? null;
+$thumb_width = '540';
+$thumb_height = '360';
+$thumb_zc = '1';
+$result = [];
 if (!empty($id)) {
   $get_id = $fn->get_id($table, $id);
   if ($get_id  && $get_id->num_rows > 0) {
@@ -119,6 +123,7 @@ include 'templates/breadcrumb.php';
                 <p class="photoUpload-choose btn btn-sm bg-gradient-success">Chọn hình</p>
               </label>
               <div class="photoUpload-dimension">
+                Width: <?= $thumb_width ?> px - Height: <?= $thumb_height ?> px
                 (.jpg|.gif|.png|.jpeg|.gif|.webp|.WEBP)
               </div>
             </div>
@@ -166,5 +171,8 @@ include 'templates/breadcrumb.php';
     </div>
     <?php include 'templates/seo.php'; ?>
     <input type="hidden" name="type" id="type" value="<?= $type ?>">
+    <input type="hidden" name="thumb_width" value="<?= $thumb_width ?>">
+    <input type="hidden" name="thumb_height" value="<?= $thumb_height ?>">
+    <input type="hidden" name="thumb_zc" value="<?= $thumb_zc ?>">
   </form>
 </section>

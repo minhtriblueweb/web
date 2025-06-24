@@ -163,14 +163,18 @@ class danhmuc
         $old_file_path = "uploads/" . $row['file'];
       }
     }
-    $thumb_filename = $this->fn->Upload(
-      $files,
-      '50x50x1',
-      [255, 255, 255, 0],
-      $old_file_path,
-      $watermark = false,
-      $convert_webp = false
-    );
+    $width = isset($data['thumb_width']) ? (int)$data['thumb_width'] : '';
+    $height = isset($data['thumb_height']) ? (int)$data['thumb_height'] : '';
+    $zc = isset($data['thumb_zc']) ? (int)$data['thumb_zc'] : '';
+    $thumb_size = $width . 'x' . $height . 'x' . $zc;
+    $thumb_filename = $this->fn->Upload([
+      'file' => $files['file'],
+      'custom_name' => $data_escaped['namevi'],
+      'thumb' => $thumb_size,
+      'old_file_path' => $old_file_path,
+      'watermark' => false,
+      'convert_webp' => false
+    ]);
     if (!empty($id)) {
       $update_fields = [];
       foreach ($data_escaped as $field => $value) {
@@ -235,14 +239,18 @@ class danhmuc
         $old_file_path = "uploads/" . $row['file'];
       }
     }
-    $thumb_filename = $this->fn->Upload(
-      $files,
-      '100x100x1',
-      [255, 255, 255, 0],
-      $old_file_path,
-      $watermark = false,
-      $convert_webp = false
-    );
+    $width = isset($data['thumb_width']) ? (int)$data['thumb_width'] : '';
+    $height = isset($data['thumb_height']) ? (int)$data['thumb_height'] : '';
+    $zc = isset($data['thumb_zc']) ? (int)$data['thumb_zc'] : '';
+    $thumb_size = $width . 'x' . $height . 'x' . $zc;
+    $thumb_filename = $this->fn->Upload([
+      'file' => $files['file'],
+      'custom_name' => $data_escaped['namevi'],
+      'thumb' => $thumb_size,
+      'old_file_path' => $old_file_path,
+      'watermark' => false,
+      'convert_webp' => false
+    ]);
     if (!empty($id)) {
       $update_fields = [];
       foreach ($data_escaped as $field => $value) {

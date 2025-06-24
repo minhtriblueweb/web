@@ -14,17 +14,6 @@ class Functions
     $this->db = new Database();
     $this->fm = new Format();
   }
-
-  public function get_seo_data(array $data): array
-  {
-    return [
-      'title'       => !empty($data['title']) ? htmlspecialchars($data['title']) : (!empty($data['name']) ? htmlspecialchars($data['name']) : ''),
-      'keywords'    => !empty($data['keywords']) ? htmlspecialchars($data['keywords']) : '',
-      'description' => !empty($data['description']) ? htmlspecialchars($data['description']) : '',
-      'url'         => !empty($data['slug']) ? BASE . $data['slug'] : BASE,
-      'image'       => !empty($data['file']) ? BASE_ADMIN . UPLOADS . $data['file'] : '',
-    ];
-  }
   public function getRedirectPath($params = [])
   {
     $map = [];
@@ -51,9 +40,34 @@ class Functions
     $query = "SELECT * FROM `$table` WHERE id = '$id' LIMIT 1";
     return $this->db->select($query);
   }
+  public function get_only_data(array $options)
+  {
+    $table = mysqli_real_escape_string($this->db->link, $options['table'] ?? '');
+    if (empty($table)) return false;
+    $where = [];
+    foreach ($options as $field => $value) {
+      if ($field == 'table') continue;
+      if ($field === 'status') {
+        $statuses = is_array($value) ? $value : explode(',', $value);
+        $status_conditions = array_map(function ($s) {
+          return "FIND_IN_SET('" . mysqli_real_escape_string($this->db->link, $s) . "', status)";
+        }, $statuses);
+        $where[] = '(' . implode(' AND ', $status_conditions) . ')';
+      } else {
+        $escaped_value = mysqli_real_escape_string($this->db->link, $value);
+        $where[] = "`$field` = '$escaped_value'";
+      }
+    }
+    $where_sql = !empty($where) ? 'WHERE ' . implode(' AND ', $where) : '';
+    $query = "SELECT * FROM `$table` $where_sql LIMIT 1";
+    $result = $this->db->select($query);
+    return $result ? $result->fetch_assoc() : false;
+  }
   private function build_where_conditions($options)
   {
     $where = [];
+
+    // Trạng thái
     if (!empty($options['status'])) {
       if (is_array($options['status'])) {
         $status_conditions = array_map(function ($s) {
@@ -68,25 +82,41 @@ class Functions
         $where[] = "(" . implode(" AND ", $status_conditions) . ")";
       }
     }
+
+    // Theo danh mục
     if (!empty($options['id_list'])) {
       $where[] = "`id_list` = " . (int)$options['id_list'];
     }
+
     if (!empty($options['id_cat'])) {
       $where[] = "`id_cat` = " . (int)$options['id_cat'];
     }
+
+    // Lọc hình ảnh con theo id_parent
     if (!empty($options['id_parent'])) {
       $where[] = "`id_parent` = " . (int)$options['id_parent'];
     }
+
+    // Loại trừ sản phẩm theo id (ví dụ: show sản phẩm liên quan)
+    if (!empty($options['exclude_id'])) {
+      $where[] = "`id` != " . (int)$options['exclude_id'];
+    }
+
+    // Loại theo type
     if (!empty($options['type'])) {
       $type = mysqli_real_escape_string($this->db->link, $options['type']);
       $where[] = "`type` = '$type'";
     }
+
+    // Tìm theo keyword
     if (!empty($options['keyword'])) {
       $keyword = mysqli_real_escape_string($this->db->link, $options['keyword']);
       $where[] = "`namevi` LIKE '%$keyword%'";
     }
+
     return $where;
   }
+
   public function show_data($options = [])
   {
     if (empty($options['table'])) return false;
@@ -311,7 +341,6 @@ class Functions
         imagesetpixel($tmp, $x, $y, $newColor);
       }
     }
-
     return $tmp;
   }
   public function addWatermark($source_path, $destination_path)
@@ -545,34 +574,62 @@ class Functions
       if (file_exists($file_source_path)) unlink($file_source_path);
     }
 
+    // if (!$thumb_filename) {
+    //   $thumb_filename = basename($file_source_path);
+    // }
+
     if (!empty($old_file_path) && file_exists($old_file_path)) {
       unlink($old_file_path);
     }
 
     return $thumb_filename;
   }
-
-  public function Upload(
-    $files,
-    $thumb_name,
-    array $background,
-    string $old_file_path = '',
-    $watermark = false,
-    $convert_webp = false
-  ) {
-    $file_name = $files["file"]["name"] ?? '';
-    $file_tmp = $files["file"]["tmp_name"] ?? '';
-
+  public function Upload(array $options)
+  {
+    $files = $options['file'] ?? [];
+    $custom_name = $options['custom_name'] ?? '';
+    $thumb_name = $options['thumb'] ?? '';
+    $background = $options['background'] ?? [255, 255, 255, 0];
+    $old_file_path = $options['old_file_path'] ?? '';
+    $watermark = $options['watermark'] ?? false;
+    $convert_webp = $options['convert_webp'] ?? false;
+    $file_name = $files["name"] ?? '';
+    $file_tmp = $files["tmp_name"] ?? '';
     if (!empty($file_name) && !empty($file_tmp)) {
       $file_ext = strtolower(pathinfo($file_name, PATHINFO_EXTENSION));
-      $unique_image = substr(md5(time() . rand() . uniqid()), 0, 10) . '.' . $file_ext;
-      $uploaded_image = "uploads/" . $unique_image;
-
+      $upload_dir = 'uploads/';
+      if (!empty($custom_name)) {
+        $slug_name = $this->to_slug($custom_name);
+        $slug_name .= '-' . substr(md5(uniqid() . microtime(true)), 0, 4);
+        $filename = $this->generateUniqueFilename($upload_dir, $slug_name, $file_ext);
+      } else {
+        $filename = substr(md5(time() . rand() . uniqid()), 0, 10) . '.' . $file_ext;
+      }
+      $uploaded_image = $upload_dir . $filename;
       if (move_uploaded_file($file_tmp, $uploaded_image)) {
-        return $this->ImageUpload($uploaded_image, $file_name, $old_file_path, $thumb_name, $background, $watermark, $convert_webp);
+        if (preg_match('/^(\d+)x(\d+)(x\d+)?$/', $thumb_name)) {
+          return $this->ImageUpload($uploaded_image, $file_name, $old_file_path, $thumb_name, $background, $watermark, $convert_webp);
+        } else {
+          if (!empty($old_file_path) && file_exists($old_file_path)) {
+            unlink($old_file_path);
+          }
+          return basename($uploaded_image);
+        }
       }
     }
     return '';
+  }
+  private function generateUniqueFilename($upload_dir, $slug_name, $ext)
+  {
+    $i = 0;
+    do {
+      $suffix = $i > 0 ? '-' . $i : '';
+      $filename = $slug_name . $suffix . '.' . $ext;
+      $file_path = rtrim($upload_dir, '/') . '/' . $filename;
+      $i++;
+    } while (file_exists($file_path));
+
+    return $filename;
   }
   function renderPagination($current_page, $total_pages, $base_url = '?p=')
   {

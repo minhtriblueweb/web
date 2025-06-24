@@ -2,7 +2,11 @@
 $message = '';
 $name_page = 'danh mục cấp 2';
 $table = 'tbl_danhmuc_c2';
+$thumb_width = '100';
+$thumb_height = '100';
+$thumb_zc = '1';
 $show_danhmuc = $fn->show_data(['table' => 'tbl_danhmuc_c1']);
+$result = [];
 $id = $_GET['id'] ?? null;
 if (!empty($id)) {
   $get_id = $fn->get_id($table, $id);
@@ -140,7 +144,9 @@ include 'templates/breadcrumb.php';
                 <p class="photoUpload-or">hoặc</p>
                 <p class="photoUpload-choose btn btn-sm bg-gradient-success">Chọn hình</p>
               </label>
-              <div class="photoUpload-dimension">(.jpg|.gif|.png|.jpeg|.gif|.webp|.WEBP)
+              <div class="photoUpload-dimension">
+                Width: <?= $thumb_width ?> px - Height: <?= $thumb_height ?> px
+                (.jpg|.gif|.png|.jpeg|.gif|.webp|.WEBP)
               </div>
             </div>
           </div>
@@ -185,5 +191,8 @@ include 'templates/breadcrumb.php';
       </div>
     </div>
     <?php include 'templates/seo.php'; ?>
+    <input type="hidden" name="thumb_width" value="<?= $thumb_width ?>">
+    <input type="hidden" name="thumb_height" value="<?= $thumb_height ?>">
+    <input type="hidden" name="thumb_zc" value="<?= $thumb_zc ?>">
   </form>
 </section>

@@ -30,15 +30,11 @@ include 'templates/breadcrumb.php';
   <div class="card-footer form-group-category text-sm bg-light row">
     <div class="form-group col-xl-2 col-lg-3 col-md-4 col-sm-4 mb-2">
       <form class="validation-form" novalidate method="post" action="">
-        <input class="btn btn-sm bg-gradient-info submit-check mb-3" type="submit" id="loc" value="Lọc danh mục"
-          name="loc" />
-        <select id="id_list" name="id_list" class="form-control filter-category select2">
+        <select id="filter-id-list" class="form-control filter-category select2">
           <option value="0">Chọn danh mục</option>
           <?php if ($show_danhmuc_c1 && $show_danhmuc_c1->num_rows > 0): ?>
             <?php while ($resule = $show_danhmuc_c1->fetch_assoc()): ?>
-              <option value="<?= $resule['id']; ?>" <?= (isset($id_list) && $id_list == $resule['id']) ? 'selected' : ''; ?>>
-                <?= $resule['namevi']; ?>
-              </option>
+              <option value="<?= $resule['id']; ?>" <?= (isset($id_list) && $id_list == $resule['id']) ? 'selected' : ''; ?>><?= $resule['namevi']; ?></option>
             <?php endwhile; ?>
           <?php else: ?>
             <option disabled>Không có danh mục</option>
@@ -47,29 +43,29 @@ include 'templates/breadcrumb.php';
       </form>
     </div>
   </div>
-  <div class="card card-primary card-outline text-sm mb-0">
-    <div class="card-header">
-      <h3 class="card-title">Danh sách <?= $name_page ?></h3>
-    </div>
-    <div class="card-body table-responsive p-0">
-      <table class="table table-hover">
-        <thead>
-          <tr>
-            <th class="align-middle" width="5%">
-              <div class="custom-control custom-checkbox my-checkbox">
-                <input type="checkbox" class="custom-control-input" id="selectall-checkbox" />
-                <label for="selectall-checkbox" class="custom-control-label"></label>
-              </div>
-            </th>
-            <th class="align-middle text-center" width="10%">STT</th>
-            <th class="align-middle">Hình</th>
-            <th class="align-middle" style="width: 30%">Tiêu đề</th>
-            <th class="align-middle text-center">Hiển thị</th>
-            <th class="align-middle text-center">Nổi bật</th>
-            <th class="align-middle text-center">Thao tác</th>
-          </tr>
-        </thead>
-        <form class="validation-form" novalidate method="post" action="">
+  <form class="validation-form" novalidate method="post" action="">
+    <div class="card card-primary card-outline text-sm mb-0">
+      <div class="card-header">
+        <h3 class="card-title">Danh sách <?= $name_page ?></h3>
+      </div>
+      <div class="card-body table-responsive p-0">
+        <table class="table table-hover">
+          <thead>
+            <tr>
+              <th class="align-middle" width="5%">
+                <div class="custom-control custom-checkbox my-checkbox">
+                  <input type="checkbox" class="custom-control-input" id="selectall-checkbox" />
+                  <label for="selectall-checkbox" class="custom-control-label"></label>
+                </div>
+              </th>
+              <th class="align-middle text-center" width="10%">STT</th>
+              <th class="align-middle">Hình</th>
+              <th class="align-middle" style="width: 30%">Tiêu đề</th>
+              <th class="align-middle text-center">Hiển thị</th>
+              <th class="align-middle text-center">Nổi bật</th>
+              <th class="align-middle text-center">Thao tác</th>
+            </tr>
+          </thead>
           <tbody>
             <?php if ($show_danhmuc_c2):
               while ($row = $show_danhmuc_c2->fetch_assoc()):
@@ -138,10 +134,10 @@ include 'templates/breadcrumb.php';
               </tr>
             <?php endif; ?>
           </tbody>
-        </form>
-      </table>
+        </table>
+      </div>
     </div>
-  </div>
+  </form>
   <?php if ($total_pages > 1): ?>
     <div class="card-footer text-sm pb-0 mb-5">
       <?= $fn->renderPagination($current_page, $total_pages, "index.php?page=$redirect_url&p="); ?>

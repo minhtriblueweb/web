@@ -4,6 +4,7 @@ $name_page = 'social';
 $table = 'tbl_social';
 $thumb_width = '30';
 $thumb_height = '30';
+$result = [];
 $id = $_GET['id'] ?? null;
 if (!empty($id)) {
   $get_id = $fn->get_id($table, $id);

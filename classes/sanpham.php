@@ -15,35 +15,16 @@ class sanpham
     $this->fn = new Functions();
   }
 
-  public function total_pages_sanpham_lienquan($id, $id_cat, $limit)
-  {
-    $id_cat = mysqli_real_escape_string($this->db->link, $id_cat);
-    $query = "SELECT COUNT(*) as total FROM tbl_sanpham WHERE id_cat = '$id_cat' AND id != '$id'";
-    $result = $this->db->select($query);
-    if ($result) {
-      $row = $result->fetch_assoc();
-      $total_products = $row['total'];
-      $total_pages = ceil($total_products / $limit);
-      return $total_pages;
-    } else {
-      return 0;
-    }
-  }
-
-  public function sanpham_lienquan($id, $id_cat, $records_per_page, $current_page)
-  {
-    $id = mysqli_real_escape_string($this->db->link, $id);
-    $id_cat = mysqli_real_escape_string($this->db->link, $id_cat);
-    $offset = ((int)$current_page - 1) * (int)$records_per_page;
-    $query = "SELECT * FROM tbl_sanpham WHERE id_cat = '$id_cat' AND id != '$id' AND hienthi='hienthi' ORDER BY numb ASC LIMIT $records_per_page OFFSET $offset";
-    $result = $this->db->select($query);
-    return $result;
-  }
-
   public function upload_gallery($data, $files, $id, $id_parent)
   {
     $id = (int)$id;
     $id_parent = (int)$id_parent;
+    $parent_name = '';
+    $parent_query = $this->db->select("SELECT namevi FROM tbl_sanpham WHERE id = '$id_parent' LIMIT 1");
+    if ($parent_query && $parent_query->num_rows > 0) {
+      $parent_row = $parent_query->fetch_assoc();
+      $parent_name = $parent_row['namevi'] ?? '';
+    }
     $table = 'tbl_gallery';
     $data_escaped = [];
     $data_escaped['numb'] = mysqli_real_escape_string($this->db->link, $data['numb'] ?? 0);
@@ -62,14 +43,14 @@ class sanpham
         $row = $old->fetch_assoc();
         $old_file_path = 'uploads/' . $row['file'];
       }
-      $thumb_filename = $this->fn->Upload(
-        ['file' => $files['file']],
-        '500x500x1',
-        [255, 255, 255, 0],
-        $old_file_path,
-        $watermark = true,
-        $convert_webp = true
-      );
+      $thumb_filename = $this->fn->Upload([
+        'file' => $files['file'],
+        'custom_name' => $parent_name,
+        'thumb' => '500x500x1',
+        'old_file_path' => $old_file_path,
+        'watermark' => true,
+        'convert_webp' => true
+      ]);
       if (empty($thumb_filename)) {
         return "Lỗi upload file!";
       }
@@ -97,19 +78,26 @@ class sanpham
   public function them_gallery($data, $files, $id_parent)
   {
     $id_parent = mysqli_real_escape_string($this->db->link, $id_parent);
+    $parent_name = '';
+    $parent_query = $this->db->select("SELECT namevi FROM tbl_sanpham WHERE id = '$id_parent' LIMIT 1");
+    if ($parent_query && $parent_query->num_rows > 0) {
+      $parent_row = $parent_query->fetch_assoc();
+      $parent_name = $parent_row['namevi'] ?? '';
+    }
     $table = 'tbl_gallery';
     for ($i = 0; $i < 6; $i++) {
       $file_key = "file$i";
       if (!empty($files[$file_key]['name']) && $files[$file_key]['error'] == 0) {
         // Upload ảnh
-        $thumb_filename = $this->fn->Upload(
-          ['file' => $files[$file_key]],
-          '500x500x1',
-          [255, 255, 255, 0],
-          '',
-          $watermark = true,
-          $convert_webp = true
-        );
+        $thumb_filename = $this->fn->Upload([
+          'file' => $files[$file_key],
+          'custom_name' => $parent_name,
+          'thumb' => '500x500x1',
+          'background' => [255, 255, 255, 0],
+          'old_file_path' => '',
+          'watermark' => true,
+          'convert_webp' => true
+        ]);
         if (!empty($thumb_filename)) {
           $fields = ['id_parent', 'file', 'numb', 'status'];
           $data_escaped = [];
@@ -152,7 +140,6 @@ class sanpham
     return $result;
   }
 
-
   public function get_gallery($id)
   {
     $id = mysqli_real_escape_string($this->db->link, $id);
@@ -174,7 +161,6 @@ class sanpham
     }
     return false;
   }
-
 
   public function get_danhmuc_by_sanpham($id)
   {
@@ -198,7 +184,6 @@ class sanpham
     $result = $this->db->select($query);
     return $result ? $result->fetch_assoc() : false;
   }
-
 
   public function get_name_danhmuc($id, $table)
   {
@@ -252,14 +237,18 @@ class sanpham
         $old_file_path = "uploads/" . $row['file'];
       }
     }
-    $thumb_filename = $this->fn->Upload(
-      $files,
-      '500x500x1',
-      [255, 255, 255, 0],
-      $old_file_path,
-      $watermark = true,
-      $convert_webp = true
-    );
+    $width = isset($data['thumb_width']) ? (int)$data['thumb_width'] : '';
+    $height = isset($data['thumb_height']) ? (int)$data['thumb_height'] : '';
+    $zc = isset($data['thumb_zc']) ? (int)$data['thumb_zc'] : '';
+    $thumb_size = $width . 'x' . $height . 'x' . $zc;
+    $thumb_filename = $this->fn->Upload([
+      'file' => $files['file'],
+      'custom_name' => $data_escaped['namevi'],
+      'thumb' => $thumb_size,
+      'old_file_path' => $old_file_path,
+      'watermark' => true,
+      'convert_webp' => true
+    ]);
     if (!empty($id)) {
       $update_fields = [];
       foreach ($data_escaped as $field => $value) {

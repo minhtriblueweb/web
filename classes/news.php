@@ -23,85 +23,7 @@ class news
     return $result ? $result->fetch_assoc() : false;
   }
 
-  public function get_baiet_by_slug_and_type($slug, $type)
-  {
-    $slug = mysqli_real_escape_string($this->db->link, $slug);
-    $type = mysqli_real_escape_string($this->db->link, $type);
-    $query = "SELECT * FROM tbl_news WHERE slugvi = '$slug' AND type = '$type' LIMIT 1";
-    $result = $this->db->select($query);
-    return $result ? $result->fetch_assoc() : false;
-  }
-
-  public function show_news_by_type($type, $hienthi = '', $noibat = '')
-  {
-    $conditions = ["type = '$type'"];
-
-    if ($hienthi !== '') {
-      $conditions[] = "hienthi = '$hienthi'";
-    }
-
-    if ($noibat !== '') {
-      $conditions[] = "noibat = '$noibat'";
-    }
-
-    $query = "SELECT * FROM tbl_news";
-    if (!empty($conditions)) {
-      $query .= " WHERE " . implode(" AND ", $conditions);
-    }
-    $query .= " ORDER BY numb,id DESC";
-
-    return $this->db->select($query);
-  }
-
-
-  public function show_chinhsach_noibat($hienthi = '', $noibat = '')
-  {
-    $conditions = ["type = 'chinh-sach'"];
-
-    if ($hienthi !== '') {
-      $conditions[] = "hienthi = '$hienthi'";
-    }
-
-    if ($noibat !== '') {
-      $conditions[] = "noibat = '$noibat'";
-    }
-
-    $query = "SELECT * FROM tbl_news";
-
-    if (!empty($conditions)) {
-      $query .= " WHERE " . implode(" AND ", $conditions);
-    }
-
-    $query .= " ORDER BY numb ASC";
-    return $this->db->select($query);
-  }
-
-
-  public function total_pages_tintuc_lienquan($id, $id_cat, $limit)
-  {
-    $id_cat = mysqli_real_escape_string($this->db->link, $id_cat);
-    $query = "SELECT COUNT(*) as total FROM tbl_news WHERE id_cat = '$id_cat' AND id != '$id'";
-    $result = $this->db->select($query);
-    if ($result) {
-      $row = $result->fetch_assoc();
-      $total_products = $row['total'];
-      $total_pages = ceil($total_products / $limit);
-      return $total_pages;
-    } else {
-      return 0;
-    }
-  }
-
-  public function relatedNews($id, $type)
-  {
-    $id = mysqli_real_escape_string($this->db->link, $id);
-    $type = mysqli_real_escape_string($this->db->link, $type);
-    $query = "SELECT * FROM tbl_news WHERE type = '$type' AND id != '$id' AND hienthi='hienthi' ORDER BY numb ASC";
-    $result = $this->db->select($query);
-    return $result;
-  }
-
-  public function update_ews_by_slug($slug)
+  public function update_views_by_slug($slug)
   {
     $query = "SELECT * FROM tbl_news WHERE slug = '$slug'";
     $result = $this->db->select($query);
@@ -113,21 +35,6 @@ class news
       return $product;
     }
     return false;
-  }
-
-  public function get_danhmuc_by_tintuc($id)
-  {
-    $query = "SELECT tbl_news.*,
-        tbl_danhmuc.name AS danhmuc,
-        tbl_danhmuc.slug AS danhmuc_slug,
-        tbl_danhmuc_c2.name AS danhmuc_c2,
-        tbl_danhmuc_c2.slug AS danhmuc_c2_slug
-        FROM tbl_news
-        INNER JOIN tbl_danhmuc ON tbl_news.id_list = tbl_danhmuc.id
-        LEFT JOIN tbl_danhmuc_c2 ON tbl_news.id_cat = tbl_danhmuc_c2.id
-        WHERE tbl_news.id = '$id'";
-    $result = $this->db->select($query);
-    return $result;
   }
 
   public function save_news($data, $files, $id = null)
@@ -169,7 +76,18 @@ class news
         $old_file_path = "uploads/" . $row['file'];
       }
     }
-    $thumb_filename = $this->fn->Upload($files, '391x215x1', [255, 255, 255, 0], $old_file_path, false, true);
+    $width = isset($data['thumb_width']) ? (int)$data['thumb_width'] : '';
+    $height = isset($data['thumb_height']) ? (int)$data['thumb_height'] : '';
+    $zc = isset($data['thumb_zc']) ? (int)$data['thumb_zc'] : '';
+    $thumb_size = $width . 'x' . $height . 'x' . $zc;
+    $thumb_filename = $this->fn->Upload([
+      'file' => $files['file'],
+      'custom_name' => $data_escaped['namevi'],
+      'thumb' => $thumb_size,
+      'old_file_path' => $old_file_path,
+      'watermark' => false,
+      'convert_webp' => true
+    ]);
     if (!empty($id)) {
       $update_fields = [];
       foreach ($data_escaped as $field => $value) {

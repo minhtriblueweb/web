@@ -11,7 +11,7 @@ if (preg_match('/^page-(\d+)$/', end($requestParts), $matches)) {
   $current_page = (int)$matches[1];
   array_pop($requestParts); // Bỏ 'page-x' ra khỏi mảng
 }
-$slugPath = implode('/', $requestParts);
+$slug = implode('/', $requestParts);
 
 // Gán lại vào $_GET để dùng cho phân trang
 $_GET['page'] = $current_page;
@@ -35,30 +35,38 @@ $reserved_slugs = array_merge(array_keys($routes), ['dang-nhap', 'dang-ky']);
 // ===== Xử lý định tuyến =====
 $page = '404.php'; // Mặc định là lỗi
 
-if (isset($routes[$slugPath])) {
+if (isset($routes[$slug])) {
   // Route tĩnh
-  $page = $routes[$slugPath];
-} elseif ($slugPath !== '') {
+  $page = $routes[$slug];
+} elseif ($slug !== '') {
   // Danh mục cấp 1
-  if ($danhmuc->slug_exists_lv1($slugPath)) {
-    $_GET['slug'] = $slugPath;
+  if ($danhmuc->slug_exists_lv1($slug)) {
+    $_GET['slug'] = $slug;
     $page = 'product_list_lv1.php';
   }
   // Danh mục cấp 2
-  elseif ($info_lv2 = $danhmuc->find_lv2_with_parent($slugPath)) {
+  elseif ($info_lv2 = $danhmuc->find_lv2_with_parent($slug)) {
     $_GET['slug'] = $info_lv2['slugvi'];
     $_GET['slug_lv1'] = $info_lv2['slug_lv1'];
     $page = 'product_list_lv2.php';
   }
   // Bài viết
-  elseif ($newsData = $news->get_news_by_slug($slugPath)) {
-    $_GET['slug'] = $slugPath;
+  elseif ($newsData = $fn->get_only_data([
+    'table' => 'tbl_news',
+    'slugvi' => $slug,
+    'status' => 'hienthi'
+  ])) {
+    $_GET['slug'] = $slug;
     $_GET['type'] = $newsData['type'];
     $page = 'news.php';
   }
   // Chi tiết sản phẩm
-  elseif ($productData = $sanpham->get_sanpham_by_slug($slugPath)) {
-    $_GET['slug'] = $slugPath;
+  elseif ($productData = $fn->get_only_data([
+    'table' => 'tbl_sanpham',
+    'slugvi' => $slug,
+    'status' => 'hienthi'
+  ])) {
+    $_GET['slug'] = $slug;
     $page = 'product_details.php';
   }
 }

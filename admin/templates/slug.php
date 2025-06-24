@@ -6,7 +6,7 @@
   <div class="card-body card-slug">
     <?php if (!empty($id)) : ?>
       <label for="slugchange" class="d-inline-block align-middle text-info mb-2 mr-2">Thay đổi đường dẫn theo tiêu đề mới:</label>
-      <div class="custom-control custom-checkbox d-inline-block align-middle">
+      <div class="custom-control custom-checkbox d-inline-block align-middle mb-2">
         <input type="checkbox" class="custom-control-input" name="slugchange" id="slugchange">
         <label for="slugchange" class="custom-control-label"></label>
       </div>

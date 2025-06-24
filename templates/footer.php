@@ -30,13 +30,13 @@
         </div>
       </div>
       <div class="footer-right">
-        <div class="box-policy">
+        <div class="box-policy pe-3">
           <div class="footer-policy">
             <p class="footer-title">Chính sách hỗ trợ</p>
             <ul class="footer-ul">
               <?php $show_chinhsach = $fn->show_data([
                 'table' => 'tbl_news',
-                'status' => 'hienthi,noibat',
+                'status' => 'hienthi',
                 'type' => 'chinhsach'
               ]);
               ?>

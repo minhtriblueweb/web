@@ -52,7 +52,6 @@ function filterCategory(url) {
       }
     });
   }
-
   return url;
 }
 
@@ -1509,6 +1508,8 @@ $(document).ready(function () {
       }
     });
   }
+  /* Ajax filter-table-category */
+
   /* Ajax place */
   if ($(".select-place").length) {
     $("body").on("change", ".select-place", function () {

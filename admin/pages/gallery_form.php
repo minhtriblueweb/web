@@ -143,5 +143,6 @@ include 'templates/breadcrumb.php';
         </div>
       <?php endif; ?>
     </div>
+    <input type="hidden" name="thumb_height" value="<?= $thumb_height ?>">
   </form>
 </section>

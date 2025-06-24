@@ -2,6 +2,9 @@
 $message = '';
 $name_page = 'danh mục cấp 1';
 $table = 'tbl_danhmuc_c1';
+$thumb_width = '50';
+$thumb_height = '50';
+$thumb_zc = '1';
 $result = [];
 $id = $_GET['id'] ?? null;
 if (!empty($id)) {
@@ -99,6 +102,37 @@ include 'templates/breadcrumb.php'; ?>
       <div class="col-xl-4">
         <div class="card card-primary card-outline text-sm">
           <div class="card-header">
+            <h3 class="card-title">Hình ảnh <?= $name_page ?></h3>
+            <div class="card-tools">
+              <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                <i class="fas fa-minus"></i>
+              </button>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="photoUpload-zone">
+              <div class="photoUpload-detail" id="photoUpload-preview">
+                <img src="<?= empty($result['file']) ? NO_IMG : BASE_ADMIN . UPLOADS . $result['file']; ?>"
+                  class="rounded" alt="Alt Photo" />
+              </div>
+              <label class="photoUpload-file" id="photo-zone" for="file-zone">
+                <input type="file" name="file" id="file-zone" />
+                <i class="fas fa-cloud-upload-alt"></i>
+                <p class="photoUpload-drop">Kéo và thả hình vào đây</p>
+                <p class="photoUpload-or">hoặc</p>
+                <p class="photoUpload-choose btn btn-sm bg-gradient-success">
+                  Chọn hình
+                </p>
+              </label>
+              <div class="photoUpload-dimension">
+                Width: <?= $thumb_width ?> px - Height: <?= $thumb_height ?> px
+                (.jpg|.gif|.png|.jpeg|.gif|.webp|.WEBP)
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card card-primary card-outline text-sm">
+          <div class="card-header">
             <h3 class="card-title">Thông tin</h3>
             <div class="card-tools">
               <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
@@ -134,38 +168,11 @@ include 'templates/breadcrumb.php'; ?>
             </div>
           </div>
         </div>
-        <div class="card card-primary card-outline text-sm">
-          <div class="card-header">
-            <h3 class="card-title">Hình ảnh <?= $name_page ?></h3>
-            <div class="card-tools">
-              <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                <i class="fas fa-minus"></i>
-              </button>
-            </div>
-          </div>
-          <div class="card-body">
-            <div class="photoUpload-zone">
-              <div class="photoUpload-detail" id="photoUpload-preview">
-                <img src="<?= empty($result['file']) ? NO_IMG : BASE_ADMIN . UPLOADS . $result['file']; ?>"
-                  class="rounded" alt="Alt Photo" />
-              </div>
-              <label class="photoUpload-file" id="photo-zone" for="file-zone">
-                <input type="file" name="file" id="file-zone" />
-                <i class="fas fa-cloud-upload-alt"></i>
-                <p class="photoUpload-drop">Kéo và thả hình vào đây</p>
-                <p class="photoUpload-or">hoặc</p>
-                <p class="photoUpload-choose btn btn-sm bg-gradient-success">
-                  Chọn hình
-                </p>
-              </label>
-              <div class="photoUpload-dimension">
-                (.jpg|.gif|.png|.jpeg|.gif|.webp|.WEBP)
-              </div>
-            </div>
-          </div>
-        </div>
       </div>
     </div>
     <?php include 'templates/seo.php'; ?>
+    <input type="hidden" name="thumb_width" value="<?= $thumb_width ?>">
+    <input type="hidden" name="thumb_height" value="<?= $thumb_height ?>">
+    <input type="hidden" name="thumb_zc" value="<?= $thumb_zc ?>">
   </form>
 </section>

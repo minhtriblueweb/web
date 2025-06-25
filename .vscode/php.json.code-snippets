@@ -1,0 +1,15 @@
+{
+  "fn-getImage": {
+    "prefix": "imgfn",
+    "body": [
+      "<?= \\$fn->getImage([",
+      "  'file' => '${1:file.jpg}',",
+      "  'width' => ${2:50},",
+      "  'height' => ${3:50},",
+      "  'alt' => '${4:alt text}',",
+      "  'title' => '${5:title text}'",
+      "]) ?>\n"
+    ],
+    "description": "Tạo thẻ <img> từ hàm getImage()"
+  }
+}

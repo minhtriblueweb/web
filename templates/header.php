@@ -54,7 +54,7 @@
   <!-- Css Files -->
   <link href="<?= BASE ?>assets/css/animate.min.css" rel="stylesheet" />
   <link href="<?= BASE ?>assets/bootstrap/bootstrap.css" rel="stylesheet" />
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" rel="stylesheet" />
+  <link href="<?= BASE ?>assets/fontawesome611/css/all.min.css" rel="stylesheet" />
   <link href="<?= BASE ?>assets/holdon/HoldOn.css" rel="stylesheet" />
   <link href="<?= BASE ?>assets/holdon/HoldOn-style.css" rel="stylesheet" />
   <link href="<?= BASE ?>assets/confirm/confirm.css" rel="stylesheet" />

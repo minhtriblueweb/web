@@ -734,7 +734,7 @@ class Functions
     $style    = !empty($data['style']) ? ' style="' . htmlspecialchars($data['style']) . '"' : '';
     $width    = isset($data['width']) ? ' width="' . (int)$data['width'] . '"' : '';
     $height   = isset($data['height']) ? ' height="' . (int)$data['height'] . '"' : '';
-    $errorImg = 'assets/img/noimage.png';
+    $errorImg = BASE_ADMIN . 'assets/img/noimage.png';
     $src      = empty($file) ? NO_IMG : BASE_ADMIN . UPLOADS . htmlspecialchars($file);
 
     return '<img src="' . $src . '"'

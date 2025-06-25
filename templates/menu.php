@@ -40,9 +40,12 @@ if ($danhmuc_lv1 && $danhmuc_lv1->num_rows > 0) {
             <li>
               <a title="<?= $dm['namevi'] ?>" href="<?= $dm['slugvi'] ?>">
                 <span class="scale-img">
-                  <img width="25"
-                    src="<?= empty($dm['file']) ? NO_IMG : BASE_ADMIN . UPLOADS . $dm['file'] ?>"
-                    alt="<?= $dm['namevi'] ?>" title="<?= $dm['namevi'] ?>" />
+                  <?= $fn->getImage([
+                    'file' => $dm['file'],
+                    'width' => 25,
+                    'alt' => $dm['namevi'],
+                    'title' => $dm['namevi']
+                  ]) ?>
                 </span>
                 <?= $dm['namevi'] ?>
                 <?= $has_sub ? '<i class="fa-solid fa-angle-right"></i>' : '' ?>

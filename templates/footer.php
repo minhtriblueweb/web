@@ -133,11 +133,10 @@
     var CONFIG_BASE = "<?= BASE ?>";
     var ASSET = "<?= BASE ?>";
     var WEBSITE_NAME = "<?= $seo['web_name'] ?>";
-    var TIMENOW = "08/09/2024";
+    var TIMENOW = "<?= date('d/m/Y') ?>";
     var SHIP_CART = false;
     var RECAPTCHA_ACTIVE = true;
     var RECAPTCHA_SITEKEY = "6Lcy4r0ZAAAAAKCm-yZWmkiZK6GO49G--KW30rNS";
-    var GOTOP = ASSET + "assets/images/top.png";
     var PATH_JSON = "./assets/jsons/";
     var LANG = {
       no_keywords: "Chưa nhập từ khóa tìm kiếm",
@@ -185,21 +184,14 @@
     {
       "@context": "https://schema.org",
       "@type": "Organization",
-      "name": "<?= $seo['web_name'] ?>",
+      "name": "<?= $seo['title'] ?? $web_name ?>",
       "url": "<?= BASE ?>",
       "sameAs": [
-        <?php
-        $sameAs = [];
-        $show_social = $social->show_social("hienthi");
-        while ($result_social = $show_social->fetch_assoc()):
-          $sameAs[] = '"' . $result_social['link'] . '"';
-        endwhile;
-        echo implode(", ", $sameAs);
-        ?>
-      ],
+        <?= implode(", ", array_map(fn($link) => '"' . $link . '"', $sameAs)) ?>
+      ]
       "address": {
         "@type": "PostalAddress",
-        "streetAddress": "446/6 Đường Vĩnh Viễn, Phường 8, Quận 10, Thành phố Hồ Chí Minh",
+        "streetAddress": "",
         "addressRegion": "Ho Chi Minh",
         "postalCode": "70000",
         "addressCountry": "vi"

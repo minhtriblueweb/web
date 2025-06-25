@@ -1,7 +1,6 @@
 <?php
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
-// Gọi file cấu hình chính
 $baseDir = dirname(__DIR__);
 require_once $baseDir . '/config/config.php';
 
@@ -22,6 +21,7 @@ spl_autoload_register(function ($class) use ($baseDir) {
 // Tạo đối tượng
 $db = new Database();
 $fn = new Functions();
+$fm = new Format();
 
 // Khởi tạo sẵn các class hay dùng
 $classes = ['danhmuc', 'sanpham', 'slideshow', 'tieuchi', 'danhgia', 'setting', 'social', 'news', 'trangtinh', 'payment'];

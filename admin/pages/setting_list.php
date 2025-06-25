@@ -47,7 +47,14 @@ include 'templates/breadcrumb.php';
                   <div class="d-flex justify-content-center">
                     <div class="d-flex justify-content-center">
                       <div class="border rounded bg-white d-flex align-items-center justify-content-center" style="width:<?= $thumb_width ?>px; height:<?= $thumb_height ?>px;">
-                        <img src="<?= empty($result[$type]) ? NO_IMG : BASE_ADMIN . UPLOADS . htmlspecialchars($result[$type]); ?>" class="img-fluid" id="preview-image" style="max-height:100%; max-width:100%;" alt="<?= $type ?>">
+                        <?= $fn->getImage([
+                          'file' => !empty($result[$type]) ? $result[$type] : '',
+                          'class' => 'img-fluid',
+                          'id'    => 'preview-image',
+                          'style' => 'max-height:100%; max-width:100%;',
+                          'alt'   => $type,
+                          'title' => $type
+                        ]) ?>
                       </div>
                     </div>
 

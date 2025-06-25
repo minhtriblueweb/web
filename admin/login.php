@@ -17,6 +17,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST["btn_login"])) {
   $password = $_POST['password'] ?? '';
   $login_check = $login->login($username, $password);
   if ($login_check === "success") {
+    Session::set("adminlogin", true);
+    Session::set("last_activity", time());
     header("Location: index.php");
     exit();
   } else {

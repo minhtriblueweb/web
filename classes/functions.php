@@ -579,21 +579,14 @@ class Functions
     $convert_webp = false
   ) {
     $thumb_filename = $this->createFixedThumbnail($file_source_path, $thumb_name, $background, $watermark, $convert_webp);
-
     if (!$thumb_filename) {
       $thumb_filename = basename($file_source_path);
     } else {
       if (file_exists($file_source_path)) unlink($file_source_path);
     }
-
-    // if (!$thumb_filename) {
-    //   $thumb_filename = basename($file_source_path);
-    // }
-
     if (!empty($old_file_path) && file_exists($old_file_path)) {
       unlink($old_file_path);
     }
-
     return $thumb_filename;
   }
   public function Upload(array $options)
@@ -646,12 +639,8 @@ class Functions
   function renderPagination($current_page, $total_pages, $base_url = 'index.php')
   {
     if ($total_pages <= 1) return '';
-
-    // Lấy tất cả các tham số GET hiện tại (trừ 'p')
     $queryParams = $_GET;
     unset($queryParams['p']);
-
-    // Tạo query string từ các tham số hiện tại
     $queryString = http_build_query($queryParams);
     $queryString = $queryString ? $queryString . '&' : '';
 
@@ -705,8 +694,7 @@ class Functions
     $show_dots = false;
     for ($i = 1; $i <= $total_pages; $i++) {
       if (
-        $i == 1 || $i == $total_pages || // Trang đầu, cuối luôn hiển thị
-        ($i >= $current_page - $range && $i <= $current_page + $range) // Các trang gần current page
+        $i == 1 || $i == $total_pages || ($i >= $current_page - $range && $i <= $current_page + $range)
       ) {
         if ($show_dots) {
           $pagination_html .= '<li class="page-item disabled"><a class="page-link">...</a></li>';
@@ -738,22 +726,29 @@ class Functions
 
   public function getImage($data = [])
   {
-    $width = isset($data['width']) ? (int)$data['width'] : 300;
-    $height = isset($data['height']) ? (int)$data['height'] : 300;
-    $zc = isset($data['zc']) ? (int)$data['zc'] : 1;
-    $class = isset($data['class']) ? $data['class'] : '';
-    $image = isset($data['image']) ? $data['image'] : '';
-    $alt = isset($data['alt']) ? $data['alt'] : '';
-    $title = isset($data['title']) ? $data['title'] : $alt;
-    $thumbs = defined('THUMBS') ? THUMBS : 'thumbs';
+    $file     = $data['file'] ?? '';
+    $class    = $data['class'] ?? '';
+    $alt      = htmlspecialchars($data['alt'] ?? '');
+    $title    = htmlspecialchars($data['title'] ?? $alt);
+    $id       = !empty($data['id']) ? ' id="' . htmlspecialchars($data['id']) . '"' : '';
+    $style    = !empty($data['style']) ? ' style="' . htmlspecialchars($data['style']) . '"' : '';
+    $width    = isset($data['width']) ? ' width="' . (int)$data['width'] . '"' : '';
+    $height   = isset($data['height']) ? ' height="' . (int)$data['height'] . '"' : '';
     $errorImg = 'assets/img/noimage.png';
-    if (empty($image)) {
-      $src = $errorImg;
-    } else {
-      $src = BASE_ADMIN . UPLOADS . $image;
-    }
-    return "<img src='{$src}' class='{$class}' width='{$width}' height='{$height}' alt='{$alt}' title='{$title}' onerror=\"this.src='{$errorImg}'\">";
+    $src      = empty($file) ? NO_IMG : BASE_ADMIN . UPLOADS . htmlspecialchars($file);
+
+    return '<img src="' . $src . '"'
+      . (!empty($class) ? ' class="' . htmlspecialchars($class) . '"' : '')
+      . $id
+      . $style
+      . $width
+      . $height
+      . (!empty($alt) ? ' alt="' . $alt . '"' : '')
+      . (!empty($title) ? ' title="' . $title . '"' : '')
+      . ' onerror="this.src=\'' . $errorImg . '\'"'
+      . '>';
   }
+
 
   public function to_slug($string)
   {

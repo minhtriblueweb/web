@@ -85,8 +85,10 @@ include 'templates/breadcrumb.php';
                 <!-- Hình ảnh -->
                 <td class="align-middle text-center">
                   <a href="<?= $linkEdit . $id ?>">
-                    <img class="rounded img-preview"
-                      src="<?= empty($row['file']) ? NO_IMG : BASE_ADMIN . UPLOADS . $row['file'] ?>">
+                    <?= $fn->getImage([
+                      'file' => $row['file'],
+                      'class' => 'rounded img-preview',
+                    ]) ?>
                   </a>
                 </td>
 

@@ -1,20 +1,20 @@
 <?php
 
 /**
- *Session Class
+ * Session Class
  **/
 class Session
 {
+  // Thời gian timeout (tính bằng giây) - mặc định 30 phút
+  private static $timeout = 1800;
+
   public static function init()
   {
-    if (version_compare(phpversion(), '5.4.0', '<')) {
-      if (session_id() == '') {
-        session_start();
-      }
-    } else {
-      if (session_status() == PHP_SESSION_NONE) {
-        session_start();
-      }
+    if (session_status() === PHP_SESSION_NONE) {
+      // Chỉ cấu hình ini_set nếu session chưa bắt đầu
+      ini_set('session.gc_maxlifetime', self::$timeout);
+      ini_set('session.cookie_lifetime', 0); // 0 = cookie hết khi đóng trình duyệt
+      session_start();
     }
   }
 
@@ -25,37 +25,53 @@ class Session
 
   public static function get($key)
   {
-    if (isset($_SESSION[$key])) {
-      return $_SESSION[$key];
-    } else {
-      return false;
-    }
+    return $_SESSION[$key] ?? false;
   }
 
   public static function checkSession()
   {
     self::init();
-    if (self::get("adminlogin") == false) {
+
+    $last_activity = self::get("last_activity");
+
+    // Nếu chưa đăng nhập hoặc vượt quá thời gian timeout
+    if (self::get("adminlogin") == false || !$last_activity || (time() - $last_activity > self::$timeout)) {
       self::destroy();
       header("Location:dang-nhap");
+      exit();
     }
+
+    // Cập nhật thời gian hoạt động mỗi lần tương tác
+    self::set("last_activity", time());
   }
 
   public static function checkLogin()
   {
     self::init();
-    if (self::get("adminLogin") == true) {
+    if (self::get("adminlogin") == true) {
       header("Location:index.php");
+      exit();
     }
   }
 
   public static function destroy()
   {
-    if (session_id() == '') session_start(); // Khởi động nếu chưa có
+    if (session_id() == '') session_start(); // Đảm bảo session đã được khởi động
     session_unset();
     session_destroy();
 
     // Xóa cookie nếu có dùng
-    setcookie(session_name(), '', time() - 3600, '/');
+    if (ini_get("session.use_cookies")) {
+      $params = session_get_cookie_params();
+      setcookie(
+        session_name(),
+        '',
+        time() - 42000,
+        $params["path"],
+        $params["domain"],
+        $params["secure"],
+        $params["httponly"]
+      );
+    }
   }
 }

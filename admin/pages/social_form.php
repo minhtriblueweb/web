@@ -136,7 +136,13 @@ include 'templates/breadcrumb.php';
           <div class="card-body">
             <div class="photoUpload-zone">
               <div class="photoUpload-detail" id="photoUpload-preview">
-                <a data-fancybox href=""><img class="rounded" src="<?= empty($result['file']) ? NO_IMG : BASE_ADMIN . UPLOADS . $result['file']; ?>" alt="Alt Photo" /></a>
+                <a data-fancybox href="">
+                  <?= $fn->getImage([
+                    'file' => $result['file'] ?? '',
+                    'class' => 'rounded',
+                    'alt' => 'Alt Photo',
+                  ]) ?>
+                </a>
               </div>
               <label class="photoUpload-file" id="photo-zone" for="file-zone">
                 <input type="file" name="file" id="file-zone">

@@ -4,9 +4,6 @@ $thumb_width = '300';
 $thumb_height = '120';
 if ($get_watermark) {
   $result = $get_watermark->fetch_assoc();
-  $watermark_src = empty($result['watermark'])
-    ? NO_IMG
-    : BASE_ADMIN . "uploads/" . htmlspecialchars($result['watermark']);
 }
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['upload'])) {
   $update = $setting->update_watermark($_POST, $_FILES);
@@ -50,7 +47,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['upload'])) {
                     <div class="d-flex justify-content-center">
                       <div class="d-flex justify-content-center">
                         <div class="border rounded bg-white d-flex align-items-center justify-content-center" style="width:<?= $thumb_width ?>px; height:<?= $thumb_height ?>px;">
-                          <img src="<?= $watermark_src ?>" class="img-fluid" id="preview-image" style="max-height:100%; max-width:100%;" alt="Watermark">
+                          <?= $fn->getImage([
+                            'file' => $result['watermark'],
+                            'class' => 'img-fluid',
+                            'alt'   => 'Watermark',
+                            'title' => 'Watermark',
+                            'id'    => 'preview-image',
+                            'style' => 'max-height:100%; max-width:100%;'
+                          ]) ?>
                         </div>
                       </div>
 

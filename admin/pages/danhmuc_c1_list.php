@@ -53,7 +53,7 @@ include 'templates/breadcrumb.php'; ?>
               <?php while ($row = $show_danhmuc->fetch_assoc()):
                 $id = $row['id'];
                 $name = $row['namevi'];
-                $file = empty($row['file']) ? NO_IMG : BASE_ADMIN . UPLOADS . $row['file'];
+                $file = $row['file'];
               ?>
                 <tr>
                   <!-- Checkbox chọn -->
@@ -75,7 +75,11 @@ include 'templates/breadcrumb.php'; ?>
                   <!-- Ảnh -->
                   <td class="align-middle">
                     <a href="<?= $linkEdit . $id ?>" title="<?= $name ?>">
-                      <img src="<?= $file ?>" alt="<?= $name ?>" class="rounded img-preview" />
+                      <?= $fn->getImage([
+                        'file' => $file,
+                        'class' => 'rounded img-preview',
+                        'alt' => $name,
+                      ]) ?>
                     </a>
                   </td>
 

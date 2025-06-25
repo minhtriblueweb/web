@@ -102,7 +102,7 @@ include 'templates/breadcrumb.php'; ?>
       <div class="col-xl-4">
         <div class="card card-primary card-outline text-sm">
           <div class="card-header">
-            <h3 class="card-title">Hình ảnh <?= $name_page ?></h3>
+            <h3 class="card-title">Icon <?= $name_page ?></h3>
             <div class="card-tools">
               <button type="button" class="btn btn-tool" data-card-widget="collapse">
                 <i class="fas fa-minus"></i>
@@ -112,8 +112,13 @@ include 'templates/breadcrumb.php'; ?>
           <div class="card-body">
             <div class="photoUpload-zone">
               <div class="photoUpload-detail" id="photoUpload-preview">
-                <img src="<?= empty($result['file']) ? NO_IMG : BASE_ADMIN . UPLOADS . $result['file']; ?>"
-                  class="rounded" alt="Alt Photo" />
+                <?= $fn->getImage([
+                  'width' => $thumb_width,
+                  'height' => $thumb_height,
+                  'file' => $result['file'] ?? '',
+                  'class' => 'rounded',
+                  'alt' => 'Alt Photo',
+                ]) ?>
               </div>
               <label class="photoUpload-file" id="photo-zone" for="file-zone">
                 <input type="file" name="file" id="file-zone" />

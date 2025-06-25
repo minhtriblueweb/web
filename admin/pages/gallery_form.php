@@ -97,7 +97,11 @@ include 'templates/breadcrumb.php';
                   <div class="photoUpload-zone w-25">
                     <div class="photoUpload-detail" id="photoUpload-preview">
                       <a data-fancybox href="">
-                        <img src="<?= empty($result['file']) ? NO_IMG : BASE_ADMIN . UPLOADS . $result['file']; ?>" alt="Alt Photo" class="rounded" />
+                        <?= $fn->getImage([
+                          'file' => $result['file'],
+                          'class' => 'rounded',
+                          'alt' => 'Alt Photo',
+                        ]) ?>
                       </a>
                     </div>
                     <label class="photoUpload-file" id="photo-zone" for="file-zone">

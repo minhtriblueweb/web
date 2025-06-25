@@ -98,9 +98,7 @@ include 'templates/breadcrumb.php';
                 $id = $row['id'];
                 $name = $row['namevi'];
                 $slug = $row['slugvi'];
-                $img = !empty($row['file'])
-                  ? BASE_ADMIN . UPLOADS . $row['file']
-                  : NO_IMG;
+                $file =  $row['file'];
               ?>
                 <tr>
                   <!-- Checkbox chọn -->
@@ -120,7 +118,11 @@ include 'templates/breadcrumb.php';
                   <!-- Ảnh sản phẩm -->
                   <td class="align-middle">
                     <a href="<?= $linkEdit . $id ?>" title="<?= $name ?>">
-                      <img class="rounded img-preview" src="<?= $img ?>" alt="<?= $name ?>" />
+                      <?= $fn->getImage([
+                        'file' => $file,
+                        'class' => 'rounded img-preview',
+                        'alt' => $name,
+                      ]) ?>
                     </a>
                   </td>
 

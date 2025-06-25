@@ -41,7 +41,7 @@ include 'templates/breadcrumb.php';
             </th>
             <th class="align-middle text-center" width="10%">STT</th>
             <th class="align-middle text-center" width="8%">Hình</th>
-            <th class="align-middle" style="width:30%">Tiêu đề</th>
+            <th class="align-middle" width="20%">Tiêu đề</th>
             <th class="align-middle">Link</th>
             <th class="align-middle text-center">Hiển thị</th>
             <th class="align-middle text-center">Thao tác</th>
@@ -55,7 +55,7 @@ include 'templates/breadcrumb.php';
               $numb     = $row['numb'];
               $link     = $row['link'];
               $status   = $row['status'] ?? '';
-              $imgSrc   = !empty($row['file']) ? BASE_ADMIN . UPLOADS . $row['file'] : NO_IMG;
+              $file     = $row['file'];
               $linkEditId  = $linkEdit . $id;
               $linkDeleteId = $linkDelete . $id;
           ?>
@@ -75,7 +75,11 @@ include 'templates/breadcrumb.php';
                 </td>
                 <td class="align-middle text-center">
                   <a href="<?= $linkEditId ?>" title="">
-                    <img src="<?= $imgSrc ?>" class="rounded img-preview" alt="<?= $name ?>">
+                    <?= $fn->getImage([
+                      'file' => $file,
+                      'class' => 'rounded img-preview',
+                      'alt' => $name,
+                    ]) ?>
                   </a>
                 </td>
                 <td class="align-middle">

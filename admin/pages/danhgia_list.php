@@ -53,7 +53,7 @@ include 'templates/breadcrumb.php';
               $name     = $row['namevi'];
               $numb     = $row['numb'];
               $status   = $row['status'] ?? '';
-              $imgSrc   = !empty($row['file']) ? BASE_ADMIN . UPLOADS . $row['file'] : NO_IMG;
+              $file     = $row['file'];
               $linkEditId    = $linkEdit . $id;
               $linkDeleteId  = $linkDelete . $id;
             ?>
@@ -75,7 +75,11 @@ include 'templates/breadcrumb.php';
                 <!-- Ảnh -->
                 <td class="align-middle">
                   <a href="<?= $linkEditId ?>" title="<?= $name ?>">
-                    <img class="rounded img-preview" src="<?= $imgSrc ?>" alt="<?= $name ?>" />
+                    <?= $fn->getImage([
+                      'file' => $file,
+                      'class' => 'rounded img-preview',
+                      'alt' => $name,
+                    ]) ?>
                   </a>
                 </td>
 

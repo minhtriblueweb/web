@@ -1,65 +1,69 @@
 <?php
-// Truy vấn danh mục cấp 1
+// Truy vấn danh mục cấp 1 và cấp 2
 $danhmuc_lv1 = $fn->show_data([
   'table' => 'tbl_danhmuc_c1',
   'status' => 'hienthi'
 ]);
 
-// Truy vấn toàn bộ danh mục cấp 2
 $danhmuc_lv2_all = $fn->show_data([
   'table' => 'tbl_danhmuc_c2',
   'status' => 'hienthi'
 ]);
 
-// Gom nhóm danh mục cấp 2 theo id_list
+// Gom nhóm cấp 2 theo id_list
 $danhmuc_lv2_group = [];
 if ($danhmuc_lv2_all && $danhmuc_lv2_all->num_rows > 0) {
   while ($row = $danhmuc_lv2_all->fetch_assoc()) {
     $danhmuc_lv2_group[$row['id_list']][] = $row;
   }
 }
+
+// Gộp thành mảng cây
+$menu_tree = [];
+if ($danhmuc_lv1 && $danhmuc_lv1->num_rows > 0) {
+  while ($lv1 = $danhmuc_lv1->fetch_assoc()) {
+    $lv1['sub'] = $danhmuc_lv2_group[$lv1['id']] ?? [];
+    $menu_tree[] = $lv1;
+  }
+}
 ?>
+
 <div class="menu">
   <div class="wrap-content d-flex flex-wrap justify-content-between align-items-center">
     <!-- Menu bên trái: Danh mục sản phẩm -->
     <div class="menu-bar-left">
       <p class="title">DANH MỤC SẢN PHẨM</p>
-      <?php if ($danhmuc_lv1 && $danhmuc_lv1->num_rows > 0): ?>
-        <div class="box-ul-left">
-          <ul>
-            <?php while ($dm = $danhmuc_lv1->fetch_assoc()):
-              $id_lv1 = $dm['id'];
-              $sub_lv2 = $danhmuc_lv2_group[$id_lv1] ?? [];
-              $has_sub = count($sub_lv2) > 0;
-            ?>
-              <li>
-                <a title="<?= $dm['namevi'] ?>" href="<?= $dm['slugvi'] ?>">
-                  <span class="scale-img">
-                    <img width="25"
-                      src="<?= empty($dm['file']) ? NO_IMG : BASE_ADMIN . UPLOADS . $dm['file'] ?>"
-                      alt="<?= $dm['namevi'] ?>" title="<?= $dm['namevi'] ?>" />
-                  </span>
-                  <?= $dm['namevi'] ?>
-                  <?= $has_sub ? '<i class="fa-solid fa-angle-right"></i>' : '' ?>
-                </a>
-                <?php if ($has_sub): ?>
-                  <div class="box-menu-cat-left">
-                    <ul>
-                      <?php foreach ($sub_lv2 as $dm2): ?>
-                        <li>
-                          <a class="transition" title="<?= $dm2['namevi'] ?>" href="<?= $dm2['slugvi'] ?>">
-                            <?= $dm2['namevi'] ?>
-                          </a>
-                        </li>
-                      <?php endforeach; ?>
-                    </ul>
-                  </div>
-                <?php endif; ?>
-              </li>
-            <?php endwhile; ?>
-          </ul>
-        </div>
-      <?php endif; ?>
+      <div class="box-ul-left">
+        <ul>
+          <?php foreach ($menu_tree as $dm): ?>
+            <?php $has_sub = count($dm['sub']) > 0; ?>
+            <li>
+              <a title="<?= $dm['namevi'] ?>" href="<?= $dm['slugvi'] ?>">
+                <span class="scale-img">
+                  <img width="25"
+                    src="<?= empty($dm['file']) ? NO_IMG : BASE_ADMIN . UPLOADS . $dm['file'] ?>"
+                    alt="<?= $dm['namevi'] ?>" title="<?= $dm['namevi'] ?>" />
+                </span>
+                <?= $dm['namevi'] ?>
+                <?= $has_sub ? '<i class="fa-solid fa-angle-right"></i>' : '' ?>
+              </a>
+              <?php if ($has_sub): ?>
+                <div class="box-menu-cat-left">
+                  <ul>
+                    <?php foreach ($dm['sub'] as $dm2): ?>
+                      <li>
+                        <a class="transition" title="<?= $dm2['namevi'] ?>" href="<?= $dm2['slugvi'] ?>">
+                          <?= $dm2['namevi'] ?>
+                        </a>
+                      </li>
+                    <?php endforeach; ?>
+                  </ul>
+                </div>
+              <?php endif; ?>
+            </li>
+          <?php endforeach; ?>
+        </ul>
+      </div>
     </div>
 
     <!-- Menu ngang bên phải -->
@@ -77,34 +81,6 @@ if ($danhmuc_lv2_all && $danhmuc_lv2_all->num_rows > 0) {
     </ul>
   </div>
 </div>
-<?php
-$menu_lv1 = $fn->show_data([
-  'table' => 'tbl_danhmuc_c1',
-  'status' => 'hienthi'
-]);
-
-$menu_lv2_all = $fn->show_data([
-  'table' => 'tbl_danhmuc_c2',
-  'status' => 'hienthi'
-]);
-
-// Gom nhóm danh mục cấp 2 theo id_list
-$menu_lv2_group = [];
-if ($menu_lv2_all && $menu_lv2_all->num_rows > 0) {
-  while ($row = $menu_lv2_all->fetch_assoc()) {
-    $menu_lv2_group[$row['id_list']][] = $row;
-  }
-}
-
-// Xây mảng hoàn chỉnh
-$menu_tree = [];
-if ($menu_lv1 && $menu_lv1->num_rows > 0) {
-  while ($lv1 = $menu_lv1->fetch_assoc()) {
-    $lv1['sub'] = $menu_lv2_group[$lv1['id']] ?? [];
-    $menu_tree[] = $lv1;
-  }
-}
-?>
 
 <div class="menu-mobile">
   <div class="wrap-content d-flex flex-wrap justify-content-between align-items-center">
@@ -129,12 +105,8 @@ if ($menu_lv1 && $menu_lv1->num_rows > 0) {
 </div>
 <nav id="menu">
   <ul>
-    <li>
-      <a class="transition" href="./" title="Trang chủ">Trang chủ</a>
-    </li>
-    <li>
-      <a class="transition" href="gioi-thieu" title="Giới thiệu">Giới thiệu</a>
-    </li>
+    <li><a class="transition" href="./" title="Trang chủ">Trang chủ</a></li>
+    <li><a class="transition" href="gioi-thieu" title="Giới thiệu">Giới thiệu</a></li>
     <li>
       <a class="transition" href="san-pham" title="Sản phẩm">Sản phẩm</a>
       <?php if (!empty($menu_tree)): ?>
@@ -153,7 +125,6 @@ if ($menu_lv1 && $menu_lv1->num_rows > 0) {
           <?php endforeach; ?>
         </ul>
       <?php endif; ?>
-
     </li>
     <li><a class="transition" href="huong-dan-choi" title="Hướng dẫn chơi">Hướng dẫn chơi</a></li>
     <li><a class="transition" href="tin-tuc" title="Tin tức">Tin tức</a></li>

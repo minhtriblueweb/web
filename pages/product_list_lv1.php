@@ -12,8 +12,9 @@ require_once $baseDir . '/sources/product_list_lv1.php';
           <a class="text-decoration-none" href="san-pham"><span>Sản phẩm</span></a>
         </li>
         <li class="breadcrumb-item active">
-          <a class="text-decoration-none"
-            href="<?= $kg_danhmuc['slugvi'] ?>"><span><?= $kg_danhmuc['namevi'] ?></span></a>
+          <a class="text-decoration-none" href="<?= $kg_danhmuc['slugvi'] ?>"><span>
+              <?= $kg_danhmuc['namevi'] ?>
+            </span></a>
         </li>
       </ol>
     </div>
@@ -26,7 +27,9 @@ require_once $baseDir . '/sources/product_list_lv1.php';
           <?php while ($row_dm_c2 = $get_danhmuc_c2->fetch_assoc()) : ?>
             <div class="item-list-noindex">
               <a href="<?= $row_dm_c2['slugvi'] ?>">
-                <h3 class="m-0"><?= $row_dm_c2['namevi'] ?></h3>
+                <h3 class="m-0 text-capitalize">
+                  <?= $row_dm_c2['namevi'] ?>
+                </h3>
               </a>
             </div>
           <?php endwhile; ?>
@@ -34,9 +37,12 @@ require_once $baseDir . '/sources/product_list_lv1.php';
       <?php endif; ?>
     </div>
   </div>
-  <div class="title-list-hot text-center">
-    <h2><?= $kg_danhmuc['namevi'] ?></h2>
-    (<?= $total_records ?> sản phẩm)
+  <div class="title-list-hot text-center text-capitalize">
+    <h2>
+      <?= $kg_danhmuc['namevi'] ?>
+    </h2>
+    (
+    <?= $total_records ?> sản phẩm)
   </div>
   <div class="wrap-main wrap-template w-clear" style="margin: 0 auto !important;">
     <div class="content-main">
@@ -61,19 +67,29 @@ require_once $baseDir . '/sources/product_list_lv1.php';
                 </div>
                 <div class="content">
                   <div class="title">
-                    <h3><?= $name ?></h3>
+                    <h3>
+                      <?= $name ?>
+                    </h3>
                     <p class="price-product">
                       <?php if (!empty($sale) && !empty($regular)): ?>
-                        <span class="price-new"><?= $sale ?>₫</span>
-                        <span class="price-old"><?= $regular ?>₫</span>
+                        <span class="price-new">
+                          <?= $sale ?>₫
+                        </span>
+                        <span class="price-old">
+                          <?= $regular ?>₫
+                        </span>
                       <?php elseif (!empty($regular)): ?>
-                        <span class="price-new"><?= $regular ?>₫</span>
+                        <span class="price-new">
+                          <?= $regular ?>₫
+                        </span>
                       <?php else: ?>
                         <span class="price-new">Liên hệ</span>
                       <?php endif; ?>
                     </p>
                     <div class="info-product">
-                      <p><i class="fa-solid fa-eye"></i> <?= $views ?> lượt xem</p>
+                      <p><i class="fa-solid fa-eye"></i>
+                        <?= $views ?> lượt xem
+                      </p>
                       <p><span>Chi tiết</span></p>
                     </div>
                   </div>
@@ -113,7 +129,8 @@ require_once $baseDir . '/sources/product_list_lv1.php';
             <p class="anhien xemthemnd">Xem thêm nội dung</p>
             <p class="anhien anbot">Ẩn bớt nội dung</p>
           </div>
-        </div><?php endif; ?>
+        </div>
+      <?php endif; ?>
     </div>
   </div>
 </div>

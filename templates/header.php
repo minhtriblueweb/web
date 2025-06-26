@@ -52,27 +52,30 @@
   <!-- Viewport -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
   <!-- Css Files -->
-  <link href="<?= BASE ?>assets/css/animate.min.css" rel="stylesheet" />
-  <link href="<?= BASE ?>assets/bootstrap/bootstrap.css" rel="stylesheet" />
-  <link href="<?= BASE ?>assets/fontawesome611/css/all.min.css" rel="stylesheet" />
-  <link href="<?= BASE ?>assets/holdon/HoldOn.css" rel="stylesheet" />
-  <link href="<?= BASE ?>assets/holdon/HoldOn-style.css" rel="stylesheet" />
-  <link href="<?= BASE ?>assets/confirm/confirm.css" rel="stylesheet" />
-  <link href="<?= BASE ?>assets/fileuploader/font-fileuploader.css" rel="stylesheet" />
-  <link href="<?= BASE ?>assets/fileuploader/jquery.fileuploader.min.css" rel="stylesheet" />
-  <link href="<?= BASE ?>assets/fileuploader/jquery.fileuploader-theme-dragdrop.css" rel="stylesheet" />
-  <link href="<?= BASE ?>assets/owlcarousel2/owl.carousel.css" rel="stylesheet" />
-  <link href="<?= BASE ?>assets/owlcarousel2/owl.theme.default.css" rel="stylesheet" />
-  <link href="<?= BASE ?>assets/photobox/photobox.css" rel="stylesheet" />
-  <link href="<?= BASE ?>assets/fotorama/fotorama.css" rel="stylesheet" />
-  <link href="<?= BASE ?>assets/fotorama/fotorama-style.css" rel="stylesheet" />
-  <link href="<?= BASE ?>assets/simplenotify/simple-notify.css" rel="stylesheet" />
-  <link href="<?= BASE ?>assets/menu-mobile/menu-mobile.css" rel="stylesheet" />
-  <link href="<?= BASE ?>assets/fancybox5/fancybox.css" rel="stylesheet" />
-  <link href="<?= BASE ?>assets/slick/slick.css" rel="stylesheet" />
-  <link href="<?= BASE ?>assets/magiczoomplus/magiczoomplus.css" rel="stylesheet" />
-  <link href="<?= BASE ?>assets/aos/aos.css" rel="stylesheet" />
-  <link href="<?= BASE ?>assets/css/style.css" rel="stylesheet" />
+  <?php
+  $css->set("css/animate.min.css");
+  $css->set("bootstrap/bootstrap.css");
+  $css->set("fontawesome611/css/all.min.css");
+  // $css->set("holdon/HoldOn.css");
+  // $css->set("holdon/HoldOn-style.css");
+  $css->set("confirm/confirm.css");
+  $css->set("fileuploader/font-fileuploader.css");
+  $css->set("fileuploader/jquery.fileuploader.min.css");
+  $css->set("fileuploader/jquery.fileuploader-theme-dragdrop.css");
+  // $css->set("owlcarousel2/owl.carousel.css");
+  // $css->set("owlcarousel2/owl.theme.default.css");
+  $css->set("photobox/photobox.css");
+  $css->set("fotorama/fotorama.css");
+  $css->set("fotorama/fotorama-style.css");
+  $css->set("simplenotify/simple-notify.css");
+  $css->set("menu-mobile/menu-mobile.css");
+  $css->set("fancybox5/fancybox.css");
+  $css->set("slick/slick.css");
+  $css->set("magiczoomplus/magiczoomplus.css");
+  $css->set("aos/aos.css");
+  $css->set("css/style.css");
+  echo $css->get();
+  ?>
 
   <!-- Js Google Analytic -->
   <?= $analytics ?>
@@ -105,9 +108,15 @@
               <?php if ($show_social): ?>
                 <?php while ($row_social = $show_social->fetch_assoc()): ?><a href="<?= $row_social['link'] ?>"
                     class="lazy hvr-icon-rotate" class="me-2">
-                    <img width="20" height="20"
-                      src="<?= empty($row_social['file']) ? NO_IMG : BASE_ADMIN . UPLOADS . $row_social['file']; ?>"
-                      alt="<?= $row_social['namevi'] ?>" />
+                    <?= $fn->getImage([
+                      'file' => $row_social['file'],
+                      'width' => 20,
+                      'height' => 20,
+                      'class' => 'me-2',
+                      'alt' => $row_social['namevi'],
+                      'title' => $row_social['namevi'],
+                      'lazy' => false
+                    ]) ?>
                   </a>
                 <?php endwhile; ?>
               <?php endif; ?>
@@ -120,7 +129,14 @@
           <div class="banner-header">
             <div class="logo">
               <a href="./">
-                <img width="300" height="auto" src="<?= $logo ?>" alt="<?= $web_name ?>" title="<?= $web_name ?>" />
+                <?= $fn->getImage([
+                  'file' => $logo,
+                  'width' => 300,
+                  'height' => 'auto',
+                  'alt' => $web_name,
+                  'title' => $web_name,
+                  'lazy' => false
+                ]) ?>
               </a>
             </div>
           </div>

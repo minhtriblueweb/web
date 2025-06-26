@@ -517,50 +517,22 @@ NN_FRAMEWORK.SlickPage = function () {
     });
   }
 
-  // if (isExist($(".slick-brand"))) {
-  //   $(".slick-brand").slick({
-  //     dots: false,
-  //     arrows: false,
-  //     autoplay: true,
-  //     infinite: true,
-  //     verticalSwiping: false,
-  //     slidesToShow: 6,
-  //     slidesToScroll: 1,
-  //     centerMode: false,
-  //     vertical: false,
-  //     swipeToSlide: true,
-  //     responsive: [
-  //       {
-  //         breakpoint: 770,
-  //         settings: {
-  //           arrows: false,
-  //           slidesToShow: 5,
-  //         },
-  //       },
-  //       {
-  //         breakpoint: 665,
-  //         settings: {
-  //           arrows: false,
-  //           slidesToShow: 4,
-  //         },
-  //       },
-  //       {
-  //         breakpoint: 585,
-  //         settings: {
-  //           arrows: false,
-  //           slidesToShow: 3,
-  //         },
-  //       },
-  //       {
-  //         breakpoint: 375,
-  //         settings: {
-  //           arrows: false,
-  //           slidesToShow: 2,
-  //         },
-  //       },
-  //     ],
-  //   });
-  // }
+  if (isExist($(".slick-slideshow"))) {
+    $('.slick-slideshow').slick({
+      slidesToShow: 1,
+      slidesToScroll: 1,
+      dots: false,
+      arrows: false,
+      autoplay: true,
+      autoplaySpeed: 5000,
+      speed: 800,
+      infinite: false,
+      pauseOnHover: true,
+      adaptiveHeight: true,
+      fade: true
+    });
+  }
+
 
   if (isExist($(".slick-service"))) {
     $(".slick-service").slick({
@@ -749,7 +721,6 @@ NN_FRAMEWORK.SlickPage = function () {
     });
   }
 };
-
 /* TOC */
 NN_FRAMEWORK.Toc = function () {
   if (isExist($(".toc-list, .toc-list-2"))) {

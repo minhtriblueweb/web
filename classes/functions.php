@@ -734,6 +734,9 @@ class Functions
     $style    = !empty($data['style']) ? ' style="' . htmlspecialchars($data['style']) . '"' : '';
     $width    = isset($data['width']) ? ' width="' . (int)$data['width'] . '"' : '';
     $height   = isset($data['height']) ? ' height="' . (int)$data['height'] . '"' : '';
+    $lazy     = array_key_exists('lazy', $data) ? (bool)$data['lazy'] : true;
+    $loading  = $lazy ? ' loading="lazy"' : '';
+
     $errorImg = BASE_ADMIN . 'assets/img/noimage.png';
     $src      = empty($file) ? NO_IMG : BASE_ADMIN . UPLOADS . htmlspecialchars($file);
 
@@ -745,10 +748,10 @@ class Functions
       . $height
       . (!empty($alt) ? ' alt="' . $alt . '"' : '')
       . (!empty($title) ? ' title="' . $title . '"' : '')
+      . $loading
       . ' onerror="this.src=\'' . $errorImg . '\'"'
       . '>';
   }
-
 
   public function to_slug($string)
   {
@@ -790,5 +793,12 @@ class Functions
     $string = preg_replace('/(-)+/', '-', $string);
     $string = strtolower($string);
     return $string;
+  }
+  public function isGoogleSpeed()
+  {
+    if (!isset($_SERVER['HTTP_USER_AGENT']) || stripos($_SERVER['HTTP_USER_AGENT'], 'Lighthouse') === false) {
+      return false;
+    }
+    return true;
   }
 }

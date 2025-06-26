@@ -4,7 +4,12 @@
       <div class="footer-banner">
         <div class="logo-footer">
           <a href="./">
-            <img src="<?= $logo ?>" alt="<?= $web_name ?>" title="<?= $web_name ?>" style="width: 250px;" />
+            <?= $fn->getImage([
+              'file' => $logo,
+              'alt' => $web_name,
+              'title' => $web_name,
+              'lazy' => false
+            ]) ?>
           </a>
         </div>
         <p class="footer-company"><?= $web_name ?></p>
@@ -159,26 +164,29 @@
   </script>
 
   <!-- Js Files -->
-  <script type="text/javascript" src="<?= BASE ?>assets/js/jquery.min.js"></script>
-  <script type="text/javascript" src="<?= BASE ?>assets/js/lazyload.min.js"></script>
-  <script type="text/javascript" src="<?= BASE ?>assets/bootstrap/bootstrap.js"></script>
-  <script type="text/javascript" src="<?= BASE ?>assets/js/wow.min.js"></script>
-  <script type="text/javascript" src="<?= BASE ?>assets/owlcarousel2/owl.carousel.js"></script>
-  <script type="text/javascript" src="<?= BASE ?>assets/holdon/HoldOn.js"></script>
-  <script type="text/javascript" src="<?= BASE ?>assets/confirm/confirm.js"></script>
-  <script type="text/javascript" src="<?= BASE ?>assets/simplenotify/simple-notify.js"></script>
-  <script type="text/javascript" src="<?= BASE ?>assets/easyticker/easy-ticker.js"></script>
-  <script type="text/javascript" src="<?= BASE ?>assets/fotorama/fotorama.js"></script>
-  <script type="text/javascript" src="<?= BASE ?>assets/photobox/photobox.js"></script>
-  <script type="text/javascript" src="<?= BASE ?>assets/fileuploader/jquery.fileuploader.min.js"></script>
-  <script type="text/javascript" src="<?= BASE ?>assets/fancybox5/fancybox.umd.js"></script>
-  <script type="text/javascript" src="<?= BASE ?>assets/slick/slick.js"></script>
-  <script type="text/javascript" src="<?= BASE ?>assets/magiczoomplus/magiczoomplus.js"></script>
-  <script type="text/javascript" src="<?= BASE ?>assets/js/functions.js"></script>
-  <script type="text/javascript" src="<?= BASE ?>assets/menu-mobile/menu-mobile.js"></script>
-  <script type="text/javascript" src="<?= BASE ?>assets/toc/toc.js"></script>
-  <script type="text/javascript" src="<?= BASE ?>assets/aos/aos.js"></script>
-  <script type="text/javascript" src="<?= BASE ?>assets/js/apps.js"></script>
+  <?php
+  $js->set("js/jquery.min.js");
+  $js->set("js/lazyload.min.js");
+  $js->set("bootstrap/bootstrap.js");
+  $js->set("js/wow.min.js");
+  $js->set("holdon/HoldOn.js");
+  $js->set("confirm/confirm.js");
+  $js->set("simplenotify/simple-notify.js");
+  $js->set("easyticker/easy-ticker.js");
+  $js->set("fotorama/fotorama.js");
+  $js->set("photobox/photobox.js");
+  $js->set("fileuploader/jquery.fileuploader.min.js");
+  $js->set("fancybox5/fancybox.umd.js");
+  $js->set("slick/slick.min.js");
+  $js->set("magiczoomplus/magiczoomplus.js");
+  $js->set("js/functions.js");
+  $js->set("menu-mobile/menu-mobile.js");
+  $js->set("toc/toc.js");
+  $js->set("aos/aos.js");
+  $js->set("js/apps.js");
+  echo $js->get();
+  ?>
+
   <!-- Js Structdata -->
   <script type="application/ld+json">
     {

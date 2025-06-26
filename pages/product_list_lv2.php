@@ -31,7 +31,7 @@ require_once $baseDir . '/sources/product_list_lv2.php';
           <?php while ($dm_c2_item = $list_danhmuc_c2->fetch_assoc()): ?>
             <div class="item-list-noindex">
               <a href="<?= $dm_c2_item['slugvi'] ?>">
-                <h3 class="m-0"><?= $dm_c2_item['namevi'] ?></h3>
+                <h3 class="m-0 text-capitalize"><?= $dm_c2_item['namevi'] ?></h3>
               </a>
             </div>
           <?php endwhile; ?>
@@ -43,7 +43,7 @@ require_once $baseDir . '/sources/product_list_lv2.php';
 
   <div class="wrap-product-list">
     <div class="wrap-content" style="background: unset;">
-      <div class="title-list-hot text-center">
+      <div class="title-list-hot text-center text-capitalize">
         <h2><?= $dm_c2['namevi'] ?></h2>
         (<?= $total_records ?> sản phẩm)
       </div>

@@ -1,33 +1,31 @@
 <?php
-// Truy vấn danh mục cấp 1 và cấp 2
-$danhmuc_lv1 = $fn->show_data([
+$dm_c1_all = $fn->show_data([
   'table' => 'tbl_danhmuc_c1',
-  'status' => 'hienthi'
+  'status' => 'hienthi,noibat'
 ]);
 
-$danhmuc_lv2_all = $fn->show_data([
+$dm_c2_all = $fn->show_data([
   'table' => 'tbl_danhmuc_c2',
-  'status' => 'hienthi'
+  'status' => 'hienthi,noibat'
 ]);
 
-// Gom nhóm cấp 2 theo id_list
-$danhmuc_lv2_group = [];
-if ($danhmuc_lv2_all && $danhmuc_lv2_all->num_rows > 0) {
-  while ($row = $danhmuc_lv2_all->fetch_assoc()) {
-    $danhmuc_lv2_group[$row['id_list']][] = $row;
+// Gom nhóm danh mục cấp 2
+$dm_c2_group = [];
+if ($dm_c2_all && $dm_c2_all->num_rows > 0) {
+  while ($row = $dm_c2_all->fetch_assoc()) {
+    $dm_c2_group[$row['id_list']][] = $row;
   }
 }
 
-// Gộp thành mảng cây
+// Tạo menu_tree (nếu cần trong menu.php)
 $menu_tree = [];
-if ($danhmuc_lv1 && $danhmuc_lv1->num_rows > 0) {
-  while ($lv1 = $danhmuc_lv1->fetch_assoc()) {
-    $lv1['sub'] = $danhmuc_lv2_group[$lv1['id']] ?? [];
+if ($dm_c1_all && $dm_c1_all->num_rows > 0) {
+  while ($lv1 = $dm_c1_all->fetch_assoc()) {
+    $lv1['sub'] = $dm_c2_group[$lv1['id']] ?? [];
     $menu_tree[] = $lv1;
   }
 }
 ?>
-
 <div class="menu">
   <div class="wrap-content d-flex flex-wrap justify-content-between align-items-center">
     <!-- Menu bên trái: Danh mục sản phẩm -->
@@ -39,12 +37,13 @@ if ($danhmuc_lv1 && $danhmuc_lv1->num_rows > 0) {
             <?php $has_sub = count($dm['sub']) > 0; ?>
             <li>
               <a title="<?= $dm['namevi'] ?>" href="<?= $dm['slugvi'] ?>">
-                <span class="scale-img">
+                <span class="">
                   <?= $fn->getImage([
                     'file' => $dm['file'],
                     'width' => 25,
                     'alt' => $dm['namevi'],
-                    'title' => $dm['namevi']
+                    'title' => $dm['namevi'],
+                    'lazy' => false
                   ]) ?>
                 </span>
                 <?= $dm['namevi'] ?>
@@ -90,7 +89,12 @@ if ($danhmuc_lv1 && $danhmuc_lv1->num_rows > 0) {
     <div class="box-banner">
       <div class="logo-mobile">
         <a href="./">
-          <img src="<?= $logo ?>" alt="<?= $web_name ?>" title="<?= $web_name ?>" />
+          <?= $fn->getImage([
+            'file' => $logo,
+            'alt' => $web_name,
+            'title' => $web_name,
+            'lazy' => false
+          ]) ?>
         </a>
       </div>
     </div>

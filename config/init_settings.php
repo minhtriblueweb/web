@@ -27,4 +27,4 @@ $copyright       = get_setting_value('copyright');
 $bodyjs          = get_setting_value('bodyjs', false);
 $headjs          = get_setting_value('headjs', false);
 $analytics       = get_setting_value('analytics', false);
-$logo            = !empty($row_st['logo']) ? BASE_ADMIN . UPLOADS . $row_st['logo'] : '';
+$logo            = $row_st['logo'];

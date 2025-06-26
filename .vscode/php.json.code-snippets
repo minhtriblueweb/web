@@ -6,10 +6,14 @@
       "  'file' => '${1:file.jpg}',",
       "  'width' => ${2:50},",
       "  'height' => ${3:50},",
-      "  'alt' => '${4:alt text}',",
-      "  'title' => '${5:title text}'",
+      "  'class' => '${4:img-fluid}',",
+      "  'alt' => '${5:alt text}',",
+      "  'title' => '${6:title text}',",
+      "  'style' => '${7:}',",
+      "  'id' => '${8:}',",
+      "  'lazy' => ${9:true}",
       "]) ?>\n"
     ],
-    "description": "Tạo thẻ <img> từ hàm getImage()"
+    "description": "Tạo thẻ <img> từ hàm getImage() với đầy đủ thuộc tính"
   }
 }

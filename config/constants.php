@@ -1,8 +1,6 @@
 <?php
-$baseDir = dirname(__DIR__); // trỏ về thư mục gốc
-
-// Định nghĩa đường dẫn
-define('ROOT', $baseDir);
+define('ROOT', dirname(__DIR__));
+define('VERSION', $fn->generateHash());
 define('UPLOADS', 'uploads/');
 define('BASE', $config['base'] ?? '/');
 define('BASE_ADMIN', $config['baseAdmin'] ?? '/admin/');

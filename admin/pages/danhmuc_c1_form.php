@@ -1,10 +1,13 @@
 <?php
-$message = '';
-$name_page = 'danh mục cấp 1';
-$table = 'tbl_danhmuc_c1';
-$thumb_width = '50';
-$thumb_height = '50';
-$thumb_zc = '1';
+$setting_page = [
+  'message' => '',
+  'name_page' => 'danh mục cấp 1',
+  'table' => 'tbl_danhmuc_c1',
+  'thumb_width' => 50,
+  'thumb_height' => 50,
+  'thumb_zc' => 1
+];
+extract($setting_page);
 $result = [];
 $id = $_GET['id'] ?? null;
 if (!empty($id)) {

@@ -14,7 +14,6 @@ class Functions
     $this->db = new Database();
     $this->fm = new Format();
   }
-
   function renderSelectOptions($result, string $valueKey = 'id', string $labelKey = 'namevi', int|string $selectedId = 0): void
   {
     if ($result instanceof mysqli_result && $result->num_rows > 0) {
@@ -800,5 +799,19 @@ class Functions
       return false;
     }
     return true;
+  }
+  public function stringRandom($sokytu = 10)
+  {
+    $str = '';
+    $chuoi = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    $max = strlen($chuoi) - 1;
+    for ($i = 0; $i < $sokytu; $i++) {
+      $str .= $chuoi[mt_rand(0, $max)];
+    }
+    return $str;
+  }
+  public function generateHash($length = 10)
+  {
+    return $this->stringRandom($length);
   }
 }

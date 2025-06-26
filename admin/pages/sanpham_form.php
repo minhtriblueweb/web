@@ -12,8 +12,11 @@ if (!empty($id)) {
   $get_id = $fn->get_id($table, $id);
   if ($get_id) {
     $result = $get_id->fetch_assoc();
-    $get_id_cap1 = $result['id_list'];
-    $show_danhmuc_c2 = $fn->show_data(['table' => 'tbl_danhmuc_c2']);
+    $show_danhmuc_c2 = $fn->show_data([
+      'table' => 'tbl_danhmuc_c2',
+      'status' => 'hienthi',
+      'id_list' => $result['id_list'],
+    ]);
   }
 }
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && (isset($_POST['add']) || isset($_POST['edit']))) {
@@ -123,7 +126,7 @@ include 'templates/breadcrumb.php';
                 <select id="id_list" name="id_list" data-level="0" data-type="san-pham" data-table="tbl_danhmuc_c2"
                   data-child="id_cat" class="form-control select2 select-category">
                   <option value="0">Chọn danh mục</option>
-                  <?php $fn->renderSelectOptions($show_danhmuc_c1); ?>
+                  <?php $fn->renderSelectOptions($show_danhmuc_c1, 'id', 'namevi', $result['id_list'] ?? 0); ?>
                 </select>
               </div>
               <div class="form-group col-xl-6 col-sm-4">
@@ -131,7 +134,7 @@ include 'templates/breadcrumb.php';
                 <select id="id_cat" name="id_cat" data-level="1" data-type="san-pham" data-table="" data-child=""
                   class="form-control select2 select-category">
                   <option value="0">Chọn danh mục</option>
-                  <?php $fn->renderSelectOptions($show_danhmuc_c2); ?>
+                  <?php $fn->renderSelectOptions($show_danhmuc_c2, 'id', 'namevi', $result['id_cat'] ?? 0); ?>
                 </select>
               </div>
             </div>

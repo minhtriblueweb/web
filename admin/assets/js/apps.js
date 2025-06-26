@@ -570,23 +570,28 @@ function youtubePreview(url, element) {
     .attr("src", "//www.youtube.com/embed/" + url)
     .css({ width: "250", height: "150" });
 }
-
 /* SEO */
 function seoExist() {
-  var inputs = $(".card-seo input.check-seo");
-  var textareas = $(".card-seo textarea.check-seo");
+  var inputs = $('.card-seo input.check-seo');
+  var textareas = $('.card-seo textarea.check-seo');
   var flag = false;
 
-  inputs.each(function () {
-    if ($(this).val().trim()) {
-      flag = true;
-      return false;
-    }
-  });
+  if (!flag) {
+    inputs.each(function (index) {
+      var input = $(this).attr('id');
+      value = $('#' + input).val();
+      if (value) {
+        flag = true;
+        return false;
+      }
+    });
+  }
 
   if (!flag) {
-    textareas.each(function () {
-      if ($(this).val().trim()) {
+    textareas.each(function (index) {
+      var textarea = $(this).attr('id');
+      value = $('#' + textarea).val();
+      if (value) {
         flag = true;
         return false;
       }
@@ -595,115 +600,110 @@ function seoExist() {
 
   return flag;
 }
-
-const seoLanguages = ["vi", "en"];
-
-function truncateText(text, limit) {
-  text = text.trim();
-  return text.length > limit ? text.substring(0, limit - 3).trim() + "..." : text;
-}
-
-function seoPreview(lang) {
-  const titleEl = $("#title" + lang);
-  const descEl = $("#description" + lang);
-
-  const titleRaw = titleEl.length ? titleEl.val() : "";
-  const descRaw = descEl.length ? descEl.val() : "";
-
-  const title = titleRaw.trim() || "Tiêu đề mô phỏng trang website của bạn";
-  const description = descRaw.trim() || "Mô tả ngắn gọn sẽ hiển thị ở đây, giúp người dùng hiểu nội dung trang. Giữ khoảng 150-160 ký tự là đẹp.";
-
-  const titleFormatted = truncateText(title, 70);
-  const descFormatted = truncateText(description, 160);
-
-  $("#title-seo-preview" + lang).text(titleFormatted);
-  $("#description-seo-preview" + lang).text(descFormatted);
-}
-
-function seoCount(input) {
-  const count = input.val().length;
-  input.closest(".form-group").find(".count-seo span").text(count);
-}
-
-function seoChange() {
-  seoLanguages.forEach(function (lang) {
-    $("body").on("keyup", "#title" + lang + ", #description" + lang + ", #keywords" + lang, function () {
-      seoCount($(this));
-      seoPreview(lang);
-    });
-  });
-}
-
 function seoCreate() {
-  const seolang = $("#seo-create").val() || seoLanguages.join(",");
-  const langs = seolang.split(",");
+  var flag = true;
+  var seolang = $('#seo-create').val();
+  var seolangArray = seolang.split(',');
+  var seolangCount = seolangArray.length;
+  var inputArticle = $('.card-article input.for-seo');
+  var textareaArticle = $('.card-article textarea.for-seo');
+  var textareaArticleCount = textareaArticle.length;
+  var count = 0;
+  var inputSeo = $('.card-seo input.check-seo');
+  var textareaSeo = $('.card-seo textarea.check-seo');
 
-  langs.forEach(function (lang) {
-    // Title + Keywords from article name
-    const nameInput = $("#name" + lang);
-    if (nameInput.length) {
-      const val = nameInput.val().trim().substring(0, 70);
-      $("#title" + lang).val(val);
-      $("#keywords" + lang).val(val);
-      seoCount($("#title" + lang));
-      seoCount($("#keywords" + lang));
-    }
-
-    // Description from textarea or CKEditor
-    const contentField = $("#content" + lang);
-    let content = contentField.val();
-
-    if (!content && typeof CKEDITOR !== "undefined" && CKEDITOR.instances["content" + lang]) {
-      content = CKEDITOR.instances["content" + lang].getData();
-    }
-
-    if (content) {
-      content = content.replace(/(<([^>]+)>)/gi, "").replace(/\r?\n|\r/g, " ").trim().substring(0, 160);
-      $("#description" + lang).val(content);
-      seoCount($("#description" + lang));
-    }
-
-    seoPreview(lang);
-  });
-}
-
-function seoExist() {
-  let exist = false;
-
-  $(".card-seo input.check-seo, .card-seo textarea.check-seo").each(function () {
-    if ($(this).val().trim() !== "") {
-      exist = true;
-      return false;
+  /* SEO Create - Input */
+  inputArticle.each(function (index) {
+    var input = $(this).attr('id');
+    var lang = input.substr(input.length - 2);
+    if (seolang.indexOf(lang) >= 0) {
+      name = $('#' + input).val();
+      name = name.substr(0, 70);
+      name = name.trim();
+      $('#title' + lang + ', #keywords' + lang).val(name);
+      seoCount($('#title' + lang));
+      seoCount($('#keywords' + lang));
     }
   });
 
-  return exist;
-}
+  /* SEO Create - Textarea */
+  textareaArticle.each(function (index) {
+    var textarea = $(this).attr('id');
+    var lang = textarea.substr(textarea.length - 2);
+    if (seolang.indexOf(lang) >= 0) {
+      if (flag) {
+        var content = $('#' + textarea).val();
 
-$(document).ready(function () {
-  seoChange();
-
-  seoLanguages.forEach(function (lang) {
-    seoPreview(lang);
-  });
-
-  $("body").on("click", ".create-seo", function () {
-    if (seoExist()) {
-      confirmDialog(
-        "create-seo",
-        LANG["noidungseodaduocthietlapbanmuontaolainoidungseo"],
-        "",
-        function () {
-          seoCreate();
+        if (!content && CKEDITOR.instances[textarea]) {
+          content = CKEDITOR.instances[textarea].getData();
         }
-      );
-    } else {
-      seoCreate();
+
+        if (content) {
+          content = content.replace(/(<([^>]+)>)/gi, '');
+          content = content.substr(0, 160);
+          content = content.trim();
+          content = content.replace(/[\r\n]+/gm, ' ');
+          $('#description' + lang).val(content);
+          seoCount($('#description' + lang));
+          flag = false;
+        } else {
+          flag = true;
+        }
+      }
+      count++;
+      if (count == textareaArticleCount / seolangCount) {
+        flag = true;
+        count = 0;
+      }
     }
   });
-});
 
+  /* SEO Preview */
+  for (var i = 0; i < seolangArray.length; i++)
+    if (seolangArray[i]) {
+      seoPreview(seolangArray[i]);
+    }
+}
+function seoPreview(lang) {
+  var titlePreview = '#title-seo-preview' + lang;
+  var descriptionPreview = '#description-seo-preview' + lang;
+  var title = $('#title' + lang).val();
+  var description = $('#description' + lang).val();
 
+  if ($(titlePreview).length) {
+    if (title) $(titlePreview).html(title);
+    else $(titlePreview).html('Tiêu đề mô phỏng trang website của bạn');
+  }
+
+  if ($(descriptionPreview).length) {
+    if (description) $(descriptionPreview).html(description);
+    else $(descriptionPreview).html('Mô tả ngắn gọn sẽ hiển thị ở đây, giúp người dùng hiểu nội dung trang. Giữ khoảng 150-160 ký tự là đẹp.');
+  }
+}
+function seoCount(obj) {
+  if (obj.length) {
+    var countseo = parseInt(obj.val().toString().length);
+    countseo = countseo ? countseo : 0;
+
+    obj.parents('div.form-group').children('div.label-seo').find('.count-seo span').html(countseo);
+  }
+}
+function seoChange() {
+  var seolang = 'vi,en';
+  var elementSeo = $('.card-seo .check-seo');
+
+  elementSeo.each(function (index) {
+    var element = $(this).attr('id');
+    var lang = element.substr(element.length - 2);
+    if (seolang.indexOf(lang) >= 0) {
+      if ($('#' + element).length) {
+        $('body').on('keyup', '#' + element, function () {
+          seoPreview(lang);
+        });
+      }
+    }
+  });
+}
 /* Slug */
 function slugConvert(slug, focus = false) {
   slug = slug.toLowerCase();
@@ -2420,9 +2420,9 @@ $(document).ready(function () {
   if ($(".form-control-ckeditor").length) {
     CKEDITOR.editorConfig = function (config) {
       config.language = "vi";
-      config.skin = "moono-lisa";
+      config.skin = 'moono-lisa';
       config.width = "auto";
-      config.height = 620;
+      config.height = 450;
       config.allowedContent = true;
       config.entities = false;
       config.entities_latin = false;

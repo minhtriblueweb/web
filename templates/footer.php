@@ -165,26 +165,32 @@
 
   <!-- Js Files -->
   <?php
-  $js->set("js/jquery.min.js");
-  $js->set("js/lazyload.min.js");
-  $js->set("bootstrap/bootstrap.js");
-  $js->set("js/wow.min.js");
-  $js->set("holdon/HoldOn.js");
-  $js->set("confirm/confirm.js");
-  $js->set("simplenotify/simple-notify.js");
-  $js->set("easyticker/easy-ticker.js");
-  $js->set("fotorama/fotorama.js");
-  $js->set("photobox/photobox.js");
-  $js->set("fileuploader/jquery.fileuploader.min.js");
-  $js->set("fancybox5/fancybox.umd.js");
-  $js->set("slick/slick.min.js");
-  $js->set("magiczoomplus/magiczoomplus.js");
-  $js->set("js/functions.js");
-  $js->set("menu-mobile/menu-mobile.js");
-  $js->set("toc/toc.js");
-  $js->set("aos/aos.js");
-  $js->set("js/apps.js");
+  $jsFiles = [
+    "js/jquery.min.js",
+    "js/lazyload.min.js",
+    "bootstrap/bootstrap.js",
+    "js/wow.min.js",
+    "holdon/HoldOn.js",
+    "confirm/confirm.js",
+    "simplenotify/simple-notify.js",
+    "easyticker/easy-ticker.js",
+    "fotorama/fotorama.js",
+    "photobox/photobox.js",
+    "fileuploader/jquery.fileuploader.min.js",
+    "fancybox5/fancybox.umd.js",
+    "slick/slick.min.js",
+    "magiczoomplus/magiczoomplus.js",
+    "js/functions.js",
+    "menu-mobile/menu-mobile.js",
+    "toc/toc.js",
+    "aos/aos.js",
+    "js/apps.js"
+  ];
+  foreach ($jsFiles as $file) {
+    $js->set("{$file}?v=" . VERSION);
+  }
   echo $js->get();
+
   ?>
 
   <!-- Js Structdata -->

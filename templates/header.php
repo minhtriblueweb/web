@@ -53,27 +53,29 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
   <!-- Css Files -->
   <?php
-  $css->set("css/animate.min.css");
-  $css->set("bootstrap/bootstrap.css");
-  $css->set("fontawesome611/css/all.min.css");
-  // $css->set("holdon/HoldOn.css");
-  // $css->set("holdon/HoldOn-style.css");
-  $css->set("confirm/confirm.css");
-  $css->set("fileuploader/font-fileuploader.css");
-  $css->set("fileuploader/jquery.fileuploader.min.css");
-  $css->set("fileuploader/jquery.fileuploader-theme-dragdrop.css");
-  // $css->set("owlcarousel2/owl.carousel.css");
-  // $css->set("owlcarousel2/owl.theme.default.css");
-  $css->set("photobox/photobox.css");
-  $css->set("fotorama/fotorama.css");
-  $css->set("fotorama/fotorama-style.css");
-  $css->set("simplenotify/simple-notify.css");
-  $css->set("menu-mobile/menu-mobile.css");
-  $css->set("fancybox5/fancybox.css");
-  $css->set("slick/slick.css");
-  $css->set("magiczoomplus/magiczoomplus.css");
-  $css->set("aos/aos.css");
-  $css->set("css/style.css");
+  $cssFiles = [
+    "css/animate.min.css",
+    "bootstrap/bootstrap.css",
+    "fontawesome611/css/all.min.css",
+    "confirm/confirm.css",
+    "fileuploader/font-fileuploader.css",
+    "fileuploader/jquery.fileuploader.min.css",
+    "fileuploader/jquery.fileuploader-theme-dragdrop.css",
+    "photobox/photobox.css",
+    "fotorama/fotorama.css",
+    "fotorama/fotorama-style.css",
+    "simplenotify/simple-notify.css",
+    "menu-mobile/menu-mobile.css",
+    "fancybox5/fancybox.css",
+    "slick/slick.css",
+    "magiczoomplus/magiczoomplus.css",
+    "aos/aos.css",
+    "css/style.css"
+  ];
+
+  foreach ($cssFiles as $file) {
+    $css->set("{$file}?v=" . VERSION);
+  }
   echo $css->get();
   ?>
 

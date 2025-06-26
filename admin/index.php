@@ -24,6 +24,14 @@ if ($page === 'deleteMulti') {
   exit;
 }
 $page_file = __DIR__ . "/pages/{$page}.php";
+// Tự động load config cho form nếu có
+// $configFile = __DIR__ . "/setting/{$page}.php";
+// $setting_page = [];
+
+// if (file_exists($configFile)) {
+//   $setting_page = include $configFile;
+//   extract($setting_page); // Biến ra dùng trong file page
+// }
 
 if (!defined('IS_TRANSFER') && $page !== 'transfer') {
   include_once __DIR__ . '/templates/header.php';

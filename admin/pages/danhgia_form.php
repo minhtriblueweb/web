@@ -1,11 +1,13 @@
 <?php
-$message = '';
-$name_page = 'đánh giá khách hàng';
-$table = "tbl_danhgia";
-$id = $_GET['id'] ?? null;
-$thumb_width = '100';
-$thumb_height = '100';
-$thumb_zc = '1';
+$setting_page = [
+  'message' => '',
+  'name_page' => 'đánh giá khách hàng',
+  'table' => 'tbl_danhgia',
+  'thumb_width' => 100,
+  'thumb_height' => 100,
+  'thumb_zc' => 1
+];
+extract($setting_page);
 $result = [];
 if (!empty($id)) {
   $get_id = $fn->get_id($table, $id);

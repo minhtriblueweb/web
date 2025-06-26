@@ -3,7 +3,6 @@ $get_setting = $setting->get_setting();
 if ($get_setting) {
   $row_st = $get_setting->fetch_assoc();
 }
-$favicon = !empty($row_st['favicon']) ? BASE_ADMIN . UPLOADS . $row_st['favicon'] : NO_IMG;
 ?>
 <div class="card card-primary card-outline text-sm">
   <div class="card-header">
@@ -64,9 +63,14 @@ $favicon = !empty($row_st['favicon']) ? BASE_ADMIN . UPLOADS . $row_st['favicon'
                 </label>
                 <div class="seo-preview-google">
                   <div class="d-flex align-items-start mb-1">
-                    <?php if (!empty($favicon)): ?>
+                    <?php if (!empty($row_st['favicon'])): ?>
                       <div class="favicon-wrapper mr-2">
-                        <img src="<?= $favicon ?>" alt="favicon" class="favicon rounded-circle border" />
+                        <?= $fn->getImage([
+                          'file' => $row_st['favicon'],
+                          'class' => 'favicon rounded-circle border',
+                          'alt' => 'favicon',
+                          'title' => 'favicon'
+                        ]) ?>
                       </div>
                     <?php endif; ?>
                     <div>

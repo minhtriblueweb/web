@@ -48,7 +48,7 @@ if ($sp_all && $sp_all->num_rows > 0) {
     $cat_list = $lv1['sub'] ?? [];
     ?>
     <?php if (!empty($sp_all)): ?>
-      <div class="box-list" data-aos="fade-up" data-aos-duration="1000">
+      <div class="box-list" data-aos="fade-up" data-aos-duration="500">
         <div class="title-list">
           <h2><span class="text-split"><?= $lv1['namevi'] ?></span></h2>
           <div class="box-tab-cat">

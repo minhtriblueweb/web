@@ -5,7 +5,7 @@ $sanpham_banchay = $fn->show_data([
 ]);
 if ($sanpham_banchay && $sanpham_banchay->num_rows > 0): ?>
   <div class="wrap-product-hot">
-    <div class="wrap-content" data-aos="fade-up" data-aos-duration="1000">
+    <div class="wrap-content" data-aos="fade-up" data-aos-duration="500">
       <div class="title-product-hot">
         <h2>SẢN PHẨM BÁN CHẠY</h2>
       </div>

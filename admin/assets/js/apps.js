@@ -1,3 +1,4 @@
+
 /* Validation form */
 function validateForm(ele) {
   window.addEventListener(
@@ -571,6 +572,9 @@ function youtubePreview(url, element) {
     .css({ width: "250", height: "150" });
 }
 /* SEO */
+$(document).ready(function () {
+  seoChange();
+});
 function seoExist() {
   var inputs = $('.card-seo input.check-seo');
   var textareas = $('.card-seo textarea.check-seo');
@@ -670,13 +674,22 @@ function seoPreview(lang) {
   var title = $('#title' + lang).val();
   var description = $('#description' + lang).val();
 
+  // Giới hạn ký tự
+  var maxTitleLength = 70;
+  var maxDescriptionLength = 160;
+
+  function truncate(text, maxLength) {
+    if (!text) return '';
+    return text.length > maxLength ? text.substring(0, maxLength) + '...' : text;
+  }
+
   if ($(titlePreview).length) {
-    if (title) $(titlePreview).html(title);
+    if (title) $(titlePreview).html(truncate(title, maxTitleLength));
     else $(titlePreview).html('Tiêu đề mô phỏng trang website của bạn');
   }
 
   if ($(descriptionPreview).length) {
-    if (description) $(descriptionPreview).html(description);
+    if (description) $(descriptionPreview).html(truncate(description, maxDescriptionLength));
     else $(descriptionPreview).html('Mô tả ngắn gọn sẽ hiển thị ở đây, giúp người dùng hiểu nội dung trang. Giữ khoảng 150-160 ký tự là đẹp.');
   }
 }
@@ -689,21 +702,26 @@ function seoCount(obj) {
   }
 }
 function seoChange() {
-  var seolang = 'vi,en';
+  var seolang = $('#seo-create').val() || 'vi,en';
+  var seolangArray = seolang.split(',');
   var elementSeo = $('.card-seo .check-seo');
 
   elementSeo.each(function (index) {
     var element = $(this).attr('id');
     var lang = element.substr(element.length - 2);
+
     if (seolang.indexOf(lang) >= 0) {
-      if ($('#' + element).length) {
-        $('body').on('keyup', '#' + element, function () {
-          seoPreview(lang);
-        });
-      }
+      // ✅ Gọi preview ngay khi form load
+      seoPreview(lang);
+
+      // ✅ Gán sự kiện cập nhật realtime
+      $('body').on('keyup', '#' + element, function () {
+        seoPreview(lang);
+      });
     }
   });
 }
+
 /* Slug */
 function slugConvert(slug, focus = false) {
   slug = slug.toLowerCase();

@@ -43,7 +43,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST["btn_login"])) {
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" rel="stylesheet" />
   <link href="assets/css/adminlte.css" rel="stylesheet" />
   <link href="assets/css/adminlte-style.css" rel="stylesheet" />
-  <link href="assets/css/login.css" rel="stylesheet" />
 </head>
 
 <body class="sidebar-mini hold-transition text-sm login-page">
@@ -89,7 +88,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST["btn_login"])) {
 
         <div class="login_blueweb_right_content">
           <div class="gr_toploginf ">
-            <div class="title_bluewf">MINH TRÍ <span>WEB</span></div>
+            <div class="title_bluewf"><span>MINH TRÍ WEB</span></div>
             <a href="../" target="_blank" title="Xem website">
               Về trang chủ
               <img src="./assets/img/icontrangchu.png" alt="" class="icontrangchu">
@@ -171,6 +170,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST["btn_login"])) {
         loader.style.opacity = 0;
         setTimeout(() => loader.remove(), 500);
       }
+    });
+    window.addEventListener('DOMContentLoaded', function() {
+      setTimeout(function() {
+        document.querySelectorAll('.title_bluewf').forEach(function(el) {
+          el.classList.add('active');
+        });
+      }, 1000);
     });
   </script>
 </body>

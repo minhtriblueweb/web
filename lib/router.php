@@ -29,9 +29,6 @@ $routes = [
   'tin-tuc' => 'list_tintuc.php'
 ];
 
-// Slug cấm
-$reserved_slugs = array_merge(array_keys($routes), ['dang-nhap', 'dang-ky']);
-
 // ===== Xử lý định tuyến =====
 $page = '404.php'; // Mặc định là lỗi
 

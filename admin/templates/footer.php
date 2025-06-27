@@ -21,7 +21,7 @@
   var COM = "";
   var ACT = "";
   var TYPE = "";
-  var HASH = "EBV0iw3wzr";
+  var HASH = "<?= VERSION ?>";
   var ACTIVE_GALLERY = false;
   var BASE64_QUERY_STRING = "";
   var LOGIN_PAGE = false;
@@ -126,30 +126,36 @@
     nhunghinhanhbanchoncokichthuocqualonvuilongchonnhunghinhanhcokichthuoctoida: "Những hình ảnh bạn chọn có kích thước quá lớn. Vui lòng chọn những hình ảnh có kích thước tối đa",
   };
 </script>
-
 <!-- Js Files -->
-<script src="./assets/js/jquery.min.js"></script>
-<script src="./assets/js/moment.min.js"></script>
-<script src="./assets/confirm/confirm.js"></script>
-<script src="./assets/select2/select2.full.js"></script>
-<script src="./assets/sumoselect/jquery.sumoselect.js"></script>
-<script src="./assets/datetimepicker/php-date-formatter.min.js"></script>
-<script src="./assets/datetimepicker/jquery.mousewheel.js"></script>
-<script src="./assets/datetimepicker/jquery.datetimepicker.js"></script>
-<script src="./assets/daterangepicker/daterangepicker.js"></script>
-<script src="./assets/rangeSlider/ion.rangeSlider.js"></script>
-<script src="./assets/js/jquery.priceformat.min.js"></script>
-<script src="./assets/jscolor/jscolor.js"></script>
-<script src="./assets/filer/jquery.filer.js"></script>
-<script src="./assets/holdon/HoldOn.js"></script>
-<script src="./assets/sortable/Sortable.js"></script>
-<script src="./assets/js/bootstrap.js"></script>
-<script src="./assets/js/adminlte.js"></script>
-<script src="./assets/apexcharts/apexcharts.min.js"></script>
-<script src="./assets/simplenotify/simple-notify.js"></script>
-<script src="./assets/comment/comment.js"></script>
-<script src="./assets/fancybox5/fancybox.umd.js"></script>
-<script src="./assets/js/apps.js"></script>
+<?php
+$jsFiles = [
+  "js/jquery.min.js",
+  "js/moment.min.js",
+  "confirm/confirm.js",
+  "select2/select2.full.js",
+  "sumoselect/jquery.sumoselect.js",
+  "datetimepicker/php-date-formatter.min.js",
+  "datetimepicker/jquery.mousewheel.js",
+  "datetimepicker/jquery.datetimepicker.js",
+  "daterangepicker/daterangepicker.js",
+  "rangeSlider/ion.rangeSlider.js",
+  "js/jquery.priceformat.min.js",
+  "jscolor/jscolor.js",
+  "filer/jquery.filer.js",
+  "holdon/HoldOn.js",
+  "sortable/Sortable.js",
+  "js/bootstrap.js",
+  "js/adminlte.js",
+  "apexcharts/apexcharts.min.js",
+  "simplenotify/simple-notify.js",
+  "comment/comment.js",
+  "fancybox5/fancybox.umd.js",
+  "js/apps.js",
+];
+foreach ($jsFiles as $file) {
+  echo '<script src="./assets/' . $file . '?v=' . VERSION . '"></script>' . PHP_EOL;
+}
+?>
 <script src="ckeditor/ckeditor.js"></script>
 </body>
 

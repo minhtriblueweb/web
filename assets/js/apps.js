@@ -541,7 +541,7 @@ NN_FRAMEWORK.SlickPage = function () {
       autoplay: true,
       infinite: true,
       verticalSwiping: false,
-      slidesToShow: 4,
+      slidesToShow: 3,
       slidesToScroll: 1,
       centerMode: false,
       vertical: false,

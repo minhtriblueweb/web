@@ -32,22 +32,29 @@ $seo['image'] = '';
       <div class="row">
         <?php if ($show_huongdanchoi): ?>
           <?php while ($row = $show_huongdanchoi->fetch_assoc()) : ?>
-            <div class="col-6 col-sm-4" data-aos="fade-up" data-aos-duration="1000">
+            <div class="col-12 col-sm-4" data-aos="fade-up" data-aos-duration="500">
               <div class="item-service">
                 <div class="images">
-                  <a class="scale-img hover-glass text-decoration-none" href="<?= $row['slugvi'] ?>"
-                    title="<?= $row['namevi'] ?>">
-                    <img class="w-100"
-                      src="<?php echo empty($row['file']) ? NO_IMG : BASE_ADMIN . UPLOADS . $row['file']; ?>"
-                      alt="<?= $row['namevi'] ?>" />
+                  <a class="scale-img hover-glass text-decoration-none" href="<?= $row['slugvi'] ?>" title="<?= $row['namevi'] ?>">
+                    <?= $fn->getImage([
+                      'file' => $row['file'],
+                      'class' => 'w-100',
+                      'alt' => $row['namevi'],
+                      'title' => $row['namevi'],
+                    ]) ?>
                   </a>
                 </div>
-                <div class="content">
-                  <h3>
-                    <a class="text-split"
-                      href="<?= $row['slugvi'] ?>"><?= $row['namevi'] ?></a>
-                  </h3>
-                </div>
+                <a href="<?= $row['slugvi'] ?>">
+                  <div class="content">
+                    <h3 class="text-split">
+                      <?= $row['namevi'] ?>
+                    </h3>
+                    <div class="content_desc text-split-3 mt-2">
+                      <?= $row['descvi'] ?>
+                    </div>
+                    <p class="content_link mt-3">Xem thêm <i class="fa fa-arrow-right"></i></p>
+                  </div>
+                </a>
               </div>
             </div>
           <?php endwhile; ?>

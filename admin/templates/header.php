@@ -11,27 +11,34 @@
   <!-- Css all -->
   <!-- Css Fonts -->
   <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet" />
-
   <!-- Css Files -->
-  <link href="./assets/fontawesome611/all.css" rel="stylesheet" />
-  <link href="./assets/confirm/confirm.css" rel="stylesheet" />
-  <link href="./assets/select2/select2.css" rel="stylesheet" />
-  <link href="./assets/sumoselect/sumoselect.css" rel="stylesheet" />
-  <link href="./assets/datetimepicker/jquery.datetimepicker.css" rel="stylesheet" />
-  <link href="./assets/daterangepicker/daterangepicker.css" rel="stylesheet" />
-  <link href="./assets/rangeSlider/ion.rangeSlider.css" rel="stylesheet" />
-  <link href="./assets/filer/jquery.filer.css" rel="stylesheet" />
-  <link href="./assets/filer/jquery.filer-dragdropbox-theme.css" rel="stylesheet" />
-  <link href="./assets/holdon/HoldOn.css" rel="stylesheet" />
-  <link href="./assets/holdon/HoldOn-style.css" rel="stylesheet" />
-  <link href="./assets/simplenotify/simple-notify.css" rel="stylesheet" />
-  <link href="./assets/comment/comment.css" rel="stylesheet" />
-  <link href="./assets/fancybox5/fancybox.css" rel="stylesheet" />
-  <link href="./assets/css/adminlte.css" rel="stylesheet" />
-  <link href="./assets/css/adminlte-style.css" rel="stylesheet" />
+  <?php
+  $cssFiles = [
+    "fontawesome611/all.css",
+    "confirm/confirm.css",
+    "select2/select2.css",
+    "sumoselect/sumoselect.css",
+    "datetimepicker/jquery.datetimepicker.css",
+    "daterangepicker/daterangepicker.css",
+    "rangeSlider/ion.rangeSlider.css",
+    "filer/jquery.filer.css",
+    "filer/jquery.filer-dragdropbox-theme.css",
+    "holdon/HoldOn.css",
+    "holdon/HoldOn-style.css",
+    "simplenotify/simple-notify.css",
+    "comment/comment.css",
+    "fancybox5/fancybox.css",
+    "css/adminlte.css",
+    "css/adminlte-style.css",
+  ];
+
+  foreach ($cssFiles as $file) {
+    echo '<link href="./assets/' . $file . '?v=' . VERSION . '" rel="stylesheet" />' . PHP_EOL;
+  }
+  ?>
 </head>
 
-<body class="sidebar-mini hold-transition text-sm">
+<body class="sidebar-mini hold-transition text-sm" data-bs-theme="light">
   <!-- Wrapper -->
   <div class="wrapper">
     <!-- Header -->

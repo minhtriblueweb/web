@@ -25,25 +25,36 @@ $seo['image'] = '';
     </div>
     <div class="wrap-content" style="background: unset;">
       <div class="row">
-        <?php $show_chinhsach = $news->show_news_by_type('chinhsach', 'hienthi'); ?>
+        <?php $show_chinhsach = $fn->show_data([
+          'table' => 'tbl_news',
+          'status' => 'hienthi',
+          'type'   => 'chinhsach'
+        ]); ?>
         <?php if ($show_chinhsach): ?>
-          <?php while ($resule_chinhsach = $show_chinhsach->fetch_assoc()) : ?>
-            <div class="col-6 col-sm-4" data-aos="fade-up" data-aos-duration="1000">
+          <?php while ($row = $show_chinhsach->fetch_assoc()) : ?>
+            <div class="col-12 col-sm-4" data-aos="fade-up" data-aos-duration="500">
               <div class="item-service">
                 <div class="images">
-                  <a class="scale-img hover-glass text-decoration-none" href="<?= $resule_chinhsach['slug'] ?>"
-                    title="<?= $resule_chinhsach['name'] ?>">
-                    <img class="w-100"
-                      src="<?php echo empty($resule_chinhsach['file']) ? NO_IMG : BASE_ADMIN . UPLOADS . $resule_chinhsach['file']; ?>"
-                      alt="<?= $resule_chinhsach['name'] ?>" />
+                  <a class="scale-img hover-glass text-decoration-none" href="<?= $row['slugvi'] ?>" title="<?= $row['namevi'] ?>">
+                    <?= $fn->getImage([
+                      'file' => $row['file'],
+                      'class' => 'w-100',
+                      'alt' => $row['namevi'],
+                      'title' => $row['namevi'],
+                    ]) ?>
                   </a>
                 </div>
-                <div class="content">
-                  <h3>
-                    <a class="text-split"
-                      href="<?= $resule_chinhsach['slug'] ?>"><?= $resule_chinhsach['name'] ?></a>
-                  </h3>
-                </div>
+                <a href="<?= $row['slugvi'] ?>">
+                  <div class="content">
+                    <h3 class="text-split">
+                      <?= $row['namevi'] ?>
+                    </h3>
+                    <div class="content_desc text-split-3 mt-2">
+                      <?= $row['descvi'] ?>
+                    </div>
+                    <p class="content_link mt-3">Xem thêm <i class="fa fa-arrow-right"></i></p>
+                  </div>
+                </a>
               </div>
             </div>
           <?php endwhile; ?>

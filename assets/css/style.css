@@ -848,22 +848,29 @@ img:not([src]) {
 }
 
 .box-hotline {
-  position: relative;
+  display: flex
+  ;
+      gap: 40px;
+}
+
+.hotline {
+  display: flex  ;
+      gap: 10px;
+      align-items: center;
+      justify-content: flex-start;
+}
+
+.icon-hottline {
+  width: 60px;
+  height: 60px;
+  background: var(--main-color);
+  border-radius: 50%;
   display: flex;
+  justify-content: center;
   align-items: center;
-  justify-content: space-between;
+}.icon-hottline svg {
+  display: block;
 }
-
-.box-hotline .hotline {
-  font-size: 15px;
-  font-weight: 500;
-  color: #333333;
-  background: url(../images/phone.png) no-repeat;
-  min-height: 50px;
-  padding-left: 70px;
-  margin: 0 0px 0 20px;
-}
-
 .box-hotline .hotline p {
   margin: 0;
   color: var(--main-color);

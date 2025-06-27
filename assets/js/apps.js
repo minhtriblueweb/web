@@ -658,6 +658,46 @@ NN_FRAMEWORK.SlickPage = function () {
       ],
     });
   }
+  if (isExist($(".slick-pro-detail"))) {
+    var slideCount = $(".slick-pro-detail > div").length;
+
+    $(".slick-pro-detail").slick({
+      slidesToShow: 4,
+      slidesToScroll: 1,
+      arrows: true,
+      prevArrow: $(".slick-prev-btn"),
+      nextArrow: $(".slick-next-btn"),
+      dots: false,
+      infinite: false,
+      speed: 500,
+      responsive: [
+        {
+          breakpoint: 992,
+          settings: {
+            slidesToShow: 3
+          }
+        },
+        {
+          breakpoint: 768,
+          settings: {
+            slidesToShow: 4
+          }
+        },
+        {
+          breakpoint: 480,
+          settings: {
+            slidesToShow: 4
+          }
+        }
+      ]
+    });
+
+    // Ẩn nút điều hướng nếu ảnh ≤ 4
+    if (slideCount <= 4) {
+      $(".slick-arrow-control").hide();
+    }
+  }
+
   if (isExist($(".slick_product_list"))) {
     var $slider = $('.slick_product_list');
     $slider.slick({
@@ -699,7 +739,6 @@ NN_FRAMEWORK.SlickPage = function () {
         }
       ]
     });
-
     function updateArrows(currentSlide) {
       var slickObj = $slider.slick("getSlick");
       var totalSlides = slickObj.slideCount;

@@ -200,12 +200,10 @@
       "@type": "Organization",
       "name": "<?= $seo['title'] ?? $web_name ?>",
       "url": "<?= BASE ?>",
-      "sameAs": [
-        <?= implode(", ", array_map(fn($link) => '"' . $link . '"', $sameAs)) ?>
-      ]
+      "sameAs": [<?= implode(", ", array_map(fn($link) => '"' . $link . '"', $sameAs)) ?>]
       "address": {
         "@type": "PostalAddress",
-        "streetAddress": "",
+        "streetAddress": "<?= $address ?>",
         "addressRegion": "Ho Chi Minh",
         "postalCode": "70000",
         "addressCountry": "vi"

@@ -53,9 +53,6 @@ require_once $baseDir . '/sources/product_list_lv1.php';
             <?php
             $slug = $sp['slugvi'];
             $name = htmlspecialchars($sp['namevi']);
-            $img = !empty($sp['file'])
-              ? BASE_ADMIN . UPLOADS . $sp['file']
-              : NO_IMG;
             $sale = $sp['sale_price'] ?? '';
             $regular = $sp['regular_price'] ?? '';
             $views = $sp['views'] ?? 0;
@@ -63,7 +60,13 @@ require_once $baseDir . '/sources/product_list_lv1.php';
             <div class="item-product" data-aos="fade-up" data-aos-duration="1000">
               <a href="<?= $slug ?>">
                 <div class="images">
-                  <img src="<?= $img ?>" alt="<?= $name ?>" title="<?= $name ?>" class="w-100" loading="lazy" />
+                  <?= $fn->getImage([
+                    'file' => $sp['file'],
+                    'class' => 'w-100',
+                    'alt' => $name,
+                    'title' => $name,
+                    'lazy' => true
+                  ]) ?>
                 </div>
                 <div class="content">
                   <div class="title">

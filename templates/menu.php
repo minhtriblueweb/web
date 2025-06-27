@@ -19,7 +19,7 @@ if ($dm_c2_all && $dm_c2_all->num_rows > 0) {
   }
 }
 
-// Tạo cây menu dùng chung
+// Tạo cây menu
 $menu_tree = [];
 if ($dm_c1_all && $dm_c1_all->num_rows > 0) {
   while ($lv1 = $dm_c1_all->fetch_assoc()) {
@@ -75,14 +75,14 @@ if ($dm_c1_all && $dm_c1_all->num_rows > 0) {
     <ul class="menu-bar">
       <li>
         <a class="transition" href="./" title="Trang chủ">
-          <i class="fa-solid fa-house"></i>
+          <span><i class="fa-solid fa-house"></i></span>
         </a>
       </li>
       <li><a class="transition" href="gioi-thieu" title="Giới thiệu"><span>Giới thiệu</span></a></li>
-      <li><a class="transition" href="mua-hang" title="Mua hàng">Mua hàng</a></li>
-      <li><a class="transition" href="huong-dan-choi" title="Hướng dẫn chơi">Hướng dẫn chơi</a></li>
-      <li><a class="transition" href="tin-tuc" title="Tin tức">Tin tức</a></li>
-      <li><a class="transition" href="lien-he" title="Liên hệ">Liên hệ</a></li>
+      <li><a class="transition" href="mua-hang" title="Mua hàng"><span>Mua hàng</span></a></li>
+      <li><a class="transition" href="huong-dan-choi" title="Hướng dẫn chơi"><span>Hướng dẫn chơi</span></a></li>
+      <li><a class="transition" href="tin-tuc" title="Tin tức"><span>Tin tức</span></a></li>
+      <li><a class="transition" href="lien-he" title="Liên hệ"><span>Liên hệ</span></a></li>
     </ul>
   </div>
 </div>
@@ -123,11 +123,15 @@ if ($dm_c1_all && $dm_c1_all->num_rows > 0) {
         <ul>
           <?php foreach ($menu_tree as $lv1): ?>
             <li>
-              <a href="<?= $lv1['slugvi'] ?>"><?= $lv1['namevi'] ?></a>
+              <a href="<?= $lv1['slugvi'] ?>">
+                <?= $lv1['namevi'] ?>
+              </a>
               <?php if (!empty($lv1['sub'])): ?>
                 <ul>
                   <?php foreach ($lv1['sub'] as $lv2): ?>
-                    <li><a href="<?= $lv2['slugvi'] ?>"><?= $lv2['namevi'] ?></a></li>
+                    <li><a href="<?= $lv2['slugvi'] ?>">
+                        <?= $lv2['namevi'] ?>
+                      </a></li>
                   <?php endforeach; ?>
                 </ul>
               <?php endif; ?>

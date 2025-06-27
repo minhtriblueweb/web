@@ -27,28 +27,26 @@ require_once $baseDir . '/sources/product_details.php';
         </div>
         <?php if ($get_gallery && $get_gallery->num_rows > 0): ?>
           <div class="gallery-thumb-pro">
-            <div class="owl-page owl-carousel owl-theme owl-pro-detail" data-items="screen:0|items:4|margin:10"
-              data-nav="1" data-navcontainer=".control-pro-detail">
+            <div class="slick-pro-detail">
               <?php
               // Ảnh đại diện sản phẩm
-              echo '<div>
-                <a class="thumb-pro-detail" data-zoom-id="Zoom-1" href="' . $img_main . '">
-                  <img class="w-100" src="' . $img_main . '" />
-                </a>
-              </div>';
-
-              // Các ảnh gallery
+              echo '<div><a class="thumb-pro-detail" data-zoom-id="Zoom-1" href="' . $img_main . '"><img class="" src="' . $img_main . '" /></a></div>';
               while ($gallery = $get_gallery->fetch_assoc()):
                 $img_src = !empty($gallery['file']) ? BASE_ADMIN . UPLOADS . $gallery['file'] : NO_IMG;
               ?>
-                <div>
-                  <a href="<?= $img_src ?>" class="thumb-pro-detail" data-zoom-id="Zoom-1">
-                    <img class="w-100" src="<?= $img_src ?>" />
-                  </a>
-                </div>
+                <div><a href="<?= $img_src ?>" class="thumb-pro-detail" data-zoom-id="Zoom-1">
+                    <?= $fn->getImage([
+                      'file' => $gallery['file'],
+                      'class' => '',
+                      'lazy' => true
+                    ]) ?>
+                  </a></div>
               <?php endwhile; ?>
             </div>
-            <div class="control-pro-detail control-owl transition"></div>
+            <div class="slick-arrow-control">
+              <button class="slick-prev-btn slick-arrow-custom" type="button"><i class="fa fa-chevron-left"></i></button>
+              <button class="slick-next-btn slick-arrow-custom" type="button"><i class="fa fa-chevron-right"></i></button>
+            </div>
           </div>
         <?php endif; ?>
       </div>

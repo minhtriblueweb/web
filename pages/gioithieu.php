@@ -16,7 +16,7 @@ $seo['image'] = isset($row_gt['file']) ? BASE_ADMIN . UPLOADS . $row_gt['file'] 
         <li class="breadcrumb-item">
           <a class="text-decoration-none" href="<?= BASE ?>"><span>Trang chủ</span></a>
         </li>
-        <li class="breadcrumb-item">
+        <li class="breadcrumb-item active">
           <a class="text-decoration-none" href="gioi-thieu"><span>Giới thiệu</span></a>
         </li>
       </ol>
@@ -25,7 +25,7 @@ $seo['image'] = isset($row_gt['file']) ? BASE_ADMIN . UPLOADS . $row_gt['file'] 
   <div class="wrap-product-list">
     <div class="title-list-hot mt-4">
       <h2><?= $row_gt['namevi'] ?></h2>
-      <div class="animate-border bg-danger mt-1"></div>
+      <div class="animate-border bg-animate-border mt-1"></div>
     </div>
     <div class="wrap-content" style="background: unset;">
       <div class="row">

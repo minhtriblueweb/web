@@ -35,7 +35,9 @@ $page = '404.php'; // Mặc định là lỗi
 if (isset($routes[$slug])) {
   // Route tĩnh
   $page = $routes[$slug];
-} elseif ($slug !== '') {
+} elseif ($slug === 'tim-kiem') {
+  $page = 'search.php';
+}elseif ($slug !== '') {
   // Danh mục cấp 1
   if ($danhmuc->slug_exists_lv1($slug)) {
     $_GET['slug'] = $slug;

@@ -101,6 +101,18 @@ include 'templates/breadcrumb.php';
         <div class="card-body">
           <div class="row">
             <div class="form-group col-md-4 col-sm-6">
+              <label for="color">Màu Website:</label>
+              <input type="text"
+                class="form-control jscolor text-sm"
+                name="color"
+                id="background_color"
+                maxlength="7"
+                value="<?= htmlspecialchars($result['color'] ?? '') ?>"
+                autocomplete="off"
+                style="background-color: <?= htmlspecialchars($result['color'] ?? '') ?>; color: #fff;">
+            </div>
+
+            <div class="form-group col-md-4 col-sm-6">
               <label for="email">Email:</label>
               <input type="email" class="form-control text-sm" name="email" id="email" placeholder="Email"
                 value="<?= isset($result['email']) ? htmlspecialchars($result['email']) : ''; ?>">
@@ -147,6 +159,11 @@ include 'templates/breadcrumb.php';
               <label for="worktime">Giờ làm việc:</label>
               <input type="text" class="form-control text-sm" name="worktime" id="worktime" placeholder="Giờ làm việc"
                 value="<?= isset($result['worktime']) ? htmlspecialchars($result['worktime']) : ''; ?>">
+            </div>
+            <div class="form-group col-md-4 col-sm-6">
+              <label for="address">Địa chỉ:</label>
+              <input type="text" class="form-control text-sm" name="address" id="address" placeholder="Địa chỉ"
+                value="<?= isset($result['address']) ? htmlspecialchars($result['address']) : ''; ?>">
             </div>
           </div>
           <div class="form-group">

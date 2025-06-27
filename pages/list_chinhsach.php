@@ -21,7 +21,7 @@ $seo['image'] = '';
   <div class="wrap-product-list">
     <div class="title-list-hot mt-4">
       <h2>Chính sách</h2>
-      <div class="animate-border bg-danger mt-1"></div>
+      <div class="animate-border bg-animate-border mt-1"></div>
     </div>
     <div class="wrap-content" style="background: unset;">
       <div class="row">

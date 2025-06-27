@@ -27,7 +27,7 @@ $seo = array_merge($seo, array(
   <div class="wrap-product-list">
     <div class="title-list-hot mt-4">
       <h2><?= $result_muahang['namevi'] ?></h2>
-      <div class="animate-border bg-danger mt-1"></div>
+      <div class="animate-border bg-animate-border mt-1"></div>
     </div>
     <div class="wrap-content" style="background: unset;">
       <div class="row">

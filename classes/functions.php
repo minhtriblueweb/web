@@ -814,4 +814,24 @@ class Functions
   {
     return $this->stringRandom($length);
   }
+  function darkenColor($hex, $percent = 10)
+  {
+    $hex = ltrim($hex, '#');
+    if (strlen($hex) == 3) {
+      $hex = $hex[0] . $hex[0] . $hex[1] . $hex[1] . $hex[2] . $hex[2]; // chuyển #abc → #aabbcc
+    }
+
+    // Chuyển hex sang RGB
+    $r = hexdec(substr($hex, 0, 2));
+    $g = hexdec(substr($hex, 2, 2));
+    $b = hexdec(substr($hex, 4, 2));
+
+    // Giảm mỗi thành phần RGB theo %
+    $r = max(0, min(255, $r - ($r * $percent / 100)));
+    $g = max(0, min(255, $g - ($g * $percent / 100)));
+    $b = max(0, min(255, $b - ($b * $percent / 100)));
+
+    // Trả về lại dạng hex
+    return sprintf("%02x%02x%02x", $r, $g, $b);
+  }
 }

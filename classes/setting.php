@@ -158,16 +158,15 @@ class setting
       'analytics',
       'headjs',
       'bodyjs',
+      'address',
+      'color'
     ];
-
     $updates = [];
     foreach ($fields as $field) {
       $value = mysqli_real_escape_string($this->db->link, $data[$field]);
       $updates[] = "`$field` = '$value'";
     }
-
     $query = "UPDATE tbl_setting SET " . implode(', ', $updates) . " WHERE id =1";
-
     $result = $this->db->update($query);
     $msg = $result ? "Cập nhật dữ liệu thành công" : "Không có dữ liệu để cập nhật hoặc lỗi xảy ra";
     $redirectPath = $this->fn->getRedirectPath([

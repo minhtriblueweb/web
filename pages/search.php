@@ -1,7 +1,20 @@
 <?php
-require_once $baseDir . '/sources/product_list_lv2.php';
+$records_per_page = 20;
+$current_page = max(1, isset($_GET['page']) ? (int)$_GET['page'] : 1);
+$total_records = $fn->count_data([
+  'table' => 'tbl_sanpham',
+  'status' => 'hienthi',
+  'keyword' => $_GET['keyword'] ?? ''
+]);
+$total_pages = ceil($total_records / $records_per_page);
+$show_sanpham = $fn->show_data([
+  'table' => 'tbl_sanpham',
+  'status' => 'hienthi',
+  'records_per_page' => $records_per_page,
+  'current_page' => $current_page,
+  'keyword' => $_GET['keyword'] ?? ''
+]);
 ?>
-
 <div class="wrap-main wrap-home w-clear">
   <div class="breadCrumbs">
     <div class="wrap-content">
@@ -9,16 +22,8 @@ require_once $baseDir . '/sources/product_list_lv2.php';
         <li class="breadcrumb-item">
           <a class="text-decoration-none" href="<?= BASE ?>"><span>Trang chủ</span></a>
         </li>
-        <li class="breadcrumb-item">
-          <a class="text-decoration-none" href="san-pham"><span>Sản phẩm</span></a>
-        </li>
-        <li class="breadcrumb-item">
-          <a class="text-decoration-none"
-            href="<?= $dm_c1['slugvi'] ?>"><span><?= $dm_c1['namevi'] ?></span></a>
-        </li>
         <li class="breadcrumb-item active">
-          <a class="text-decoration-none"
-            href="<?= $dm_c2['slugvi'] ?>"><span><?= $dm_c2['namevi'] ?></span></a>
+          <a class="text-decoration-none" href="san-pham"><span>Sản phẩm</span></a>
         </li>
       </ol>
     </div>
@@ -26,36 +31,17 @@ require_once $baseDir . '/sources/product_list_lv2.php';
 
   <div class="wrap-product-list">
     <div class="wrap-content" style="background: unset;">
-      <?php if ($list_danhmuc_c2 && $list_danhmuc_c2->num_rows > 0): ?>
-        <div class="grid-list-no-index">
-          <?php while ($dm_c2_item = $list_danhmuc_c2->fetch_assoc()): ?>
-            <div class="item-list-noindex">
-              <a href="<?= $dm_c2_item['slugvi'] ?>">
-                <h3 class="m-0 text-capitalize"><?= $dm_c2_item['namevi'] ?></h3>
-              </a>
-            </div>
-          <?php endwhile; ?>
-        </div>
-      <?php endif; ?>
-
-    </div>
-  </div>
-
-  <div class="wrap-product-list">
-    <div class="wrap-content" style="background: unset;">
-      <div class="title-list-hot text-center text-capitalize">
-        <h2><?= $dm_c2['namevi'] ?></h2>
-        (<?= $total_records ?> sản phẩm)
+      <div class="title-list-hot text-center">
+        <h2>Tìm Kiếm</h2>
+        (<?= $total_records ?>) sản phẩm : <?= $_GET['keyword'] ?>
       </div>
     </div>
   </div>
-
   <div class="wrap-main wrap-template w-clear" style="margin: 0 auto !important;">
     <div class="content-main">
-      <?php if ($get_sp && $get_sp->num_rows > 0) : ?>
-        <div class="grid-product .paging-product-loadmore .paging-product-loadmore-1" data-perpage="25" data-list="1"
-          data-cat="" data-item="" data-brand="" data-curpage="2" data-total="124">
-          <?php while ($sp = $get_sp->fetch_assoc()) : ?>
+      <?php if ($show_sanpham && $show_sanpham->num_rows > 0) : ?>
+        <div class="grid-product">
+          <?php while ($sp = $show_sanpham->fetch_assoc()) : ?>
             <?php
             $slug = $sp['slugvi'];
             $name = htmlspecialchars($sp['namevi']);
@@ -76,7 +62,7 @@ require_once $baseDir . '/sources/product_list_lv2.php';
                 </div>
                 <div class="content">
                   <div class="title">
-                    <h3><?= $name ?></h3>
+                    <h3><?= $namevi ?></h3>
                     <p class="price-product">
                       <?php if (!empty($sale) && !empty($regular)): ?>
                         <span class="price-new"><?= $sale ?>₫</span>
@@ -103,8 +89,7 @@ require_once $baseDir . '/sources/product_list_lv2.php';
         </div>
       <?php endif ?>
       <div class="mt-3">
-        <?= $pagination_html = $fn->renderPagination_tc($current_page, $total_pages, BASE . $dm_c2['slugvi'] . '/page-');
-        ?>
+        <?= $fn->renderPagination_tc($current_page, $total_pages, BASE . 'san-pham/page-'); ?>
       </div>
     </div>
   </div>

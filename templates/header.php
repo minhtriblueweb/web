@@ -84,6 +84,12 @@
   <!-- Js Head -->
   <?= $headjs ?>
 </head>
+<style>
+  :root {
+    --main-color: #<?= $color ?>;
+    --main-color-dark: #<?= $fn->darkenColor($color, 15) ?>;
+  }
+</style>
 
 <body>
   <div class="wrap-container">

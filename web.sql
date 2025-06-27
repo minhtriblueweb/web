@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Máy chủ: 127.0.0.1
--- Thời gian đã tạo: Th6 27, 2025 lúc 12:01 PM
+-- Thời gian đã tạo: Th6 27, 2025 lúc 07:40 PM
 -- Phiên bản máy phục vụ: 10.4.32-MariaDB
 -- Phiên bản PHP: 8.2.12
 
@@ -1063,7 +1063,12 @@ INSERT INTO `tbl_gallery` (`id`, `id_parent`, `file`, `numb`, `status`, `date_cr
 (132, 124, '588ba4502a_500x500x1.jpg', 3, 'hienthi', '2025-06-23 23:22:36', '2025-06-23 23:22:36'),
 (196, 9, 'rubik-tam-giac-sieu-dep-4e6b_500x500x1.webp', 3, 'hienthi', '2025-06-24 11:34:14', '2025-06-24 11:34:14'),
 (195, 9, 'rubik-tam-giac-sieu-dep-5d0c_500x500x1.webp', 2, 'hienthi', '2025-06-24 11:34:14', '2025-06-24 12:11:03'),
-(194, 9, 'rubik-tam-giac-sieu-dep-a01e_500x500x1.webp', 1, 'hienthi', '2025-06-24 11:34:13', '2025-06-24 12:11:02');
+(194, 9, 'rubik-tam-giac-sieu-dep-a01e_500x500x1.webp', 1, 'hienthi', '2025-06-24 11:34:13', '2025-06-24 12:11:02'),
+(201, 11, 'ttttt-a22b_500x500x1.webp', 1, 'hienthi', '2025-06-27 23:59:58', '2025-06-27 23:59:58'),
+(202, 11, 'ttttt-caf2_500x500x1.webp', 2, 'hienthi', '2025-06-27 23:59:58', '2025-06-28 00:32:59'),
+(203, 11, 'ttttt-1596_500x500x1.webp', 3, 'hienthi', '2025-06-27 23:59:58', '2025-06-28 00:33:04'),
+(204, 11, 'ttttt-18db_500x500x1.webp', 1, 'hienthi', '2025-06-28 00:31:40', '2025-06-28 00:31:40'),
+(205, 11, 'ttttt-3e55_500x500x1.webp', 2, 'hienthi', '2025-06-28 00:31:40', '2025-06-28 00:31:40');
 
 -- --------------------------------------------------------
 
@@ -1190,8 +1195,8 @@ CREATE TABLE `tbl_sanpham` (
 
 INSERT INTO `tbl_sanpham` (`id`, `slugvi`, `slugen`, `namevi`, `nameen`, `descvi`, `descen`, `contentvi`, `contenten`, `titlevi`, `titleen`, `keywordsvi`, `keywordsen`, `descriptionvi`, `descriptionen`, `file`, `id_list`, `id_cat`, `regular_price`, `sale_price`, `discount`, `code`, `type`, `status`, `numb`, `views`, `date_created`, `date_updated`) VALUES
 (9, 'rubik-tam-giac-sieu-dep', '', 'Rubik Tam Giác siêu đẹp', '', '', '', '', '', '', '', '', '', '', '', 'rubik-tam-giac-sieu-dep-431f_500x500x1.webp', 2, 2, '', '', 0, '', 'sanpham', 'noibat,banchay,hienthi', 1, 44, '2025-06-24 11:01:15', '2025-06-26 14:19:56'),
-(10, 'rubik-sieu-dep-trai', '', 'Rubik siêu đẹp trai', '', '', '', '', '', 'Rubik siêu đẹp trai cute', '', 'Rubik siêu đẹp trai', '', '', '', 'rubik-sieu-dep-trai-66f4_500x500x1.webp', 2, 0, '', '', 0, '', 'sanpham', 'banchay,noibat,hienthi', 1, 6, '2025-06-24 15:16:15', '2025-06-26 16:22:54'),
-(11, 'ttttt', '', 'ttttt', '', '', '', '', '', '', '', '', '', '', '', 'ttttt-32c2_500x500x1.webp', 4, 8, '', '', 0, '', 'sanpham', 'noibat,banchay,hienthi', 1, 3, '2025-06-25 16:19:28', '2025-06-27 14:34:55');
+(10, 'rubik-sieu-dep-trai', '', 'Rubik siêu đẹp trai', '', '', '', '', '', 'Rubik siêu đẹp trai cute', '', 'Rubik siêu đẹp trai', '', '', '', 'rubik-sieu-dep-trai-66f4_500x500x1.webp', 2, 0, '', '', 0, '', 'sanpham', 'banchay,noibat,hienthi', 1, 7, '2025-06-24 15:16:15', '2025-06-27 23:59:17'),
+(11, 'ttttt', '', 'ttttt', '', '', '', '', '', '', '', '', '', '', '', 'ttttt-32c2_500x500x1.webp', 4, 8, '', '', 0, '', 'sanpham', 'noibat,banchay,hienthi', 1, 76, '2025-06-25 16:19:28', '2025-06-28 00:38:58');
 
 -- --------------------------------------------------------
 
@@ -1216,15 +1221,17 @@ CREATE TABLE `tbl_setting` (
   `headjs` text DEFAULT NULL,
   `bodyjs` text DEFAULT NULL,
   `logo` varchar(255) DEFAULT NULL,
-  `favicon` varchar(255) NOT NULL
+  `favicon` varchar(255) NOT NULL,
+  `color` varchar(7) DEFAULT NULL,
+  `address` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Đang đổ dữ liệu cho bảng `tbl_setting`
 --
 
-INSERT INTO `tbl_setting` (`id`, `email`, `hotline`, `web_name`, `link_googlemaps`, `fanpage`, `copyright`, `introduction`, `worktime`, `desc`, `coords_iframe`, `coords`, `analytics`, `headjs`, `bodyjs`, `logo`, `favicon`) VALUES
-(1, 'minhtri.blueweb@gmail.com', '0328 732 834', 'Thế Giới Rubik TMT', 'https://maps.app.goo.gl/QBCDJLNAcySUtTiGA', 'https://www.facebook.com/profile.php?id=100090056894070', 'Bản quyền thuộc Minh Trí Rubik. Design by Minh Trí BlueWeb', 'Chào mừng các bạn đến với website của Minh Trí Rubik', '8h - 17h', 'Sản phẩm của Rubik TMT đa dạng về mẫu mã, từ những viên Rubik cổ điển đến các phiên bản hiện đại với nhiều hình dạng và kích thước khác nhau. Chúng tôi cam kết cung cấp những sản phẩm được sản xuất với công nghệ tiên tiến, đảm bảo an toàn và thân thiện với người dùng.', '<iframe src=\"https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d489.7908536223631!2d106.63337394536576!3d10.86272739886291!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x317529f4163891e3%3A0xeaf1734b54adb3f!2zxJDGsOG7nW5nIFRo4buLIE3GsOG7nWkvMThhIEjhurttIDI2MCwgS2h1IFBo4buRIDNBLCBRdeG6rW4gMTIsIEjhu5MgQ2jDrSBNaW5oLCBWaeG7h3QgTmFt!5e0!3m2!1svi!2s!4v1749044597447!5m2!1svi!2s\" width=\"600\" height=\"450\" style=\"border:0;\" allowfullscreen=\"\" loading=\"lazy\" referrerpolicy=\"no-referrer-when-downgrade\"></iframe>', '10.86276948472411, 106.63364911149097', '<!-- Google tag (gtag.js) -->\r\n<script async src=\"https://www.googletagmanager.com/gtag/js?id=G-XKMLLRQBJ9\"></script>\r\n<script>\r\n  window.dataLayer = window.dataLayer || [];\r\n  function gtag(){dataLayer.push(arguments);}\r\n  gtag(\'js\', new Date());\r\n\r\n  gtag(\'config\', \'G-XKMLLRQBJ9\');\r\n</script>', '', '', 'ade0194b20_300x120x1.png', '25f50996fd_48x48x1.png');
+INSERT INTO `tbl_setting` (`id`, `email`, `hotline`, `web_name`, `link_googlemaps`, `fanpage`, `copyright`, `introduction`, `worktime`, `desc`, `coords_iframe`, `coords`, `analytics`, `headjs`, `bodyjs`, `logo`, `favicon`, `color`, `address`) VALUES
+(1, 'minhtri.blueweb@gmail.com', '0328 732 834', 'Thế Giới Rubik TMT', 'https://maps.app.goo.gl/QBCDJLNAcySUtTiGA', 'https://www.facebook.com/profile.php?id=100090056894070', 'Bản quyền thuộc Minh Trí Rubik. Design by Minh Trí BlueWeb', 'Chào mừng các bạn đến với website của Minh Trí Rubik', '8h - 17h', 'Sản phẩm của Rubik TMT đa dạng về mẫu mã, từ những viên Rubik cổ điển đến các phiên bản hiện đại với nhiều hình dạng và kích thước khác nhau. Chúng tôi cam kết cung cấp những sản phẩm được sản xuất với công nghệ tiên tiến, đảm bảo an toàn và thân thiện với người dùng.', '<iframe src=\"https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d489.7908536223631!2d106.63337394536576!3d10.86272739886291!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x317529f4163891e3%3A0xeaf1734b54adb3f!2zxJDGsOG7nW5nIFRo4buLIE3GsOG7nWkvMThhIEjhurttIDI2MCwgS2h1IFBo4buRIDNBLCBRdeG6rW4gMTIsIEjhu5MgQ2jDrSBNaW5oLCBWaeG7h3QgTmFt!5e0!3m2!1svi!2s!4v1749044597447!5m2!1svi!2s\" width=\"600\" height=\"450\" style=\"border:0;\" allowfullscreen=\"\" loading=\"lazy\" referrerpolicy=\"no-referrer-when-downgrade\"></iframe>', '10.86276948472411, 106.63364911149097', '<!-- Google tag (gtag.js) -->\r\n<script async src=\"https://www.googletagmanager.com/gtag/js?id=G-XKMLLRQBJ9\"></script>\r\n<script>\r\n  window.dataLayer = window.dataLayer || [];\r\n  function gtag(){dataLayer.push(arguments);}\r\n  gtag(\'js\', new Date());\r\n\r\n  gtag(\'config\', \'G-XKMLLRQBJ9\');\r\n</script>', '', '', 'ade0194b20_300x120x1.png', '25f50996fd_48x48x1.png', 'FF00AA', '152/18, Dương Thị Mười, P.Tân Thới Hiệp, Quận 12, TpHCM');
 
 -- --------------------------------------------------------
 
@@ -12399,7 +12406,7 @@ ALTER TABLE `tbl_district`
 -- AUTO_INCREMENT cho bảng `tbl_gallery`
 --
 ALTER TABLE `tbl_gallery`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=201;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=206;
 
 --
 -- AUTO_INCREMENT cho bảng `tbl_news`

@@ -2,18 +2,20 @@
 $setting_page = [
   'message' => '',
   'name_page' => 'danh mục cấp 1',
+  'type' => 'danhmuc_c1',
   'table' => 'tbl_danhmuc_c1',
   'thumb_width' => 50,
   'thumb_height' => 50,
-  'thumb_zc' => 1
+  'thumb_zc' => 1,
 ];
 extract($setting_page);
-$result = [];
-$id = $_GET['id'] ?? null;
-if (!empty($id)) {
+$result = $seo_data = [];
+$id = isset($_GET['id']) && is_numeric($_GET['id']) ? (int)$_GET['id'] : null;
+if ($id !== null) {
   $get_id = $fn->get_id($table, $id);
   if ($get_id && $get_id->num_rows > 0) {
     $result = $get_id->fetch_assoc();
+    $seo_data = $seo->get_seo($id);
   }
 }
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && (isset($_POST['add']) || isset($_POST['edit']))) {
@@ -179,6 +181,7 @@ include 'templates/breadcrumb.php'; ?>
       </div>
     </div>
     <?php include 'templates/seo.php'; ?>
+    <input type="hidden" name="type" value="<?= $type ?>">
     <input type="hidden" name="thumb_width" value="<?= $thumb_width ?>">
     <input type="hidden" name="thumb_height" value="<?= $thumb_height ?>">
     <input type="hidden" name="thumb_zc" value="<?= $thumb_zc ?>">

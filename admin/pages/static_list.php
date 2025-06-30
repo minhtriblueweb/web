@@ -82,11 +82,6 @@ include 'templates/breadcrumb.php';
         </div>
       </div>
     </div>
-    <?php
-    if ($type == 'gioithieu' || $type == 'muahang') {
-      include 'templates/seo.php';
-    }
-    ?>
     <input type="hidden" name="type" id="type" value="<?= $type ?>">
   </form>
 </section>

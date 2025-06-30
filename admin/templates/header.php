@@ -240,6 +240,47 @@
         ]
       ],
       [
+        'title' => 'Quản lý SEO page',
+        'icon' => 'fas fa-share-alt',
+        'children' => [
+          [
+            'title' => 'Trang chủ',
+            'link' => '?page=seopage_list&type=trangchu',
+            'active' => ['?page=seopage_list&type=trangchu']
+          ],
+          [
+            'title' => 'Giới thiệu',
+            'link' => '?page=seopage_list&type=gioithieu',
+            'active' => ['?page=seopage_list&type=gioithieu']
+          ],
+          [
+            'title' => 'Sản phẩm',
+            'link' => '?page=seopage_list&type=sanpham',
+            'active' => ['?page=seopage_list&type=sanpham']
+          ],
+          [
+            'title' => 'Tin tức',
+            'link' => '?page=seopage_list&type=tintuc',
+            'active' => ['?page=seopage_list&type=tintuc']
+          ],
+          [
+            'title' => 'Mua hàng',
+            'link' => '?page=seopage_list&type=muahang',
+            'active' => ['?page=seopage_list&type=muahang']
+          ],
+          [
+            'title' => 'Hướng dẫn chơi',
+            'link' => '?page=seopage_list&type=huongdanchoi',
+            'active' => ['?page=seopage_list&type=huongdanchoi']
+          ],
+          [
+            'title' => 'Liên Hệ',
+            'link' => '?page=seopage_list&type=lienhe',
+            'active' => ['?page=seopage_list&type=lienhe']
+          ]
+        ]
+      ],
+      [
         'title' => 'Thiết lập thông tin',
         'icon' => 'fas fa-cogs',
         'link' => '?page=setting_list',

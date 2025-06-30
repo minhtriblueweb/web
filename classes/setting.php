@@ -42,15 +42,15 @@ class setting
           $old_file_path = "uploads/" . $row['watermark'];
         }
       }
-      $files['file'] = $files['watermark'];
-      $thumb_filename = $this->fn->Upload(
-        $files,
-        $thumb_size,
-        [0, 0, 0, 127],
-        '',
-        $watermark = false,
-        $convert_webp = false
-      );
+      $thumb_filename = $this->fn->Upload([
+        'file' => $files['watermark'],
+        'custom_name' => 'watermark',
+        'thumb' => $thumb_size,
+        'old_file_path' => '',
+        'background' => [0, 0, 0, 127],
+        'watermark' => false,
+        'convert_webp' => false
+      ]);
       if (!empty($thumb_filename) && !empty($old_file_path) && file_exists($old_file_path)) {
         unlink($old_file_path);
       }
@@ -70,7 +70,6 @@ class setting
 
     $this->fn->transfer($msg, "index.php?page=watermark", $result);
   }
-
   public function update_setting_item($item, $data, $files)
   {
     $width = isset($data['thumb_width']) ? (int)$data['thumb_width'] : 300;
@@ -78,8 +77,8 @@ class setting
     $thumb_size = "{$width}x{$height}x1";
     $thumb_filename = '';
     $old_file_path = '';
-    $old_file_name = '';
 
+    // Nếu có file mới upload
     if (!empty($files[$item]['name'])) {
       $allowed_extensions = ['jpg', 'jpeg', 'png', 'gif'];
       $ext = strtolower(pathinfo($files[$item]['name'], PATHINFO_EXTENSION));
@@ -88,38 +87,36 @@ class setting
         $this->fn->transfer("File không hợp lệ! Chỉ chấp nhận JPG, JPEG, PNG, GIF", "index.php?page=setting_file&type={$item}", false);
       }
 
-      // Lấy thông tin ảnh cũ (chưa xóa)
-      $query = "SELECT `$item` FROM tbl_setting WHERE id = 1";
-      $old_file = $this->db->select($query);
-      if ($old_file && $old_file->num_rows > 0) {
-        $row = $old_file->fetch_assoc();
-        $old_file_name = $row[$item] ?? '';
-        if (!empty($old_file_name)) {
-          $old_file_path = "uploads/" . $old_file_name;
-        }
+      // Lấy ảnh cũ
+      $old = $this->db->rawQueryOne("SELECT `$item` FROM tbl_setting WHERE id = 1");
+      if (!empty($old[$item])) {
+        $old_file_path = "uploads/" . $old[$item];
       }
-      $files['file'] = $files[$item];
-      $thumb_filename = $this->fn->Upload(
-        $files,
-        $thumb_size,
-        [0, 0, 0, 127],
-        '',
-        $watermark = false,
-        $convert_webp = false
-      );
+
+      // Upload ảnh mới
+      $thumb_filename = $this->fn->Upload([
+        'file' => $files[$item],
+        'custom_name' => $item,
+        'thumb' => $thumb_size,
+        'background' => [0, 0, 0, 127],
+        'old_file_path' => $old_file_path,
+        'watermark' => false,
+        'convert_webp' => false
+      ]);
+      // Xoá ảnh cũ nếu có
       if (!empty($thumb_filename) && !empty($old_file_path) && file_exists($old_file_path)) {
         unlink($old_file_path);
       }
-    }
-    if (!empty($thumb_filename)) {
-      $update_query = "UPDATE tbl_setting SET `$item` = '$thumb_filename' WHERE id = 1";
-      $result = $this->db->update($update_query);
-      $msg = $result ? "Cập nhật thành công" : "Cập nhật thất bại";
-      $this->fn->transfer($msg, "index.php?page=setting_file&type={$item}", $result);
+
+      // Cập nhật CSDL
+      $updated = $this->db->execute("UPDATE tbl_setting SET `$item` = ? WHERE id = 1", [$thumb_filename]);
+      $msg = $updated ? "Cập nhật ảnh thành công" : "Cập nhật ảnh thất bại";
+      $this->fn->transfer($msg, "index.php?page=setting_list&type={$item}", $updated);
     } else {
-      $this->fn->transfer("Không có ảnh được tải lên", "index.php?page=setting_file&type={$item}", false);
+      $this->fn->transfer("Không có ảnh mới, không cần cập nhật", "index.php?page=setting_list&type={$item}", true);
     }
   }
+
   public function get_setting_item($item)
   {
     $query = "SELECT `$item` FROM tbl_setting WHERE id = '1' LIMIT 1";
@@ -169,9 +166,7 @@ class setting
     $query = "UPDATE tbl_setting SET " . implode(', ', $updates) . " WHERE id =1";
     $result = $this->db->update($query);
     $msg = $result ? "Cập nhật dữ liệu thành công" : "Không có dữ liệu để cập nhật hoặc lỗi xảy ra";
-    $redirectPath = $this->fn->getRedirectPath([
-      'table' => 'tbl_setting',
-    ]);
+    $redirectPath = $this->fn->getRedirectPath(['table' => 'tbl_setting']);
     $this->fn->transfer($msg, $redirectPath, $result);
   }
 }

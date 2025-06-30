@@ -207,38 +207,26 @@ class sanpham
     $fields_common = ['id_list', 'id_cat', 'regular_price', 'sale_price', 'discount', 'code', 'numb', 'type'];
     $table = 'tbl_sanpham';
     $data_prepared = [];
-
-    // Xử lý các trường đa ngôn ngữ
     foreach ($langs as $lang) {
       foreach ($fields_multi as $field) {
         $key = $field . $lang;
         $data_prepared[$key] = $data[$key] ?? "";
       }
     }
-
-    // Xử lý các trường dùng chung
     foreach ($fields_common as $field) {
       $data_prepared[$field] = $data[$field] ?? "";
     }
-
-    // Xử lý trạng thái (checkbox)
     $status_flags = ['hienthi', 'noibat', 'banchay'];
     $status_values = [];
     foreach ($status_flags as $flag) {
-      if (!empty($data[$flag])) {
-        $status_values[] = $flag;
-      }
+      if (!empty($data[$flag])) $status_values[] = $flag;
     }
     $data_prepared['status'] = implode(',', $status_values);
-
-    // Kiểm tra slug trùng
     foreach ($langs as $lang) {
       $slug_key = 'slug' . $lang;
       $slug_error = $this->fn->isSlugDuplicated($data_prepared[$slug_key], $table, $id ?? '');
       if ($slug_error) return $slug_error;
     }
-
-    // Xử lý hình ảnh
     $thumb_filename = '';
     $old_file_path = '';
     if (!empty($id)) {
@@ -247,12 +235,10 @@ class sanpham
         $old_file_path = "uploads/" . $old['file'];
       }
     }
-
     $width = (int)($data['thumb_width'] ?? 0);
     $height = (int)($data['thumb_height'] ?? 0);
     $zc = (int)($data['thumb_zc'] ?? 0);
     $thumb_size = $width . 'x' . $height . 'x' . $zc;
-
     $thumb_filename = $this->fn->Upload([
       'file' => $files['file'],
       'custom_name' => $data_prepared['namevi'],
@@ -261,30 +247,25 @@ class sanpham
       'watermark' => true,
       'convert_webp' => true
     ]);
-
     if (!empty($id)) {
-      // Cập nhật sản phẩm
       $fields = [];
       $params = [];
       foreach ($data_prepared as $key => $val) {
-        $fields[] = "$key = ?";
+        $fields[] = "`$key` = ?";
         $params[] = $val;
       }
       if (!empty($thumb_filename)) {
-        $fields[] = "file = ?";
+        $fields[] = "`file` = ?";
         $params[] = $thumb_filename;
       }
       $params[] = (int)$id;
       $sql = "UPDATE $table SET " . implode(", ", $fields) . " WHERE id = ?";
       $result = $this->db->execute($sql, $params);
-
       if ($result) {
         $this->seo->save_seo($data_prepared['type'], (int)$id, $data, $langs);
       }
-
       $msg = $result ? "Cập nhật sản phẩm thành công" : "Cập nhật sản phẩm thất bại";
     } else {
-      // Thêm mới sản phẩm
       $columns = array_keys($data_prepared);
       $placeholders = array_fill(0, count($columns), '?');
       $params = array_values($data_prepared);
@@ -293,18 +274,14 @@ class sanpham
         $placeholders[] = '?';
         $params[] = $thumb_filename;
       }
-
       $sql = "INSERT INTO $table (" . implode(", ", $columns) . ") VALUES (" . implode(", ", $placeholders) . ")";
       $inserted = $this->db->execute($sql, $params);
       $insert_id = $inserted ? $this->db->getInsertId() : 0;
-
       if ($insert_id) {
         $this->seo->save_seo($data_prepared['type'], $insert_id, $data, $langs);
       }
-
       $msg = $inserted ? "Thêm sản phẩm thành công" : "Thêm sản phẩm thất bại";
     }
-
     $this->fn->transfer($msg, $this->fn->getRedirectPath(['table' => $table]), !empty($id) ? $result : $inserted);
   }
 }

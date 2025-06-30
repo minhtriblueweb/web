@@ -9,7 +9,8 @@ $setting_page = [
 ];
 extract($setting_page);
 $result = [];
-if (!empty($id)) {
+$id = isset($_GET['id']) && is_numeric($_GET['id']) ? (int)$_GET['id'] : null;
+if ($id !== null) {
   $get_id = $fn->get_id($table, $id);
   if ($get_id && $get_id->num_rows > 0) {
     $result = $get_id->fetch_assoc();

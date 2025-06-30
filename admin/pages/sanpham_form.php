@@ -1,20 +1,22 @@
 <?php
-$message = '';
-$name_page = 'sản phẩm';
-$table = 'tbl_sanpham';
-$thumb_width = '500';
-$thumb_height = '500';
-$thumb_zc = '1';
-$type = 'sanpham';
+$setting_page = [
+  'message' => '',
+  'name_page' => 'sản phẩm',
+  'table' => 'tbl_sanpham',
+  'thumb_width' => 500,
+  'thumb_height' => 500,
+  'thumb_zc' => 1,
+  'type' => 'sanpham'
+];
+extract($setting_page);
 $show_danhmuc_c1 = $fn->show_data(['table' => 'tbl_danhmuc_c1']);
-$id = $_GET['id'] ?? null;
-$result = [];
-$seo_data = [];
-if (!empty($id)) {
+$result = $seo_data = [];
+$id = isset($_GET['id']) && is_numeric($_GET['id']) ? (int)$_GET['id'] : null;
+if ($id !== null) {
   $get_id = $fn->get_id($table, $id);
   if ($get_id) {
     $result = $get_id->fetch_assoc();
-    $seo_data = $seo->get_seo($type, (int)$id);
+    $seo_data = $seo->get_seo($id);
     $show_danhmuc_c2 = $fn->show_data([
       'table' => 'tbl_danhmuc_c2',
       'status' => 'hienthi',

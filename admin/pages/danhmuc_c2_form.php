@@ -1,22 +1,27 @@
 <?php
-$message = '';
-$name_page = 'danh mục cấp 2';
-$table = 'tbl_danhmuc_c2';
-$thumb_width = '100';
-$thumb_height = '100';
-$thumb_zc = '1';
-$show_danhmuc = $fn->show_data(['table' => 'tbl_danhmuc_c1']);
-$result = [];
-$id = $_GET['id'] ?? null;
-if (!empty($id)) {
+$setting_page = [
+  'message' => '',
+  'name_page' => 'danh mục cấp 2',
+  'table' => 'tbl_danhmuc_c2',
+  'thumb_width' => 100,
+  'thumb_height' => 100,
+  'thumb_zc' => 1,
+  'type' => 'danhmuc_c2'
+];
+extract($setting_page);
+$result = $seo_data = [];
+$id = isset($_GET['id']) && is_numeric($_GET['id']) ? (int)$_GET['id'] : null;
+if ($id !== null) {
   $get_id = $fn->get_id($table, $id);
   if ($get_id && $get_id->num_rows > 0) {
     $result = $get_id->fetch_assoc();
+    $seo_data = $seo->get_seo($id);
   }
 }
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && (isset($_POST['add']) || isset($_POST['edit']))) {
   $message = $danhmuc->save_danhmuc_c2($_POST, $_FILES, $id);
 }
+$show_danhmuc = $fn->show_data(['table' => 'tbl_danhmuc_c1']);
 ?>
 <?php
 $breadcrumb = [
@@ -193,6 +198,7 @@ include 'templates/breadcrumb.php';
       </div>
     </div>
     <?php include 'templates/seo.php'; ?>
+    <input type="hidden" name="type" value="<?= $type ?>">
     <input type="hidden" name="thumb_width" value="<?= $thumb_width ?>">
     <input type="hidden" name="thumb_height" value="<?= $thumb_height ?>">
     <input type="hidden" name="thumb_zc" value="<?= $thumb_zc ?>">

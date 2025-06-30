@@ -1,17 +1,23 @@
 <?php
-$message = '';
-$name_page = 'tin tức';
-$table = 'tbl_news';
-$id = $_GET['id'] ?? null;
-$type = $_GET['type'] ?? null;
-$thumb_width = '540';
-$thumb_height = '360';
-$thumb_zc = '1';
-$result = [];
-if (!empty($id)) {
+$id = isset($_GET['id']) && is_numeric($_GET['id']) ? (int)$_GET['id'] : null;
+$type = isset($_GET['type']) ? trim($_GET['type']) : null;
+$convert_type = $fn->convert_type($type);
+$setting_page = [
+  'message' => '',
+  'name_page' => $convert_type['vi'],
+  'table' => 'tbl_news',
+  'thumb_width' => 540,
+  'thumb_height' => 360,
+  'thumb_zc' => 1,
+  'type' => $type
+];
+extract($setting_page);
+$result = $seo_data = [];
+if ($id !== null) {
   $get_id = $fn->get_id($table, $id);
   if ($get_id  && $get_id->num_rows > 0) {
     $result = $get_id->fetch_assoc();
+    $seo_data = $seo->get_seo($id, $type);
   }
 }
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && (isset($_POST['add']) || isset($_POST['edit']))) {

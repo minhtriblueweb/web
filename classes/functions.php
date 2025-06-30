@@ -14,6 +14,19 @@ class Functions
     $this->db = new Database();
     $this->fm = new Format();
   }
+  function get_seo(array $row, string $baseUrl = '', string $defaultTitleKey = 'titlevi'): array
+  {
+    global $default_seo;
+
+    return array_merge($default_seo, [
+      'title'       => $row[$defaultTitleKey] ?? '',
+      'keywords'    => $row['keywordsvi'] ?? '',
+      'description' => $row['descriptionvi'] ?? '',
+      'url'         => $baseUrl . ($row['slugvi'] ?? $row['slug'] ?? ''),
+      'image'       => !empty($row['file']) ? BASE_ADMIN . UPLOADS . $row['file'] : ''
+    ]);
+  }
+
   function renderSelectOptions($result, string $valueKey = 'id', string $labelKey = 'namevi', int|string $selectedId = 0): void
   {
     if ($result instanceof mysqli_result && $result->num_rows > 0) {

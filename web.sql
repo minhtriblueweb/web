@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Máy chủ: 127.0.0.1
--- Thời gian đã tạo: Th6 27, 2025 lúc 07:40 PM
+-- Thời gian đã tạo: Th6 30, 2025 lúc 11:58 AM
 -- Phiên bản máy phục vụ: 10.4.32-MariaDB
 -- Phiên bản PHP: 8.2.12
 
@@ -1168,12 +1168,6 @@ CREATE TABLE `tbl_sanpham` (
   `descen` text NOT NULL,
   `contentvi` text NOT NULL,
   `contenten` text NOT NULL,
-  `titlevi` text DEFAULT NULL,
-  `titleen` text DEFAULT NULL,
-  `keywordsvi` text DEFAULT NULL,
-  `keywordsen` text DEFAULT NULL,
-  `descriptionvi` text DEFAULT NULL,
-  `descriptionen` text DEFAULT NULL,
   `file` text NOT NULL,
   `id_list` int(11) NOT NULL,
   `id_cat` int(11) NOT NULL,
@@ -1193,10 +1187,39 @@ CREATE TABLE `tbl_sanpham` (
 -- Đang đổ dữ liệu cho bảng `tbl_sanpham`
 --
 
-INSERT INTO `tbl_sanpham` (`id`, `slugvi`, `slugen`, `namevi`, `nameen`, `descvi`, `descen`, `contentvi`, `contenten`, `titlevi`, `titleen`, `keywordsvi`, `keywordsen`, `descriptionvi`, `descriptionen`, `file`, `id_list`, `id_cat`, `regular_price`, `sale_price`, `discount`, `code`, `type`, `status`, `numb`, `views`, `date_created`, `date_updated`) VALUES
-(9, 'rubik-tam-giac-sieu-dep', '', 'Rubik Tam Giác siêu đẹp', '', '', '', '', '', '', '', '', '', '', '', 'rubik-tam-giac-sieu-dep-431f_500x500x1.webp', 2, 2, '', '', 0, '', 'sanpham', 'noibat,banchay,hienthi', 1, 44, '2025-06-24 11:01:15', '2025-06-26 14:19:56'),
-(10, 'rubik-sieu-dep-trai', '', 'Rubik siêu đẹp trai', '', '', '', '', '', 'Rubik siêu đẹp trai cute', '', 'Rubik siêu đẹp trai', '', '', '', 'rubik-sieu-dep-trai-66f4_500x500x1.webp', 2, 0, '', '', 0, '', 'sanpham', 'banchay,noibat,hienthi', 1, 7, '2025-06-24 15:16:15', '2025-06-27 23:59:17'),
-(11, 'ttttt', '', 'ttttt', '', '', '', '', '', '', '', '', '', '', '', 'ttttt-32c2_500x500x1.webp', 4, 8, '', '', 0, '', 'sanpham', 'noibat,banchay,hienthi', 1, 76, '2025-06-25 16:19:28', '2025-06-28 00:38:58');
+INSERT INTO `tbl_sanpham` (`id`, `slugvi`, `slugen`, `namevi`, `nameen`, `descvi`, `descen`, `contentvi`, `contenten`, `file`, `id_list`, `id_cat`, `regular_price`, `sale_price`, `discount`, `code`, `type`, `status`, `numb`, `views`, `date_created`, `date_updated`) VALUES
+(9, 'rubik-tam-giac-sieu-dep', '', 'Rubik Tam Giác siêu đẹp', '', '', '', '', '', 'rubik-tam-giac-sieu-dep-431f_500x500x1.webp', 2, 2, '', '', 0, '', 'sanpham', 'noibat,banchay,hienthi', 1, 45, '2025-06-24 11:01:15', '2025-06-30 09:15:44'),
+(10, 'rubik-sieu-dep-trai', '', 'Rubik siêu đẹp trai', '', '', '', '', '', 'rubik-sieu-dep-trai-66f4_500x500x1.webp', 2, 3, '', '', 0, '', 'sanpham', 'hienthi,noibat,banchay', 1, 7, '2025-06-24 15:16:15', '2025-06-29 16:49:25'),
+(11, 'ttttt', '', 'ttttt', '', '', '', '', '', 'ttttt-32c2_500x500x1.webp', 4, 8, '', '', 0, '', 'sanpham', 'noibat,banchay,hienthi', 1, 77, '2025-06-25 16:19:28', '2025-06-29 16:48:26'),
+(16, 'rubik-3x3x3-khoi-lap-phuong-do-choi-tri-tue-danh-cho-be-tren-3-tuoi', '', 'Rubik 3x3x3 khối lập phương đồ chơi trí tuệ dành cho bé trên 3 tuổi', '', '<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">Vừa chơi vừa học: Đồ chơi Rubik 3x3x3 khối lập phương là đồ chơi giúp bé tăng sự tập trung trí tuệ, tư duy logic để rèn luyện trí nhớ</span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">Phát triển kỹ năng cho trẻ: Khối rubik lập phương với những màu sắc các mặt khác nhau giúp bé tăng khả năng nhận biết màu sắc. Xoay các khối rubick giúp bé rèn luyện thêm sự kiên trì và kỹ năng vận động khéo léo của tay.</span></span></p>\r\n', '', '<h1><span style=\"line-height:2;\"><span style=\"font-size:16px;\">Chi tiết sản phẩm đồ chơi rubik 3x3x3 khối lập phương đồ chơi trí tuệ dành cho bé trên 3 tuổi</span></span></h1>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">Mã sản phẩm:</span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">Thương hiệu: <a href=\"https://v-toys.vn/\">V-toys</a></span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">Xuất xứ: Việt Nam</span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">Màu sắc: Theo ảnh sản phẩm hoặc có thể thay đổi</span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">Size:</span></span></p>\r\n\r\n<h3><span style=\"line-height:2;\"><span style=\"font-size:16px;\">Hướng dẫn cách chơi rubik 3x3x3 khối lập phương</span></span></h3>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\"><strong>Bước 1:</strong></span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">Bạn phải quay đúng một mặt, nhưng phải quay đúng luật, nghĩa là khi quay xong 1 mặt thì sẽ hình thành tầng một xung quanh mặt vừa lắp đúng. Đầu tiên phải xoay được một hình chữ thập, sau đó nhét các ô đúng vào 4 góc. Tất cả đều có công thức: Quay tầng 3 của mặt đó về bên trái, cạnh bên phải lên trên. Sau đó quay trở lại: tầng 3 về bên phải, cạnh phải xuống dưới. Cứ làm liên tục như vậy cho tới khi được góc cùng màu trở về vị trí thích hợp</span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\"><strong>Bước 2:</strong></span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">Sau khi hoàn thành bước 1, bạn lật mặt kề mặt đúng, tầng 2 bạn hãy để ý cái tâm, bạn phải quay sang phải hoặc trái để cho màu của tâm trùng với màu của tầng một. Sau khi tâm trùng với tầng 1, bạn lấy 1 mặt bất kì làm mặt chính (ngoại trừ mặt đối diện mặt làm đúng ở bước 1). Bạn lấy tầng 3 của mặt chính, quay về một phía sao cho đủ 2 điều kiện: điều kiện 1 là màu giữa tầng 3 mặt chính phải trùng với màu tâm mặt chính, điều kiện 2 là màu kề màu giữa tầng 3 (ở phía mặt dưới) trùng màu với tâm kế bên (phải trùng màu với màu tâm của mặt trái hoặc mặt phải mặt chính).</span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">Nếu trùng màu tâm mặt phải, công thức: giữ mặt chính, tầng 3 qua trái, cạnh bên phải mặt chính quay xuống, tầng 3 qua phải, cạnh bên phải mặt chính quay lên, tầng 3 qua phải, mặt chính qua phải, tầng 3 qua trái, mặt chính qua trái.</span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">Nếu trùng màu tâm mặt trái, công thức: giữ mặt chính, tầng 3 qua phải, cạnh bên trái mặt chính quay xuống, tầng 3 qua trái, cạnh bên trái mặt chính quay lên, tầng 3 qua trái, mặt chính qua trái, tầng 3 qua phải, mặt chính qua phải.</span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\"><strong>Bước 3:</strong></span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">Đây là bước khó nhất trong các bước. Sau khi hoàn thành bước 2, bạn quay rubik xuống mặt đối diện mặt đúng ở bước 1 làm mặt chính, bạn nhìn vào 4 góc ở mặt chính, kiếm 2 góc hội tụ các điều kiện: 3 màu của góc phải trùng với 3 màu của 3 tâm gồm: tâm mặt chính, tâm 2 mặt có chứa góc, không nhất thiết 3 màu của góc phải nằm chính xác. Sau khi xác định hai góc hội tụ đủ các điều kiện trên, bạn hãy xác định mặt nào chứa 2 góc đó (nằm phía trên mặt chính) và lấy mặt đó làm mặt chính. Công thức: Mặt bên phải mặt chính quay xuống, tầng 3 quay qua trái, mặt bên phải mặt chính quay lên, mặt chính quay qua phải, tầng 3 quay qua trái (nếu trường hợp 2 góc hội tụ điều kiện thì đáy trái 2 lần), mặt chính quay qua trái, mặt bên phải mặt chính quay xuống, tầng 3 quay qua phải, mặt bên phải mặt chính quay lên, tầng 3 qua trái 2 lần. Sau khi quay xong, bạn lật mặt đáy, nhìn 4 góc, lúc này cả bốn góc sẽ đúng vị trí nhưng chưa hẳn chính xác. Bạn lật trở lại mặt chính vừa quay và thực hiện công thức: mặt bên phải mặt chính quay xuống, tầng 3 quay qua trái, mặt bên phải mặt chính quay lên, tầng 3 quay qua trái, mặt bên phải mặt chính quay xuống, tầng 3 quay qua trái 2 lần, mặt bên phải mặt chính quay lên, tầng 3 quay qua trái 2 lần. Lúc này góc phía dưới bên phải mặt chính (tức là màu nằm bên phải tầng 3 của mặt chính) sẽ trùng màu với tâm mặt chính (nếu không trùng thì cứ thực hiện công thức trên thêm 1 lần nữa) và màu bên phải màu trên sẽ trùng màu với tâm của mặt phải mặt chính. Lúc này ta lấy mặt phải mặt chính làm mặt chính và ta thực hiện công thức trên cho tới khi nào màu tầng 3 bên phải mặt chính phù hợp với điều kiện vừa rồi (có thể mặt chính sẽ đúng màu). Ta lật mặt đối mặt chính làm mặt chính thực hiện công thức trên và điều kiện cũng như trên.</span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\"><strong>Bước 4:</strong></span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">Đây là bước cuối cùng, bạn hãy chú ý mặt đáy của mặt chính ở bước 3, lúc này nó có thể xuất hiện các hình sau: chữ X, mũi tên, chữ H hoặc mặt đáy sẽ đúng màu.</span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">Nếu là chữ X: Lấy mặt chính(mc) ở bước 3, thực hiện công thức: trái mc lên, phải mc lên, mc quay qua phải một cái, trái mc xuống, phải mc xuống, tầng 3 qua trái hai cái, thực hiện 2 lần như thế. Lúc này mặt đáy mc sẽ ra hình mũi tên hoặc màu đúng</span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">Nếu là mũi tên: Bạn hãy quan sát mặt đáy, quay mặt đáy về chiều 11h (tức chiều phía trên bên trái),lật lên và lấy mặt bên phải đầu mũi tên làm mặt chính, thực hiện công thức chữ X</span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">Nếu mặt đáy đúng màu: Bạn hãy lấy màu bất kì trên mặt đáy làm mặt chính (nếu mặt nào màu đã đúng thì không lấy làm mc) và thực hiện công thức 10 bước: trái mc lên, phải mc lên, mc quay qua phải một cái, trái mc xuống, phải mc xuống, tầng 3 qua phải một cái, trái mc lên, phải mc lên, mc quay qua phải một cái, trái mc xuống, phải mc xuống, tầng 3 qua phải một cái, trái mc lên, phải mc lên, mc qua phải hai cái, trái mc xuống, phải mc xuống, tầng 3 qua phải 1cái, thực hiện thêm 5 lần nữa(nhớ mc chỉ qua phải một cái),đếm bước 10 thì tầng 3 qua phải hai cái.</span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">Chữ H: bạn hãy lấy mặt trên hoặc dưới chữ H làm mc, thực hiện công thức chữ X, cho đến khi một trong 2 mặt hai bên chữ H đúng màu, lấy mặt đó làm mc, thực hiện công thức chữ X, thực hiện cho đến khi 2 mặt hai bên chữ H đúng màu hết. Khi đó ta lấy mặt trên hoặc dưới chữ H làm mc, thực hiện công thức 10 bước, lúc này khối rubik sẽ được hoàn thiện.</span></span></p>\r\n', '', 'rubik-3x3x3-khoi-lap-phuong-do-choi-tri-tue-danh-cho-be-tren-3-tuoi-4322_500x500x1.webp', 2, 3, '', '', 0, '', 'sanpham', 'hienthi,noibat,banchay', 1, 3, '2025-06-30 16:45:55', '2025-06-30 16:56:48');
+
+-- --------------------------------------------------------
+
+--
+-- Cấu trúc bảng cho bảng `tbl_seo`
+--
+
+CREATE TABLE `tbl_seo` (
+  `id` int(11) UNSIGNED NOT NULL,
+  `id_parent` int(11) DEFAULT 0,
+  `type` varchar(30) DEFAULT NULL,
+  `titlevi` mediumtext DEFAULT NULL,
+  `keywordsvi` mediumtext DEFAULT NULL,
+  `descriptionvi` mediumtext DEFAULT NULL,
+  `titleen` mediumtext DEFAULT NULL,
+  `keywordsen` mediumtext DEFAULT NULL,
+  `descriptionen` mediumtext DEFAULT NULL,
+  `schemavi` text DEFAULT NULL,
+  `schemaen` text DEFAULT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
+
+--
+-- Đang đổ dữ liệu cho bảng `tbl_seo`
+--
+
+INSERT INTO `tbl_seo` (`id`, `id_parent`, `type`, `titlevi`, `keywordsvi`, `descriptionvi`, `titleen`, `keywordsen`, `descriptionen`, `schemavi`, `schemaen`) VALUES
+(288, 15, 'sanpham', 'THẾ GIỚI RUBIK TMT THẾ GIỚI RUBIK TMT', 'THẾ GIỚI RUBIK TMT', 'THẾ GIỚI RUBIK TMT\r\n\r\n=THẾ GIỚI RUBIK TMT\r\n\r\nTHẾ GIỚI RUBIK TMT\r\n\r\n', 'THẾ GIỚI RUBIK TMTTHẾ GIỚI RUBIK TMTTHẾ GIỚI RUBIK TMTTHẾ GIỚI RUBIK TMT', '', '', '', ''),
+(289, 16, 'sanpham', 'Rubik 3x3x3 khối lập phương đồ chơi trí tuệ dành cho bé trên 3 tuổi', 'Rubik 3x3x3 khối lập phương đồ chơi trí tuệ dành cho bé trên 3 tuổi', 'Vừa chơi vừa học: Đồ chơi Rubik 3x3x3 khối lập phương là đồ chơi giúp bé tăng sự tập trung trí tuệ, tư duy logic để rèn luyện trí nhớ Phát triển kỹ năng cho tr', '', '', '', '', '');
 
 -- --------------------------------------------------------
 
@@ -1231,7 +1254,7 @@ CREATE TABLE `tbl_setting` (
 --
 
 INSERT INTO `tbl_setting` (`id`, `email`, `hotline`, `web_name`, `link_googlemaps`, `fanpage`, `copyright`, `introduction`, `worktime`, `desc`, `coords_iframe`, `coords`, `analytics`, `headjs`, `bodyjs`, `logo`, `favicon`, `color`, `address`) VALUES
-(1, 'minhtri.blueweb@gmail.com', '0328 732 834', 'Thế Giới Rubik TMT', 'https://maps.app.goo.gl/QBCDJLNAcySUtTiGA', 'https://www.facebook.com/profile.php?id=100090056894070', 'Bản quyền thuộc Minh Trí Rubik. Design by Minh Trí BlueWeb', 'Chào mừng các bạn đến với website của Minh Trí Rubik', '8h - 17h', 'Sản phẩm của Rubik TMT đa dạng về mẫu mã, từ những viên Rubik cổ điển đến các phiên bản hiện đại với nhiều hình dạng và kích thước khác nhau. Chúng tôi cam kết cung cấp những sản phẩm được sản xuất với công nghệ tiên tiến, đảm bảo an toàn và thân thiện với người dùng.', '<iframe src=\"https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d489.7908536223631!2d106.63337394536576!3d10.86272739886291!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x317529f4163891e3%3A0xeaf1734b54adb3f!2zxJDGsOG7nW5nIFRo4buLIE3GsOG7nWkvMThhIEjhurttIDI2MCwgS2h1IFBo4buRIDNBLCBRdeG6rW4gMTIsIEjhu5MgQ2jDrSBNaW5oLCBWaeG7h3QgTmFt!5e0!3m2!1svi!2s!4v1749044597447!5m2!1svi!2s\" width=\"600\" height=\"450\" style=\"border:0;\" allowfullscreen=\"\" loading=\"lazy\" referrerpolicy=\"no-referrer-when-downgrade\"></iframe>', '10.86276948472411, 106.63364911149097', '<!-- Google tag (gtag.js) -->\r\n<script async src=\"https://www.googletagmanager.com/gtag/js?id=G-XKMLLRQBJ9\"></script>\r\n<script>\r\n  window.dataLayer = window.dataLayer || [];\r\n  function gtag(){dataLayer.push(arguments);}\r\n  gtag(\'js\', new Date());\r\n\r\n  gtag(\'config\', \'G-XKMLLRQBJ9\');\r\n</script>', '', '', 'ade0194b20_300x120x1.png', '25f50996fd_48x48x1.png', 'FF00AA', '152/18, Dương Thị Mười, P.Tân Thới Hiệp, Quận 12, TpHCM');
+(1, 'minhtri.blueweb@gmail.com', '0328 732 834', 'Thế Giới Rubik TMT', 'https://maps.app.goo.gl/QBCDJLNAcySUtTiGA', 'https://www.facebook.com/profile.php?id=100090056894070', 'Bản quyền thuộc Minh Trí Rubik. Design by Minh Trí BlueWeb', 'Chào mừng các bạn đến với website của Minh Trí Rubik', '8h - 17h', 'Sản phẩm của Rubik TMT đa dạng về mẫu mã, từ những viên Rubik cổ điển đến các phiên bản hiện đại với nhiều hình dạng và kích thước khác nhau. Chúng tôi cam kết cung cấp những sản phẩm được sản xuất với công nghệ tiên tiến, đảm bảo an toàn và thân thiện với người dùng.', '<iframe src=\"https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d489.7908536223631!2d106.63337394536576!3d10.86272739886291!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x317529f4163891e3%3A0xeaf1734b54adb3f!2zxJDGsOG7nW5nIFRo4buLIE3GsOG7nWkvMThhIEjhurttIDI2MCwgS2h1IFBo4buRIDNBLCBRdeG6rW4gMTIsIEjhu5MgQ2jDrSBNaW5oLCBWaeG7h3QgTmFt!5e0!3m2!1svi!2s!4v1749044597447!5m2!1svi!2s\" width=\"600\" height=\"450\" style=\"border:0;\" allowfullscreen=\"\" loading=\"lazy\" referrerpolicy=\"no-referrer-when-downgrade\"></iframe>', '10.86276948472411, 106.63364911149097', '<!-- Google tag (gtag.js) -->\r\n<script async src=\"https://www.googletagmanager.com/gtag/js?id=G-XKMLLRQBJ9\"></script>\r\n<script>\r\n  window.dataLayer = window.dataLayer || [];\r\n  function gtag(){dataLayer.push(arguments);}\r\n  gtag(\'js\', new Date());\r\n\r\n  gtag(\'config\', \'G-XKMLLRQBJ9\');\r\n</script>', '', '', 'ade0194b20_300x120x1.png', '25f50996fd_48x48x1.png', 'FF2323', '152/18, Dương Thị Mười, P.Tân Thới Hiệp, Quận 12, TpHCM');
 
 -- --------------------------------------------------------
 
@@ -12315,6 +12338,12 @@ ALTER TABLE `tbl_sanpham`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Chỉ mục cho bảng `tbl_seo`
+--
+ALTER TABLE `tbl_seo`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Chỉ mục cho bảng `tbl_setting`
 --
 ALTER TABLE `tbl_setting`
@@ -12424,7 +12453,13 @@ ALTER TABLE `tbl_payment`
 -- AUTO_INCREMENT cho bảng `tbl_sanpham`
 --
 ALTER TABLE `tbl_sanpham`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+
+--
+-- AUTO_INCREMENT cho bảng `tbl_seo`
+--
+ALTER TABLE `tbl_seo`
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=290;
 
 --
 -- AUTO_INCREMENT cho bảng `tbl_setting`

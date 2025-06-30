@@ -2,12 +2,8 @@
 $get_lienhe = $trangtinh->get_static('lienhe');
 if ($get_lienhe) {
   $result_lienhe = $get_lienhe->fetch_assoc();
+  $seo = $fn->get_seo($result_lienhe);
 }
-$seo['title'] = $result_lienhe['titlevi'];
-$seo['keywords'] = $result_lienhe['keywordsvi'];
-$seo['description'] = $result_lienhe['descriptionvi'];
-$seo['url'] = $result_lienhe['slugvi'] ?? '';
-$seo['image'] = isset($result_lienhe['file']) ? BASE_ADMIN . UPLOADS . $result_lienhe['file'] : '';
 ?>
 <div class="wrap-main wrap-home w-clear" style="background:#fff">
   <div class="breadCrumbs">
@@ -27,7 +23,6 @@ $seo['image'] = isset($result_lienhe['file']) ? BASE_ADMIN . UPLOADS . $result_l
       <h2>Liên Hệ</h2>
       <div class="animate-border bg-animate-border mt-1"></div>
     </div>
-
     <div class="wrap-content" style="background: unset;">
       <div class="content-main">
         <div class="contact-article row">
@@ -72,13 +67,11 @@ $seo['image'] = isset($result_lienhe['file']) ? BASE_ADMIN . UPLOADS . $result_l
                 placeholder="Nội dung" required=""></textarea>
               <div class="invalid-feedback">Vui lòng nhập nội dung</div>
             </div>
-
             <input type="submit" class="btn btn-primary mr-2" name="submit-contact" value="Gửi">
             <input type="reset" class="btn btn-secondary" value="Nhập lại">
           </form>
         </div>
-        <div class="contact-map"><?= $coords_iframe ?>
-        </div>
+        <div class="contact-map"><?= $coords_iframe ?></div>
       </div>
     </div>
   </div>

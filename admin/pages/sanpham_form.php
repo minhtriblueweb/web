@@ -5,13 +5,16 @@ $table = 'tbl_sanpham';
 $thumb_width = '500';
 $thumb_height = '500';
 $thumb_zc = '1';
+$type = 'sanpham';
 $show_danhmuc_c1 = $fn->show_data(['table' => 'tbl_danhmuc_c1']);
 $id = $_GET['id'] ?? null;
 $result = [];
+$seo_data = [];
 if (!empty($id)) {
   $get_id = $fn->get_id($table, $id);
   if ($get_id) {
     $result = $get_id->fetch_assoc();
+    $seo_data = $seo->get_seo($type, (int)$id);
     $show_danhmuc_c2 = $fn->show_data([
       'table' => 'tbl_danhmuc_c2',
       'status' => 'hienthi',
@@ -19,6 +22,7 @@ if (!empty($id)) {
     ]);
   }
 }
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && (isset($_POST['add']) || isset($_POST['edit']))) {
   // echo '<pre>';
   // print_r($_POST);
@@ -283,7 +287,7 @@ include 'templates/breadcrumb.php';
     */
     ?>
     <?php include 'templates/seo.php'; ?>
-    <input type="hidden" name="type" value="sanpham">
+    <input type="hidden" name="type" value="<?= $type ?>">
     <input type="hidden" name="thumb_width" value="<?= $thumb_width ?>">
     <input type="hidden" name="thumb_height" value="<?= $thumb_height ?>">
     <input type="hidden" name="thumb_zc" value="<?= $thumb_zc ?>">

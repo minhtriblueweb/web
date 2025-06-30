@@ -2,7 +2,7 @@
   "fn-getImage": {
     "prefix": "imgfn",
     "body": [
-      "<?= \\$fn->getImage([",
+      "<?= $fn->getImage([",
       "  'file' => '${1:file.jpg}',",
       "  'width' => ${2:50},",
       "  'height' => ${3:50},",
@@ -15,5 +15,12 @@
       "]) ?>\n"
     ],
     "description": "Tạo thẻ <img> từ hàm getImage() với đầy đủ thuộc tính"
+  },
+  "rename-table": {
+    "prefix": "rename",
+    "body": [
+      "RENAME TABLE `${1:old_table}` TO `${2:new_table}`;"
+    ],
+    "description": "SQL: RENAME TABLE `old_table` TO `new_table`"
   }
 }

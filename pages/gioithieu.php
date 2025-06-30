@@ -2,12 +2,9 @@
 $get_gioithieu = $trangtinh->get_static('gioithieu');
 if ($get_gioithieu) {
   $row_gt = $get_gioithieu->fetch_assoc();
+  $seo = $fn->get_seo($row_gt);
 }
-$seo['title'] = $row_gt['titlevi'];
-$seo['keywords'] = $row_gt['keywordsvi'];
-$seo['description'] = $row_gt['descriptionvi'];
-$seo['url'] = $row_gt['slugvi'] ?? '';
-$seo['image'] = isset($row_gt['file']) ? BASE_ADMIN . UPLOADS . $row_gt['file'] : '';
+
 ?>
 <div class="wrap-main wrap-home w-clear" style="background:#fff">
   <div class="breadCrumbs">

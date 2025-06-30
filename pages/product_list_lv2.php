@@ -29,7 +29,7 @@ require_once $baseDir . '/sources/product_list_lv2.php';
       <?php if ($list_danhmuc_c2 && $list_danhmuc_c2->num_rows > 0): ?>
         <div class="grid-list-no-index">
           <?php while ($dm_c2_item = $list_danhmuc_c2->fetch_assoc()): ?>
-            <div class="item-list-noindex">
+            <div class="item-list-noindex <?= $dm_c2_item['slugvi'] == $dm_c2['slugvi'] ? 'active' : '' ?>">
               <a href="<?= $dm_c2_item['slugvi'] ?>">
                 <h3 class="m-0 text-capitalize"><?= $dm_c2_item['namevi'] ?></h3>
               </a>
@@ -37,7 +37,6 @@ require_once $baseDir . '/sources/product_list_lv2.php';
           <?php endwhile; ?>
         </div>
       <?php endif; ?>
-
     </div>
   </div>
 

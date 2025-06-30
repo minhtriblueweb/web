@@ -8,11 +8,13 @@ class sanpham
 {
   private $db;
   private $fn;
+  private $seo;
 
   public function __construct()
   {
     $this->db = new Database();
     $this->fn = new Functions();
+    $this->seo = new seo();
   }
 
   public function upload_gallery($data, $files, $id, $id_parent)
@@ -197,24 +199,29 @@ class sanpham
     }
     return '';
   }
-
   public function save_sanpham($data, $files, $id = null)
   {
     global $config;
     $langs = array_keys($config['website']['lang']);
-    $fields_multi = ['slug', 'name', 'desc', 'content', 'title', 'keywords', 'description'];
-    $fields_common = ['id_list', 'id_cat', 'regular_price', 'sale_price', 'discount', 'code', 'type', 'numb'];
+    $fields_multi = ['slug', 'name', 'desc', 'content'];
+    $fields_common = ['id_list', 'id_cat', 'regular_price', 'sale_price', 'discount', 'code', 'numb', 'type'];
     $table = 'tbl_sanpham';
-    $data_escaped = [];
+    $data_prepared = [];
+
+    // Xử lý các trường đa ngôn ngữ
     foreach ($langs as $lang) {
       foreach ($fields_multi as $field) {
         $key = $field . $lang;
-        $data_escaped[$key] = !empty($data[$key]) ? mysqli_real_escape_string($this->db->link, $data[$key]) : "";
+        $data_prepared[$key] = $data[$key] ?? "";
       }
     }
+
+    // Xử lý các trường dùng chung
     foreach ($fields_common as $field) {
-      $data_escaped[$field] = !empty($data[$field]) ? mysqli_real_escape_string($this->db->link, $data[$field]) : "";
+      $data_prepared[$field] = $data[$field] ?? "";
     }
+
+    // Xử lý trạng thái (checkbox)
     $status_flags = ['hienthi', 'noibat', 'banchay'];
     $status_values = [];
     foreach ($status_flags as $flag) {
@@ -222,56 +229,83 @@ class sanpham
         $status_values[] = $flag;
       }
     }
-    $data_escaped['status'] = mysqli_real_escape_string($this->db->link, implode(',', $status_values));
+    $data_prepared['status'] = implode(',', $status_values);
+
+    // Kiểm tra slug trùng
     foreach ($langs as $lang) {
       $slug_key = 'slug' . $lang;
-      $slug_error = $this->fn->isSlugDuplicated($data_escaped[$slug_key], $table, $id ?? '');
+      $slug_error = $this->fn->isSlugDuplicated($data_prepared[$slug_key], $table, $id ?? '');
       if ($slug_error) return $slug_error;
     }
+
+    // Xử lý hình ảnh
     $thumb_filename = '';
     $old_file_path = '';
     if (!empty($id)) {
-      $old_file = $this->db->select("SELECT file FROM $table WHERE id = '" . (int)$id . "'");
-      if ($old_file && $old_file->num_rows > 0) {
-        $row = $old_file->fetch_assoc();
-        $old_file_path = "uploads/" . $row['file'];
+      $old = $this->db->rawQueryOne("SELECT file FROM $table WHERE id = ?", [(int)$id]);
+      if ($old && !empty($old['file'])) {
+        $old_file_path = "uploads/" . $old['file'];
       }
     }
-    $width = isset($data['thumb_width']) ? (int)$data['thumb_width'] : '';
-    $height = isset($data['thumb_height']) ? (int)$data['thumb_height'] : '';
-    $zc = isset($data['thumb_zc']) ? (int)$data['thumb_zc'] : '';
+
+    $width = (int)($data['thumb_width'] ?? 0);
+    $height = (int)($data['thumb_height'] ?? 0);
+    $zc = (int)($data['thumb_zc'] ?? 0);
     $thumb_size = $width . 'x' . $height . 'x' . $zc;
+
     $thumb_filename = $this->fn->Upload([
       'file' => $files['file'],
-      'custom_name' => $data_escaped['namevi'],
+      'custom_name' => $data_prepared['namevi'],
       'thumb' => $thumb_size,
       'old_file_path' => $old_file_path,
       'watermark' => true,
       'convert_webp' => true
     ]);
+
     if (!empty($id)) {
-      $update_fields = [];
-      foreach ($data_escaped as $field => $value) {
-        $update_fields[] = "`$field` = '$value'";
+      // Cập nhật sản phẩm
+      $fields = [];
+      $params = [];
+      foreach ($data_prepared as $key => $val) {
+        $fields[] = "$key = ?";
+        $params[] = $val;
       }
       if (!empty($thumb_filename)) {
-        $update_fields[] = "file = '$thumb_filename'";
+        $fields[] = "file = ?";
+        $params[] = $thumb_filename;
       }
-      $update_query = "UPDATE $table SET " . implode(", ", $update_fields) . " WHERE id = '" . (int)$id . "'";
-      $result = $this->db->update($update_query);
+      $params[] = (int)$id;
+      $sql = "UPDATE $table SET " . implode(", ", $fields) . " WHERE id = ?";
+      $result = $this->db->execute($sql, $params);
+
+      if ($result) {
+        $this->seo->save_seo($data_prepared['type'], (int)$id, $data, $langs);
+      }
+
       $msg = $result ? "Cập nhật sản phẩm thành công" : "Cập nhật sản phẩm thất bại";
     } else {
-      $field_names = array_keys($data_escaped);
-      $field_values = array_map(fn($v) => "'" . $v . "'", $data_escaped);
+      // Thêm mới sản phẩm
+      $columns = array_keys($data_prepared);
+      $placeholders = array_fill(0, count($columns), '?');
+      $params = array_values($data_prepared);
       if (!empty($thumb_filename)) {
-        $field_names[] = 'file';
-        $field_values[] = "'" . $thumb_filename . "'";
+        $columns[] = 'file';
+        $placeholders[] = '?';
+        $params[] = $thumb_filename;
       }
-      $insert_query = "INSERT INTO $table (" . implode(", ", $field_names) . ") VALUES (" . implode(", ", $field_values) . ")";
-      $result = $this->db->insert($insert_query);
-      $msg = $result ? "Thêm sản phẩm thành công" : "Thêm sản phẩm thất bại";
+
+      $sql = "INSERT INTO $table (" . implode(", ", $columns) . ") VALUES (" . implode(", ", $placeholders) . ")";
+      $inserted = $this->db->execute($sql, $params);
+      $insert_id = $inserted ? $this->db->getInsertId() : 0;
+
+      if ($insert_id) {
+        $this->seo->save_seo($data_prepared['type'], $insert_id, $data, $langs);
+      }
+
+      $msg = $inserted ? "Thêm sản phẩm thành công" : "Thêm sản phẩm thất bại";
     }
-    $this->fn->transfer($msg, $this->fn->getRedirectPath(['table' => $table]), $result);
+
+    $this->fn->transfer($msg, $this->fn->getRedirectPath(['table' => $table]), !empty($id) ? $result : $inserted);
   }
 }
 ?>

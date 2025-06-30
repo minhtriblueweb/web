@@ -41,8 +41,13 @@ class Database
 
   public function insert($query)
   {
-    $insert_row = $this->link->query($query) or die($this->link->error . __LINE__);
-    return $insert_row ?: false;
+    $insert_row = $this->link->query($query);
+    if ($insert_row) {
+      return $this->link->insert_id;
+    } else {
+      error_log("Insert Error: " . $this->link->error . " | Query: $query");
+      return false;
+    }
   }
 
   public function update($query)
@@ -111,5 +116,10 @@ class Database
     }
 
     return $stmt->execute();
+  }
+
+  public function getInsertId()
+  {
+    return $this->link->insert_id;
   }
 }

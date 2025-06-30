@@ -15,7 +15,6 @@ $default_seo = [
   'url'         => BASE,
   'image'       => !empty($row_st['logo']) ? BASE_ADMIN . UPLOADS . $row_st['logo'] : ''
 ];
-
 // Các biến toàn cục khác (tuỳ dùng)
 $hotline         = get_setting_value('hotline');
 $web_name        = get_setting_value('web_name');

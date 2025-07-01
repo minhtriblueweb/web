@@ -116,7 +116,6 @@ if ($sp_all && $sp_all->num_rows > 0) {
                 <?php foreach ($sp_cat as $sp): ?>
                   <?php
                   $name = htmlspecialchars($sp['namevi']);
-                  $img = !empty($sp['file']) ? BASE_ADMIN . UPLOADS . $sp['file'] : NO_IMG;
                   ?>
                   <div class="item-product">
                     <a href="<?= $sp['slugvi'] ?>">

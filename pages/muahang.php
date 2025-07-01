@@ -1,15 +1,6 @@
 <?php
 $result_muahang = $trangtinh->get_static('muahang');
-if ($result_muahang) {
-  $result_muahang = $result_muahang->fetch_assoc();
-}
-$seo = array_merge($seo, array(
-  'title' => $result_muahang['titlevi'],
-  'keywords' => $result_muahang['keywordsvi'],
-  'description' => $result_muahang['descriptionvi'],
-  'url' => BASE . $result_muahang['slug'],
-  'image' => isset($result_muahang['file']) ? BASE_ADMIN . UPLOADS . $result_muahang['file'] : '',
-));
+$seo_data = $fn->get_seo($db->rawQueryOne("SELECT * FROM tbl_seopage WHERE `type` = ?", ['muahang']) ?? [], $lang);
 ?>
 <div class="wrap-main wrap-home w-clear" style="background:#fff">
   <div class="breadCrumbs">

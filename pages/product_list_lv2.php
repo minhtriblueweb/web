@@ -44,7 +44,7 @@ require_once $baseDir . '/sources/product_list_lv2.php';
     <div class="wrap-content" style="background: unset;">
       <div class="title-list-hot text-center text-capitalize">
         <h2><?= $dm_c2['namevi'] ?></h2>
-        (<?= $total_records ?> sản phẩm)
+        (<?= $total ?> sản phẩm)
       </div>
     </div>
   </div>

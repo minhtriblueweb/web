@@ -1,3 +1,4 @@
+<?php $seo_data = $fn->get_seo($db->rawQueryOne("SELECT * FROM tbl_seopage WHERE `type` = ?", ['tintuc']) ?? [], $lang); ?>
 <div class="wrap-main wrap-home w-clear" style="background:#fff">
   <div class="breadCrumbs">
     <div class="wrap-content">

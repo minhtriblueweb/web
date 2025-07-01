@@ -78,10 +78,7 @@ include 'templates/breadcrumb.php';
   </section>
 <?php } else { ?>
   <?php
-  $get_setting = $setting->get_setting();
-  if ($get_setting) {
-    $result = $get_setting->fetch_assoc();
-  }
+  $result = $db->rawQueryOne("SELECT * FROM tbl_setting WHERE id = ?", [1]);
   if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['upload'])) {
     $update = $setting->update_setting($_POST);
   }

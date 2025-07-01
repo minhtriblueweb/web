@@ -4,11 +4,7 @@ $show_huongdanchoi = $fn->show_data([
   'status' => 'hienthi',
   'type'   => 'huongdanchoi'
 ]);
-$seo['title'] = 'Hướng dẫn chơi';
-$seo['keywords'] = '';
-$seo['description'] = '';
-$seo['url'] = '';
-$seo['image'] = '';
+$seo_data = $fn->get_seo($db->rawQueryOne("SELECT * FROM tbl_seopage WHERE `type` = ?", ['huongdanchoi']) ?? [], $lang);
 ?>
 <div class="wrap-main wrap-home w-clear" style="background:#fff">
   <div class="breadCrumbs">

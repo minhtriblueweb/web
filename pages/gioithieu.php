@@ -1,10 +1,6 @@
 <?php
-$get_gioithieu = $trangtinh->get_static('gioithieu');
-if ($get_gioithieu) {
-  $row_gt = $get_gioithieu->fetch_assoc();
-  $seo = $fn->get_seo($row_gt);
-}
-
+$row_gt = $trangtinh->get_static('gioithieu');
+$seo_data = $fn->get_seo($db->rawQueryOne("SELECT * FROM tbl_seopage WHERE `type` = ?", ['gioithieu']) ?? [], $lang);
 ?>
 <div class="wrap-main wrap-home w-clear" style="background:#fff">
   <div class="breadCrumbs">

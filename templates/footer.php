@@ -14,7 +14,7 @@
         </div>
         <p class="footer-company"><?= $web_name ?></p>
         <div class="footer-info content-ck">
-          <p><span><?= ($get = $trangtinh->get_static('footer')) && ($row = $get->fetch_assoc()) ? $row['contentvi'] : ''; ?></span></p>
+          <p><span><?= ($trangtinh->get_static('footer')['contentvi'] ?? '') ?></span></p>
         </div>
         <div class="social">
           <p>KẾT NỐI VỚI CHÚNG TÔI</p>
@@ -26,9 +26,14 @@
           <?php if ($show_social): ?>
             <?php while ($row_social = $show_social->fetch_assoc()): ?>
               <a class="hvr-icon-rotate" href="<?= $row_social['link'] ?>" target="_blank" class="me-2">
-                <img width="50" class="hvr-icon"
-                  src="<?= empty($row_social['file']) ? NO_IMG : BASE_ADMIN . UPLOADS . $row_social['file']; ?>"
-                  alt="<?= $row_social['namevi'] ?>" title="<?= $row_social['namevi'] ?>" />
+                <?= $fn->getImage([
+                  'file' => $row_social['file'],
+                  'class' => 'hvr-icon',
+                  'width' => 50,
+                  'alt' => $row_social['namevi'],
+                  'title' => $row_social['namevi'],
+                  'lazy' => true
+                ]) ?>
               </a>
             <?php endwhile; ?>
           <?php endif; ?>
@@ -77,16 +82,14 @@
         <div class="box-policy">
           <div class="footer-policy">
             <p class="footer-title">HỖ TRỢ KHÁCH HÀNG</p>
-            <?= ($get = $trangtinh->get_static('hotrokhachhang')) && ($row = $get->fetch_assoc()) ? $row['contentvi'] : '';
-            ?>
+            <?= ($trangtinh->get_static('hotrokhachhang')['contentvi'] ?? '') ?>
           </div>
         </div>
         <div class="box-policy">
           <div class="footer-policy">
             <p class="footer-title">HỖ TRỢ 24/7</p>
             <div class="footer-info content-ck">
-              <?= ($get = $trangtinh->get_static('hotro247')) && ($row = $get->fetch_assoc()) ? $row['contentvi'] : '';
-              ?>
+              <?= ($trangtinh->get_static('hotro247')['contentvi'] ?? '') ?>
             </div>
           </div>
           <div class="footer-newsletter">

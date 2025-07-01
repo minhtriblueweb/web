@@ -2,10 +2,7 @@
 $redirect_url = $_GET['page'];
 $type = $_GET['type'];
 $name_page = $fn->convert_type($type)['vi'];
-$get_gioithieu = $trangtinh->get_static($type);
-if ($get_gioithieu) {
-  $result = $get_gioithieu->fetch_assoc();
-}
+$result = $trangtinh->get_static($type);
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['upload'])) {
   $update = $trangtinh->update_static($_POST, $type, $result['id']);
 }

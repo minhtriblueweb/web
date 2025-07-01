@@ -122,4 +122,26 @@ class Database
   {
     return $this->link->insert_id;
   }
+  public function rawQueryValue(string $sql, array $params = [])
+  {
+    $stmt = $this->link->prepare($sql);
+    if (!$stmt) return null;
+
+    if (!empty($params)) {
+      $types = str_repeat('s', count($params));
+      $stmt->bind_param($types, ...$params);
+    }
+
+    $stmt->execute();
+    $stmt->store_result();
+
+    $value = null;
+    if ($stmt->num_rows > 0) {
+      $stmt->bind_result($value);
+      $stmt->fetch();
+    }
+
+    $stmt->close();
+    return $value;
+  }
 }

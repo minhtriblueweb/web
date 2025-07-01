@@ -15,7 +15,7 @@ if ($id !== null) {
   $get_id = $fn->get_id($table, $id);
   if ($get_id && $get_id->num_rows > 0) {
     $result = $get_id->fetch_assoc();
-    $seo_data = $seo->get_seo($id);
+    $seo_data = $seo->get_seo($id, $type);
   }
 }
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && (isset($_POST['add']) || isset($_POST['edit']))) {

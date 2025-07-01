@@ -14,19 +14,24 @@ class Functions
     $this->db = new Database();
     $this->fm = new Format();
   }
-  function get_seo(array $row, string $baseUrl = '', string $defaultTitleKey = 'titlevi'): array
+  public function abort_404()
   {
-    global $default_seo;
+    http_response_code(404);
+    include '404.php';
+    exit();
+  }
+  function get_seo(array $row, string $lang = 'vi'): void
+  {
+    global $default_seo, $seo;
 
-    return array_merge($default_seo, [
-      'title'       => $row[$defaultTitleKey] ?? '',
-      'keywords'    => $row['keywordsvi'] ?? '',
-      'description' => $row['descriptionvi'] ?? '',
-      'url'         => $baseUrl . ($row['slugvi'] ?? $row['slug'] ?? ''),
+    $seo = array_merge($default_seo, [
+      'title'       => $row['title' . $lang] ?? $row['name' . $lang] ?? '',
+      'keywords'    => $row['keywords' . $lang] ?? '',
+      'description' => $row['description' . $lang] ?? '',
+      'url'         => BASE . ($row['slug' . $lang] ?? $row['slug'] ?? ''),
       'image'       => !empty($row['file']) ? BASE_ADMIN . UPLOADS . $row['file'] : ''
     ]);
   }
-
   function renderSelectOptions($result, string $valueKey = 'id', string $labelKey = 'namevi', int|string $selectedId = 0): void
   {
     if ($result instanceof mysqli_result && $result->num_rows > 0) {
@@ -87,92 +92,70 @@ class Functions
     $result = $this->db->select($query);
     return $result ? $result->fetch_assoc() : false;
   }
-  private function build_where_conditions($options)
+  private function buildWhere(array $options): array
   {
     $where = [];
-
-    // Trạng thái
+    $params = [];
     if (!empty($options['status'])) {
-      if (is_array($options['status'])) {
-        $status_conditions = array_map(function ($s) {
-          return "FIND_IN_SET('" . mysqli_real_escape_string($this->db->link, $s) . "', status)";
-        }, $options['status']);
-        $where[] = "(" . implode(" AND ", $status_conditions) . ")";
-      } else {
-        $statuses = explode(',', $options['status']);
-        $status_conditions = array_map(function ($s) {
-          return "FIND_IN_SET('" . mysqli_real_escape_string($this->db->link, $s) . "', status)";
-        }, $statuses);
-        $where[] = "(" . implode(" AND ", $status_conditions) . ")";
+      $statuses = is_array($options['status']) ? $options['status'] : explode(',', $options['status']);
+      foreach ($statuses as $s) {
+        $where[] = "FIND_IN_SET(?, status)";
+        $params[] = trim($s);
       }
     }
-
-    // Theo danh mục
     if (!empty($options['id_list'])) {
-      $where[] = "`id_list` = " . (int)$options['id_list'];
+      $where[] = "`id_list` = ?";
+      $params[] = (int)$options['id_list'];
     }
-
     if (!empty($options['id_cat'])) {
-      $where[] = "`id_cat` = " . (int)$options['id_cat'];
+      $where[] = "`id_cat` = ?";
+      $params[] = (int)$options['id_cat'];
     }
-
-    // Lọc hình ảnh con theo id_parent
     if (!empty($options['id_parent'])) {
-      $where[] = "`id_parent` = " . (int)$options['id_parent'];
+      $where[] = "`id_parent` = ?";
+      $params[] = (int)$options['id_parent'];
     }
-
-    // Loại trừ sản phẩm theo id (ví dụ: show sản phẩm liên quan)
     if (!empty($options['exclude_id'])) {
-      $where[] = "`id` != " . (int)$options['exclude_id'];
+      $where[] = "`id` != ?";
+      $params[] = (int)$options['exclude_id'];
     }
-
-    // Loại theo type
     if (!empty($options['type'])) {
-      $type = mysqli_real_escape_string($this->db->link, $options['type']);
-      $where[] = "`type` = '$type'";
+      $where[] = "`type` = ?";
+      $params[] = $options['type'];
     }
-
-    // Tìm theo keyword
     if (!empty($options['keyword'])) {
-      $keyword = mysqli_real_escape_string($this->db->link, $options['keyword']);
-      $where[] = "`namevi` LIKE '%$keyword%'";
+      $where[] = "`namevi` LIKE ?";
+      $params[] = '%' . $options['keyword'] . '%';
     }
-
-    return $where;
+    $sql = !empty($where) ? ' WHERE ' . implode(' AND ', $where) : '';
+    return ['sql' => $sql, 'params' => $params];
   }
 
-  public function show_data($options = [])
+  public function show_data(array $options = [])
   {
     if (empty($options['table'])) return false;
-    $tbl = mysqli_real_escape_string($this->db->link, $options['table']);
-    $where = $this->build_where_conditions($options);
-    $query = "SELECT * FROM `$tbl`";
-    if (!empty($where)) {
-      $query .= " WHERE " . implode(" AND ", $where);
-    }
-    $query .= " ORDER BY numb, id DESC";
+    $table = $options['table'];
+    $order = " ORDER BY numb, id DESC";
+    $whereData = $this->buildWhere($options);
+    $sql = "SELECT * FROM `$table`" . $whereData['sql'] . $order;
     if (!empty($options['records_per_page']) && !empty($options['current_page'])) {
       $limit = (int)$options['records_per_page'];
       $offset = ((int)$options['current_page'] - 1) * $limit;
-      $query .= " LIMIT $limit OFFSET $offset";
+      $sql .= " LIMIT $limit OFFSET $offset";
     }
-    return $this->db->select($query);
+    return $this->db->rawQuery($sql, $whereData['params']);
   }
-  public function count_data($options = [])
+
+  public function count_data(array $options = []): int
   {
     if (empty($options['table'])) return 0;
-    $tbl = mysqli_real_escape_string($this->db->link, $options['table']);
-    $where = $this->build_where_conditions($options);
-    $query = "SELECT COUNT(*) AS total FROM `$tbl`";
-    if (!empty($where)) {
-      $query .= " WHERE " . implode(" AND ", $where);
-    }
-    $result = $this->db->select($query);
-    if ($result && $row = $result->fetch_assoc()) {
-      return (int)$row['total'];
-    }
-    return 0;
+    $table = $options['table'];
+    $whereData = $this->buildWhere($options);
+    $sql = "SELECT COUNT(*) FROM `$table`" . $whereData['sql'];
+    return (int)$this->db->rawQueryValue($sql, $whereData['params']);
   }
+
+
 
   function transfer($msg, $page = 'dashboard', $numb = true)
   {
@@ -287,25 +270,26 @@ class Functions
       $resultDelete
     );
   }
-  public function convert_type($type)
+  public function convert_type(string $type)
   {
     $type = trim($type);
     if ($type === '') return '';
 
-    $escapedType = mysqli_real_escape_string($this->db->link, $type);
-    $query = "SELECT langvi FROM tbl_type WHERE lang_define = '$escapedType' LIMIT 1";
-    $result = $this->db->select($query);
+    $row = $this->db->rawQueryOne(
+      "SELECT langvi FROM tbl_type WHERE lang_define = ? LIMIT 1",
+      [$type]
+    );
 
-    if ($result && $row = $result->fetch_assoc()) {
+    if ($row && !empty($row['langvi'])) {
       $lang = $row['langvi'];
       return [
         'vi' => $lang,
         'slug' => $this->to_slug($lang)
       ];
     }
+
     return $type;
   }
-
 
   function is_selected($name, $result, $id, $value)
   {
@@ -331,14 +315,15 @@ class Functions
 
     return $default ? 'checked' : '';
   }
-
   public function isSlugDuplicated($slug, $table, $exclude_id = '', $lang = 'vi')
   {
-    $slug = mysqli_real_escape_string($this->db->link, trim($slug));
-    $table = mysqli_real_escape_string($this->db->link, trim($table));
-    $exclude_id = mysqli_real_escape_string($this->db->link, trim($exclude_id));
-    $lang = mysqli_real_escape_string($this->db->link, trim($lang));
-    $reserved_slugs = [
+    $slug = trim($slug);
+    $exclude_id = trim($exclude_id);
+    $lang = trim($lang);
+    $slug_col = 'slug' . $lang;
+
+    // Slugs cố định
+    $reserved = [
       'lien-he',
       'tin-tuc',
       'huong-dan-choi',
@@ -349,33 +334,41 @@ class Functions
       'dang-nhap',
       'dang-ky'
     ];
-    if (in_array($slug, $reserved_slugs)) {
+    if (in_array($slug, $reserved)) {
       return "Đường dẫn đã tồn tại. Vui lòng chọn đường dẫn khác để tránh trùng lặp.";
     }
-    // global $reserved_slugs;
-    // if (in_array($slug, $reserved_slugs)) {
-    //   return "Đường dẫn đã tồn tại. Vui lòng chọn đường dẫn khác để tránh trùng lặp.";
-    // }
+
+    // Danh sách bảng cần kiểm tra
     $tables = ['tbl_danhmuc_c1', 'tbl_danhmuc_c2', 'tbl_sanpham', 'tbl_news'];
+
     foreach ($tables as $tbl) {
-      $slug_column = 'slug' . $lang;
-      $check_column_query = "SHOW COLUMNS FROM `$tbl` LIKE '$slug_column'";
-      $check_column_result = $this->db->select($check_column_query);
-      if (!$check_column_result || $check_column_result->num_rows == 0) continue;
-      $check_slug_query = "SELECT `$slug_column` FROM `$tbl` WHERE `$slug_column` = '$slug'";
-      if ($table === $tbl && is_numeric($exclude_id) && (int)$exclude_id > 0) {
-        $check_slug_query .= " AND id != '$exclude_id'";
+      // Kiểm tra xem cột slug hiện diện trong bảng hay không
+      $hasColumn = $this->db->rawQueryOne(
+        "SHOW COLUMNS FROM `$tbl` LIKE ?",
+        [$slug_col]
+      );
+      if (!$hasColumn) continue;
+
+      // Tạo câu query kiểm tra slug
+      $params = [$slug];
+      $sql = "SELECT `$slug_col` FROM `$tbl` WHERE `$slug_col` = ?";
+
+      if ($tbl === $table && is_numeric($exclude_id) && (int)$exclude_id > 0) {
+        $sql .= " AND id != ?";
+        $params[] = (int)$exclude_id;
       }
-      $check_slug_query .= " LIMIT 1";
-      // file_put_contents('log_sql_query.txt', $check_slug_query . PHP_EOL, FILE_APPEND);
-      $result = $this->db->select($check_slug_query);
-      if ($result && $result->num_rows > 0) {
+
+      $sql .= " LIMIT 1";
+      $exists = $this->db->rawQueryOne($sql, $params);
+
+      if ($exists) {
         return "Đường dẫn đã tồn tại. Vui lòng chọn đường dẫn khác để tránh trùng lặp.";
       }
     }
 
     return false;
   }
+
   private function applyOpacity($image, $opacity)
   {
     $opacity = max(0, min(100, $opacity));
@@ -773,21 +766,23 @@ class Functions
     return $pagination_html;
   }
 
-  public function getImage($data = [])
+  public function getImage(array $data = []): string
   {
-    $file     = $data['file'] ?? '';
-    $class    = $data['class'] ?? '';
-    $alt      = htmlspecialchars($data['alt'] ?? '');
-    $title    = htmlspecialchars($data['title'] ?? $alt);
-    $id       = !empty($data['id']) ? ' id="' . htmlspecialchars($data['id']) . '"' : '';
-    $style    = !empty($data['style']) ? ' style="' . htmlspecialchars($data['style']) . '"' : '';
-    $width    = isset($data['width']) ? ' width="' . (int)$data['width'] . '"' : '';
-    $height   = isset($data['height']) ? ' height="' . (int)$data['height'] . '"' : '';
-    $lazy     = array_key_exists('lazy', $data) ? (bool)$data['lazy'] : true;
-    $loading  = $lazy ? ' loading="lazy"' : '';
+    $file    = $data['file'] ?? '';
+    $class   = $data['class'] ?? '';
+    $alt     = htmlspecialchars($data['alt'] ?? pathinfo($file, PATHINFO_FILENAME));
+    $title   = htmlspecialchars($data['title'] ?? $alt);
+    $id      = !empty($data['id']) ? ' id="' . htmlspecialchars($data['id']) . '"' : '';
+    $style   = !empty($data['style']) ? ' style="' . htmlspecialchars($data['style']) . '"' : '';
+    $width   = isset($data['width']) ? ' width="' . (int)$data['width'] . '"' : '';
+    $height  = isset($data['height']) ? ' height="' . (int)$data['height'] . '"' : '';
+    $lazy    = array_key_exists('lazy', $data) ? (bool)$data['lazy'] : true;
+    $loading = $lazy ? ' loading="lazy"' : '';
 
     $errorImg = BASE_ADMIN . 'assets/img/noimage.png';
-    $src      = empty($file) ? NO_IMG : BASE_ADMIN . UPLOADS . htmlspecialchars($file);
+    $src = empty($file)
+      ? NO_IMG
+      : rtrim(BASE_ADMIN . UPLOADS, '/') . '/' . ltrim(htmlspecialchars($file), '/');
 
     return '<img src="' . $src . '"'
       . (!empty($class) ? ' class="' . htmlspecialchars($class) . '"' : '')
@@ -795,12 +790,13 @@ class Functions
       . $style
       . $width
       . $height
-      . (!empty($alt) ? ' alt="' . $alt . '"' : '')
-      . (!empty($title) ? ' title="' . $title . '"' : '')
+      . ' alt="' . $alt . '"'
+      . ' title="' . $title . '"'
       . $loading
       . ' onerror="this.src=\'' . $errorImg . '\'"'
       . '>';
   }
+
 
   public function to_slug($string)
   {
@@ -868,20 +864,14 @@ class Functions
   {
     $hex = ltrim($hex, '#');
     if (strlen($hex) == 3) {
-      $hex = $hex[0] . $hex[0] . $hex[1] . $hex[1] . $hex[2] . $hex[2]; // chuyển #abc → #aabbcc
+      $hex = $hex[0] . $hex[0] . $hex[1] . $hex[1] . $hex[2] . $hex[2];
     }
-
-    // Chuyển hex sang RGB
     $r = hexdec(substr($hex, 0, 2));
     $g = hexdec(substr($hex, 2, 2));
     $b = hexdec(substr($hex, 4, 2));
-
-    // Giảm mỗi thành phần RGB theo %
     $r = max(0, min(255, $r - ($r * $percent / 100)));
     $g = max(0, min(255, $g - ($g * $percent / 100)));
     $b = max(0, min(255, $b - ($b * $percent / 100)));
-
-    // Trả về lại dạng hex
     return sprintf("%02x%02x%02x", $r, $g, $b);
   }
 }

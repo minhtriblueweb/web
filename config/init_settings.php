@@ -1,7 +1,13 @@
 <?php
-$get_setting = $setting->get_setting();
-if ($get_setting) {
-  $row_st = $get_setting->fetch_assoc();
+$lang = array_key_first($config['website']['lang']);
+$row_st = $db->rawQueryOne("SELECT * FROM tbl_setting WHERE id = ?", [1]);
+function get_setting_value($key, $htmlspecialchars = true, $default = '')
+{
+  global $row_st;
+  if (isset($row_st[$key])) {
+    return $htmlspecialchars ? htmlspecialchars($row_st[$key]) : $row_st[$key];
+  }
+  return $default;
 }
 // SEO mặc định
 $default_seo = [

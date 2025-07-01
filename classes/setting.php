@@ -124,13 +124,6 @@ class setting
     return $result;
   }
 
-  public function get_setting()
-  {
-    $query = "SELECT * FROM tbl_setting WHERE id = '1' LIMIT 1";
-    $result = $this->db->select($query);
-    return $result;
-  }
-
   public function get_watermark()
   {
     $query = "SELECT * FROM tbl_watermark WHERE id = '1' LIMIT 1";

@@ -2,7 +2,6 @@
 $redirect_url = $_GET['page'] ?? '';
 $type = isset($_GET['type']) ? trim($_GET['type']) : '';
 $name_page = $fn->convert_type($type)['vi'] ?? '';
-
 $setting_page = [
   'message' => '',
   'name_page' => $name_page,
@@ -12,11 +11,8 @@ $setting_page = [
   'thumb_zc' => 1,
   'type' => $type
 ];
-
 extract($setting_page);
-
-$seo_data = $seo->get_seopage($type);
-
+$seo_data = $db->rawQueryOne("SELECT * FROM tbl_seopage WHERE `type` = ?", [$type]);
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['upload'])) {
   $update = $seo->save_seopage($_POST, $_FILES);
 }
@@ -45,16 +41,22 @@ include 'templates/breadcrumb.php';
           <div class="form-group">
             <div class="upload-file">
               <p>Upload hình ảnh:</p>
-              <div class="d-flex align-items-center justify-content-center" style="width:300px; height:200px;">
-                <?= $fn->getImage([
-                  'file' => $seo_data['file'] ?? '',
-                  'class' => 'img-fluid',
-                  'id'    => 'preview-image',
-                  'style' => 'max-height:100%; max-width:100%;',
-                  'alt'   => $name_page,
-                  'title' => $name_page
-                ]) ?>
-              </div>
+              <?php
+              $file = $seo_data['file'] ?? ($_POST['file'] ?? '');
+              ?>
+              <?php if (!empty($file)): ?>
+                <div class="d-flex align-items-center justify-content-center" style="width:300px; height:200px;">
+                  <?= $fn->getImage([
+                    'file'  => $file,
+                    'class' => 'img-fluid',
+                    'id'    => 'preview-image',
+                    'style' => 'max-height:100%; max-width:100%;',
+                    'alt'   => $name_page,
+                    'title' => $name_page
+                  ]) ?>
+                </div>
+              <?php endif; ?>
+
               <label class="upload-file-label mb-2 mt-3" for="file">
                 <div class="custom-file my-custom-file">
                   <input type="file" class="custom-file-input" name="file" id="file" lang="vi">

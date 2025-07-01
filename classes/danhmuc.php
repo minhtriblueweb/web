@@ -16,115 +16,65 @@ class danhmuc
     $this->fn = new Functions();
     $this->seo = new seo();
   }
-
   public function get_danhmuc_c2_with_parent_or_404($slug)
   {
-    $slug = mysqli_real_escape_string($this->db->link, $slug);
-
-    $query = "
-    SELECT
+    $row = $this->db->rawQueryOne("
+      SELECT
         c2.*,
         c1.namevi AS name_lv1,
-        c1.slugvi AS slug_lv1,
-        c1.titlevi AS title_lv1,
-        c1.keywordsvi AS keywords_lv1,
-        c1.descriptionvi AS description_lv1
-    FROM tbl_danhmuc_c2 c2
-    JOIN tbl_danhmuc_c1 c1 ON c2.id_list = c1.id
-    WHERE c2.slugvi = '$slug'
-    LIMIT 1
-  ";
-    $result = $this->db->select($query);
-    if ($result && $row = $result->fetch_assoc()) {
-      return $row;
-    } else {
-      http_response_code(404);
-      include '404.php';
-      exit();
-    }
-  }
+        c1.slugvi AS slug_lv1
+      FROM tbl_danhmuc_c2 c2
+      JOIN tbl_danhmuc_c1 c1 ON c2.id_list = c1.id
+      WHERE c2.slugvi = ?
+      LIMIT 1
+    ", [$slug]);
 
+    if ($row) return $row;
+
+    http_response_code(404);
+    include '404.php';
+    exit();
+  }
+  public function get_danhmuc_or_404($slug, $table)
+  {
+    $row = $this->db->rawQueryOne("SELECT * FROM `$table` WHERE slugvi = ? LIMIT 1", [$slug]);
+    if ($row) return $row;
+    http_response_code(404);
+    include '404.php';
+    exit();
+  }
   public function slug_exists_lv1($slug)
   {
-    $slug = mysqli_real_escape_string($this->db->link, $slug);
-    $query = "SELECT id FROM tbl_danhmuc_c1 WHERE slugvi = '$slug' LIMIT 1";
-    $result = $this->db->select($query);
-    return $result ? true : false;
+    $row = $this->db->rawQueryOne("SELECT id FROM tbl_danhmuc_c1 WHERE slugvi = ? LIMIT 1", [$slug]);
+    return $row ? true : false;
   }
-
   public function slug_exists_lv2($slug_lv2, $slug_lv1)
   {
-    $slug_lv1 = mysqli_real_escape_string($this->db->link, $slug_lv1);
-    $slug_lv2 = mysqli_real_escape_string($this->db->link, $slug_lv2);
-
-    // Lấy ID của danh mục cấp 1 từ slug
-    $query_lv1 = "SELECT id FROM tbl_danhmuc_c1 WHERE slugvi = '$slug_lv1' LIMIT 1";
-    $result_lv1 = $this->db->select($query_lv1);
-    if ($result_lv1 && $row_lv1 = $result_lv1->fetch_assoc()) {
+    $row_lv1 = $this->db->rawQueryOne("SELECT id FROM tbl_danhmuc_c1 WHERE slugvi = ? LIMIT 1", [$slug_lv1]);
+    if ($row_lv1) {
       $id_list = $row_lv1['id'];
-
-      // Kiểm tra danh mục cấp 2 trong danh mục cấp 1 đó
-      $query_lv2 = "SELECT id FROM tbl_danhmuc_c2 WHERE slugvi = '$slug_lv2' AND id_list = '$id_list' LIMIT 1";
-      $result_lv2 = $this->db->select($query_lv2);
-      return $result_lv2 ? true : false;
+      $row_lv2 = $this->db->rawQueryOne("SELECT id FROM tbl_danhmuc_c2 WHERE slugvi = ? AND id_list = ? LIMIT 1", [$slug_lv2, $id_list]);
+      return $row_lv2 ? true : false;
     }
-
     return false;
   }
   public function find_lv2_with_parent($slug_lv2)
   {
-    $slug_lv2 = mysqli_real_escape_string($this->db->link, $slug_lv2);
+    $row = $this->db->rawQueryOne("
+      SELECT
+        c2.*,
+        c1.slugvi AS slug_lv1,
+        c1.namevi AS name_lv1,
+        c1.id AS id_list
+      FROM tbl_danhmuc_c2 AS c2
+      JOIN tbl_danhmuc_c1 AS c1 ON c2.id_list = c1.id
+      WHERE c2.slugvi = ?
+      LIMIT 1
+    ", [$slug_lv2]);
 
-    $query = "
-        SELECT
-            c2.*,
-            c1.slugvi AS slug_lv1,
-            c1.namevi AS name_lv1,
-            c1.id AS id_list
-        FROM tbl_danhmuc_c2 AS c2
-        JOIN tbl_danhmuc_c1 AS c1 ON c2.id_list = c1.id
-        WHERE c2.slugvi = '$slug_lv2'
-        LIMIT 1
-    ";
-
-    $result = $this->db->select($query);
-
-    if ($result && $row = $result->fetch_assoc()) {
-      return $row;
-    }
-
-    return false;
+    return $row ?: false;
   }
 
-  public function get_danhmuc($slug)
-  {
-    $slug = mysqli_real_escape_string($this->db->link, $slug);
-    $query = "SELECT * FROM tbl_danhmuc_c1 WHERE slugvi = '$slug' LIMIT 1";
-    $result = $this->db->select($query);
-    return $result;
-  }
-
-  public function get_danhmuc_or_404($slug, $table)
-  {
-    $slug = mysqli_real_escape_string($this->db->link, $slug);
-    $query = "SELECT * FROM $table WHERE slugvi = '$slug' LIMIT 1";
-    $result = $this->db->select($query);
-    if ($result && $row = $result->fetch_assoc()) {
-      return $row;
-    } else {
-      http_response_code(404);
-      include '404.php';
-      exit();
-    }
-  }
-
-  public function get_danhmuc_c2($slug)
-  {
-    $slug = mysqli_real_escape_string($this->db->link, $slug);
-    $query = "SELECT * FROM tbl_danhmuc_c2 WHERE slugvi = '$slug' LIMIT 1";
-    $result = $this->db->select($query);
-    return $result;
-  }
   public function save_danhmuc($data, $files, $id = null)
   {
     global $config;

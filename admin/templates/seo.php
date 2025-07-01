@@ -1,8 +1,5 @@
 <?php
-$get_setting = $setting->get_setting();
-if ($get_setting) {
-  $row_st = $get_setting->fetch_assoc();
-}
+$row_st = $db->rawQueryOne("SELECT favicon FROM tbl_setting WHERE id = ?", [1]);
 ?>
 <div class="card card-primary card-outline text-sm">
   <div class="card-header">

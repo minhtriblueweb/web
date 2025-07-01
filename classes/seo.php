@@ -14,16 +14,6 @@ class seo
     $this->db = new Database();
     $this->fn = new Functions();
   }
-  public function get_seopage(string $type = ''): array
-  {
-    $row = [];
-    if (!empty($type)) {
-      $row = $this->db->rawQueryOne("SELECT * FROM tbl_seopage WHERE type = ?", [$type]);
-    }
-    return $row ?: [];
-  }
-
-
   public function get_seo(int $id_parent, string $type = ''): array
   {
     $sql = "SELECT * FROM tbl_seo WHERE `id_parent` = ?" . ($type ? " AND `type` = ?" : "");
@@ -42,12 +32,23 @@ class seo
       'type' => $type
     ];
 
+    $has_data = false; // <- Dùng để kiểm tra nếu có dữ liệu
+
     foreach ($langs as $lang) {
       foreach ($fields_multi as $field) {
         $key = $field . $lang;
-        $data_sql[$key] = $data[$key] ?? '';
+        $value = $data[$key] ?? '';
+        $data_sql[$key] = $value;
+
+        // Nếu ít nhất 1 trường có nội dung
+        if (!$has_data && trim($value) !== '') {
+          $has_data = true;
+        }
       }
     }
+
+    // Nếu không có dữ liệu SEO, không lưu gì cả
+    if (!$has_data) return;
 
     // Kiểm tra bản ghi SEO đã tồn tại chưa
     $existing = $this->db->rawQueryOne(
@@ -78,103 +79,101 @@ class seo
       $this->db->execute($sql, $params);
     }
   }
+
   public function save_seopage($data, $files, $id = null)
   {
     global $config;
     $langs = array_keys($config['website']['lang']);
+    $table = 'tbl_seopage';
     $fields_multi = ['title', 'keywords', 'description'];
     $fields_common = ['type'];
-    $table = 'tbl_seopage';
-
     $data_prepared = [];
+    $has_data = false;
 
-    // Dữ liệu đa ngôn ngữ
+    // Ghép dữ liệu đa ngôn ngữ và kiểm tra nội dung
     foreach ($langs as $lang) {
       foreach ($fields_multi as $field) {
         $key = $field . $lang;
-        $data_prepared[$key] = $data[$key] ?? "";
+        $val = trim($data[$key] ?? '');
+        $data_prepared[$key] = $val;
+        if (!$has_data && $val !== '') $has_data = true;
       }
     }
 
     // Dữ liệu chung
     foreach ($fields_common as $field) {
-      $data_prepared[$field] = $data[$field] ?? "";
+      $data_prepared[$field] = $data[$field] ?? '';
     }
 
+    // Tạo đường dẫn chuyển hướng
+    $type_safe = preg_replace('/[^a-zA-Z0-9_-]/', '', $data_prepared['type']);
+    $redirectPath = $this->fn->getRedirectPath(['table' => $table, 'type' => $type_safe]);
+
+    // Nếu không có nội dung -> bỏ qua
+    if (!$has_data) {
+      $this->fn->transfer("Cập nhật dữ liệu thành công", $redirectPath, true);
+      return;
+    }
+
+    // Xử lý ảnh
+    $thumb_filename = '';
+    $old_file_path = '';
     $width = (int)($data['thumb_width'] ?? 0);
     $height = (int)($data['thumb_height'] ?? 0);
     $zc = (int)($data['thumb_zc'] ?? 0);
     $thumb_size = "{$width}x{$height}x{$zc}";
 
-    $thumb_filename = '';
-    $old_file_path = '';
-
-    // Nếu có ID => lấy file cũ
-    if (!empty($id)) {
-      $old = $this->db->rawQueryOne("SELECT file FROM $table WHERE id = ?", [(int)$id]);
-      if ($old && !empty($old['file'])) {
-        $old_file_path = "uploads/" . $old['file'];
-      }
+    // Nếu có ID, lấy ảnh cũ
+    if ($id) {
+      $old = $this->db->rawQueryOne("SELECT file FROM $table WHERE id = ?", [$id]);
+      if (!empty($old['file'])) $old_file_path = "uploads/" . $old['file'];
     } else {
-      // Nếu không có ID, kiểm tra theo type xem đã có trong DB chưa
+      // Nếu chưa có ID, tìm theo type
       $existing = $this->db->rawQueryOne("SELECT id, file FROM $table WHERE type = ?", [$data_prepared['type']]);
       if (!empty($existing)) {
         $id = $existing['id'];
-        if (!empty($existing['file'])) {
-          $old_file_path = "uploads/" . $existing['file'];
-        }
+        if (!empty($existing['file'])) $old_file_path = "uploads/" . $existing['file'];
       }
     }
 
-    // Upload ảnh mới
-    $thumb_filename = $this->fn->Upload([
-      'file' => $files['file'],
-      'custom_name' => 'ogimage_' . $data_prepared['type'],
-      'background' => [255, 255, 255, 0],
-      'thumb' => $thumb_size,
-      'old_file_path' => $old_file_path,
-      'watermark' => false,
-      'convert_webp' => true
-    ]);
-
-    if (!empty($thumb_filename)) {
-      $data_prepared['options'] = json_encode(['w' => $width, 'h' => $height]);
+    // Upload nếu có file mới
+    if (!empty($files['file']['tmp_name'])) {
+      $thumb_filename = $this->fn->Upload([
+        'file' => $files['file'],
+        'custom_name' => 'ogimage_' . $data_prepared['type'],
+        'background' => [255, 255, 255, 0],
+        'thumb' => $thumb_size,
+        'old_file_path' => $old_file_path,
+        'watermark' => false,
+        'convert_webp' => true
+      ]);
+      if ($thumb_filename) {
+        $data_prepared['options'] = json_encode(['w' => $width, 'h' => $height]);
+      }
     }
 
-    if (!empty($id)) {
-      // UPDATE
-      $fields = [];
-      $params = [];
-      foreach ($data_prepared as $key => $val) {
-        $fields[] = "`$key` = ?";
-        $params[] = $val;
-      }
-      if (!empty($thumb_filename)) {
-        $fields[] = "`file` = ?";
-        $params[] = $thumb_filename;
-      }
-      $params[] = (int)$id;
-      $sql = "UPDATE $table SET " . implode(", ", $fields) . " WHERE id = ?";
-      $result = $this->db->execute($sql, $params);
-      $msg = $result ? "Cập nhật dữ liệu thành công" : "Cập nhật dữ liệu thất bại";
+    // Xử lý lưu DB
+    $params = array_values($data_prepared);
+    if ($thumb_filename) {
+      $data_prepared['file'] = $thumb_filename;
+      $params[] = $thumb_filename;
+    }
+
+    if ($id) {
+      $fields = array_map(fn($k) => "`$k` = ?", array_keys($data_prepared));
+      $params[] = $id;
+      $sql = "UPDATE `$table` SET " . implode(", ", $fields) . " WHERE id = ?";
+      $ok = $this->db->execute($sql, $params);
+      $msg = $ok ? "Cập nhật dữ liệu thành công" : "Cập nhật dữ liệu thất bại";
     } else {
-      // INSERT
-      $columns = array_keys($data_prepared);
+      $columns = array_map(fn($k) => "`$k`", array_keys($data_prepared));
       $placeholders = array_fill(0, count($columns), '?');
-      $params = array_values($data_prepared);
-      if (!empty($thumb_filename)) {
-        $columns[] = 'file';
-        $placeholders[] = '?';
-        $params[] = $thumb_filename;
-      }
-      $sql = "INSERT INTO $table (" . implode(", ", $columns) . ") VALUES (" . implode(", ", $placeholders) . ")";
-      $inserted = $this->db->execute($sql, $params);
-      $msg = $inserted ? "Thêm dữ liệu thành công" : "Thêm dữ liệu thất bại";
+      $sql = "INSERT INTO `$table` (" . implode(",", $columns) . ") VALUES (" . implode(",", $placeholders) . ")";
+      $ok = $this->db->execute($sql, array_values($data_prepared));
+      $msg = $ok ? "Thêm dữ liệu thành công" : "Thêm dữ liệu thất bại";
     }
 
-    $type_safe = preg_replace('/[^a-zA-Z0-9_-]/', '', $data_prepared['type']);
-    $redirectPath = $this->fn->getRedirectPath(['table' => $table, 'type' => $type_safe]);
-    $this->fn->transfer($msg, $redirectPath, !empty($id) ? $result : $inserted);
+    $this->fn->transfer($msg, $redirectPath, $ok);
   }
 }
 

@@ -1,9 +1,6 @@
 <?php
-$get_lienhe = $trangtinh->get_static('lienhe');
-if ($get_lienhe) {
-  $result_lienhe = $get_lienhe->fetch_assoc();
-  $seo = $fn->get_seo($result_lienhe);
-}
+$result_lienhe = $trangtinh->get_static('lienhe');
+$seo_data = $fn->get_seo($db->rawQueryOne("SELECT * FROM tbl_seopage WHERE `type` = ?", ['lienhe']) ?? [], $lang);
 ?>
 <div class="wrap-main wrap-home w-clear" style="background:#fff">
   <div class="breadCrumbs">

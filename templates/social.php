@@ -11,9 +11,12 @@
       <?php $sameAs[] = $row_social['link']; ?>
       <a href="<?= $row_social['link'] ?>" class="floating-support__item" target="_blank">
         <div class="floating-support__item__icon">
-          <img
-            src="<?= empty($row_social['file']) ? NO_IMG : BASE_ADMIN . UPLOADS . $row_social['file']; ?>"
-            alt="<?= $row_social['namevi'] ?>" class="tada">
+          <?= $fn->getImage([
+            'file'   => $row_social['file'],
+            'alt'    => $row_social['namevi'],
+            'title'  => $row_social['namevi'],
+            'class'  => 'tada'
+          ]) ?>
         </div>
         <div class="floating-support__item__content">
           <p><b><?= $row_social['namevi'] ?></b></p>

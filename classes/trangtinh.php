@@ -13,51 +13,57 @@ class trangtinh
     $this->db = new Database();
     $this->fn = new Functions();
   }
-  public function get_static($type)
+  public function get_static(string $type)
   {
-    $type = mysqli_real_escape_string($this->db->link, $type);
-    $query = "SELECT * FROM tbl_static WHERE type='$type' LIMIT 1";
-    $result = $this->db->select($query);
-    return $result;
+    return $this->db->rawQueryOne("SELECT * FROM tbl_static WHERE type = ? LIMIT 1", [$type]);
   }
-  public function update_static($data, $type, $id)
+  public function update_static(array $data, string $type, int $id)
   {
     global $config;
     $langs = array_keys($config['website']['lang']);
     $table = 'tbl_static';
 
     $id = (int)$id;
-    $type = mysqli_real_escape_string($this->db->link, $type);
-    $slug = mysqli_real_escape_string($this->db->link, $data['slug'] ?? '');
+    $type = trim($type);
+    $slug = trim($data['slug'] ?? '');
 
-    $update_fields = [];
+    // Danh sách field cần update
+    $fields = [];
+    $binds = [];
 
     if (!empty($slug)) {
-      $update_fields[] = "`slug` = '$slug'";
+      $fields[] = 'slug = ?';
+      $binds[] = $slug;
     }
 
     foreach ($langs as $lang) {
-      foreach (['name', 'desc', 'content', 'title', 'keywords', 'description'] as $field) {
-        $key = $field . $lang;
+      foreach (['name', 'desc', 'content'] as $f) {
+        $key = $f . $lang;
         if (isset($data[$key])) {
-          $value = mysqli_real_escape_string($this->db->link, $data[$key]);
-          $update_fields[] = "`$key` = '$value'";
+          $fields[] = "`$key` = ?";
+          $binds[] = trim($data[$key]);
         }
       }
     }
-    $update_fields[] = "`update_at` = NOW()";
-    if (!empty($update_fields)) {
-      $query = "UPDATE `$table` SET " . implode(', ', $update_fields) . " WHERE `id` = '$id' AND `type` = '$type'";
-      $result = $this->db->update($query);
+
+    $fields[] = "update_at = NOW()";
+
+    if (!empty($fields)) {
+      $sql = "UPDATE $table SET " . implode(', ', $fields) . " WHERE id = ? AND type = ?";
+      $binds[] = $id;
+      $binds[] = $type;
+      $result = $this->db->execute($sql, $binds);
     } else {
       $result = false;
     }
+
     $msg = $result ? "Cập nhật dữ liệu thành công" : "Không có dữ liệu để cập nhật hoặc lỗi xảy ra";
-    $redirectPath = $this->fn->getRedirectPath([
+    $redirect = $this->fn->getRedirectPath([
       'table' => $table,
       'type' => $type
     ]);
-    $this->fn->transfer($msg, $redirectPath, $result);
+
+    $this->fn->transfer($msg, $redirect, $result);
   }
 }
 

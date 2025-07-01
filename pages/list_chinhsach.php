@@ -1,10 +1,4 @@
-<?php
-$seo['title'] = 'Chính sách';
-$seo['keywords'] = '';
-$seo['description'] = '';
-$seo['url'] = '';
-$seo['image'] = '';
-?>
+<?php $seo_data = $fn->get_seo($db->rawQueryOne("SELECT * FROM tbl_seopage WHERE `type` = ?", ['chinhsach']) ?? [], $lang); ?>
 <div class="wrap-main wrap-home w-clear" style="background:#fff">
   <div class="breadCrumbs">
     <div class="wrap-content">

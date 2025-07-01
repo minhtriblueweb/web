@@ -10,9 +10,13 @@
             <div class="item-criterion hvr-icon-rotate">
               <div class="images">
                 <a class="hvr-icon" title="<?= $row['namevi'] ?>">
-                  <img
-                    src="<?= empty($row['file']) ? NO_IMG : BASE_ADMIN . UPLOADS . $row['file'] ?>"
-                    width="40" height="40" />
+                  <?= $fn->getImage([
+                    'file' => $row['file'],
+                    'width' => 40,
+                    'height' => 40,
+                    'lazy' => true
+                  ]) ?>
+
                 </a>
                 <h3><span class="text-split"><?= $row['namevi'] ?></span></h3>
               </div>

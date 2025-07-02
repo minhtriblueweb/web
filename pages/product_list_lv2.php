@@ -1,8 +1,4 @@
-<?php require_once ROOT . '/sources/product_list_lv2.php'; ?>
-
 <div class="wrap-main wrap-home w-clear">
-  <!-- Breadcrumbs -->
-  <?php include ROOT . '/templates/breadcrumb.php'; ?>
   <!-- Danh mục cấp 2 -->
   <?php if (!empty($list_danhmuc_c2)): ?>
     <div class="wrap-product-list">

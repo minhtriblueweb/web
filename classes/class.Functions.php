@@ -14,23 +14,17 @@ class Functions
     $this->db = new Database();
     $this->fm = new Format();
   }
+  /* Decode html characters */
+  public function decodeHtmlChars($htmlChars)
+  {
+    return htmlspecialchars_decode($htmlChars ?: '');
+  }
+
   public function abort_404()
   {
     http_response_code(404);
     include '404.php';
     exit();
-  }
-  function get_seo(array $row, string $lang = 'vi'): void
-  {
-    global $default_seo, $seo;
-
-    $seo = array_merge($default_seo, [
-      'title'       => $row['title' . $lang] ?? $row['name' . $lang] ?? '',
-      'keywords'    => $row['keywords' . $lang] ?? '',
-      'description' => $row['description' . $lang] ?? '',
-      'url'         => BASE . ($row['slug' . $lang] ?? $row['slug'] ?? ''),
-      'image'       => !empty($row['file']) ? BASE_ADMIN . UPLOADS . $row['file'] : ''
-    ]);
   }
   function renderSelectOptions($result, string $valueKey = 'id', string $labelKey = 'namevi', int|string $selectedId = 0): void
   {

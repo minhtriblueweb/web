@@ -1,190 +1,81 @@
-<!DOCTYPE html>
-<html lang="vi">
-
-<head>
-  <!-- Basehref -->
-  <base href="<?= BASE ?>" />
-  <!-- UTF-8 -->
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-  <!-- Title, Keywords, Description -->
-  <title><?= $seo['title'] ?? $web_name ?></title>
-  <meta name="keywords" content="<?= $seo['keywords'] ?>" />
-  <meta name="description" content="<?= $seo['description'] ?>" />
-  <!-- Robots -->
-  <meta name="robots" content="index,follow,noodp" />
-  <!-- Favicon -->
-  <link rel="shortcut icon" type="image/x-icon" href="<?= $seo['favicon'] ?>" />
-  <!-- GEO -->
-  <meta name="geo.region" content="VN" />
-  <meta name="geo.placename" content="Hồ Chí Minh" />
-  <meta name="geo.position" content="<?= $seo['geo'] ?>" />
-  <meta name="ICBM" content="<?= $seo['geo'] ?>" />
-  <!-- Author - Copyright -->
-  <meta name='revisit-after' content='1 days' />
-  <meta name="author" content="<?= $web_name ?>" />
-  <meta name="copyright" content="<?= $web_name ?> - [<?= $seo['email'] ?>]" />
-  <link rel="canonical" href="<?= $seo['url'] ?>" />
-  <!-- Facebook -->
-  <meta property="og:type" content="website" />
-  <meta property="og:site_name" content="<?= $web_name ?>" />
-  <meta property="og:title" content="<?= $seo['title'] ?>" />
-  <meta property="og:description" content="<?= $seo['description'] ?>" />
-  <meta property="og:url" content="<?= $seo['url'] ?>" />
-  <meta property="og:image" content="<?= $seo['image'] ?>" />
-  <meta property="og:image:alt" content="<?= $seo['title'] ?>" />
-  <meta property="og:image:type" content="image/png" />
-  <meta property="og:image:width" content="682" />
-  <meta property="og:image:height" content="810" />
-
-  <!-- Canonical -->
-  <link rel="canonical" href="<?= BASE ?>" />
-  <!-- Twitter -->
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:site" content="<?= $seo['email'] ?>" />
-  <meta name="twitter:creator" content="<?= $web_name ?>" />
-  <meta property="og:url" content="<?= $seo['url'] ?>" />
-  <meta property="og:title" content="<?= $seo['title'] ?>" />
-  <meta property="og:description" content="<?= $seo['description'] ?>" />
-  <meta property="og:image" content="<?= $seo['image'] ?>" />
-  <!-- Chống đổi màu trên IOS -->
-  <meta name="format-detection" content="telephone=no" />
-
-  <!-- Viewport -->
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
-  <!-- Css Files -->
-  <?php
-  $cssFiles = [
-    "css/animate.min.css",
-    "bootstrap/bootstrap.css",
-    "fontawesome611/css/all.min.css",
-    "confirm/confirm.css",
-    "fileuploader/font-fileuploader.css",
-    "fileuploader/jquery.fileuploader.min.css",
-    "fileuploader/jquery.fileuploader-theme-dragdrop.css",
-    "photobox/photobox.css",
-    "fotorama/fotorama.css",
-    "fotorama/fotorama-style.css",
-    "simplenotify/simple-notify.css",
-    "menu-mobile/menu-mobile.css",
-    "fancybox5/fancybox.css",
-    "slick/slick.css",
-    "magiczoomplus/magiczoomplus.css",
-    "aos/aos.css",
-    "css/style.css"
-  ];
-
-  foreach ($cssFiles as $file) {
-    $css->set("{$file}?v=" . VERSION);
-  }
-  echo $css->get();
-  ?>
-
-  <!-- Js Google Analytic -->
-  <?= $analytics ?>
-  <!-- Js Head -->
-  <?= $headjs ?>
-</head>
-<style>
-  :root {
-    --main-color: #<?= $color ?>;
-    --main-color-dark: #<?= $fn->darkenColor($color, 15) ?>;
-  }
-</style>
-
-<body>
-  <div class="wrap-container">
-    <ul class="h-card hidden">
-      <li class="h-fn fn"><?= $web_name ?></li>
-      <li class="h-org org"><?= $web_name ?></li>
-      <li class="h-tel tel"><?= $hotline ?></li>
-      <li><a class="u-url ul" href="<?= BASE ?>"><?= BASE ?></a></li>
-    </ul>
-    <h1 class="hidden-seoh"><?= $web_name ?></h1>
-    <div class="header">
-      <div class="header-slogan">
-        <div class="wrap-content d-flex flex-wrap justify-content-between align-items-center">
-          <marquee><?= $introduction ?></marquee>
-          <div class="box-social">
-            <a class="pay" href="">Phương thức thanh toán</a>
-            <?php
-            $show_social = $fn->show_data([
-              'table'  => 'tbl_social',
-              'status' => 'hienthi',
-              'select' => "name{$lang}, file, link"
-            ]);
-            ?>
-            <?php if (!empty($show_social)): ?>
-              <div class="social-header">
-                <p>Kết nối :</p>
-                <?php foreach ($show_social as $row): ?>
-                  <?php
-                  $name = $row['name' . $lang] ?? '';
-                  ?>
-                  <a href="<?= $row['link'] ?>" class="hvr-icon-rotate me-2" target="_blank" rel="noopener noreferrer">
-                    <?= $fn->getImage([
-                      'file'   => $row['file'],
-                      'width'  => 20,
-                      'height' => 20,
-                      'class'  => 'hvr-icon',
-                      'alt'    => $name,
-                      'title'  => $name,
-                      'lazy'   => false
-                    ]) ?>
-                  </a>
-                <?php endforeach; ?>
-              </div>
-            <?php endif; ?>
-
-          </div>
-        </div>
-      </div>
-      <div class="header-banner">
-        <div class="wrap-content d-flex flex-wrap justify-content-between align-items-center">
-          <div class="banner-header">
-            <div class="logo">
-              <a href="./">
+<div class="header">
+  <div class="header-slogan">
+    <div class="wrap-content d-flex flex-wrap justify-content-between align-items-center">
+      <marquee><?= $introduction ?></marquee>
+      <div class="box-social">
+        <a class="pay" href="">Phương thức thanh toán</a>
+        <?php if (!empty($show_social)): ?>
+          <div class="social-header">
+            <p>Kết nối :</p>
+            <?php foreach ($show_social as $row): ?>
+              <?php
+              $name = $row['name' . $lang] ?? '';
+              ?>
+              <a href="<?= $row['link'] ?>" class="hvr-icon-rotate me-2" target="_blank" rel="noopener noreferrer">
                 <?= $fn->getImage([
-                  'file' => $logo,
-                  'width' => 300,
-                  'height' => 'auto',
-                  'alt' => $web_name,
-                  'title' => $web_name,
-                  'lazy' => false
+                  'file'   => $row['file'],
+                  'width'  => 20,
+                  'height' => 20,
+                  'class'  => 'hvr-icon',
+                  'alt'    => $name,
+                  'title'  => $name,
+                  'lazy'   => false
                 ]) ?>
               </a>
-            </div>
+            <?php endforeach; ?>
           </div>
+        <?php endif; ?>
 
-          <div class="search">
-            <input type="text" id="keyword" placeholder="Nhập từ khóa tìm kiếm...."
-              onkeypress="doEnter(event,'keyword');" />
-            <p onclick="onSearch('keyword');">
-              <i class="fa-solid fa-magnifying-glass"></i>
-            </p>
+      </div>
+    </div>
+  </div>
+  <div class="header-banner">
+    <div class="wrap-content d-flex flex-wrap justify-content-between align-items-center">
+      <div class="banner-header">
+        <div class="logo">
+          <a href="./">
+            <?= $fn->getImage([
+              'file' => $logo,
+              'width' => 300,
+              'height' => 'auto',
+              'alt' => $web_name,
+              'title' => $web_name,
+              'lazy' => false
+            ]) ?>
+          </a>
+        </div>
+      </div>
+
+      <div class="search">
+        <input type="text" id="keyword" placeholder="Nhập từ khóa tìm kiếm...."
+          onkeypress="doEnter(event,'keyword');" />
+        <p onclick="onSearch('keyword');">
+          <i class="fa-solid fa-magnifying-glass"></i>
+        </p>
+      </div>
+      <div class="box-hotline">
+        <div class="hotline">
+          <div class="icon-hottline">
+            <svg xmlns="http://www.w3.org/2000/svg" width="26" height="32" viewBox="0 0 26 32" fill="none">
+              <path d="M0.0209931 32C-0.098024 29.7391 0.288294 27.6118 1.19848 25.5976C2.54084 22.6272 4.64705 20.456 7.50834 19.0809C7.80589 18.9382 8.02441 18.9525 8.30537 19.1329C8.79997 19.451 9.33067 19.7109 9.85064 19.9973C9.73162 20.4275 9.56481 20.8678 9.49164 21.3245C9.15898 23.3897 10.4613 24.8494 11.67 25.3183C13.2543 25.9329 14.9567 25.3264 15.941 23.8107C16.0727 23.6078 16.299 23.4121 16.5195 23.3397C18.0745 22.826 19.4764 22.0319 20.7144 20.928C20.9163 20.7486 21.0597 20.6884 21.2919 20.8943C24.5307 23.7729 26.1004 27.4273 25.995 31.8675C25.9941 31.9001 25.9745 31.9317 25.9521 32C17.337 32 8.70925 32 0.0209931 32Z" fill="white"></path>
+              <path d="M22.0333 13.7294C21.7289 13.7294 21.4392 13.7294 21.1134 13.7294C21.1134 12.0903 21.1134 10.489 21.1134 8.84988C21.4334 8.83357 21.7358 8.81726 22.0401 8.80197C21.4099 5.29546 17.9331 1.5127 13.1539 1.44033C8.30049 1.36694 4.67827 5.07426 3.95051 8.79993C4.25683 8.81522 4.56023 8.83153 4.89289 8.84886C4.89289 10.4665 4.89289 12.0557 4.89289 13.7743C4.07441 13.7203 3.24129 13.7621 2.45109 13.5867C1.57017 13.392 1.10093 12.6693 1.02581 11.7387C0.926304 10.5012 1.20043 9.43905 2.42573 8.88963C2.53109 8.84274 2.61693 8.6715 2.65108 8.54102C3.86466 3.94688 6.7123 1.07949 11.1686 0.198781C16.7888 -0.911275 22.0567 2.73692 23.4635 8.4187C23.5152 8.62664 23.6937 8.85803 23.8742 8.96201C24.7532 9.4676 25.1317 10.2352 25.1112 11.2626C25.0917 12.232 24.6946 12.9405 23.8752 13.4104C23.7035 13.5082 23.524 13.708 23.4713 13.8976C22.2811 18.1758 19.6725 20.9382 15.5303 22.0992C15.3459 22.1512 15.1635 22.3999 15.0747 22.6028C14.3479 24.2704 12.3373 24.5996 11.2769 23.2103C10.4926 22.1838 10.6701 20.6986 11.672 19.9066C12.6661 19.1197 14.107 19.3551 14.7947 20.4652C15.0074 20.8087 15.1801 20.8536 15.5293 20.7445C18.7955 19.7262 20.9514 17.5316 22.0011 14.1463C22.0265 14.0658 22.045 13.9833 22.0606 13.9007C22.0655 13.8721 22.0509 13.8375 22.0333 13.7294Z" fill="white"></path>
+              <path d="M20.3046 12.4644C20.0383 15.4858 17.3653 18.9882 13.2095 19.1003C8.72681 19.2206 5.77772 15.4073 5.56212 12.1209C7.69175 11.4206 9.75796 10.5858 11.2467 8.61747C13.4007 12.0791 16.3166 13.6224 20.3046 12.4644Z" fill="white"></path>
+              <path d="M5.66358 10.6939C5.77186 9.12816 6.26354 7.76225 7.17275 6.59205C9.15605 4.03964 11.7374 3.00399 14.7938 3.77869C17.8648 4.55746 19.7125 6.72049 20.3856 9.94872C20.6032 10.9925 20.4734 11.1301 19.3749 11.3605C16.4834 11.967 14.344 10.7866 12.7471 8.32798C12.4573 7.88151 12.2203 7.39427 11.9832 6.91314C11.8086 6.55943 11.5715 6.35557 11.1784 6.3892C10.7472 6.4259 10.6984 6.7684 10.5589 7.11089C10.3491 7.62566 10.0877 8.15877 9.71992 8.55427C8.89655 9.44109 6.92594 10.4298 5.66358 10.6939Z" fill="white"></path>
+            </svg>
           </div>
-          <div class="box-hotline">
-            <div class="hotline">
-              <div class="icon-hottline">
-                <svg xmlns="http://www.w3.org/2000/svg" width="26" height="32" viewBox="0 0 26 32" fill="none">
-                  <path d="M0.0209931 32C-0.098024 29.7391 0.288294 27.6118 1.19848 25.5976C2.54084 22.6272 4.64705 20.456 7.50834 19.0809C7.80589 18.9382 8.02441 18.9525 8.30537 19.1329C8.79997 19.451 9.33067 19.7109 9.85064 19.9973C9.73162 20.4275 9.56481 20.8678 9.49164 21.3245C9.15898 23.3897 10.4613 24.8494 11.67 25.3183C13.2543 25.9329 14.9567 25.3264 15.941 23.8107C16.0727 23.6078 16.299 23.4121 16.5195 23.3397C18.0745 22.826 19.4764 22.0319 20.7144 20.928C20.9163 20.7486 21.0597 20.6884 21.2919 20.8943C24.5307 23.7729 26.1004 27.4273 25.995 31.8675C25.9941 31.9001 25.9745 31.9317 25.9521 32C17.337 32 8.70925 32 0.0209931 32Z" fill="white"></path>
-                  <path d="M22.0333 13.7294C21.7289 13.7294 21.4392 13.7294 21.1134 13.7294C21.1134 12.0903 21.1134 10.489 21.1134 8.84988C21.4334 8.83357 21.7358 8.81726 22.0401 8.80197C21.4099 5.29546 17.9331 1.5127 13.1539 1.44033C8.30049 1.36694 4.67827 5.07426 3.95051 8.79993C4.25683 8.81522 4.56023 8.83153 4.89289 8.84886C4.89289 10.4665 4.89289 12.0557 4.89289 13.7743C4.07441 13.7203 3.24129 13.7621 2.45109 13.5867C1.57017 13.392 1.10093 12.6693 1.02581 11.7387C0.926304 10.5012 1.20043 9.43905 2.42573 8.88963C2.53109 8.84274 2.61693 8.6715 2.65108 8.54102C3.86466 3.94688 6.7123 1.07949 11.1686 0.198781C16.7888 -0.911275 22.0567 2.73692 23.4635 8.4187C23.5152 8.62664 23.6937 8.85803 23.8742 8.96201C24.7532 9.4676 25.1317 10.2352 25.1112 11.2626C25.0917 12.232 24.6946 12.9405 23.8752 13.4104C23.7035 13.5082 23.524 13.708 23.4713 13.8976C22.2811 18.1758 19.6725 20.9382 15.5303 22.0992C15.3459 22.1512 15.1635 22.3999 15.0747 22.6028C14.3479 24.2704 12.3373 24.5996 11.2769 23.2103C10.4926 22.1838 10.6701 20.6986 11.672 19.9066C12.6661 19.1197 14.107 19.3551 14.7947 20.4652C15.0074 20.8087 15.1801 20.8536 15.5293 20.7445C18.7955 19.7262 20.9514 17.5316 22.0011 14.1463C22.0265 14.0658 22.045 13.9833 22.0606 13.9007C22.0655 13.8721 22.0509 13.8375 22.0333 13.7294Z" fill="white"></path>
-                  <path d="M20.3046 12.4644C20.0383 15.4858 17.3653 18.9882 13.2095 19.1003C8.72681 19.2206 5.77772 15.4073 5.56212 12.1209C7.69175 11.4206 9.75796 10.5858 11.2467 8.61747C13.4007 12.0791 16.3166 13.6224 20.3046 12.4644Z" fill="white"></path>
-                  <path d="M5.66358 10.6939C5.77186 9.12816 6.26354 7.76225 7.17275 6.59205C9.15605 4.03964 11.7374 3.00399 14.7938 3.77869C17.8648 4.55746 19.7125 6.72049 20.3856 9.94872C20.6032 10.9925 20.4734 11.1301 19.3749 11.3605C16.4834 11.967 14.344 10.7866 12.7471 8.32798C12.4573 7.88151 12.2203 7.39427 11.9832 6.91314C11.8086 6.55943 11.5715 6.35557 11.1784 6.3892C10.7472 6.4259 10.6984 6.7684 10.5589 7.11089C10.3491 7.62566 10.0877 8.15877 9.71992 8.55427C8.89655 9.44109 6.92594 10.4298 5.66358 10.6939Z" fill="white"></path>
-                </svg>
-              </div>
-              <div>Hotline tư vấn:<p><?= $hotline ?></p>
-              </div>
-            </div>
-            <div class="hotline">
-              <div class="icon-hottline">
-                <svg xmlns="http://www.w3.org/2000/svg" height="35px" viewBox="0 -960 960 960" width="42px" fill="white">
-                  <path d="m606-280 74-74-146-148v-182H428v226l178 178ZM480-48q-89.64 0-168.48-34.02-78.84-34.02-137.16-92.34-58.32-58.32-92.34-137.16T48-480q0-89.9 34.08-168.96 34.08-79.07 92.5-137.55Q233-845 311.74-878.5 390.48-912 480-912q89.89 0 168.94 33.5Q728-845 786.5-786.5t92 137.58q33.5 79.09 33.5 169 0 89.92-33.5 168.42Q845-233 786.51-174.58q-58.48 58.42-137.55 92.5Q569.9-48 480-48Zm0-432Zm0 326q136 0 231-95t95-231q0-136-95-231t-231-95q-136 0-231 95t-95 231q0 136 95 231t231 95Z" />
-                </svg>
-              </div>
-              <div> Giờ làm việc:<p><?= $worktime ?></p>
-              </div>
-            </div>
+          <div>Hotline tư vấn:<p><?= $hotline ?></p>
+          </div>
+        </div>
+        <div class="hotline">
+          <div class="icon-hottline">
+            <svg xmlns="http://www.w3.org/2000/svg" height="35px" viewBox="0 -960 960 960" width="42px" fill="white">
+              <path d="m606-280 74-74-146-148v-182H428v226l178 178ZM480-48q-89.64 0-168.48-34.02-78.84-34.02-137.16-92.34-58.32-58.32-92.34-137.16T48-480q0-89.9 34.08-168.96 34.08-79.07 92.5-137.55Q233-845 311.74-878.5 390.48-912 480-912q89.89 0 168.94 33.5Q728-845 786.5-786.5t92 137.58q33.5 79.09 33.5 169 0 89.92-33.5 168.42Q845-233 786.51-174.58q-58.48 58.42-137.55 92.5Q569.9-48 480-48Zm0-432Zm0 326q136 0 231-95t95-231q0-136-95-231t-231-95q-136 0-231 95t-95 231q0 136 95 231t231 95Z" />
+            </svg>
+          </div>
+          <div> Giờ làm việc:<p><?= $worktime ?></p>
           </div>
         </div>
       </div>
     </div>
+  </div>
+</div>

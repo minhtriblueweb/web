@@ -41,8 +41,7 @@ $sp_all = $fn->show_data([
 ]);
 
 // SEO
-$seo = $db->rawQueryOne("SELECT * FROM tbl_seo WHERE type = ? AND id_parent = ?", ['danhmuc_c1', $id_list]);
-$fn->get_seo($seo ?: $dm, $lang);
+$data_seo = $seo->get_seo($id_list, 'danhmuc_c1');
 // breadcrumbs
 $breadcrumbs->set('san-pham', 'Sản phẩm');
 $breadcrumbs->set($dm['slug' . $lang], $dm['name' . $lang]);

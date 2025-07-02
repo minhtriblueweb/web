@@ -4,23 +4,67 @@ include_once($filepath . '/../lib/database.php');
 include_once($filepath . '/../helpers/format.php');
 ?>
 <?php
-class seo
+class Seo
 {
   private $db;
   private $fn;
-
+  private $data;
+  private $seo = [];
   public function __construct()
   {
     $this->db = new Database();
     $this->fn = new Functions();
   }
-  public function get_seo(int $id_parent, string $type = ''): array
+  public function get_seo(int $id_parent, string $type = '', string $lang = 'vi'): array
   {
+    global $default_seo;
+
     $sql = "SELECT * FROM tbl_seo WHERE `id_parent` = ?" . ($type ? " AND `type` = ?" : "");
     $params = [$id_parent];
     if ($type) $params[] = $type;
+
     $row = $this->db->rawQueryOne($sql, $params);
-    return $row ?: [];
+
+    if (!$row) return $default_seo;
+
+    return array_merge($default_seo, [
+      'h1'          => $row['title' . $lang] ?? '',
+      'title'       => $row['title' . $lang] ?? '',
+      'keywords'    => $row['keywords' . $lang] ?? '',
+      'description' => $row['description' . $lang] ?? '',
+      'url'         => BASE . ($row['slug' . $lang] ?? $row['slug'] ?? ''),
+      'image'       => !empty($row['file']) ? BASE_ADMIN . UPLOADS . $row['file'] : ''
+    ]);
+  }
+  public function get_seopage(array $row, string $lang = 'vi'): array
+  {
+    global $default_seo, $data_seo;
+    $data_seo = array_merge($default_seo, [
+      'h1'          => $row['title' . $lang] ?? '',
+      'title'       => $row['title' . $lang] ?? '',
+      'keywords'    => $row['keywords' . $lang] ?? '',
+      'description' => $row['description' . $lang] ?? '',
+      'url'         => BASE . ($row['slug' . $lang] ?? $row['slug'] ?? ''),
+      'image'       => !empty($row['file']) ? BASE_ADMIN . UPLOADS . $row['file'] : ''
+    ]);
+    return $data_seo;
+  }
+
+  public function getSeo(): array
+  {
+    return $this->seo;
+  }
+
+  public function set($key = '', $value = '')
+  {
+    if (!empty($key) && !empty($value)) {
+      $this->data[$key] = $value;
+    }
+  }
+
+  public function get($key)
+  {
+    return (!empty($this->data[$key])) ? $this->data[$key] : '';
   }
   public function save_seo(string $type, int $id_parent, array $data, array $langs): void
   {

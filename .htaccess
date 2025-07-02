@@ -6,3 +6,21 @@ RewriteCond %{REQUEST_FILENAME} !-d
 
 # Chuyển tất cả truy vấn sang index.php?page=ten-trang
 RewriteRule ^(.+)$ index.php?page=$1 [QSA,L]
+<FilesMatch ".(ico|pdf|flv)$">
+    Header set Cache-Control "max-age=29030400, public"
+</FilesMatch>
+
+<FilesMatch ".(jpg|jpeg|png|gif|swf)$">
+    Header set Cache-Control "max-age=604800, public"
+</FilesMatch>
+
+<FilesMatch ".(xml|txt|css|js)$">
+    Header set Cache-Control "max-age=604800, proxy-revalidate"
+</FilesMatch>
+
+<FilesMatch ".(html|htm|php)$">
+    Header set Cache-Control "max-age=604800, private, proxy-revalidate"
+</FilesMatch>
+<FilesMatch "\.(ttf|otf|eot|woff|woff2)$">
+  Header set Access-Control-Allow-Origin "*"
+</FilesMatch>

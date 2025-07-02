@@ -1,6 +1,4 @@
-<?php require_once ROOT . '/sources/list_news.php'; ?>
 <div class="wrap-main wrap-home w-clear" style="background:#fff">
-  <?php include ROOT . '/templates/breadcrumb.php'; ?>
   <div class="wrap-product-list">
     <div class="title-list-hot mt-4">
       <h2><?= $typeInfo['vi'] ?></h2>

@@ -28,7 +28,8 @@ if (!empty($dm_c1_all)) {
     $menu_tree[] = $lv1;
   }
 }
-?><div class="menu">
+?>
+<div class="menu">
   <div class="wrap-content d-flex flex-wrap justify-content-between align-items-center">
     <!-- Menu bên trái: Danh mục sản phẩm -->
     <div class="menu-bar-left">

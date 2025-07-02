@@ -1,12 +1,4 @@
-<?php
-$result_lienhe = $trangtinh->get_static('lienhe');
-$seo_data = $fn->get_seo($db->rawQueryOne("SELECT * FROM tbl_seopage WHERE `type` = ?", ['lienhe']) ?? [], $lang);
-// breadcrumbs
-$breadcrumbs->set('lien-he', 'Liên Hệ');
-$breadcrumbs = $breadcrumbs->get();
-?>
 <div class="wrap-main wrap-home w-clear" style="background:#fff">
-  <?php include ROOT . '/templates/breadcrumb.php'; ?>
   <div class="wrap-product-list">
     <div class="title-list-hot mt-4">
       <h2>Liên Hệ</h2>
@@ -16,7 +8,7 @@ $breadcrumbs = $breadcrumbs->get();
       <div class="content-main">
         <div class="contact-article row">
           <div class="contact-text col-lg-6 mb-3" data-aos="fade-right" data-aos-duration="500">
-            <?= $result_lienhe['contentvi'] ?></div>
+            <?= $row_lh['content' . $lang] ?></div>
           <form data-aos="fade-left" data-aos-duration="500" class="contact-form validation-contact col-lg-6 mb-3"
             novalidate="" method="post" action="" enctype="multipart/form-data">
             <div class="social">

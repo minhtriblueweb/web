@@ -14,17 +14,10 @@
         </div>
         <p class="footer-company"><?= $web_name ?></p>
         <div class="footer-info content-ck">
-          <p><span><?= ($trangtinh->get_static('footer')['contentvi'] ?? '') ?></span></p>
+          <p><span><?= ($trangtinh->get_static('footer')['content' . $lang] ?? '') ?></span></p>
         </div>
         <div class="social">
           <p>KẾT NỐI VỚI CHÚNG TÔI</p>
-          <?php
-          $show_social = $fn->show_data([
-            'table'  => 'tbl_social',
-            'status' => 'hienthi',
-            'select' => "file, link, name{$lang}"
-          ]);
-          ?>
           <?php if (!empty($show_social)): ?>
             <?php foreach ($show_social as $row): ?>
               <?php
@@ -151,89 +144,33 @@
       </path>
     </svg>
   </div>
-  <?php include ROOT . '/templates/social.php'; ?>
-  <!-- Js Config -->
-  <script type="text/javascript">
-    var NN_FRAMEWORK = NN_FRAMEWORK || {};
-    var CONFIG_BASE = "<?= BASE ?>";
-    var ASSET = "<?= BASE ?>";
-    var WEBSITE_NAME = "<?= $seo['web_name'] ?>";
-    var TIMENOW = "<?= date('d/m/Y') ?>";
-    var SHIP_CART = false;
-    var RECAPTCHA_ACTIVE = true;
-    var RECAPTCHA_SITEKEY = "6Lcy4r0ZAAAAAKCm-yZWmkiZK6GO49G--KW30rNS";
-    var PATH_JSON = "./assets/jsons/";
-    var LANG = {
-      no_keywords: "Chưa nhập từ khóa tìm kiếm",
-      delete_product_from_cart: "Bạn muốn xóa sản phẩm này khỏi giỏ hàng ? ",
-      no_products_in_cart: "Không tồn tại sản phẩm nào trong giỏ hàng !",
-      ward: "Phường/xã",
-      back_to_home: "Về trang chủ",
-      thongbao: "Thông báo",
-      dongy: "Đồng ý",
-      dungluonghinhanhlon: "Dung lượng hình ảnh lớn. Dung lượng cho phép &lt;= 4MB ~ 4096KB",
-      dulieukhonghople: "Dữ liệu không hợp lệ",
-      banchiduocchon1hinhanhdeuplen: "Bạn chỉ được chọn 1 hình ảnh để upload",
-      dinhdanghinhanhkhonghople: "Định dạng hình ảnh không hợp lệ",
-      huy: "Hủy",
-      chinhsach: "Chính Sách",
-    };
-    var logo_img = "<?= $logo ?>";
-    var IDLIST = "";
-    var TOTALPAGE = "";
-  </script>
-
-  <!-- Js Files -->
-  <?php
-  $jsFiles = [
-    "js/jquery.min.js",
-    "js/lazyload.min.js",
-    "bootstrap/bootstrap.js",
-    "js/wow.min.js",
-    "holdon/HoldOn.js",
-    "confirm/confirm.js",
-    "simplenotify/simple-notify.js",
-    "easyticker/easy-ticker.js",
-    "fotorama/fotorama.js",
-    "photobox/photobox.js",
-    "fileuploader/jquery.fileuploader.min.js",
-    "fancybox5/fancybox.umd.js",
-    "slick/slick.min.js",
-    "magiczoomplus/magiczoomplus.js",
-    "js/functions.js",
-    "menu-mobile/menu-mobile.js",
-    "toc/toc.js",
-    "aos/aos.js",
-    "js/apps.js"
-  ];
-  foreach ($jsFiles as $file) {
-    $js->set("{$file}?v=" . VERSION);
-  }
-  echo $js->get();
-
-  ?>
-
-  <!-- Js Structdata -->
-  <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "Organization",
-      "name": "<?= $seo['title'] ?? $web_name ?>",
-      "url": "<?= BASE ?>",
-      "sameAs": [<?= implode(", ", array_map(fn($link) => '"' . $link . '"', $sameAs)) ?>]
-      "address": {
-        "@type": "PostalAddress",
-        "streetAddress": "<?= $address ?>",
-        "addressRegion": "Ho Chi Minh",
-        "postalCode": "70000",
-        "addressCountry": "vi"
-      }
-    }
-  </script>
-
-  <!-- Js Body -->
-  <?= $bodyjs ?>
 </div>
-</body>
-
-</html>
+<div class="floating-support" data-aos="fade-left" data-aos-anchor="#example-anchor" data-aos-offset="500"
+  data-aos-duration="500">
+  <?php if (!empty($show_social)): ?>
+    <?php
+    $sameAs = [];
+    foreach ($show_social as $row_social): ?>
+      <?php
+      $name = $row_social['name' . $lang];
+      $desc = $row_social['desc' . $lang];
+      $link = $row_social['link'];
+      $sameAs[] = $link;
+      ?>
+      <a href="<?= $link ?>" class="floating-support__item" target="_blank">
+        <div class="floating-support__item__icon">
+          <?= $fn->getImage([
+            'file'   => $row_social['file'],
+            'alt'    => $name,
+            'title'  => $name,
+            'class'  => 'tada'
+          ]) ?>
+        </div>
+        <div class="floating-support__item__content">
+          <p><b><?= $name ?></b></p>
+          <span><?= $desc ?></span>
+        </div>
+      </a>
+    <?php endforeach; ?>
+  <?php endif; ?>
+</div>

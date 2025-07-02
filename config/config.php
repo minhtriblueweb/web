@@ -15,6 +15,9 @@ $config = [
     'lang' => [
       'vi' => 'Tiếng Việt',
       'en' => 'Tiếng Anh'
-    ]
+    ],
+    'lang-doc' => 'vi|en',
+    'debug-css' => false,
+    'debug-js' => false,
   ]
 ];

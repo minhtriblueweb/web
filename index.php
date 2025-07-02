@@ -1,15 +1,24 @@
 <?php
+ob_start();
+session_start();
 include_once 'config/autoload.php';
 include_once 'lib/router.php';
 
 // SEO mặc định
-$seo = $default_seo;
-// Cho phép các trang ghi đè biến SEO
-$page_file = 'pages/' . $page;
+$data_seo = $default_seo;
+$sources_file = SOURCES . $page;
+$pageFile       = 'pages/' . $page;
 
-if (file_exists($page_file)) {
+require_once SOURCES . "allpage.php";
+
+if (file_exists($sources_file)) {
+  include_once $sources_file;
+}
+
+// Gọi view nếu tồn tại
+if (file_exists($pageFile)) {
   ob_start();
-  include $page_file;
+  include $pageFile;
   $page_content = ob_get_clean();
 } else {
   http_response_code(404);
@@ -18,7 +27,4 @@ if (file_exists($page_file)) {
 }
 
 // Load template chung
-include_once 'templates/header.php';
-include_once 'templates/menu.php';
-echo $page_content;
-include_once 'templates/footer.php';
+include TEMPLATE . "index.php";

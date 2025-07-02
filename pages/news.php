@@ -1,6 +1,4 @@
-<?php require_once ROOT . '/sources/news.php'; ?>
 <div class="wrap-main wrap-home w-clear">
-  <?php include ROOT . '/templates/breadcrumb.php'; ?>
   <div class="wrap-content mt-3 p-2">
     <div class="row">
       <div class="col-lg-9 mb-3">

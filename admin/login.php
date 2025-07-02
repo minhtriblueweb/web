@@ -7,7 +7,7 @@ if (Session::get("adminlogin")) {
   exit();
 }
 
-include_once '../classes/adminlogin.php';
+include_once '../classes/class.adminlogin.php';
 include_once '../lib/validation.php';
 
 $login = new adminlogin();

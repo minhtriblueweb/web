@@ -16,8 +16,7 @@ $news_list = $fn->show_data([
   'type' => $type,
   'select' => "id, file, slug{$lang}, name{$lang}, desc{$lang}"
 ]);
-
-$seo_data = $fn->get_seo(
+$data_seo = $seo->get_seopage(
   $db->rawQueryOne("SELECT * FROM tbl_seopage WHERE `type` = ?", [$type]) ?? [],
   $lang
 );

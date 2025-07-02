@@ -48,9 +48,8 @@ $get_sp = $fn->show_data([
   'select' => "id, name{$lang}, slug{$lang}, file, regular_price, sale_price, views"
 ]);
 
-// Lấy SEO nếu có, nếu không fallback qua dữ liệu danh mục
-$seo_row = $db->rawQueryOne("SELECT * FROM tbl_seo WHERE type = ? AND id_parent = ?", ['danhmuc_c2', $dm_c2['id']]);
-$fn->get_seo($seo_row ?: $dm_c2, $lang);
+// SEO
+$data_seo = $seo->get_seo($dm_c2['id'], 'danhmuc_c2');
 // breadcrumbs
 $breadcrumbs->set('san-pham', 'Sản phẩm');
 $breadcrumbs->set($dm_c1['slug' . $lang], $dm_c1['name' . $lang]);

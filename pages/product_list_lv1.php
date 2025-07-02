@@ -1,7 +1,4 @@
-<?php require_once ROOT . '/sources/product_list_lv1.php'; ?>
-
 <div class="wrap-main wrap-home w-clear">
-  <?php include ROOT . '/templates/breadcrumb.php'; ?>
   <div class="wrap-product-list">
     <div class="wrap-content" style="background: unset;">
       <?php if (!empty($dm_c2_all)): ?>

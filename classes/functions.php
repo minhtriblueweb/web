@@ -69,93 +69,117 @@ class Functions
     $query = "SELECT * FROM `$table` WHERE id = '$id' LIMIT 1";
     return $this->db->select($query);
   }
-  public function get_only_data(array $options)
-  {
-    $table = mysqli_real_escape_string($this->db->link, $options['table'] ?? '');
-    if (empty($table)) return false;
-    $where = [];
-    foreach ($options as $field => $value) {
-      if ($field == 'table') continue;
-      if ($field === 'status') {
-        $statuses = is_array($value) ? $value : explode(',', $value);
-        $status_conditions = array_map(function ($s) {
-          return "FIND_IN_SET('" . mysqli_real_escape_string($this->db->link, $s) . "', status)";
-        }, $statuses);
-        $where[] = '(' . implode(' AND ', $status_conditions) . ')';
-      } else {
-        $escaped_value = mysqli_real_escape_string($this->db->link, $value);
-        $where[] = "`$field` = '$escaped_value'";
-      }
-    }
-    $where_sql = !empty($where) ? 'WHERE ' . implode(' AND ', $where) : '';
-    $query = "SELECT * FROM `$table` $where_sql LIMIT 1";
-    $result = $this->db->select($query);
-    return $result ? $result->fetch_assoc() : false;
-  }
   private function buildWhere(array $options): array
   {
     $where = [];
     $params = [];
+
+    // Trạng thái (multi-value)
     if (!empty($options['status'])) {
       $statuses = is_array($options['status']) ? $options['status'] : explode(',', $options['status']);
-      foreach ($statuses as $s) {
+      foreach ($statuses as $status) {
         $where[] = "FIND_IN_SET(?, status)";
-        $params[] = trim($s);
+        $params[] = trim($status);
       }
     }
-    if (!empty($options['id_list'])) {
-      $where[] = "`id_list` = ?";
-      $params[] = (int)$options['id_list'];
+
+    // Các điều kiện đơn giản + loại trừ ID
+    $fields = ['id_list', 'id_cat', 'id_parent', 'exclude_id', 'type'];
+    foreach ($fields as $field) {
+      if (isset($options[$field]) && $options[$field] !== '') {
+        $operator = ($field == 'exclude_id') ? '!=' : '=';
+        $column = ($field == 'exclude_id') ? 'id' : $field;
+        $where[] = "`$column` $operator ?";
+        $params[] = $field === 'type' ? $options[$field] : (int)$options[$field];
+      }
     }
-    if (!empty($options['id_cat'])) {
-      $where[] = "`id_cat` = ?";
-      $params[] = (int)$options['id_cat'];
-    }
-    if (!empty($options['id_parent'])) {
-      $where[] = "`id_parent` = ?";
-      $params[] = (int)$options['id_parent'];
-    }
-    if (!empty($options['exclude_id'])) {
-      $where[] = "`id` != ?";
-      $params[] = (int)$options['exclude_id'];
-    }
-    if (!empty($options['type'])) {
-      $where[] = "`type` = ?";
-      $params[] = $options['type'];
-    }
+
+    // Từ khóa (search)
     if (!empty($options['keyword'])) {
       $where[] = "`namevi` LIKE ?";
       $params[] = '%' . $options['keyword'] . '%';
     }
-    $sql = !empty($where) ? ' WHERE ' . implode(' AND ', $where) : '';
+
+    $sql = $where ? ' WHERE ' . implode(' AND ', $where) : '';
     return ['sql' => $sql, 'params' => $params];
   }
 
   public function show_data(array $options = [])
   {
-    if (empty($options['table'])) return false;
+    if (empty($options['table'])) return [];
+
     $table = $options['table'];
-    $order = " ORDER BY numb, id DESC";
+    $select = $options['select'] ?? '*';
+    $order = $options['order'] ?? ' ORDER BY numb, id DESC';
+
     $whereData = $this->buildWhere($options);
-    $sql = "SELECT * FROM `$table`" . $whereData['sql'] . $order;
+    $sql = "SELECT $select FROM `$table`" . $whereData['sql'] . $order;
+
+    // Phân trang
     if (!empty($options['records_per_page']) && !empty($options['current_page'])) {
       $limit = (int)$options['records_per_page'];
       $offset = ((int)$options['current_page'] - 1) * $limit;
       $sql .= " LIMIT $limit OFFSET $offset";
+    } elseif (!empty($options['limit'])) {
+      $limit = (int)$options['limit'];
+      $offset = isset($options['offset']) ? (int)$options['offset'] : 0;
+      $sql .= " LIMIT $limit OFFSET $offset";
     }
-    return $this->db->rawQuery($sql, $whereData['params']);
+    $result = $this->db->rawQuery($sql, $whereData['params']);
+    $data = [];
+    if ($result instanceof mysqli_result) {
+      while ($row = $result->fetch_assoc()) {
+        $data[] = $row;
+      }
+    }
+    return $data;
+  }
+
+  public function show_data_join(array $options = [])
+  {
+    $select = $options['select'] ?? '*';
+    $table = $options['table'] ?? '';
+    $alias = $options['alias'] ?? '';
+    $join = $options['join'] ?? '';
+    $where = [];
+    $bindings = [];
+
+    if (!empty($options['where'])) {
+      foreach ($options['where'] as $key => $val) {
+        $where[] = "$key = ?";
+        $bindings[] = $val;
+      }
+    }
+
+    $sql = "SELECT $select FROM `$table`";
+    if (!empty($alias)) $sql .= " $alias";
+    if (!empty($join)) $sql .= " $join";
+    if (!empty($where)) $sql .= " WHERE " . implode(" AND ", $where);
+    if (!empty($options['order_by'])) $sql .= " ORDER BY " . $options['order_by'];
+    if (!empty($options['limit'])) $sql .= " LIMIT " . (int)$options['limit'];
+
+    $result = $this->db->rawQuery($sql, $bindings);
+
+    $data = [];
+    if ($result instanceof mysqli_result) {
+      while ($row = $result->fetch_assoc()) {
+        $data[] = $row;
+      }
+    }
+    return $data;
   }
 
   public function count_data(array $options = []): int
   {
     if (empty($options['table'])) return 0;
+
     $table = $options['table'];
     $whereData = $this->buildWhere($options);
     $sql = "SELECT COUNT(*) FROM `$table`" . $whereData['sql'];
-    return (int)$this->db->rawQueryValue($sql, $whereData['params']);
+
+    $count = $this->db->rawQueryValue($sql, $whereData['params']);
+    return is_numeric($count) ? (int)$count : 0;
   }
-
-
 
   function transfer($msg, $page = 'dashboard', $numb = true)
   {

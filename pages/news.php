@@ -1,28 +1,11 @@
-<?php
-require_once $baseDir . '/sources/news.php';
-?>
+<?php require_once ROOT . '/sources/news.php'; ?>
 <div class="wrap-main wrap-home w-clear">
-  <div class="breadCrumbs">
-    <div class="wrap-content">
-      <ol class="breadcrumb">
-        <li class="breadcrumb-item">
-          <a class="text-decoration-none" href="<?= BASE ?>"><span>Trang chủ</span></a>
-        </li>
-        <li class="breadcrumb-item">
-          <a class="text-decoration-none" href="<?= $typeInfo['slug'] ?>"><span><?= $typeInfo['vi'] ?></span></a>
-        </li>
-        <li class="breadcrumb-item active">
-          <a class="text-decoration-none"
-            href="<?= $baiviet['slugvi'] ?>"><span><?= $baiviet['namevi'] ?></span></a>
-        </li>
-      </ol>
-    </div>
-  </div>
+  <?php include ROOT . '/templates/breadcrumb.php'; ?>
   <div class="wrap-content mt-3 p-2">
     <div class="row">
       <div class="col-lg-9 mb-3">
         <div class="title-list-hot p-2">
-          <h2 class=" text-start"><?= $baiviet['namevi'] ?></h2>
+          <h2 class="text-start"><?= $baiviet['name' . $lang] ?></h2>
         </div>
         <div class="wrap-main wrap-template w-clear" style="margin: 0 auto !important;">
           <div class="wrap-toc">
@@ -34,31 +17,43 @@ require_once $baseDir . '/sources/news.php';
             </div>
           </div>
           <div class="content-main" id="toc-content">
-            <?= $baiviet['contentvi'] ?>
+            <?= $baiviet['content' . $lang] ?>
           </div>
         </div>
       </div>
+
       <div class="col-lg-3">
         <div class="share othernews mb-3">
           <b>Tin liên quan:</b>
           <div class="fix__row__news">
             <div class="row">
-              <?php if ($relatedNews && $relatedNews->num_rows > 0): ?>
-                <?php while ($kg_relatedNews = $relatedNews->fetch_assoc()) : ?>
+              <?php if (!empty($relatedNews)): ?>
+                <?php foreach ($relatedNews as $kg_relatedNews): ?>
+                  <?php
+                  $slug = BASE . $kg_relatedNews['slug' . $lang];
+                  $name = $kg_relatedNews['name' . $lang];
+                  $img = !empty($kg_relatedNews['file']) ? BASE_ADMIN . UPLOADS . $kg_relatedNews['file'] : NO_IMG;
+                  ?>
                   <div class="col-lg-12 col-md-6 col-12">
                     <div class="news-other d-flex flex-wrap">
-                      <a class="scale-img text-decoration-none pic-news-other" href="<?= $kg_relatedNews['slugvi'] ?>"
-                        title="<?= $kg_relatedNews["namevi"] ?>">
-                        <img class="w-100" src="<?= BASE_ADMIN . UPLOADS . $kg_relatedNews['file'] ?>"
-                          alt="<?= $kg_relatedNews["namevi"] ?>" title="<?= $kg_relatedNews["namevi"] ?>">
+                      <a class="scale-img text-decoration-none pic-news-other" href="<?= $slug ?>" title="<?= $name ?>">
+                        <?= $fn->getImage([
+                          'file' => $kg_relatedNews['file'],
+                          'class' => 'w-100',
+                          'alt' => $name,
+                          'title' => $name,
+                          'lazy' => true
+                        ]) ?>
+
                       </a>
                       <div class="info-news-other">
-                        <a class="name-news-other text-decoration-none" href="<?= $kg_relatedNews['slugvi'] ?>"
-                          title="<?= $kg_relatedNews["namevi"] ?>"><?= $kg_relatedNews["namevi"] ?></a>
+                        <a class="name-news-other text-decoration-none" href="<?= $slug ?>" title="<?= $name ?>">
+                          <?= $name ?>
+                        </a>
                       </div>
                     </div>
                   </div>
-                <?php endwhile; ?>
+                <?php endforeach; ?>
               <?php endif; ?>
             </div>
           </div>

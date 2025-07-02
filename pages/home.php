@@ -1,6 +1,5 @@
 <?php
-$get_seopage = $db->rawQueryOne("SELECT * FROM tbl_seopage WHERE `type` = ?", ['trangchu']);
-$fn->get_seo($get_seopage, $lang);
+$fn->get_seo($db->rawQueryOne("SELECT * FROM tbl_seopage WHERE `type` = ?", ['trangchu']), $lang);
 ?>
 <?php include ROOT . '/templates/slideshow.php'; ?>
 <div class="wrap-main wrap-home w-clear">

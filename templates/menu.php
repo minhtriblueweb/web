@@ -1,35 +1,34 @@
 <?php
 // Truy vấn danh mục cấp 1
 $dm_c1_all = $fn->show_data([
-  'table' => 'tbl_danhmuc_c1',
-  'status' => 'hienthi,noibat'
+  'table'  => 'tbl_danhmuc_c1',
+  'status' => 'hienthi,noibat',
+  'select' => "id, file, slug{$lang}, name{$lang}"
 ]);
 
-// Truy vấn danh mục cấp 2
 $dm_c2_all = $fn->show_data([
-  'table' => 'tbl_danhmuc_c2',
-  'status' => 'hienthi,noibat'
+  'table'  => 'tbl_danhmuc_c2',
+  'status' => 'hienthi,noibat',
+  'select' => "id, id_list, slug{$lang}, name{$lang}"
 ]);
 
 // Gom nhóm cấp 2 theo id_list (id cấp 1)
 $dm_c2_group = [];
-if ($dm_c2_all && $dm_c2_all->num_rows > 0) {
-  while ($row = $dm_c2_all->fetch_assoc()) {
+if (!empty($dm_c2_all)) {
+  foreach ($dm_c2_all as $row) {
     $dm_c2_group[$row['id_list']][] = $row;
   }
 }
 
 // Tạo cây menu
 $menu_tree = [];
-if ($dm_c1_all && $dm_c1_all->num_rows > 0) {
-  while ($lv1 = $dm_c1_all->fetch_assoc()) {
+if (!empty($dm_c1_all)) {
+  foreach ($dm_c1_all as $lv1) {
     $lv1['sub'] = $dm_c2_group[$lv1['id']] ?? [];
     $menu_tree[] = $lv1;
   }
 }
-?>
-
-<div class="menu">
+?><div class="menu">
   <div class="wrap-content d-flex flex-wrap justify-content-between align-items-center">
     <!-- Menu bên trái: Danh mục sản phẩm -->
     <div class="menu-bar-left">
@@ -37,28 +36,36 @@ if ($dm_c1_all && $dm_c1_all->num_rows > 0) {
       <div class="box-ul-left">
         <ul>
           <?php foreach ($menu_tree as $dm): ?>
-            <?php $has_sub = count($dm['sub']) > 0; ?>
+            <?php
+            $has_sub = count($dm['sub']) > 0;
+            $name = $dm['name' . $lang];
+            $slug = $dm['slug' . $lang];
+            ?>
             <li>
-              <a title="<?= $dm['namevi'] ?>" href="<?= $dm['slugvi'] ?>">
+              <a title="<?= $name ?>" href="<?= $slug ?>">
                 <span>
                   <?= $fn->getImage([
                     'file' => $dm['file'],
                     'width' => 25,
-                    'alt' => $dm['namevi'],
-                    'title' => $dm['namevi'],
+                    'alt' => $name,
+                    'title' => $name,
                     'lazy' => false
                   ]) ?>
                 </span>
-                <?= $dm['namevi'] ?>
+                <?= $name ?>
                 <?= $has_sub ? '<i class="fa-solid fa-angle-right"></i>' : '' ?>
               </a>
               <?php if ($has_sub): ?>
                 <div class="box-menu-cat-left">
                   <ul>
                     <?php foreach ($dm['sub'] as $dm2): ?>
+                      <?php
+                      $name2 = $dm2['name' . $lang];
+                      $slug2 = $dm2['slug' . $lang];
+                      ?>
                       <li>
-                        <a class="transition" href="<?= $dm2['slugvi'] ?>" title="<?= $dm2['namevi'] ?>">
-                          <?= $dm2['namevi'] ?>
+                        <a class="transition" href="<?= $slug2 ?>" title="<?= $name2 ?>">
+                          <?= $name2 ?>
                         </a>
                       </li>
                     <?php endforeach; ?>
@@ -73,11 +80,7 @@ if ($dm_c1_all && $dm_c1_all->num_rows > 0) {
 
     <!-- Menu ngang bên phải -->
     <ul class="menu-bar">
-      <li>
-        <a class="transition" href="./" title="Trang chủ">
-          <span><i class="fa-solid fa-house"></i></span>
-        </a>
-      </li>
+      <li><a class="transition" href="./" title="Trang chủ"><span><i class="fa-solid fa-house"></i></span></a></li>
       <li><a class="transition" href="gioi-thieu" title="Giới thiệu"><span>Giới thiệu</span></a></li>
       <li><a class="transition" href="mua-hang" title="Mua hàng"><span>Mua hàng</span></a></li>
       <li><a class="transition" href="huong-dan-choi" title="Hướng dẫn chơi"><span>Hướng dẫn chơi</span></a></li>
@@ -122,16 +125,20 @@ if ($dm_c1_all && $dm_c1_all->num_rows > 0) {
       <?php if (!empty($menu_tree)): ?>
         <ul>
           <?php foreach ($menu_tree as $lv1): ?>
+            <?php
+            $name1 = $lv1['name' . $lang];
+            $slug1 = $lv1['slug' . $lang];
+            ?>
             <li>
-              <a href="<?= $lv1['slugvi'] ?>">
-                <?= $lv1['namevi'] ?>
-              </a>
+              <a href="<?= $slug1 ?>"><?= $name1 ?></a>
               <?php if (!empty($lv1['sub'])): ?>
                 <ul>
                   <?php foreach ($lv1['sub'] as $lv2): ?>
-                    <li><a href="<?= $lv2['slugvi'] ?>">
-                        <?= $lv2['namevi'] ?>
-                      </a></li>
+                    <?php
+                    $name2 = $lv2['name' . $lang];
+                    $slug2 = $lv2['slug' . $lang];
+                    ?>
+                    <li><a href="<?= $slug2 ?>"><?= $name2 ?></a></li>
                   <?php endforeach; ?>
                 </ul>
               <?php endif; ?>

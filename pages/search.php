@@ -1,50 +1,23 @@
-<?php
-$records_per_page = 20;
-$current_page = max(1, isset($_GET['page']) ? (int)$_GET['page'] : 1);
-$total_records = $fn->count_data([
-  'table' => 'tbl_sanpham',
-  'status' => 'hienthi',
-  'keyword' => $_GET['keyword'] ?? ''
-]);
-$total_pages = ceil($total_records / $records_per_page);
-$show_sanpham = $fn->show_data([
-  'table' => 'tbl_sanpham',
-  'status' => 'hienthi',
-  'records_per_page' => $records_per_page,
-  'current_page' => $current_page,
-  'keyword' => $_GET['keyword'] ?? ''
-]);
-?>
+<?php require_once ROOT . '/sources/search.php'; ?>
 <div class="wrap-main wrap-home w-clear">
-  <div class="breadCrumbs">
-    <div class="wrap-content">
-      <ol class="breadcrumb">
-        <li class="breadcrumb-item">
-          <a class="text-decoration-none" href="<?= BASE ?>"><span>Trang chủ</span></a>
-        </li>
-        <li class="breadcrumb-item active">
-          <a class="text-decoration-none" href="san-pham"><span>Sản phẩm</span></a>
-        </li>
-      </ol>
-    </div>
-  </div>
-
+  <?php include ROOT . '/templates/breadcrumb.php'; ?>
   <div class="wrap-product-list">
     <div class="wrap-content" style="background: unset;">
       <div class="title-list-hot text-center">
-        <h2>Tìm Kiếm</h2>
-        (<?= $total_records ?>) sản phẩm : <?= $_GET['keyword'] ?>
+        <h2>Kết quả tìm kiếm</h2>
+        <p>(<?= $total_records ?> sản phẩm): <strong><?= htmlspecialchars($keyword) ?></strong></p>
       </div>
     </div>
   </div>
+
   <div class="wrap-main wrap-template w-clear" style="margin: 0 auto !important;">
     <div class="content-main">
-      <?php if ($show_sanpham && $show_sanpham->num_rows > 0) : ?>
+      <?php if (!empty($show_sanpham)): ?>
         <div class="grid-product">
-          <?php while ($sp = $show_sanpham->fetch_assoc()) : ?>
+          <?php foreach ($show_sanpham as $sp): ?>
             <?php
-            $slug = $sp['slugvi'];
-            $name = htmlspecialchars($sp['namevi']);
+            $slug = $sp['slug' . $lang];
+            $name = htmlspecialchars($sp['name' . $lang]);
             $sale = $sp['sale_price'] ?? '';
             $regular = $sp['regular_price'] ?? '';
             $views = $sp['views'] ?? 0;
@@ -62,7 +35,7 @@ $show_sanpham = $fn->show_data([
                 </div>
                 <div class="content">
                   <div class="title">
-                    <h3><?= $namevi ?></h3>
+                    <h3><?= $name ?></h3>
                     <p class="price-product">
                       <?php if (!empty($sale) && !empty($regular)): ?>
                         <span class="price-new"><?= $sale ?>₫</span>
@@ -81,13 +54,14 @@ $show_sanpham = $fn->show_data([
                 </div>
               </a>
             </div>
-          <?php endwhile; ?>
+          <?php endforeach; ?>
         </div>
-      <?php else : ?>
+      <?php else: ?>
         <div class="alert alert-warning w-100" role="alert">
           <strong>Không tìm thấy kết quả</strong>
         </div>
-      <?php endif ?>
+      <?php endif; ?>
+
       <div class="mt-3">
         <?= $fn->renderPagination_tc($current_page, $total_pages, BASE . 'san-pham/page-'); ?>
       </div>

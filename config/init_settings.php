@@ -1,5 +1,5 @@
 <?php
-$lang = array_key_first($config['website']['lang']);
+$lang = $_SESSION['lang'] ?? array_key_first($config['website']['lang']);
 $row_st = $db->rawQueryOne("SELECT * FROM tbl_setting WHERE id = ?", [1]);
 function get_setting_value($key, $htmlspecialchars = true, $default = '')
 {

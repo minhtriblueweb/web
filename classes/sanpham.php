@@ -164,21 +164,6 @@ class sanpham
     return false;
   }
 
-  public function get_danhmuc_by_sanpham($id)
-  {
-    $query = "SELECT tbl_sanpham.*,
-        tbl_danhmuc_c1.namevi AS dm_c1_name,
-        tbl_danhmuc_c1.slugvi AS dm_c1_slug,
-        tbl_danhmuc_c2.namevi AS dm_c2_name,
-        tbl_danhmuc_c2.slugvi AS dm_c2_slug
-        FROM tbl_sanpham
-        INNER JOIN tbl_danhmuc_c1 ON tbl_sanpham.id_list = tbl_danhmuc_c1.id
-        LEFT JOIN tbl_danhmuc_c2 ON tbl_sanpham.id_cat = tbl_danhmuc_c2.id
-        WHERE tbl_sanpham.id = '$id'";
-    $result = $this->db->select($query);
-    return $result;
-  }
-
   public function get_sanpham_by_slug($slug)
   {
     $slug = mysqli_real_escape_string($this->db->link, $slug);

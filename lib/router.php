@@ -1,70 +1,77 @@
 <?php
-// Lấy URI từ tham số page
-$request_uri = $_GET['page'] ?? '';
-$request_uri = trim($request_uri, '/');
+$request_uri = trim($_GET['page'] ?? '', '/');
 
-// Tách page-x nếu có ở cuối URI
+// Xử lý phân trang page-x
 $requestParts = explode('/', $request_uri);
 $current_page = 1;
 
 if (preg_match('/^page-(\d+)$/', end($requestParts), $matches)) {
-  $current_page = (int)$matches[1];
-  array_pop($requestParts); // Bỏ 'page-x' ra khỏi mảng
+  $current_page = (int) $matches[1];
+  array_pop($requestParts);
 }
 $slug = implode('/', $requestParts);
-
-// Gán lại vào $_GET để dùng cho phân trang
 $_GET['page'] = $current_page;
 
-// Các route tĩnh
+// Danh sách route tĩnh
 $routes = [
-  '' => 'home.php',
-  'trang-chu' => 'home.php',
-  'gioi-thieu' => 'gioithieu.php',
-  'lien-he' => 'lienhe.php',
-  'san-pham' => 'product_list.php',
-  'mua-hang' => 'muahang.php',
-  'huong-dan-choi' => 'list_huongdan.php',
-  'chinh-sach' => 'list_chinhsach.php',
-  'tin-tuc' => 'list_tintuc.php'
+  ''              => 'home.php',
+  'trang-chu'     => 'home.php',
+  'gioi-thieu'    => 'gioithieu.php',
+  'lien-he'       => 'lienhe.php',
+  'san-pham'      => 'product_list.php',
+  'mua-hang'      => 'muahang.php',
+  'huong-dan-choi' => 'list_news.php',
+  'chinh-sach'    => 'list_news.php',
+  'tin-tuc'       => 'list_news.php'
 ];
 
-// ===== Xử lý định tuyến =====
-$page = '404.php'; // Mặc định là lỗi
+// Mặc định là 404
+$page = '404.php';
 
+// ======== Xử lý định tuyến ========
 if (isset($routes[$slug])) {
-  // Route tĩnh
   $page = $routes[$slug];
+
+  // Gán type cho list_news.php
+  if (in_array($slug, ['huong-dan-choi', 'chinh-sach', 'tin-tuc'])) {
+    $map_type = [
+      'huong-dan-choi' => 'huongdanchoi',
+      'chinh-sach'     => 'chinhsach',
+      'tin-tuc'        => 'tintuc'
+    ];
+    $_GET['type'] = $map_type[$slug];
+  }
 } elseif ($slug === 'tim-kiem') {
   $page = 'search.php';
-}elseif ($slug !== '') {
+} elseif (!empty($slug)) {
   // Danh mục cấp 1
-  if ($danhmuc->slug_exists_lv1($slug)) {
+  if ($db->rawQueryOne("SELECT id FROM tbl_danhmuc_c1 WHERE slug{$lang} = ? LIMIT 1", [$slug])) {
     $_GET['slug'] = $slug;
     $page = 'product_list_lv1.php';
   }
+
   // Danh mục cấp 2
-  elseif ($info_lv2 = $danhmuc->find_lv2_with_parent($slug)) {
-    $_GET['slug'] = $info_lv2['slugvi'];
+  elseif ($info_lv2 = $db->rawQueryOne("
+    SELECT c2.*, c1.slug{$lang} AS slug_lv1, c1.name{$lang} AS name_lv1, c1.id AS id_list
+    FROM tbl_danhmuc_c2 AS c2
+    JOIN tbl_danhmuc_c1 AS c1 ON c2.id_list = c1.id
+    WHERE c2.slug{$lang} = ?
+    LIMIT 1
+  ", [$slug])) {
+    $_GET['slug'] = $info_lv2['slug' . $lang];
     $_GET['slug_lv1'] = $info_lv2['slug_lv1'];
     $page = 'product_list_lv2.php';
   }
-  // Bài viết
-  elseif ($newsData = $fn->get_only_data([
-    'table' => 'tbl_news',
-    'slugvi' => $slug,
-    'status' => 'hienthi'
-  ])) {
+
+  // Bài viết chi tiết
+  elseif ($newsData = $db->rawQueryOne("SELECT * FROM tbl_news WHERE slug{$lang} = ? AND FIND_IN_SET('hienthi', status)", [$slug])) {
     $_GET['slug'] = $slug;
     $_GET['type'] = $newsData['type'];
     $page = 'news.php';
   }
-  // Chi tiết sản phẩm
-  elseif ($productData = $fn->get_only_data([
-    'table' => 'tbl_sanpham',
-    'slugvi' => $slug,
-    'status' => 'hienthi'
-  ])) {
+
+  // Sản phẩm chi tiết
+  elseif ($productData = $db->rawQueryOne("SELECT * FROM tbl_sanpham WHERE slug{$lang} = ? AND FIND_IN_SET('hienthi', status)", [$slug])) {
     $_GET['slug'] = $slug;
     $page = 'product_details.php';
   }

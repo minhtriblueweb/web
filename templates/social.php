@@ -3,26 +3,33 @@
   <?php
   $sameAs = [];
   $show_social = $fn->show_data([
-    'table' => 'tbl_social',
-    'status' => 'hienthi'
-  ]); ?>
-  <?php if ($show_social): ?>
-    <?php while ($row_social = $show_social->fetch_assoc()): ?>
-      <?php $sameAs[] = $row_social['link']; ?>
-      <a href="<?= $row_social['link'] ?>" class="floating-support__item" target="_blank">
+    'table'  => 'tbl_social',
+    'status' => 'hienthi',
+    'select' => "file, link, name{$lang}, desc{$lang}"
+  ]);
+  ?>
+  <?php if (!empty($show_social)): ?>
+    <?php foreach ($show_social as $row_social): ?>
+      <?php
+      $name = $row_social['name' . $lang];
+      $desc = $row_social['desc' . $lang];
+      $link = $row_social['link'];
+      $sameAs[] = $link;
+      ?>
+      <a href="<?= $link ?>" class="floating-support__item" target="_blank">
         <div class="floating-support__item__icon">
           <?= $fn->getImage([
             'file'   => $row_social['file'],
-            'alt'    => $row_social['namevi'],
-            'title'  => $row_social['namevi'],
+            'alt'    => $name,
+            'title'  => $name,
             'class'  => 'tada'
           ]) ?>
         </div>
         <div class="floating-support__item__content">
-          <p><b><?= $row_social['namevi'] ?></b></p>
-          <span><?= $row_social['descvi'] ?></span>
+          <p><b><?= $name ?></b></p>
+          <span><?= $desc ?></span>
         </div>
       </a>
-    <?php endwhile; ?>
+    <?php endforeach; ?>
   <?php endif; ?>
 </div>

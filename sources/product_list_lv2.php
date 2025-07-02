@@ -2,24 +2,34 @@
 $slug = $_GET['slug'] ?? '';
 if (!$slug) $fn->abort_404();
 
-// Lấy danh mục cấp 2 + cấp 1
-$dm_c2 = $danhmuc->get_danhmuc_c2_with_parent_or_404($slug);
+// Lấy danh mục cấp 2 kèm cấp 1 (JOIN)
+$dm_c2_list = $fn->show_data_join([
+  'table' => 'tbl_danhmuc_c2',
+  'alias' => 'c2',
+  'join' => 'JOIN tbl_danhmuc_c1 c1 ON c2.id_list = c1.id',
+  'select' => "c2.*, c1.name{$lang} AS name_lv1, c1.slug{$lang} AS slug_lv1",
+  'where' => ["c2.slug{$lang}" => $slug],
+  'limit' => 1
+]);
 
-// Lấy danh mục cấp 1 (từ c2), đổi key name_lv1 => namevi
-$dm_c1 = array_combine(
-  array_map(fn($k) => $k . 'vi', ['name', 'slug', 'title', 'keywords', 'description']),
-  array_map(fn($k) => $dm_c2[$k . '_lv1'] ?? '', ['name', 'slug', 'title', 'keywords', 'description'])
-);
+$dm_c2 = $dm_c2_list[0] ?? null;
+if (!$dm_c2) $fn->abort_404();
+// Gộp dữ liệu danh mục cấp 1 vào biến $dm_c1
+$dm_c1 = [
+  "name{$lang}" => $dm_c2["name_lv1"] ?? '',
+  "slug{$lang}" => $dm_c2["slug_lv1"] ?? ''
+];
 
-// Lấy các danh mục cấp 2 cùng cấp 1
+// Lấy danh sách các danh mục cấp 2 cùng cấp 1
 $id_list = (int)$dm_c2['id_list'];
 $list_danhmuc_c2 = $fn->show_data([
   'table' => 'tbl_danhmuc_c2',
   'status' => 'hienthi',
-  'id_list' => $id_list
+  'id_list' => $id_list,
+  'select' => "id, name{$lang}, slug{$lang}"
 ]);
 
-// Phân trang sản phẩm
+// Phân trang sản phẩm thuộc danh mục cấp 2
 $per_page = 20;
 $page = max(1, (int)($_GET['page'] ?? 1));
 $total = $fn->count_data([
@@ -27,17 +37,22 @@ $total = $fn->count_data([
   'status' => 'hienthi',
   'id_cat' => $dm_c2['id']
 ]);
-$total_pages = ceil(max(1, $total / $per_page));
+$total_pages = max(1, ceil($total / $per_page));
 
 $get_sp = $fn->show_data([
   'table' => 'tbl_sanpham',
   'status' => 'hienthi',
   'id_cat' => $dm_c2['id'],
   'records_per_page' => $per_page,
-  'current_page' => $page
+  'current_page' => $page,
+  'select' => "id, name{$lang}, slug{$lang}, file, regular_price, sale_price, views"
 ]);
 
-// SEO
-$lang = array_key_first($config['website']['lang']);
+// Lấy SEO nếu có, nếu không fallback qua dữ liệu danh mục
 $seo_row = $db->rawQueryOne("SELECT * FROM tbl_seo WHERE type = ? AND id_parent = ?", ['danhmuc_c2', $dm_c2['id']]);
 $fn->get_seo($seo_row ?: $dm_c2, $lang);
+// breadcrumbs
+$breadcrumbs->set('san-pham', 'Sản phẩm');
+$breadcrumbs->set($dm_c1['slug' . $lang], $dm_c1['name' . $lang]);
+$breadcrumbs->set($dm_c2['slug' . $lang], $dm_c2['name' . $lang]);
+$breadcrumbs = $breadcrumbs->get();

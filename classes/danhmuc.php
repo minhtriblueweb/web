@@ -16,38 +16,6 @@ class danhmuc
     $this->fn = new Functions();
     $this->seo = new seo();
   }
-  public function get_danhmuc_c2_with_parent_or_404($slug)
-  {
-    $row = $this->db->rawQueryOne("
-      SELECT
-        c2.*,
-        c1.namevi AS name_lv1,
-        c1.slugvi AS slug_lv1
-      FROM tbl_danhmuc_c2 c2
-      JOIN tbl_danhmuc_c1 c1 ON c2.id_list = c1.id
-      WHERE c2.slugvi = ?
-      LIMIT 1
-    ", [$slug]);
-
-    if ($row) return $row;
-
-    http_response_code(404);
-    include '404.php';
-    exit();
-  }
-  public function get_danhmuc_or_404($slug, $table)
-  {
-    $row = $this->db->rawQueryOne("SELECT * FROM `$table` WHERE slugvi = ? LIMIT 1", [$slug]);
-    if ($row) return $row;
-    http_response_code(404);
-    include '404.php';
-    exit();
-  }
-  public function slug_exists_lv1($slug)
-  {
-    $row = $this->db->rawQueryOne("SELECT id FROM tbl_danhmuc_c1 WHERE slugvi = ? LIMIT 1", [$slug]);
-    return $row ? true : false;
-  }
   public function slug_exists_lv2($slug_lv2, $slug_lv1)
   {
     $row_lv1 = $this->db->rawQueryOne("SELECT id FROM tbl_danhmuc_c1 WHERE slugvi = ? LIMIT 1", [$slug_lv1]);
@@ -57,22 +25,6 @@ class danhmuc
       return $row_lv2 ? true : false;
     }
     return false;
-  }
-  public function find_lv2_with_parent($slug_lv2)
-  {
-    $row = $this->db->rawQueryOne("
-      SELECT
-        c2.*,
-        c1.slugvi AS slug_lv1,
-        c1.namevi AS name_lv1,
-        c1.id AS id_list
-      FROM tbl_danhmuc_c2 AS c2
-      JOIN tbl_danhmuc_c1 AS c1 ON c2.id_list = c1.id
-      WHERE c2.slugvi = ?
-      LIMIT 1
-    ", [$slug_lv2]);
-
-    return $row ?: false;
   }
 
   public function save_danhmuc($data, $files, $id = null)

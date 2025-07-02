@@ -106,29 +106,35 @@
           <marquee><?= $introduction ?></marquee>
           <div class="box-social">
             <a class="pay" href="">Phương thức thanh toán</a>
-            <div class="social-header">
-              <p>Kết nối :</p>
-              <?php
-              $show_social = $fn->show_data([
-                'table' => 'tbl_social',
-                'status' => 'hienthi'
-              ]); ?>
-              <?php if ($show_social): ?>
-                <?php while ($row_social = $show_social->fetch_assoc()): ?><a href="<?= $row_social['link'] ?>"
-                    class="lazy hvr-icon-rotate" class="me-2">
+            <?php
+            $show_social = $fn->show_data([
+              'table'  => 'tbl_social',
+              'status' => 'hienthi',
+              'select' => "name{$lang}, file, link"
+            ]);
+            ?>
+            <?php if (!empty($show_social)): ?>
+              <div class="social-header">
+                <p>Kết nối :</p>
+                <?php foreach ($show_social as $row): ?>
+                  <?php
+                  $name = $row['name' . $lang] ?? '';
+                  ?>
+                  <a href="<?= $row['link'] ?>" class="hvr-icon-rotate me-2" target="_blank" rel="noopener noreferrer">
                     <?= $fn->getImage([
-                      'file' => $row_social['file'],
-                      'width' => 20,
+                      'file'   => $row['file'],
+                      'width'  => 20,
                       'height' => 20,
-                      'class' => 'me-2',
-                      'alt' => $row_social['namevi'],
-                      'title' => $row_social['namevi'],
-                      'lazy' => false
+                      'class'  => 'hvr-icon',
+                      'alt'    => $name,
+                      'title'  => $name,
+                      'lazy'   => false
                     ]) ?>
                   </a>
-                <?php endwhile; ?>
-              <?php endif; ?>
-            </div>
+                <?php endforeach; ?>
+              </div>
+            <?php endif; ?>
+
           </div>
         </div>
       </div>

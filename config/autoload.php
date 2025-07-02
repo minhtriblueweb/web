@@ -31,7 +31,7 @@ $fm = new Format();
 require_once $baseDir . '/config/constants.php';
 
 // 7. Khởi tạo các class thường dùng (sau constants.php để dùng BASE,...)
-$classes = ['seo', 'danhmuc', 'sanpham', 'slideshow', 'tieuchi', 'danhgia', 'setting', 'social', 'news', 'trangtinh', 'payment'];
+$classes = ['breadcrumbs', 'seo', 'danhmuc', 'sanpham', 'slideshow', 'tieuchi', 'danhgia', 'setting', 'social', 'news', 'trangtinh', 'payment'];
 foreach ($classes as $class) {
   if (class_exists($class)) {
     $$class = new $class();

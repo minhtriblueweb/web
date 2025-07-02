@@ -1,42 +1,48 @@
 <?php
+// Lấy danh mục cấp 1
 $dm_c1_all = $fn->show_data([
-  'table' => 'tbl_danhmuc_c1',
-  'status' => 'hienthi,noibat'
+  'table'  => 'tbl_danhmuc_c1',
+  'status' => 'hienthi,noibat',
+  'select' => "id, file, slug{$lang}, name{$lang}"
 ]);
 
+// Lấy danh mục cấp 2
 $dm_c2_all = $fn->show_data([
-  'table' => 'tbl_danhmuc_c2',
-  'status' => 'hienthi,noibat'
+  'table'  => 'tbl_danhmuc_c2',
+  'status' => 'hienthi,noibat',
+  'select' => "id, id_list, slug{$lang}, name{$lang}"
 ]);
+
+// Gom nhóm cấp 2 theo id_list
 $dm_c2_group = [];
-if ($dm_c2_all && $dm_c2_all->num_rows > 0) {
-  while ($row = $dm_c2_all->fetch_assoc()) {
-    $dm_c2_group[$row['id_list']][] = $row;
-  }
-}
-$dm_c1_rows = [];
-if ($dm_c1_all && $dm_c1_all->num_rows > 0) {
-  while ($lv1 = $dm_c1_all->fetch_assoc()) {
-    $lv1['sub'] = $dm_c2_group[$lv1['id']] ?? [];
-    $menu_tree[] = $lv1;
-    $dm_c1_rows[] = $lv1;
-  }
+foreach ($dm_c2_all ?? [] as $row) {
+  $dm_c2_group[$row['id_list']][] = $row;
 }
 
-// Gọt sản phẩm theo nhóm
+// Gộp vào menu cây
+$dm_c1_rows = [];
+$menu_tree = [];
+foreach ($dm_c1_all ?? [] as $lv1) {
+  $lv1['sub'] = $dm_c2_group[$lv1['id']] ?? [];
+  $menu_tree[] = $lv1;
+  $dm_c1_rows[] = $lv1;
+}
+
+// Lấy sản phẩm
 $sp_all = $fn->show_data([
-  'table' => 'tbl_sanpham',
-  'status' => 'hienthi'
+  'table'  => 'tbl_sanpham',
+  'status' => 'hienthi',
+  'select' => "id, file, slug{$lang}, name{$lang}, sale_price, regular_price, views, id_list, id_cat"
 ]);
+
+// Gom sản phẩm theo id_list và id_cat
 $sp_group = [];
-if ($sp_all && $sp_all->num_rows > 0) {
-  while ($row = $sp_all->fetch_assoc()) {
-    $id_list = $row['id_list'];
-    $id_cat = $row['id_cat'];
-    $sp_group[$id_list]['all'][] = $row;
-    if ($id_cat) {
-      $sp_group[$id_list]['cat'][$id_cat][] = $row;
-    }
+foreach ($sp_all ?? [] as $row) {
+  $id_list = $row['id_list'];
+  $id_cat = $row['id_cat'];
+  $sp_group[$id_list]['all'][] = $row;
+  if ($id_cat) {
+    $sp_group[$id_list]['cat'][$id_cat][] = $row;
   }
 }
 ?>
@@ -50,15 +56,15 @@ if ($sp_all && $sp_all->num_rows > 0) {
     <?php if (!empty($sp_all)): ?>
       <div class="box-list" data-aos="fade-up" data-aos-duration="500">
         <div class="title-list">
-          <h2><span class="text-split"><?= $lv1['namevi'] ?></span></h2>
+          <h2><span class="text-split"><?= $lv1['name' . $lang] ?></span></h2>
           <div class="box-tab-cat">
             <ul class="tab-cat" data-aos="fade-left" data-aos-duration="500">
               <li><a href="#" class="tab-cat-link active" data-tab="tab-all-<?= $id_list ?>">Tất cả</a></li>
               <?php foreach ($cat_list as $dm_c2): ?>
-                <li><a href="#" class="tab-cat-link text-capitalize" data-tab="tab-<?= $dm_c2['id'] ?>"><?= $dm_c2['namevi'] ?></a></li>
+                <li><a href="#" class="tab-cat-link text-capitalize" data-tab="tab-<?= $dm_c2['id'] ?>"><?= $dm_c2['name' . $lang] ?></a></li>
               <?php endforeach; ?>
             </ul>
-            <a class="viewlist" href="<?= $lv1['slugvi'] ?>">Xem tất cả</a>
+            <a class="viewlist" href="<?= $lv1['slug' . $lang] ?>">Xem tất cả</a>
           </div>
         </div>
 
@@ -67,10 +73,10 @@ if ($sp_all && $sp_all->num_rows > 0) {
           <div class="grid-product">
             <?php foreach ($sp_all as $sp): ?>
               <?php
-              $name = htmlspecialchars($sp['namevi']);
+              $name = htmlspecialchars($sp['name' . $lang]);
               ?>
               <div class="item-product">
-                <a href="<?= $sp['slugvi'] ?>">
+                <a href="<?= $sp['slug' . $lang] ?>">
                   <div class="images">
                     <?= $fn->getImage([
                       'file' => $sp['file'],
@@ -114,11 +120,9 @@ if ($sp_all && $sp_all->num_rows > 0) {
             <div class="grid-product">
               <?php if (!empty($sp_cat)): ?>
                 <?php foreach ($sp_cat as $sp): ?>
-                  <?php
-                  $name = htmlspecialchars($sp['namevi']);
-                  ?>
+                  <?php $name = htmlspecialchars($sp['name' . $lang]); ?>
                   <div class="item-product">
-                    <a href="<?= $sp['slugvi'] ?>">
+                    <a href="<?= $sp['slug' . $lang] ?>">
                       <div class="images">
                         <?= $fn->getImage([
                           'file' => $sp['file'],

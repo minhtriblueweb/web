@@ -1,69 +1,51 @@
-<?php
-require_once $baseDir . '/sources/product_list_lv2.php';
-?>
+<?php require_once ROOT . '/sources/product_list_lv2.php'; ?>
 
 <div class="wrap-main wrap-home w-clear">
-  <div class="breadCrumbs">
-    <div class="wrap-content">
-      <ol class="breadcrumb">
-        <li class="breadcrumb-item">
-          <a class="text-decoration-none" href="<?= BASE ?>"><span>Trang chủ</span></a>
-        </li>
-        <li class="breadcrumb-item">
-          <a class="text-decoration-none" href="san-pham"><span>Sản phẩm</span></a>
-        </li>
-        <li class="breadcrumb-item">
-          <a class="text-decoration-none"
-            href="<?= $dm_c1['slugvi'] ?>"><span><?= $dm_c1['namevi'] ?></span></a>
-        </li>
-        <li class="breadcrumb-item active">
-          <a class="text-decoration-none"
-            href="<?= $dm_c2['slugvi'] ?>"><span><?= $dm_c2['namevi'] ?></span></a>
-        </li>
-      </ol>
-    </div>
-  </div>
-
-  <div class="wrap-product-list">
-    <div class="wrap-content" style="background: unset;">
-      <?php if ($list_danhmuc_c2 && $list_danhmuc_c2->num_rows > 0): ?>
+  <!-- Breadcrumbs -->
+  <?php include ROOT . '/templates/breadcrumb.php'; ?>
+  <!-- Danh mục cấp 2 -->
+  <?php if (!empty($list_danhmuc_c2)): ?>
+    <div class="wrap-product-list">
+      <div class="wrap-content" style="background: unset;">
         <div class="grid-list-no-index">
-          <?php while ($dm_c2_item = $list_danhmuc_c2->fetch_assoc()): ?>
-            <div class="item-list-noindex <?= $dm_c2_item['slugvi'] == $dm_c2['slugvi'] ? 'active' : '' ?>">
-              <a href="<?= $dm_c2_item['slugvi'] ?>">
-                <h3 class="m-0 text-capitalize"><?= $dm_c2_item['namevi'] ?></h3>
+          <?php foreach ($list_danhmuc_c2 as $dm_c2_item): ?>
+            <div class="item-list-noindex <?= $dm_c2_item['slug' . $lang] === $dm_c2['slug' . $lang] ? 'active' : '' ?>">
+              <a href="<?= BASE . $dm_c2_item['slug' . $lang] ?>">
+                <h3 class="m-0 text-capitalize"><?= $dm_c2_item['name' . $lang] ?></h3>
               </a>
             </div>
-          <?php endwhile; ?>
+          <?php endforeach; ?>
         </div>
-      <?php endif; ?>
+      </div>
     </div>
-  </div>
+  <?php endif; ?>
 
+
+  <!-- Tiêu đề danh mục -->
   <div class="wrap-product-list">
     <div class="wrap-content" style="background: unset;">
       <div class="title-list-hot text-center text-capitalize">
-        <h2><?= $dm_c2['namevi'] ?></h2>
-        (<?= $total ?> sản phẩm)
+        <h2><?= $dm_c2['name' . $lang] ?></h2>
+        <p>(<?= $total ?> sản phẩm)</p>
       </div>
     </div>
   </div>
 
+  <!-- Danh sách sản phẩm -->
   <div class="wrap-main wrap-template w-clear" style="margin: 0 auto !important;">
     <div class="content-main">
-      <?php if ($get_sp && $get_sp->num_rows > 0) : ?>
-        <div class="grid-product .paging-product-loadmore .paging-product-loadmore-1" data-perpage="25" data-list="1"
-          data-cat="" data-item="" data-brand="" data-curpage="2" data-total="124">
-          <?php while ($sp = $get_sp->fetch_assoc()) : ?>
+      <?php if (!empty($get_sp)): ?>
+        <div class="grid-product" data-aos="fade-up" data-aos-duration="500">
+          <?php foreach ($get_sp as $sp): ?>
             <?php
-            $slug = $sp['slugvi'];
-            $name = htmlspecialchars($sp['namevi']);
+            $slug = $sp['slug' . $lang];
+            $name = htmlspecialchars($sp['name' . $lang]);
             $sale = $sp['sale_price'] ?? '';
             $regular = $sp['regular_price'] ?? '';
             $views = $sp['views'] ?? 0;
             ?>
-            <div class="item-product" data-aos="fade-up" data-aos-duration="1000">
-              <a href="<?= $slug ?>">
+            <div class="item-product">
+              <a href="<?= BASE . $slug ?>">
                 <div class="images">
                   <?= $fn->getImage([
                     'file' => $sp['file'],
@@ -77,10 +59,10 @@ require_once $baseDir . '/sources/product_list_lv2.php';
                   <div class="title">
                     <h3><?= $name ?></h3>
                     <p class="price-product">
-                      <?php if (!empty($sale) && !empty($regular)): ?>
+                      <?php if ($sale && $regular): ?>
                         <span class="price-new"><?= $sale ?>₫</span>
                         <span class="price-old"><?= $regular ?>₫</span>
-                      <?php elseif (!empty($regular)): ?>
+                      <?php elseif ($regular): ?>
                         <span class="price-new"><?= $regular ?>₫</span>
                       <?php else: ?>
                         <span class="price-new">Liên hệ</span>
@@ -94,16 +76,17 @@ require_once $baseDir . '/sources/product_list_lv2.php';
                 </div>
               </a>
             </div>
-          <?php endwhile; ?>
+          <?php endforeach; ?>
         </div>
-      <?php else : ?>
+      <?php else: ?>
         <div class="alert alert-warning w-100" role="alert">
           <strong>Không tìm thấy kết quả</strong>
         </div>
-      <?php endif ?>
+      <?php endif; ?>
+
+      <!-- Phân trang -->
       <div class="mt-3">
-        <?= $pagination_html = $fn->renderPagination_tc($current_page, $total_pages, BASE . $dm_c2['slugvi'] . '/page-');
-        ?>
+        <?= $fn->renderPagination_tc($page, $total_pages, BASE . $dm_c2['slug' . $lang] . '/page-') ?>
       </div>
     </div>
   </div>

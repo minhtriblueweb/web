@@ -1,34 +1,39 @@
 <?php
 $show_danhmuc = $fn->show_data([
-  'table' => 'tbl_danhmuc_c2',
-  'status' => 'hienthi,noibat'
+  'table'  => 'tbl_danhmuc_c2',
+  'status' => 'hienthi,noibat',
+  'select' => "id, file, slug{$lang}, name{$lang}"
 ]);
-
-if ($show_danhmuc && $show_danhmuc->num_rows > 0):
 ?>
+
+<?php if (!empty($show_danhmuc)): ?>
   <div class="wrap-product-list">
     <div class="wrap-content">
       <div class="title-list-hot">
         <h2>DANH MỤC BẠN QUAN TÂM</h2>
       </div>
       <div class="slick_product_list">
-        <?php while ($dm = $show_danhmuc->fetch_assoc()): ?>
-          <a href="<?= $dm['slugvi'] ?>" title="<?= $dm['namevi'] ?>">
+        <?php foreach ($show_danhmuc as $dm): ?>
+          <?php
+          $name = $dm['name' . $lang];
+          $slug = $dm['slug' . $lang];
+          ?>
+          <a href="<?= $slug ?>" title="<?= $name ?>">
             <div class="item-list">
               <div class="item-list-img">
                 <?= $fn->getImage([
-                  'file' => $dm['file'],
-                  'alt' => $dm['namevi'],
-                  'width' => 100,
-                  'title' => $dm['namevi']
+                  'file'  => $dm['file'],
+                  'alt'   => $name,
+                  'title' => $name,
+                  'width' => 100
                 ]) ?>
               </div>
               <div class="item-list-name">
-                <h3 class="m-0"><?= $dm['namevi'] ?></h3>
+                <h3 class="m-0"><?= $name ?></h3>
               </div>
             </div>
           </a>
-        <?php endwhile; ?>
+        <?php endforeach; ?>
       </div>
       <div class="slick-banner slick-d-none"></div>
     </div>

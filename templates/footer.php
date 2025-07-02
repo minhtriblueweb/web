@@ -20,22 +20,28 @@
           <p>KẾT NỐI VỚI CHÚNG TÔI</p>
           <?php
           $show_social = $fn->show_data([
-            'table' => 'tbl_social',
-            'status' => 'hienthi'
-          ]); ?>
-          <?php if ($show_social): ?>
-            <?php while ($row_social = $show_social->fetch_assoc()): ?>
-              <a class="hvr-icon-rotate" href="<?= $row_social['link'] ?>" target="_blank" class="me-2">
+            'table'  => 'tbl_social',
+            'status' => 'hienthi',
+            'select' => "file, link, name{$lang}"
+          ]);
+          ?>
+          <?php if (!empty($show_social)): ?>
+            <?php foreach ($show_social as $row): ?>
+              <?php
+              $name = $row['name' . $lang];
+              $link = $row['link'];
+              ?>
+              <a class="hvr-icon-rotate me-2" href="<?= $link ?>" target="_blank" rel="noopener noreferrer">
                 <?= $fn->getImage([
-                  'file' => $row_social['file'],
-                  'class' => 'hvr-icon',
-                  'width' => 50,
-                  'alt' => $row_social['namevi'],
-                  'title' => $row_social['namevi'],
-                  'lazy' => true
+                  'file'   => $row['file'],
+                  'class'  => 'hvr-icon',
+                  'width'  => 50,
+                  'alt'    => $name,
+                  'title'  => $name,
+                  'lazy'   => true
                 ]) ?>
               </a>
-            <?php endwhile; ?>
+            <?php endforeach; ?>
           <?php endif; ?>
         </div>
       </div>
@@ -43,42 +49,53 @@
         <div class="box-policy pe-3">
           <div class="footer-policy">
             <p class="footer-title">Chính sách hỗ trợ</p>
-            <ul class="footer-ul">
-              <?php $show_chinhsach = $fn->show_data([
-                'table' => 'tbl_news',
-                'status' => 'hienthi',
-                'type' => 'chinhsach'
-              ]);
-              ?>
-              <?php if ($show_chinhsach): ?>
-                <?php while ($row_cs = $show_chinhsach->fetch_assoc()): ?>
+            <?php
+            $show_chinhsach = $fn->show_data([
+              'table'  => 'tbl_news',
+              'status' => 'hienthi',
+              'type'   => 'chinhsach',
+              'select' => "id, slug{$lang}, name{$lang}"
+            ]);
+            ?>
+
+            <?php if (!empty($show_chinhsach)): ?>
+              <ul class="footer-ul">
+                <?php foreach ($show_chinhsach as $row): ?>
+                  <?php
+                  $name = $row['name' . $lang];
+                  $slug = $row['slug' . $lang];
+                  ?>
                   <li>
-                    <a class="transition" href="<?= $row_cs['slugvi'] ?>"
-                      title="<?= $row_cs['namevi'] ?>"><?= $row_cs['namevi'] ?></a>
+                    <a class="transition" href="<?= $slug ?>" title="<?= $name ?>"><?= $name ?></a>
                   </li>
-                <?php endwhile; ?>
-              <?php endif; ?>
-            </ul>
+                <?php endforeach; ?>
+              </ul>
+            <?php endif; ?>
+
           </div>
+
           <div class="footer-policy">
             <p class="footer-title">PHƯƠNG THỨC THANH TOÁN</p>
             <div class="ibank-wrapper">
-              <?php $show_phuongthuctt = $fn->show_data([
+              <?php
+              $show_phuongthuctt = $fn->show_data([
                 'table' => 'tbl_payment',
-                'status' => 'hienthi',
-              ]); ?>
-              <?php if ($show_phuongthuctt): ?>
-                <?php while ($row_pt = $show_phuongthuctt->fetch_assoc()): ?>
+                'status' => 'hienthi'
+              ]);
+              ?>
+              <?php if (!empty($show_phuongthuctt)): ?>
+                <?php foreach ($show_phuongthuctt as $row_pt): ?>
+                  <?php $name = $row_pt['name' . $lang]; ?>
                   <span class="ibank scale-img">
-                    <img
-                      src="<?= empty($row_pt['file']) ? NO_IMG : BASE_ADMIN . UPLOADS . $row_pt['file']; ?>"
-                      alt="<?= $row_pt['namevi'] ?>" title="<?= $row_pt['namevi'] ?>" />
+                    <img src="<?= empty($row_pt['file']) ? NO_IMG : BASE_ADMIN . UPLOADS . $row_pt['file'] ?>"
+                      alt="<?= $name ?>" title="<?= $name ?>" />
                   </span>
-                <?php endwhile; ?>
+                <?php endforeach; ?>
               <?php endif; ?>
             </div>
           </div>
         </div>
+
         <div class="box-policy">
           <div class="footer-policy">
             <p class="footer-title">HỖ TRỢ KHÁCH HÀNG</p>

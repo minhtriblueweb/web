@@ -98,10 +98,21 @@ class Database
   }
 
   // Hàm lấy 1 dòng (dạng array)
-  public function fetchOne($query)
+  public function fetchOne($sql, $params = [])
   {
-    $res = $this->select($query);
-    return $res ? $res->fetch_assoc() : null;
+    $stmt = $this->link->prepare($sql);
+    if (!$stmt) {
+      throw new Exception("Prepare failed: " . $this->link->error);
+    }
+
+    if (!empty($params)) {
+      $types = str_repeat('s', count($params)); // Tự động assume là chuỗi
+      $stmt->bind_param($types, ...$params);
+    }
+
+    $stmt->execute();
+    $result = $stmt->get_result();
+    return $result->fetch_assoc();
   }
 
   // Dành cho insert/update/delete dùng prepare

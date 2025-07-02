@@ -896,7 +896,7 @@ img:not([src]) {
   z-index: 999;
   width: 100%;
   background: var(--main-color);
-  border-top: 10px solid #f3f3f3;
+
 }
 
 .menu-bar {

@@ -1,30 +1,20 @@
 <?php
-$setting_page = [
-  'message' => '',
-  'name_page' => 'danh mục cấp 2',
-  'table' => 'tbl_danhmuc_c2',
-  'thumb_width' => 100,
-  'thumb_height' => 100,
-  'thumb_zc' => 1,
-  'type' => 'danhmuc_c2'
-];
-extract($setting_page);
+$message = '';
+$name_page = 'danh mục cấp 2';
+$type = 'danhmuc_c2';
+$table = "tbl_{$type}";
+$linkMan = "index.php?page={$type}_list";
+$thumb_width = 100;
+$thumb_height = 100;
+$thumb_zc = 1;
 $result = $seo_data = [];
+$show_danhmuc = $fn->show_data(['table' => 'tbl_danhmuc_c1']);
 $id = isset($_GET['id']) && is_numeric($_GET['id']) ? (int)$_GET['id'] : null;
-if ($id !== null) {
-  $get_id = $fn->get_id($table, $id);
-  if ($get_id && $get_id->num_rows > 0) {
-    $result = $get_id->fetch_assoc();
-    $seo_data = $seo->get_seo($id, $type);
-  }
-}
+$result = ($id !== null) ? $db->rawQueryOne("SELECT * FROM `$table` WHERE id = ? LIMIT 1", [$id]) : [];
+$seo_data = !empty($result) ? $seo->get_seo($id, $type) : [];
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && (isset($_POST['add']) || isset($_POST['edit']))) {
   $message = $danhmuc->save_danhmuc_c2($_POST, $_FILES, $id);
 }
-$show_danhmuc = $fn->show_data(['table' => 'tbl_danhmuc_c1']);
-$linkMan = "index.php?page=danhmuc_c2_list";
-?>
-<?php
 $breadcrumb = [
   ['label' => (!empty($id) ? 'Cập nhật ' : 'Thêm mới ') . $name_page]
 ];
@@ -44,7 +34,7 @@ include TEMPLATE . 'breadcrumb.php';
     </div>
     <div class="row">
       <div class="col-xl-8">
-        <?php include 'templates/slug.php'; ?>
+        <?php include TEMPLATE . 'slug.php'; ?>
         <div class="card card-primary card-outline text-sm">
           <div class="card-header">
             <h3 class="card-title">Nội dung <?= $name_page ?></h3>
@@ -121,13 +111,7 @@ include TEMPLATE . 'breadcrumb.php';
           </div>
           <div class="card-body">
             <div class="form-group-category">
-              <select id="id_list" name="id_list" data-level="0" data-type="san-pham" data-table="#_product_cat"
-                data-child="id_cat" class="form-control select2 select-category">
-                <option value="0">Chọn danh mục</option>
-                <?php
-                $fn->renderSelectOptions($show_danhmuc, 'id', 'namevi', $_POST['id_list'] ?? $result['id_list'] ?? '');
-                ?>
-              </select>
+              <?= $fn->getAjaxCategory('tbl_danhmuc_c1', $_POST['id_list'] ?? ($result['id_list'] ?? '')) ?>
             </div>
           </div>
         </div>
@@ -140,26 +124,7 @@ include TEMPLATE . 'breadcrumb.php';
             </div>
           </div>
           <div class="card-body">
-            <div class="photoUpload-zone">
-              <div class="photoUpload-detail" id="photoUpload-preview">
-                <?= $fn->getImage([
-                  'file' => $result['file'] ?? '',
-                  'class' => 'rounded',
-                  'alt' => 'Alt Photo',
-                ]) ?>
-              </div>
-              <label class="photoUpload-file" id="photo-zone" for="file-zone">
-                <input type="file" name="file" id="file-zone">
-                <i class="fas fa-cloud-upload-alt"></i>
-                <p class="photoUpload-drop">Kéo và thả hình vào đây</p>
-                <p class="photoUpload-or">hoặc</p>
-                <p class="photoUpload-choose btn btn-sm bg-gradient-success">Chọn hình</p>
-              </label>
-              <div class="photoUpload-dimension">
-                Width: <?= $thumb_width ?> px - Height: <?= $thumb_height ?> px
-                (.jpg|.gif|.png|.jpeg|.gif|.webp|.WEBP)
-              </div>
-            </div>
+            <?php include TEMPLATE . "image.php"; ?>
           </div>
         </div>
         <div class="card card-primary card-outline text-sm">
@@ -201,7 +166,7 @@ include TEMPLATE . 'breadcrumb.php';
         </div>
       </div>
     </div>
-    <?php include 'templates/seo.php'; ?>
+    <?php include TEMPLATE . 'seo.php'; ?>
     <input type="hidden" name="type" value="<?= $type ?>">
     <input type="hidden" name="thumb_width" value="<?= $thumb_width ?>">
     <input type="hidden" name="thumb_height" value="<?= $thumb_height ?>">

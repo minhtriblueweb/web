@@ -32,21 +32,117 @@ class Functions
     include '404.php';
     exit();
   }
-  function renderSelectOptions($result, string $valueKey = 'id', string $labelKey = 'namevi', int|string $selectedId = 0): void
+  public function getLinkCategory($table = '', $selectedId = 0, $title_select = 'Chọn danh mục')
   {
-    if (is_array($result) && !empty($result)) {
-      foreach ($result as $row) {
-        $selected = ($row[$valueKey] == $selectedId) ? 'selected' : '';
-        echo '<option value="' . htmlspecialchars($row[$valueKey]) . '" ' . $selected . '>' . htmlspecialchars($row[$labelKey]) . '</option>';
+    $params = [];
+    $where = ' WHERE 1';
+    $name = $id = '';
+
+    // Xác định cấp danh mục và điều kiện
+    if (str_contains($table, '_c1')) {
+      $name = $id = 'id_list'; // cấp 1
+    } elseif (str_contains($table, '_c2')) {
+      $name = $id = 'id_cat';
+      $id_list = $_REQUEST['id_list'] ?? 0;
+      if ((int)$id_list > 0) {
+        $where .= ' AND id_list = ?';
+        $params[] = (int)$id_list;
       }
-    } elseif ($result instanceof mysqli_result && $result->num_rows > 0) {
-      while ($row = $result->fetch_assoc()) {
-        $selected = ($row[$valueKey] == $selectedId) ? 'selected' : '';
-        echo '<option value="' . htmlspecialchars($row[$valueKey]) . '" ' . $selected . '>' . htmlspecialchars($row[$labelKey]) . '</option>';
+    } elseif (str_contains($table, '_c3')) {
+      $name = $id = 'id_item';
+      $id_cat = $_REQUEST['id_cat'] ?? 0;
+      if ((int)$id_cat > 0) {
+        $where .= ' AND id_cat = ?';
+        $params[] = (int)$id_cat;
       }
     } else {
-      echo '<option disabled>Không có danh mục</option>';
+      $name = $id = 'id';
     }
+
+    // Truy vấn
+    $rows = $this->db->rawQuery("SELECT id, namevi FROM `$table` $where ORDER BY numb, id DESC", $params);
+
+    // Tạo <select>
+    $str = '<select id="' . $id . '" name="' . $name . '" onchange="onchangeCategory($(this))" class="form-control filter-category select2">';
+    $str .= '<option value="0">' . htmlspecialchars($title_select) . '</option>';
+
+    if (!empty($rows)) {
+      foreach ($rows as $row) {
+        $selected = ($selectedId == $row['id']) ? 'selected' : '';
+        $str .= '<option value="' . $row['id'] . '" ' . $selected . '>' . htmlspecialchars($row['namevi']) . '</option>';
+      }
+    } else {
+      $str .= '<option disabled>Không có dữ liệu</option>';
+    }
+
+    $str .= '</select>';
+    return $str;
+  }
+
+  public function getAjaxCategory($table = '', $selectedId = 0, $title_select = 'Chọn danh mục')
+  {
+    $params = [];
+    $where = ' WHERE 1';
+    $name = $id = $data_table = $data_child = '';
+    $data_level = 'data-level="0"';
+    $class = 'form-control select2 select-category';
+
+    // Escape bảng an toàn
+    $table = preg_replace('/[^a-zA-Z0-9_]/', '', $table);
+    $rows = [];
+
+    if (str_contains($table, '_c1')) {
+      $id = $name = 'id_list';
+      $data_table = 'data-table="tbl_danhmuc_c2"';
+      $data_child = 'data-child="id_cat"';
+      $data_level = 'data-level="0"';
+
+      $rows = $this->db->rawQuery("SELECT id, namevi FROM `$table` ORDER BY numb, id DESC");
+    } elseif (str_contains($table, '_c2')) {
+      $id = $name = 'id_cat';
+      $data_table = 'data-table="tbl_danhmuc_c3"';
+      $data_child = 'data-child="id_item"';
+      $data_level = 'data-level="1"';
+
+      $id_list = isset($_REQUEST['id_list']) ? (int)$_REQUEST['id_list'] : 0;
+
+      if ($id_list > 0) {
+        $where .= ' AND id_list = ?';
+        $params[] = $id_list;
+        $rows = $this->db->rawQuery("SELECT id, namevi FROM `$table` $where ORDER BY numb, id DESC", $params);
+      }
+    } elseif (str_contains($table, '_c3')) {
+      $id = $name = 'id_item';
+      $data_level = 'data-level="2"';
+
+      $id_list = isset($_REQUEST['id_list']) ? (int)$_REQUEST['id_list'] : 0;
+      $id_cat = isset($_REQUEST['id_cat']) ? (int)$_REQUEST['id_cat'] : 0;
+
+      if ($id_list > 0 && $id_cat > 0) {
+        $where .= ' AND id_list = ? AND id_cat = ?';
+        array_push($params, $id_list, $id_cat);
+        $rows = $this->db->rawQuery("SELECT id, namevi FROM `$table` $where ORDER BY numb, id DESC", $params);
+      }
+    } else {
+      $id = $name = 'id';
+      $rows = $this->db->rawQuery("SELECT id, namevi FROM `$table` ORDER BY numb, id DESC");
+    }
+
+    // Render select
+    $str = '<select id="' . $id . '" name="' . $name . '" ' . $data_level . ' ' . $data_table . ' ' . $data_child . ' class="' . $class . '">';
+    $str .= '<option value="0">' . htmlspecialchars($title_select) . '</option>';
+
+    if (!empty($rows)) {
+      foreach ($rows as $row) {
+        $selected = ($selectedId == $row['id']) ? 'selected' : '';
+        $str .= '<option value="' . $row['id'] . '" ' . $selected . '>' . htmlspecialchars($row['namevi']) . '</option>';
+      }
+    } else {
+      $str .= '<option disabled>Không có dữ liệu</option>';
+    }
+
+    $str .= '</select>';
+    return $str;
   }
 
   public function getRedirectPath($params = [])
@@ -68,19 +164,10 @@ class Functions
     return $query;
   }
 
-  public function get_id($table, $id)
-  {
-    $table = mysqli_real_escape_string($this->db->link, $table);
-    $id = mysqli_real_escape_string($this->db->link, $id);
-    $query = "SELECT * FROM `$table` WHERE id = '$id' LIMIT 1";
-    return $this->db->select($query);
-  }
   private function buildWhere(array $options): array
   {
     $where = [];
     $params = [];
-
-    // Trạng thái (multi-value)
     if (!empty($options['status'])) {
       $statuses = is_array($options['status']) ? $options['status'] : explode(',', $options['status']);
       foreach ($statuses as $status) {
@@ -88,8 +175,6 @@ class Functions
         $params[] = trim($status);
       }
     }
-
-    // Các điều kiện đơn giản + loại trừ ID
     $fields = ['id_list', 'id_cat', 'id_parent', 'exclude_id', 'type'];
     foreach ($fields as $field) {
       if (isset($options[$field]) && $options[$field] !== '') {
@@ -99,13 +184,10 @@ class Functions
         $params[] = $field === 'type' ? $options[$field] : (int)$options[$field];
       }
     }
-
-    // Từ khóa (search)
     if (!empty($options['keyword'])) {
       $where[] = "`namevi` LIKE ?";
       $params[] = '%' . $options['keyword'] . '%';
     }
-
     $sql = $where ? ' WHERE ' . implode(' AND ', $where) : '';
     return ['sql' => $sql, 'params' => $params];
   }
@@ -178,11 +260,9 @@ class Functions
   public function count_data(array $options = []): int
   {
     if (empty($options['table'])) return 0;
-
     $table = $options['table'];
     $whereData = $this->buildWhere($options);
     $sql = "SELECT COUNT(*) FROM `$table`" . $whereData['sql'];
-
     $count = $this->db->rawQueryValue($sql, $whereData['params']);
     return is_numeric($count) ? (int)$count : 0;
   }

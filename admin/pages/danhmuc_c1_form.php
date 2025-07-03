@@ -8,19 +8,12 @@ $thumb_width = 50;
 $thumb_height = 50;
 $thumb_zc = 1;
 $result = $seo_data = [];
-$id = isset($_GET['id']) && is_numeric($_GET['id']) ? (int)$_GET['id'] : null;
-if ($id !== null) {
-  $get_id = $fn->get_id($table, $id);
-  if ($get_id && $get_id->num_rows > 0) {
-    $result = $get_id->fetch_assoc();
-    $seo_data = $seo->get_seo($id, $type);
-  }
-}
+$id = (isset($_GET['id']) && is_numeric($_GET['id'])) ? (int)$_GET['id'] : null;
+$result = ($id !== null) ? $db->rawQueryOne("SELECT * FROM `$table` WHERE id = ? LIMIT 1", [$id]) : [];
+$seo_data = !empty($result) ? $seo->get_seo($id, $type) : [];
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && (isset($_POST['add']) || isset($_POST['edit']))) {
   $message = $danhmuc->save_danhmuc($_POST, $_FILES, $id);
 }
-?>
-<?php
 $breadcrumb = [
   ['label' => (!empty($id) ? 'Cập nhật ' : 'Thêm mới ') . $name_page]
 ];

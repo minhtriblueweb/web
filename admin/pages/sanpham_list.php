@@ -21,6 +21,7 @@ $total_records = $fn->count_data([
   'keyword' => $_GET['keyword'] ?? ''
 ]);
 $total_pages = ceil($total_records / $records_per_page);
+$paging = $fn->renderPagination($current_page, $total_pages);
 $show_sanpham = $fn->show_data([
   'table' => $table,
   'id_list' => $_GET['id_list'] ?? '',
@@ -32,6 +33,7 @@ $show_sanpham = $fn->show_data([
 $linkMulti = "index.php?page=deleteMulti&table=$table";
 $linkDelete = "index.php?page=delete&table=$table&id=";
 $linkEdit = "index.php?page=sanpham_form&id=";
+$linkMan = "index.php?page=sanpham_list";
 $linkAdd = "index.php?page=sanpham_form";
 $linkGalleryList = "index.php?page=gallery_list&id=";
 $linkGallery = "index.php?page=gallery_form&id=";
@@ -60,22 +62,10 @@ include 'templates/breadcrumb.php';
   </div>
   <div class="card-footer form-group-category text-sm bg-light row">
     <div class="form-group col-xl-2 col-lg-3 col-md-4 col-sm-4 mb-2">
-      <select id="id_list" name="id_list" class="form-control filter-category select2" onchange="onchangeCategory($(this))">
-        <option value="0">Chọn danh mục</option>
-        <?php
-        $id_list_selected = (int)($_GET['id_list'] ?? 0);
-        $fn->renderSelectOptions($show_danhmuc_c1, 'id', 'namevi', $id_list_selected);
-        ?>
-      </select>
+      <?= $fn->getLinkCategory('tbl_danhmuc_c1',  $_GET['id_list'] ?? '') ?>
     </div>
     <div class="form-group col-xl-2 col-lg-3 col-md-4 col-sm-4 mb-2">
-      <select id="id_cat" name="id_cat" class="form-control filter-category select2" onchange="onchangeCategory($(this))">
-        <option value="0">Chọn danh mục</option>
-        <?php
-        $id_cat_selected = (int)($_GET['id_cat'] ?? 0);
-        $fn->renderSelectOptions($show_danhmuc_c2, 'id', 'namevi', $id_cat_selected);
-        ?>
-      </select>
+      <?= $fn->getLinkCategory('tbl_danhmuc_c2',  $_GET['id_cat'] ?? '') ?>
     </div>
   </div>
   <div class="card card-primary card-outline text-sm mb-0">
@@ -106,8 +96,8 @@ include 'templates/breadcrumb.php';
         </thead>
         <form action="" method="POST">
           <tbody>
-            <?php if ($show_sanpham): ?>
-              <?php while ($row = $show_sanpham->fetch_assoc()):
+            <?php if (!empty($show_sanpham)): ?>
+              <?php foreach ($show_sanpham as $row):
                 $id = $row['id'];
                 $name = $row['namevi'];
                 $slug = $row['slugvi'];
@@ -192,7 +182,7 @@ include 'templates/breadcrumb.php';
                     <a class="text-danger" id="delete-item" data-url="<?= $linkDelete . $id ?>" title="Xóa"><i class="fas fa-trash-alt"></i></a>
                   </td>
                 </tr>
-              <?php endwhile; ?>
+              <?php endforeach; ?>
             <?php else: ?>
               <tr>
                 <td colspan="100" class="text-center">Không có dữ liệu</td>

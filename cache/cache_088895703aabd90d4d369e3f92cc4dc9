@@ -1,0 +1,64 @@
+a:2:{i:0;i:1751558347;i:1;a:4:{s:2:"id";i:4;s:6:"slugvi";s:14:"rubik-nang-cao";s:6:"namevi";s:15:"Rubik nâng cao";s:9:"contentvi";s:5268:"<h2 style="font-size: 20px; font-weight: bold; color: red;">Giới thiệu Rubik Nâng Cao</h2>
+
+<p style="font-size: 16px;">Rubik nâng cao là những khối lập phương có kích thước từ 6x6x6 trở lên, dành cho người chơi đã có kinh nghiệm với các dòng cơ bản như 3x3 hoặc 5x5. Những khối Rubik này không chỉ có số lượng mảnh tăng lên đáng kể, mà còn yêu cầu người chơi thành thạo kỹ thuật ghép tâm, ghép cạnh, và xử lý các lỗi đặc biệt như parity. Mỗi cấp độ đều mang đến những thử thách riêng biệt, từ thao tác xoay phức tạp đến khối lượng bước giải khổng lồ, đòi hỏi sự kiên trì, chính xác và tư duy logic vượt trội. Rubik nâng cao không chỉ là một trò chơi trí tuệ, mà còn là biểu tượng của niềm đam mê và sự chinh phục giới hạn bản thân trong thế giới speedcubing.</p>
+
+<h3 style="font-size: 18px; font-weight: bold; color: blue;">1. Rubik 6x6x6</h3>
+
+<p style="font-size: 16px;"><strong>Cấu trúc:</strong> Gồm 6 tầng mỗi cạnh, không có tâm cố định, nhiều mảnh cạnh và tâm nhỏ cần ghép.</p>
+
+<p style="font-size: 16px;"><strong>Độ khó:</strong> Khó hơn 5x5 do số lượng mảnh tăng và lỗi parity xuất hiện nhiều hơn.</p>
+
+<p style="font-size: 16px;"><strong>Mục tiêu:</strong> Ghép tất cả các mảnh về đúng vị trí trước khi giải như 3x3.</p>
+
+<p style="font-size: 16px;"><strong>Điểm thú vị:</strong> Là cấp độ mở rộng tiếp theo của dòng Rubik Even (số chẵn), đòi hỏi sự kiên nhẫn và chính xác.</p>
+
+<h3 style="font-size: 18px; font-weight: bold; color: blue;">2. Rubik 7x7x7</h3>
+
+<p style="font-size: 16px;"><strong>Cấu trúc:</strong> Gồm 7 tầng, có tâm cố định, số lượng mảnh tăng nhiều.</p>
+
+<p style="font-size: 16px;"><strong>Độ khó:</strong> Cao hơn 6x6 nhưng dễ hơn về mặt parity vì là rubik lẻ (odd).</p>
+
+<p style="font-size: 16px;"><strong>Mục tiêu:</strong> Tương tự 5x5 nhưng thêm nhiều bước ghép các mảnh nhỏ.</p>
+
+<p style="font-size: 16px;"><strong>Điểm thú vị:</strong> Còn gọi là "Ultimate Cube", cân bằng giữa độ phức tạp và tính giải trí.</p>
+
+<h3 style="font-size: 18px; font-weight: bold; color: blue;">3. Rubik 8x8x8</h3>
+
+<p style="font-size: 16px;"><strong>Cấu trúc:</strong> 8 tầng mỗi trục, là khối lập phương chẵn, không có tâm cố định.</p>
+
+<p style="font-size: 16px;"><strong>Độ khó:</strong> Rất cao, do số mảnh tăng mạnh và parity phức tạp hơn.</p>
+
+<p style="font-size: 16px;"><strong>Mục tiêu:</strong> Giải theo trình tự: ghép tâm, ghép cạnh, sau đó giải như 3x3.</p>
+
+<p style="font-size: 16px;"><strong>Điểm thú vị:</strong> Là thử thách nặng về kỹ thuật, đòi hỏi người chơi phải kiểm soát từng tầng một cách chính xác.</p>
+
+<h3 style="font-size: 18px; font-weight: bold; color: blue;">4. Rubik 9x9x9</h3>
+
+<p style="font-size: 16px;"><strong>Cấu trúc:</strong> Gồm 9 tầng, là dạng Rubik lẻ, có tâm cố định.</p>
+
+<p style="font-size: 16px;"><strong>Độ khó:</strong> Khó ở khâu ghép mảnh vì số lượng mảnh nhỏ nhiều, nhưng dễ hơn 8x8 về mặt parity.</p>
+
+<p style="font-size: 16px;"><strong>Mục tiêu:</strong> Giống với 7x7, nhưng cần thêm nhiều bước lặp hơn khi ghép tâm và cạnh.</p>
+
+<p style="font-size: 16px;"><strong>Điểm thú vị:</strong> Cảm giác cực kỳ "khổng lồ" khi cầm và xoay, phù hợp cho người chơi muốn thử thách độ bền và kỹ thuật.</p>
+
+<h3 style="font-size: 18px; font-weight: bold; color: blue;">5. Rubik 10x10x10</h3>
+
+<p style="font-size: 16px;"><strong>Cấu trúc:</strong> 10 tầng, là khối Rubik chẵn, không có tâm cố định.</p>
+
+<p style="font-size: 16px;"><strong>Độ khó:</strong> Vô cùng cao, số lượng bước giải lớn, parity rất phức tạp.</p>
+
+<p style="font-size: 16px;"><strong>Mục tiêu:</strong> Giải giống 6x6 hoặc 8x8 nhưng mất nhiều thời gian và công đoạn hơn.</p>
+
+<p style="font-size: 16px;"><strong>Điểm thú vị:</strong> Thường không được giải bằng tay thường xuyên mà chủ yếu để trưng bày hoặc phá kỷ lục.</p>
+
+<h3 style="font-size: 18px; font-weight: bold; color: blue;">6. Rubik 11x11x11</h3>
+
+<p style="font-size: 16px;"><strong>Cấu trúc:</strong> Rubik lớn nhất sản xuất đại trà, với 11 tầng mỗi trục, có tâm cố định.</p>
+
+<p style="font-size: 16px;"><strong>Độ khó:</strong> Cấp độ cao nhất trong dòng Rubik cổ điển, số lượng mảnh và bước giải khổng lồ.</p>
+
+<p style="font-size: 16px;"><strong>Mục tiêu:</strong> Giải qua các bước ghép tâm, cạnh, sau đó như Rubik 3x3.</p>
+
+<p style="font-size: 16px;"><strong>Điểm thú vị:</strong> Là minh chứng cho sự kiên trì và đam mê của người chơi Rubik chuyên sâu.</p>
+";}}

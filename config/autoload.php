@@ -26,9 +26,9 @@ spl_autoload_register(function ($class) use ($baseDir) {
 
 // 5. Khởi tạo các class cơ bản
 $db  = new Database();
+$cache = new Cache($db);
 $fn  = new Functions();
 $fm  = new Format();
-$cache = new Cache($db);
 $seo = new Seo();
 
 // 6. Định nghĩa các hằng số dùng chung

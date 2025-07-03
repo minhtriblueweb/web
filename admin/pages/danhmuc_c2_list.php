@@ -11,6 +11,7 @@ $total_records = $fn->count_data([
   'keyword' => $_GET['keyword'] ?? ''
 ]);
 $total_pages = ceil($total_records / $records_per_page);
+$paging = $fn->renderPagination($current_page, $total_pages);
 // lọc danh mục cấp 2
 $show_danhmuc_c2 = $fn->show_data([
   'table' => $table,
@@ -50,13 +51,7 @@ include TEMPLATE . 'breadcrumb.php';
   </div>
   <div class="card-footer form-group-category text-sm bg-light row">
     <div class="form-group col-xl-2 col-lg-3 col-md-4 col-sm-4 mb-2">
-      <select id="id_list" name="id_list" onchange="onchangeCategory($(this))" class="form-control filter-category select2 " data-select2-id="id_list" tabindex="-1" aria-hidden="true">
-        <option value="0">Chọn danh mục</option>
-        <?php
-        $id_list_selected = (int)($_GET['id_list'] ?? 0);
-        $fn->renderSelectOptions($show_danhmuc_c1, 'id', 'namevi', $id_list_selected);
-        ?>
-      </select>
+      <?= $fn->getLinkCategory('tbl_danhmuc_c1',  $_GET['id_list'] ?? '') ?>
     </div>
   </div>
   <form class="validation-form" novalidate method="post" action="">
@@ -160,7 +155,5 @@ include TEMPLATE . 'breadcrumb.php';
       </div>
     </div>
   </form>
-  <div class="card-footer text-sm pb-0 mb-5">
-    <?= $fn->renderPagination($current_page, $total_pages); ?>
-  </div>
+  <?php if ($paging): ?><div class="card-footer text-sm p-3"><?= $paging ?></div><?php endif; ?>
 </section>

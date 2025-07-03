@@ -6,6 +6,7 @@ $records_per_page = 10;
 $current_page = max(1, isset($_GET['p']) ? (int)$_GET['p'] : 1);
 $total_records = $fn->count_data(['table' => $table, 'keyword' => $_GET['keyword'] ?? '']);
 $total_pages = ceil($total_records / $records_per_page);
+$paging = $fn->renderPagination($current_page, $total_pages);
 $show_danhmuc = $fn->show_data([
   'table' => $table,
   'records_per_page' => $records_per_page,
@@ -141,7 +142,5 @@ include 'templates/breadcrumb.php'; ?>
       </table>
     </div>
   </div>
-  <div class="card-footer text-sm pb-0 mb-5">
-    <?= $fn->renderPagination($current_page, $total_pages); ?>
-  </div>
+  <?php if ($paging): ?><div class="card-footer text-sm p-3"><?= $paging ?></div><?php endif; ?>
 </section>

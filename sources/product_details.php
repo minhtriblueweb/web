@@ -73,7 +73,7 @@ $get_gallery = $fn->show_data([
 ]);
 
 // SEO
-$fn->get_seo($db->rawQueryOne("SELECT * FROM tbl_seo WHERE type = ? AND id_parent = ?", ['sanpham', $id]) ?: $row_sp, $lang);
+$data_seo = $seo->get_seo($id, 'sanpham');
 
 // Ảnh chính sản phẩm
 $img_main = !empty($row_sp['file']) ? BASE_ADMIN . UPLOADS . $row_sp['file'] : NO_IMG;

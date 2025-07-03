@@ -24,17 +24,30 @@ $show_danhmuc_c1 = $fn->show_data(['table' => 'tbl_danhmuc_c1']);
 $linkMulti = "index.php?page=deleteMulti&table=$table";
 $linkDelete = "index.php?page=delete&table=$table&id=";
 $linkEdit = "index.php?page=danhmuc_c2_form&id=";
+$linkMan = "index.php?page=danhmuc_c2_list";
 $linkAdd = "index.php?page=danhmuc_c2_form";
 ?>
 <?php
 $breadcrumb = [
-  ['label' => 'Bảng điều khiển', 'link' => 'index.php'],
   ['label' => $name_page]
 ];
-include 'templates/breadcrumb.php';
+include TEMPLATE . 'breadcrumb.php';
 ?>
 <section class="content">
-  <?php include 'templates/act_list.php'; ?>
+  <div class="card-footer text-sm sticky-top">
+    <a class="btn btn-sm bg-gradient-primary text-white" href="<?= $linkAdd ?>" title="Thêm mới"><i class="fas fa-plus mr-2"></i>Thêm mới</a>
+    <a class="btn btn-sm bg-gradient-danger text-white" id="delete-all" data-url="<?= $linkDelete ?>" title="Xóa tất cả"><i class="far fa-trash-alt mr-2"></i>Xóa tất cả</a>
+    <div class="form-inline form-search d-inline-block align-middle ml-3">
+      <div class="input-group input-group-sm">
+        <input class="form-control form-control-navbar text-sm" type="search" id="keyword" placeholder="Tìm kiếm" aria-label="Tìm kiếm" value="<?= (isset($_GET['keyword'])) ? $_GET['keyword'] : '' ?>" onkeypress="doEnter(event,'keyword','<?= $linkMan ?>')">
+        <div class="input-group-append bg-primary rounded-right">
+          <button class="btn btn-navbar text-white" type="button" onclick="onSearch('keyword','<?= $linkMan ?>')">
+            <i class="fas fa-search"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
   <div class="card-footer form-group-category text-sm bg-light row">
     <div class="form-group col-xl-2 col-lg-3 col-md-4 col-sm-4 mb-2">
       <select id="id_list" name="id_list" onchange="onchangeCategory($(this))" class="form-control filter-category select2 " data-select2-id="id_list" tabindex="-1" aria-hidden="true">
@@ -70,12 +83,12 @@ include 'templates/breadcrumb.php';
             </tr>
           </thead>
           <tbody>
-            <?php if ($show_danhmuc_c2):
-              while ($row = $show_danhmuc_c2->fetch_assoc()):
+            <?php if (!empty($show_danhmuc_c2)): ?>
+              <?php foreach ($show_danhmuc_c2 as $row):
                 $id = $row['id'];
                 $name = $row['namevi'];
                 $file = $row['file'];
-            ?>
+              ?>
                 <tr>
                   <!-- Checkbox chọn -->
                   <td class="align-middle">
@@ -114,7 +127,10 @@ include 'templates/breadcrumb.php';
                   <?php foreach (['hienthi', 'noibat'] as $attr): ?>
                     <td class="align-middle text-center">
                       <label class="switch switch-success">
-                        <input type="checkbox" class="switch-input custom-control-input show-checkbox " id="show-checkbox-<?= $attr ?>-<?= $id ?>" data-table="<?= $table ?>" data-id="<?= $id ?>" data-attr="<?= $attr ?>" <?= (strpos($row['status'], $attr) !== false) ? 'checked' : '' ?>>
+                        <input type="checkbox" class="switch-input custom-control-input show-checkbox"
+                          id="show-checkbox-<?= $attr ?>-<?= $id ?>" data-table="<?= $table ?>"
+                          data-id="<?= $id ?>" data-attr="<?= $attr ?>"
+                          <?= (strpos($row['status'], $attr) !== false) ? 'checked' : '' ?>>
                         <span class="switch-toggle-slider">
                           <span class="switch-on"><i class="fa-solid fa-check"></i></span>
                           <span class="switch-off"><i class="fa-solid fa-xmark"></i></span>
@@ -122,7 +138,6 @@ include 'templates/breadcrumb.php';
                       </label>
                     </td>
                   <?php endforeach; ?>
-
 
                   <!-- Hành động -->
                   <td class="align-middle text-center text-md text-nowrap">
@@ -134,7 +149,7 @@ include 'templates/breadcrumb.php';
                     </a>
                   </td>
                 </tr>
-              <?php endwhile; ?>
+              <?php endforeach; ?>
             <?php else: ?>
               <tr>
                 <td colspan="100" class="text-center">Không có dữ liệu</td>

@@ -77,7 +77,7 @@ $row_st = $db->rawQueryOne("SELECT favicon FROM tbl_setting WHERE id = ?", [1]);
                       </div>
                     <?php endif; ?>
                     <div>
-                      <div class="web-name text-dark fw-bold small"><?= $web_name ?></div>
+                      <div class="web-name text-dark fw-bold small"><?= $setting['web_name'] ?></div>
                       <div class="seo-url text-muted small" id="seourlpreview<?= $k ?>">
                         <?= BASE ?><?= !empty($_POST['slug' . $k]) ? $_POST['slug' . $k] : ($result['slug' . $k] ?? '') ?>
                         <span class="seo-dot-menu ml-1">⋮</span>

@@ -20,10 +20,9 @@ if ($id_child) {
 ?>
 <?php
 $breadcrumb = [
-  ['label' => 'Bảng điều khiển', 'link' => 'index.php'],
-  ['label' => !empty($id) ? 'Cập nhật ' . $name_page : 'Thêm mới ' . $name_page]
+  ['label' => (!empty($id) ? 'Cập nhật ' : 'Thêm mới ') . $name_page]
 ];
-include 'templates/breadcrumb.php';
+include TEMPLATE . 'breadcrumb.php';
 ?>
 <section class="content">
   <form class="validation-form" novalidate method="post" action="" enctype="multipart/form-data">

@@ -28,6 +28,7 @@ spl_autoload_register(function ($class) use ($baseDir) {
 $db  = new Database();
 $fn  = new Functions();
 $fm  = new Format();
+$cache = new Cache($db);
 $seo = new Seo();
 
 // 6. Định nghĩa các hằng số dùng chung

@@ -1,14 +1,12 @@
 <?php
-$setting_page = [
-  'message' => '',
-  'name_page' => 'danh mục cấp 1',
-  'type' => 'danhmuc_c1',
-  'table' => 'tbl_danhmuc_c1',
-  'thumb_width' => 50,
-  'thumb_height' => 50,
-  'thumb_zc' => 1,
-];
-extract($setting_page);
+$message = '';
+$name_page = 'danh mục cấp 1';
+$type = 'danhmuc_c1';
+$table = "tbl_{$type}";
+$linkMan = "index.php?page={$type}_list";
+$thumb_width = 50;
+$thumb_height = 50;
+$thumb_zc = 1;
 $result = $seo_data = [];
 $id = isset($_GET['id']) && is_numeric($_GET['id']) ? (int)$_GET['id'] : null;
 if ($id !== null) {
@@ -24,16 +22,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && (isset($_POST['add']) || isset($_PO
 ?>
 <?php
 $breadcrumb = [
-  ['label' => 'Bảng điều khiển', 'link' => 'index.php'],
-  ['label' => !empty($id) ? 'Cập nhật ' . $name_page : 'Thêm mới ' . $name_page]
+  ['label' => (!empty($id) ? 'Cập nhật ' : 'Thêm mới ') . $name_page]
 ];
-include 'templates/breadcrumb.php'; ?>
+include TEMPLATE . 'breadcrumb.php';
+?>
 <section class="content">
   <form class="validation-form" novalidate method="post" action="" enctype="multipart/form-data">
-    <?php include 'templates/act.php'; ?>
+    <div class="card-footer text-sm sticky-top">
+      <button type="submit" name="<?= !empty($id) ? "edit" : "add"; ?>"
+        class="btn btn-sm bg-gradient-primary submit-check" disabled>
+        <i class="far fa-save mr-2"></i>Lưu
+      </button>
+      <button type="reset" class="btn btn-sm bg-gradient-secondary">
+        <i class="fas fa-redo mr-2"></i>Làm lại
+      </button>
+      <a class="btn btn-sm bg-gradient-danger" href="<?= $linkMan ?>" title="Thoát"><i class="fas fa-sign-out-alt mr-2"></i>Thoát</a>
+    </div>
     <div class="row">
       <div class="col-xl-8">
-        <?php include 'templates/slug.php'; ?>
+        <?php include TEMPLATE . 'slug.php'; ?>
         <div class="card card-primary card-outline text-sm">
           <div class="card-header">
             <h3 class="card-title">Nội dung <?= $name_page ?></h3>
@@ -115,30 +122,7 @@ include 'templates/breadcrumb.php'; ?>
             </div>
           </div>
           <div class="card-body">
-            <div class="photoUpload-zone">
-              <div class="photoUpload-detail" id="photoUpload-preview">
-                <?= $fn->getImage([
-                  'width' => $thumb_width,
-                  'height' => $thumb_height,
-                  'file' => $result['file'] ?? '',
-                  'class' => 'rounded',
-                  'alt' => 'Alt Photo',
-                ]) ?>
-              </div>
-              <label class="photoUpload-file" id="photo-zone" for="file-zone">
-                <input type="file" name="file" id="file-zone" />
-                <i class="fas fa-cloud-upload-alt"></i>
-                <p class="photoUpload-drop">Kéo và thả hình vào đây</p>
-                <p class="photoUpload-or">hoặc</p>
-                <p class="photoUpload-choose btn btn-sm bg-gradient-success">
-                  Chọn hình
-                </p>
-              </label>
-              <div class="photoUpload-dimension">
-                Width: <?= $thumb_width ?> px - Height: <?= $thumb_height ?> px
-                (.jpg|.gif|.png|.jpeg|.gif|.webp|.WEBP)
-              </div>
-            </div>
+            <?php include TEMPLATE . "image.php"; ?>
           </div>
         </div>
         <div class="card card-primary card-outline text-sm">
@@ -180,7 +164,7 @@ include 'templates/breadcrumb.php'; ?>
         </div>
       </div>
     </div>
-    <?php include 'templates/seo.php'; ?>
+    <?php include TEMPLATE . 'seo.php'; ?>
     <input type="hidden" name="type" value="<?= $type ?>">
     <input type="hidden" name="thumb_width" value="<?= $thumb_width ?>">
     <input type="hidden" name="thumb_height" value="<?= $thumb_height ?>">

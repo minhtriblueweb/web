@@ -1,15 +1,4 @@
-<?php require_once ROOT . '/sources/product_list.php'; ?>
 <div class="wrap-main wrap-home w-clear">
-  <!-- BREADCRUMB -->
-  <div class="breadCrumbs">
-    <div class="wrap-content">
-      <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a class="text-decoration-none" href="<?= BASE ?>"><span>Trang chủ</span></a></li>
-        <li class="breadcrumb-item active"><a class="text-decoration-none" href="san-pham"><span>Sản phẩm</span></a></li>
-      </ol>
-    </div>
-  </div>
-
   <!-- DANH MỤC -->
   <?php if (!empty($dm)): ?>
     <div class="wrap-product-list">

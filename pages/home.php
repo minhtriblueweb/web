@@ -1,8 +1,8 @@
-<?php include ROOT . '/templates/tieuchi.php'; ?>
-<?php include ROOT . '/templates/banchay.php'; ?>
-<?php include ROOT . '/templates/danhmuc.php'; ?>
-<?php include ROOT . '/templates/sanpham.php'; ?>
-<?php include ROOT . '/templates/brand.php'; ?>
-<?php include ROOT . '/templates/feedback.php'; ?>
-<?php include ROOT . '/templates/tintuc.php'; ?>
+<?php include TEMPLATE . 'tieuchi.php'; ?>
+<?php include TEMPLATE . 'banchay.php'; ?>
+<?php include TEMPLATE . 'danhmuc.php'; ?>
+<?php include TEMPLATE . 'sanpham.php'; ?>
+<?php include TEMPLATE . 'brand.php'; ?>
+<?php include TEMPLATE . 'feedback.php'; ?>
+<?php include TEMPLATE . 'tintuc.php'; ?>
 

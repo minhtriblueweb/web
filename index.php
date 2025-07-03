@@ -15,14 +15,14 @@ if (file_exists($sources_file)) {
   include_once $sources_file;
 }
 
-// Gọi view nếu tồn tại
+// Gọi view
 if (file_exists($pageFile)) {
   ob_start();
-  include $pageFile;
+  include_once $pageFile;
   $page_content = ob_get_clean();
 } else {
   http_response_code(404);
-  include '404.php';
+  include_once '404.php';
   exit();
 }
 

@@ -8,6 +8,9 @@ class Database
   private $user;
   private $pass;
   private $dbname;
+  private $port;
+  private $charset;
+  public $prefix;
 
   public $link;
   public $error;
@@ -15,10 +18,15 @@ class Database
   public function __construct()
   {
     global $config;
-    $this->host = $config['db_host'];
-    $this->user = $config['db_user'];
-    $this->pass = $config['db_pass'];
-    $this->dbname = $config['db_name'];
+    $dbConfig = $config['database'];
+
+    $this->host    = $dbConfig['host'];
+    $this->user    = $dbConfig['username'];
+    $this->pass    = $dbConfig['password'];
+    $this->dbname  = $dbConfig['dbname'];
+    $this->port    = $dbConfig['port'] ?? 3306;
+    $this->charset = $dbConfig['charset'] ?? 'utf8mb4';
+    $this->prefix  = $dbConfig['prefix'] ?? '';
 
     $this->connectDB();
   }
@@ -133,6 +141,18 @@ class Database
   {
     return $this->link->insert_id;
   }
+  public function rawQueryArray($query, $params = [])
+  {
+    $result = $this->rawQuery($query, $params);
+    if (!$result) return [];
+
+    $rows = [];
+    while ($row = $result->fetch_assoc()) {
+      $rows[] = $row;
+    }
+    return $rows;
+  }
+
   public function rawQueryValue(string $sql, array $params = [])
   {
     $stmt = $this->link->prepare($sql);

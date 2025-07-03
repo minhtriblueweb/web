@@ -12,12 +12,12 @@ $dataSlug['id'] = !empty($_POST['id']) ? (int)$_POST['id'] : '';
 $dataSlug['lang'] = !empty($_POST['lang']) ? trim($_POST['lang']) : 'vi';
 
 // Gọi hàm kiểm tra đa ngôn ngữ
-$check = $fn->isSlugDuplicated(
-  $dataSlug['slug'],
-  $dataSlug['table'],
-  $dataSlug['id'],
-  $dataSlug['lang']
-);
+$check = $fn->checkSlug([
+  'slug' => $dataSlug['slug'],
+  'table' => $dataSlug['table'],
+  'exclude_id' => $dataSlug['id'],
+  'lang' => $dataSlug['lang']
+]);
 
 if ($check === false) {
   echo json_encode(['status' => 1]);

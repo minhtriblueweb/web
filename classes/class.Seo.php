@@ -9,7 +9,9 @@ class Seo
   private $db;
   private $fn;
   private $data;
+  private $prefix;
   private $seo = [];
+  private $d;
   public function __construct()
   {
     $this->db = new Database();
@@ -24,44 +26,53 @@ class Seo
     if ($type) $params[] = $type;
 
     $row = $this->db->rawQueryOne($sql, $params);
+    if (!$row) {
+      $this->set($default_seo);
+      return $default_seo;
+    }
 
-    if (!$row) return $default_seo;
-
-    return array_merge($default_seo, [
-      'h1'          => $row['title' . $lang] ?? '',
-      'title'       => $row['title' . $lang] ?? '',
-      'keywords'    => $row['keywords' . $lang] ?? '',
-      'description' => $row['description' . $lang] ?? '',
-      'url'         => BASE . ($row['slug' . $lang] ?? $row['slug'] ?? ''),
+    $title = $row["title{$lang}"] ?? '';
+    $data = array_merge($default_seo, [
+      'h1'          => $title,
+      'title'       => $title,
+      'keywords'    => $row["keywords{$lang}"] ?? '',
+      'description' => $row["description{$lang}"] ?? '',
+      'url'         => BASE . ($row["slug{$lang}"] ?? $row['slug'] ?? ''),
       'image'       => !empty($row['file']) ? BASE_ADMIN . UPLOADS . $row['file'] : ''
     ]);
+
+    $this->set($data); // Gán vào $this->data để dùng $seo->get('...')
+
+    return $row + $data;
   }
   public function get_seopage(array $row, string $lang = 'vi'): array
   {
-    global $default_seo, $data_seo;
-    $data_seo = array_merge($default_seo, [
-      'h1'          => $row['title' . $lang] ?? '',
-      'title'       => $row['title' . $lang] ?? '',
-      'keywords'    => $row['keywords' . $lang] ?? '',
-      'description' => $row['description' . $lang] ?? '',
-      'url'         => BASE . ($row['slug' . $lang] ?? $row['slug'] ?? ''),
-      'image'       => !empty($row['file']) ? BASE_ADMIN . UPLOADS . $row['file'] : ''
+    global $default_seo;
+
+    $title = $row["title{$lang}"] ?? '';
+    $data = array_merge($default_seo, [
+      'h1'    => $title,
+      'title' => $title,
+      'keywords' => $row["keywords{$lang}"] ?? '',
+      'description' => $row["description{$lang}"] ?? '',
+      'url'   => BASE . ($row["slug{$lang}"] ?? ''),
+      'image' => !empty($row['file']) ? BASE_ADMIN . UPLOADS . $row['file'] : ''
     ]);
-    return $data_seo;
-  }
 
-  public function getSeo(): array
-  {
-    return $this->seo;
-  }
+    $this->set($data); // GÁN vào bên trong class Seo
 
+    return $data;
+  }
   public function set($key = '', $value = '')
   {
-    if (!empty($key) && !empty($value)) {
+    if (is_array($key)) {
+      foreach ($key as $k => $v) {
+        $this->set($k, $v);
+      }
+    } elseif ($key !== '') {
       $this->data[$key] = $value;
     }
   }
-
   public function get($key)
   {
     return (!empty($this->data[$key])) ? $this->data[$key] : '';
@@ -214,6 +225,99 @@ class Seo
       $placeholders = array_fill(0, count($columns), '?');
       $sql = "INSERT INTO `$table` (" . implode(",", $columns) . ") VALUES (" . implode(",", $placeholders) . ")";
       $ok = $this->db->execute($sql, array_values($data_prepared));
+      $msg = $ok ? "Thêm dữ liệu thành công" : "Thêm dữ liệu thất bại";
+    }
+
+    $this->fn->transfer($msg, $redirectPath, $ok);
+  }
+  public function save_seopagePDODb($data, $files, $id = null)
+  {
+    global $config;
+    $langs = array_keys($config['website']['lang']);
+    $table = $this->prefix . 'seopage';
+    $fields_multi = ['title', 'keywords', 'description'];
+    $fields_common = ['type'];
+    $data_prepared = [];
+    $has_data = false;
+
+    // Ghép dữ liệu đa ngôn ngữ và kiểm tra nội dung
+    foreach ($langs as $lang) {
+      foreach ($fields_multi as $field) {
+        $key = $field . $lang;
+        $val = trim($data[$key] ?? '');
+        $data_prepared[$key] = $val;
+        if (!$has_data && $val !== '') $has_data = true;
+      }
+    }
+
+    // Dữ liệu chung
+    foreach ($fields_common as $field) {
+      $data_prepared[$field] = $data[$field] ?? '';
+    }
+
+    // Tạo đường dẫn chuyển hướng
+    $type_safe = preg_replace('/[^a-zA-Z0-9_-]/', '', $data_prepared['type']);
+    $redirectPath = $this->fn->getRedirectPath(['table' => $table, 'type' => $type_safe]);
+
+    // Nếu không có nội dung -> bỏ qua
+    if (!$has_data) {
+      $this->fn->transfer("Cập nhật dữ liệu thành công", $redirectPath, true);
+      return;
+    }
+
+    // Xử lý ảnh
+    $thumb_filename = '';
+    $old_file_path = '';
+    $width = (int)($data['thumb_width'] ?? 0);
+    $height = (int)($data['thumb_height'] ?? 0);
+    $zc = (int)($data['thumb_zc'] ?? 0);
+    $thumb_size = "{$width}x{$height}x{$zc}";
+
+    // Nếu có ID, lấy ảnh cũ
+    if ($id) {
+      $old = $this->d->rawQueryOne("SELECT file FROM $table WHERE id = ?", [$id]);
+      if (!empty($old['file'])) $old_file_path = "uploads/" . $old['file'];
+    } else {
+      // Nếu chưa có ID, tìm theo type
+      $existing = $this->d->rawQueryOne("SELECT id, file FROM $table WHERE type = ?", [$data_prepared['type']]);
+      if (!empty($existing)) {
+        $id = $existing['id'];
+        if (!empty($existing['file'])) $old_file_path = "uploads/" . $existing['file'];
+      }
+    }
+
+    // Upload nếu có file mới
+    if (!empty($files['file']['tmp_name'])) {
+      $thumb_filename = $this->fn->Upload([
+        'file' => $files['file'],
+        'custom_name' => 'ogimage_' . $data_prepared['type'],
+        'background' => [255, 255, 255, 0],
+        'thumb' => $thumb_size,
+        'old_file_path' => $old_file_path,
+        'watermark' => false,
+        'convert_webp' => true
+      ]);
+      if ($thumb_filename) {
+        $data_prepared['file'] = $thumb_filename;
+        $data_prepared['options'] = json_encode(['w' => $width, 'h' => $height]);
+      }
+    }
+
+    // Xử lý lưu DB
+    if ($id) {
+      // UPDATE
+      $fields = array_map(fn($k) => "`$k` = ?", array_keys($data_prepared));
+      $params = array_values($data_prepared);
+      $params[] = $id;
+      $sql = "UPDATE `$table` SET " . implode(", ", $fields) . " WHERE id = ?";
+      $ok = $this->d->execute($sql, $params);
+      $msg = $ok ? "Cập nhật dữ liệu thành công" : "Cập nhật dữ liệu thất bại";
+    } else {
+      // INSERT
+      $columns = array_map(fn($k) => "`$k`", array_keys($data_prepared));
+      $placeholders = array_fill(0, count($columns), '?');
+      $sql = "INSERT INTO `$table` (" . implode(", ", $columns) . ") VALUES (" . implode(", ", $placeholders) . ")";
+      $ok = $this->d->execute($sql, array_values($data_prepared));
       $msg = $ok ? "Thêm dữ liệu thành công" : "Thêm dữ liệu thất bại";
     }
 

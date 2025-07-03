@@ -1,17 +1,34 @@
 <?php
-if (!empty($breadcrumb) && is_array($breadcrumb)): ?>
+// Đảm bảo biến $breadcrumb là mảng
+$breadcrumb = $breadcrumb ?? [];
+
+// Thêm mặc định "Bảng điều khiển" nếu chưa có
+if (empty($breadcrumb) || !isset($breadcrumb[0]['label']) || $breadcrumb[0]['label'] !== 'Bảng điều khiển') {
+  array_unshift($breadcrumb, ['label' => 'Bảng điều khiển', 'link' => 'index.php']);
+}
+?>
+
+<?php if (!empty($breadcrumb) && is_array($breadcrumb)): ?>
   <section class="content-header text-sm">
     <div class="container-fluid">
       <div class="row">
-        <ol class="breadcrumb float-sm-left">
-          <?php foreach ($breadcrumb as $index => $item): ?>
-            <?php if (isset($item['link'])): ?>
-              <li class="breadcrumb-item"><a href="<?= $item['link']; ?>" title="<?= $item['label']; ?>"><?= $item['label']; ?></a></li>
-            <?php else: ?>
-              <li class="breadcrumb-item active"><?= $item['label']; ?></li>
-            <?php endif; ?>
-          <?php endforeach; ?>
-        </ol>
+        <div class="col-12">
+          <ol class="breadcrumb float-sm-left mb-0">
+            <?php foreach ($breadcrumb as $item): ?>
+              <?php if (!empty($item['link'])): ?>
+                <li class="breadcrumb-item">
+                  <a href="<?= htmlspecialchars($item['link']) ?>" title="<?= htmlspecialchars($item['label']) ?>">
+                    <?= htmlspecialchars($item['label']) ?>
+                  </a>
+                </li>
+              <?php else: ?>
+                <li class="breadcrumb-item active" aria-current="page">
+                  <?= htmlspecialchars($item['label']) ?>
+                </li>
+              <?php endif; ?>
+            <?php endforeach; ?>
+          </ol>
+        </div>
       </div>
     </div>
   </section>

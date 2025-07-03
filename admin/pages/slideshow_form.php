@@ -14,17 +14,26 @@ if (!empty($id)) {
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && (isset($_POST['add']) || isset($_POST['edit']))) {
   $message = $slideshow->save_slideshow($_POST, $_FILES, $id);
 }
+$linkMan = "index.php?page=slideshow_list";
 ?>
 <?php
 $breadcrumb = [
-  ['label' => 'Bảng điều khiển', 'link' => 'index.php'],
-  ['label' => !empty($id) ? 'Cập nhật ' . $name_page : 'Thêm mới ' . $name_page]
+  ['label' => (!empty($id) ? 'Cập nhật ' : 'Thêm mới ') . $name_page]
 ];
-include 'templates/breadcrumb.php';
+include TEMPLATE . 'breadcrumb.php';
 ?>
 <section class="content">
   <form class="validation-form" novalidate="" method="post" action="" enctype="multipart/form-data">
-    <?php include 'templates/act.php'; ?>
+    <div class="card-footer text-sm sticky-top">
+      <button type="submit" name="<?= !empty($id) ? "edit" : "add"; ?>"
+        class="btn btn-sm bg-gradient-primary submit-check" disabled>
+        <i class="far fa-save mr-2"></i>Lưu
+      </button>
+      <button type="reset" class="btn btn-sm bg-gradient-secondary">
+        <i class="fas fa-redo mr-2"></i>Làm lại
+      </button>
+      <a class="btn btn-sm bg-gradient-danger" href="<?= $linkMan ?>" title="Thoát"><i class="fas fa-sign-out-alt mr-2"></i>Thoát</a>
+    </div>
     <div class="card card-primary card-outline text-sm">
       <div class="card-header">
         <h3 class="card-title">Nội dung <?= $name_page ?></h3>

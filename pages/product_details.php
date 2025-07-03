@@ -1,6 +1,4 @@
-<?php require_once ROOT . '/sources/product_details.php'; ?>
 <div class="wrap-main wrap-home w-clear">
-  <?php include ROOT . '/templates/breadcrumb.php'; ?>
   <div class="wrap-main wrap-template w-clear">
     <div class="grid-pro-detail d-flex flex-wrap justify-content-between align-items-start">
       <div class="left-pro-detail">

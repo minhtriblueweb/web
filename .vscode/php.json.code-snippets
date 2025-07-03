@@ -23,13 +23,12 @@
     ],
     "description": "SQL: RENAME TABLE `old_table` TO `new_table`"
   },
-  "Echo Pre Print_r": {
-    "prefix": "Print_r",
+  "Dump Fn": {
+    "prefix": "Dump",
     "body": [
-      "echo '<pre>';",
-      "print_r($${1:variable});",
-      "echo '</pre>';"
+      "<?php",
+      "\\$fn->dump(${1:\\$data});"
     ],
-    "description": "Echo <pre> with print_r for debugging"
-  }
+    "description": "Gọi hàm dump() từ $fn để debug dữ liệu"
+  },
 }

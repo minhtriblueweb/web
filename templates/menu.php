@@ -1,34 +1,3 @@
-<?php
-// Truy vấn danh mục cấp 1
-$dm_c1_all = $fn->show_data([
-  'table'  => 'tbl_danhmuc_c1',
-  'status' => 'hienthi,noibat',
-  'select' => "id, file, slug{$lang}, name{$lang}"
-]);
-
-$dm_c2_all = $fn->show_data([
-  'table'  => 'tbl_danhmuc_c2',
-  'status' => 'hienthi,noibat',
-  'select' => "id, id_list, slug{$lang}, name{$lang}"
-]);
-
-// Gom nhóm cấp 2 theo id_list (id cấp 1)
-$dm_c2_group = [];
-if (!empty($dm_c2_all)) {
-  foreach ($dm_c2_all as $row) {
-    $dm_c2_group[$row['id_list']][] = $row;
-  }
-}
-
-// Tạo cây menu
-$menu_tree = [];
-if (!empty($dm_c1_all)) {
-  foreach ($dm_c1_all as $lv1) {
-    $lv1['sub'] = $dm_c2_group[$lv1['id']] ?? [];
-    $menu_tree[] = $lv1;
-  }
-}
-?>
 <div class="menu">
   <div class="wrap-content d-flex flex-wrap justify-content-between align-items-center">
     <!-- Menu bên trái: Danh mục sản phẩm -->

@@ -44,7 +44,20 @@ $breadcrumb = [
 include 'templates/breadcrumb.php';
 ?>
 <section class="content">
-  <?php include 'templates/act_list.php'; ?>
+  <div class="card-footer text-sm sticky-top">
+    <a class="btn btn-sm bg-gradient-primary text-white" href="<?= $linkAdd ?>" title="Thêm mới"><i class="fas fa-plus mr-2"></i>Thêm mới</a>
+    <a class="btn btn-sm bg-gradient-danger text-white" id="delete-all" data-url="<?= $linkDelete ?>" title="Xóa tất cả"><i class="far fa-trash-alt mr-2"></i>Xóa tất cả</a>
+    <div class="form-inline form-search d-inline-block align-middle ml-3">
+      <div class="input-group input-group-sm">
+        <input class="form-control form-control-navbar text-sm" type="search" id="keyword" placeholder="Tìm kiếm" aria-label="Tìm kiếm" value="<?= (isset($_GET['keyword'])) ? $_GET['keyword'] : '' ?>" onkeypress="doEnter(event,'keyword','<?= $linkMan ?>')">
+        <div class="input-group-append bg-primary rounded-right">
+          <button class="btn btn-navbar text-white" type="button" onclick="onSearch('keyword','<?= $linkMan ?>')">
+            <i class="fas fa-search"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
   <div class="card-footer form-group-category text-sm bg-light row">
     <div class="form-group col-xl-2 col-lg-3 col-md-4 col-sm-4 mb-2">
       <select id="id_list" name="id_list" class="form-control filter-category select2" onchange="onchangeCategory($(this))">

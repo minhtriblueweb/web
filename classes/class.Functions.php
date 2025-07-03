@@ -7,12 +7,18 @@ include_once($filepath . '/../helpers/format.php');
 class Functions
 {
   private $db;
+  private $d;
   private $fm;
 
   public function __construct()
   {
     $this->db = new Database();
     $this->fm = new Format();
+  }
+  /* Alert */
+  public function alert($notify = '')
+  {
+    echo '<script language="javascript">alert("' . $notify . '")</script>';
   }
   /* Decode html characters */
   public function decodeHtmlChars($htmlChars)
@@ -28,7 +34,12 @@ class Functions
   }
   function renderSelectOptions($result, string $valueKey = 'id', string $labelKey = 'namevi', int|string $selectedId = 0): void
   {
-    if ($result instanceof mysqli_result && $result->num_rows > 0) {
+    if (is_array($result) && !empty($result)) {
+      foreach ($result as $row) {
+        $selected = ($row[$valueKey] == $selectedId) ? 'selected' : '';
+        echo '<option value="' . htmlspecialchars($row[$valueKey]) . '" ' . $selected . '>' . htmlspecialchars($row[$labelKey]) . '</option>';
+      }
+    } elseif ($result instanceof mysqli_result && $result->num_rows > 0) {
       while ($row = $result->fetch_assoc()) {
         $selected = ($row[$valueKey] == $selectedId) ? 'selected' : '';
         echo '<option value="' . htmlspecialchars($row[$valueKey]) . '" ' . $selected . '>' . htmlspecialchars($row[$labelKey]) . '</option>';
@@ -37,6 +48,7 @@ class Functions
       echo '<option disabled>Không có danh mục</option>';
     }
   }
+
   public function getRedirectPath($params = [])
   {
     $map = [];
@@ -187,6 +199,18 @@ class Functions
     header("Location: index.php?page=transfer");
     exit();
   }
+  /* Delete file */
+  public function deleteFile($file = '')
+  {
+    if ($file && file_exists($file)) {
+      @unlink($file);
+      $webp = preg_replace('/\.(jpg|jpeg|png)$/i', '.webp', $file);
+      if (file_exists($webp)) @unlink($webp);
+    }
+
+    return true;
+  }
+
   public function delete(int $id, string $table, string $type = '', $id_parent = null)
   {
     $id = (int)$id;
@@ -198,10 +222,8 @@ class Functions
 
     // Xoá file vật lý nếu có
     if (!empty($row['file'])) {
-      $filePath = "uploads/" . $row['file'];
-      if (file_exists($filePath)) unlink($filePath);
+      $this->deleteFile(UPLOADS . $row['file']);
     }
-
     // Xoá dữ liệu chính
     $delete_result = $this->db->execute("DELETE FROM `$table` WHERE id = ?", [$id]);
 
@@ -248,8 +270,7 @@ class Functions
       while ($row = $resultSelect->fetch_assoc()) {
         // Xoá file vật lý nếu có
         if (!empty($row['file'])) {
-          $filePath = 'uploads/' . $row['file'];
-          if (file_exists($filePath)) unlink($filePath);
+          $this->deleteFile(UPLOADS . $row['file']);
         }
 
         // Nếu là gallery, lưu lại id_parent
@@ -333,14 +354,27 @@ class Functions
 
     return $default ? 'checked' : '';
   }
-  public function isSlugDuplicated($slug, $table, $exclude_id = '', $lang = 'vi')
+  /* Dump */
+  public function dump($value = '', $exit = false)
   {
-    $slug = trim($slug);
-    $exclude_id = trim($exclude_id);
-    $lang = trim($lang);
+    echo "<pre>";
+    print_r($value);
+    echo "</pre>";
+    if ($exit) exit();
+  }
+  public function checkSlug(array $data = []): string|false
+  {
+    $slug = trim($data['slug'] ?? '');
+    $table = $data['table'] ?? '';
+    $exclude_id = isset($data['exclude_id']) ? (int)$data['exclude_id'] : 0;
+    $lang = $data['lang'] ?? 'vi';
+
+    // Nếu slug rỗng
+    if ($slug === '') return false;
+
     $slug_col = 'slug' . $lang;
 
-    // Slugs cố định
+    // Slug cố định không được dùng
     $reserved = [
       'lien-he',
       'tin-tuc',
@@ -352,28 +386,31 @@ class Functions
       'dang-nhap',
       'dang-ky'
     ];
+
     if (in_array($slug, $reserved)) {
       return "Đường dẫn đã tồn tại. Vui lòng chọn đường dẫn khác để tránh trùng lặp.";
     }
 
-    // Danh sách bảng cần kiểm tra
+    // Danh sách các bảng có thể chứa slug
     $tables = ['tbl_danhmuc_c1', 'tbl_danhmuc_c2', 'tbl_sanpham', 'tbl_news'];
 
     foreach ($tables as $tbl) {
-      // Kiểm tra xem cột slug hiện diện trong bảng hay không
+      // Escape tên cột slug
+      $slug_col_safe = mysqli_real_escape_string($this->db->link, $slug_col);
+
+      // Kiểm tra xem bảng có cột slug đó không
       $hasColumn = $this->db->rawQueryOne(
-        "SHOW COLUMNS FROM `$tbl` LIKE ?",
-        [$slug_col]
+        "SHOW COLUMNS FROM `$tbl` LIKE '$slug_col_safe'"
       );
       if (!$hasColumn) continue;
 
-      // Tạo câu query kiểm tra slug
+      // Tạo câu SQL kiểm tra trùng
       $params = [$slug];
       $sql = "SELECT `$slug_col` FROM `$tbl` WHERE `$slug_col` = ?";
 
-      if ($tbl === $table && is_numeric($exclude_id) && (int)$exclude_id > 0) {
+      if ($tbl === $table && $exclude_id > 0) {
         $sql .= " AND id != ?";
-        $params[] = (int)$exclude_id;
+        $params[] = $exclude_id;
       }
 
       $sql .= " LIMIT 1";
@@ -384,7 +421,7 @@ class Functions
       }
     }
 
-    return false;
+    return false; // không trùng
   }
 
   private function applyOpacity($image, $opacity)

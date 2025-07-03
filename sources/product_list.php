@@ -20,14 +20,16 @@ $show_sanpham = $fn->show_data([
 ]);
 
 // Lấy dữ liệu SEO
-$seo_data = $fn->get_seo(
-  $db->rawQueryOne("SELECT * FROM tbl_seopage WHERE `type` = ?", ['sanpham']) ?? [],
+$data_seo = $seo->get_seopage(
+  $db->rawQueryOne("SELECT * FROM tbl_seopage WHERE type = ?", ['sanpham']) ?: [],
   $lang
 );
-
 // Lấy danh mục cấp 1
 $dm = $fn->show_data([
   'table' => 'tbl_danhmuc_c1',
   'status' => 'hienthi,noibat',
   'select' => "id, name{$lang}, slug{$lang}"
 ]);
+// breadcrumbs
+$breadcrumbs->set('san-pham', 'Sản phẩm');
+$breadcrumbs = $breadcrumbs->get();

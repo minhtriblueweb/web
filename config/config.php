@@ -1,16 +1,10 @@
 <?php
 $config = [
-  // Cấu hình base URL
+  // Base URL
   'base' => 'http://localhost/web/',
   'baseAdmin' => 'http://localhost/web/admin/',
 
-  // Cấu hình cơ sở dữ liệu
-  'db_host' => 'localhost',
-  'db_user' => 'root',
-  'db_pass' => '',
-  'db_name' => 'web',
-
-  // Cấu hình giao diện
+  // Cấu hình website
   'website' => [
     'lang' => [
       'vi' => 'Tiếng Việt',
@@ -18,6 +12,20 @@ $config = [
     ],
     'lang-doc' => 'vi|en',
     'debug-css' => false,
-    'debug-js' => false,
+    'debug-js' => false
+  ],
+
+  // Cấu hình cơ sở dữ liệu (chuẩn dùng cho PDO/PDODb)
+  'database' => [
+    'type' => 'mysql',
+    'host' => 'localhost',
+    'username' => 'root',
+    'password' => '',
+    'dbname' => 'web',
+    'port' => 3306,
+    'prefix' => 'tbl_',
+    'charset' => 'utf8mb4',
+    'server-name' => $_SERVER['SERVER_NAME'],
+    'url' => '/web/'
   ]
 ];

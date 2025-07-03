@@ -52,8 +52,13 @@ class danhmuc
     $data_prepared['status'] = implode(',', $status_values);
     foreach ($langs as $lang) {
       $slug_key = 'slug' . $lang;
-      $slug_error = $this->fn->isSlugDuplicated($data_prepared[$slug_key], $table, $id ?? '');
-      if ($slug_error) return $slug_error;
+      $error = $this->fn->checkSlug([
+        'slug' => $data_prepared[$slug_key],
+        'table' => $table,
+        'exclude_id' => $id ?? '',
+        'lang' => $lang
+      ]);
+      if ($error) return $error;
     }
     $thumb_filename = '';
     $old_file_path = '';
@@ -140,8 +145,13 @@ class danhmuc
     $data_prepared['status'] = implode(',', $status_values);
     foreach ($langs as $lang) {
       $slug_key = 'slug' . $lang;
-      $slug_error = $this->fn->isSlugDuplicated($data_escaped[$slug_key], $table, $id ?? '');
-      if ($slug_error) return $slug_error;
+      $error = $this->fn->checkSlug([
+        'slug' => $data_prepared[$slug_key],
+        'table' => $table,
+        'exclude_id' => $id ?? '',
+        'lang' => $lang
+      ]);
+      if ($error) return $error;
     }
     $thumb_filename = '';
     $old_file_path = '';

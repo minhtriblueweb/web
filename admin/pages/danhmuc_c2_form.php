@@ -22,17 +22,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && (isset($_POST['add']) || isset($_PO
   $message = $danhmuc->save_danhmuc_c2($_POST, $_FILES, $id);
 }
 $show_danhmuc = $fn->show_data(['table' => 'tbl_danhmuc_c1']);
+$linkMan = "index.php?page=danhmuc_c2_list";
 ?>
 <?php
 $breadcrumb = [
-  ['label' => 'Bảng điều khiển', 'link' => 'index.php'],
-  ['label' => !empty($id) ? 'Cập nhật ' . $name_page : 'Thêm mới ' . $name_page]
+  ['label' => (!empty($id) ? 'Cập nhật ' : 'Thêm mới ') . $name_page]
 ];
-include 'templates/breadcrumb.php';
+include TEMPLATE . 'breadcrumb.php';
 ?>
 <section class="content">
   <form class="validation-form" novalidate method="post" action="" enctype="multipart/form-data">
-    <?php include 'templates/act.php'; ?>
+    <div class="card-footer text-sm sticky-top">
+      <button type="submit" name="<?= !empty($id) ? "edit" : "add"; ?>"
+        class="btn btn-sm bg-gradient-primary submit-check" disabled>
+        <i class="far fa-save mr-2"></i>Lưu
+      </button>
+      <button type="reset" class="btn btn-sm bg-gradient-secondary">
+        <i class="fas fa-redo mr-2"></i>Làm lại
+      </button>
+      <a class="btn btn-sm bg-gradient-danger" href="<?= $linkMan ?>" title="Thoát"><i class="fas fa-sign-out-alt mr-2"></i>Thoát</a>
+    </div>
     <div class="row">
       <div class="col-xl-8">
         <?php include 'templates/slug.php'; ?>
@@ -115,14 +124,9 @@ include 'templates/breadcrumb.php';
               <select id="id_list" name="id_list" data-level="0" data-type="san-pham" data-table="#_product_cat"
                 data-child="id_cat" class="form-control select2 select-category">
                 <option value="0">Chọn danh mục</option>
-                <?php if ($show_danhmuc): ?>
-                  <?php while ($row = $show_danhmuc->fetch_assoc()): ?>
-                    <option value="<?= $row['id'] ?>"
-                      <?= (($_POST['id_list'] ?? ($result['id_list'] ?? '')) == $row['id']) ? 'selected' : '' ?>>
-                      <?= $row['namevi'] ?>
-                    </option>
-                  <?php endwhile; ?>
-                <?php endif; ?>
+                <?php
+                $fn->renderSelectOptions($show_danhmuc, 'id', 'namevi', $_POST['id_list'] ?? $result['id_list'] ?? '');
+                ?>
               </select>
             </div>
           </div>

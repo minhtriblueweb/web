@@ -1815,7 +1815,7 @@ $(document).ready(function () {
           $checkbox.prop("checked", isChecked);
         } else {
           $checkbox.prop("checked", !isChecked);
-          alert("Lỗi cập nhật trạng thái.");
+          alert(res.message || "Lỗi cập nhật trạng thái.");
         }
       },
       error: function () {

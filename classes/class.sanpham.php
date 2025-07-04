@@ -91,11 +91,14 @@ class sanpham
       $file_key = "file$i";
       if (!empty($files[$file_key]['name']) && $files[$file_key]['error'] == 0) {
         // Upload ảnh
+        $width = (int)($data['thumb_width'] ?? 0);
+        $height = (int)($data['thumb_height'] ?? 0);
+        $zc = (int)($data['thumb_zc'] ?? 0);
+        $thumb_size = $width . 'x' . $height . 'x' . $zc;
         $thumb_filename = $this->fn->Upload([
-          'file' => $files[$file_key],
+          'file' => $files['file'],
           'custom_name' => $parent_name,
-          'thumb' => '500x500x1',
-          'background' => [255, 255, 255, 0],
+          'thumb' => $thumb_size,
           'old_file_path' => '',
           'watermark' => true,
           'convert_webp' => true

@@ -1,34 +1,27 @@
 <?php
-$id = isset($_GET['id']) && is_numeric($_GET['id']) ? (int)$_GET['id'] : null;
-$type = isset($_GET['type']) ? trim($_GET['type']) : null;
+$id   = (isset($_GET['id']) && is_numeric($_GET['id'])) ? (int)$_GET['id'] : null;
+$type = $_GET['type'] ?? null;
 $convert_type = $fn->convert_type($type);
 $setting_page = [
-  'message' => '',
-  'name_page' => $convert_type['vi'],
-  'table' => 'tbl_news',
-  'thumb_width' => 540,
+  'message'      => '',
+  'name_page'    => $convert_type['vi'] ?? '',
+  'table'        => 'tbl_news',
+  'thumb_width'  => 540,
   'thumb_height' => 360,
-  'thumb_zc' => 1,
-  'type' => $type
+  'thumb_zc'     => 1,
+  'type'         => $type,
+  'linkMan'      => "index.php?page=news_list&type=$type",
+  'linkSave'     => "index.php?page=news_edit&type=$type&id=$id",
 ];
 extract($setting_page);
 $result = $seo_data = [];
-if ($id !== null) {
-  $get_id = $fn->get_id($table, $id);
-  if ($get_id  && $get_id->num_rows > 0) {
-    $result = $get_id->fetch_assoc();
-    $seo_data = $seo->get_seo($id, $type);
-  }
-}
+$result = ($id !== null) ? $db->rawQueryOne("SELECT * FROM `$table` WHERE id = ? LIMIT 1", [$id]) : [];
+$seo_data = !empty($result) ? $seo->get_seo($id, $type) : [];
+// Xử lý khi submit form
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && (isset($_POST['add']) || isset($_POST['edit']))) {
   $message = $news->save_news($_POST, $_FILES, $id);
 }
-$linkMan = "index.php?page=news_list&type=$type";
-?>
-<?php
-$breadcrumb = [
-  ['label' => (!empty($id) ? 'Cập nhật ' : 'Thêm mới ') . $name_page]
-];
+$breadcrumb = [['label' => (!empty($id) ? 'Cập nhật ' : 'Thêm mới ') . $name_page]];
 include TEMPLATE . 'breadcrumb.php';
 ?>
 <section class="content">
@@ -125,26 +118,7 @@ include TEMPLATE . 'breadcrumb.php';
             </div>
           </div>
           <div class="card-body">
-            <div class="photoUpload-zone">
-              <div class="photoUpload-detail" id="photoUpload-preview">
-                <?= $fn->getImage([
-                  'file' => $result['file'] ?? '',
-                  'class' => 'rounded',
-                  'alt' => 'Alt Photo',
-                ]) ?>
-              </div>
-              <label class="photoUpload-file" id="photo-zone" for="file-zone">
-                <input type="file" name="file" id="file-zone">
-                <i class="fas fa-cloud-upload-alt"></i>
-                <p class="photoUpload-drop">Kéo và thả hình vào đây</p>
-                <p class="photoUpload-or">hoặc</p>
-                <p class="photoUpload-choose btn btn-sm bg-gradient-success">Chọn hình</p>
-              </label>
-              <div class="photoUpload-dimension">
-                Width: <?= $thumb_width ?> px - Height: <?= $thumb_height ?> px
-                (.jpg|.gif|.png|.jpeg|.gif|.webp|.WEBP)
-              </div>
-            </div>
+            <?php include TEMPLATE . "image.php"; ?>
           </div>
         </div>
         <div class="card card-primary card-outline text-sm">
@@ -164,17 +138,20 @@ include TEMPLATE . 'breadcrumb.php';
               ];
               ?>
               <?php foreach ($checkboxes as $check => $label): ?>
-                <div class="form-group d-inline-block mb-2 mr-2">
-                  <label for="<?= $check ?>-checkbox" class="d-inline-block align-middle mb-0 mr-2"><?= $label ?>:</label>
-                  <div class="custom-control custom-checkbox d-inline-block align-middle">
-                    <input <?= $fn->is_checked($check, $result ?? null, $id ?? null) ?>
+                <div class="form-group d-inline-block mb-2 mr-5">
+                  <label for="<?= $check ?>-checkbox" class="d-inline-block align-middle mb-0 mr-3 form-label"><?= $label ?>:</label>
+                  <label class="switch switch-success">
+                    <input
                       type="checkbox"
-                      class="custom-control-input <?= $check ?>-checkbox"
                       name="<?= $check ?>"
+                      class="switch-input custom-control-input .show-checkbox"
                       id="<?= $check ?>-checkbox"
-                      value="<?= $check ?>" />
-                    <label for="<?= $check ?>-checkbox" class="custom-control-label"></label>
-                  </div>
+                      <?= $fn->is_checked($check, $result['status'] ?? '', $id ?? '') ?>>
+                    <span class="switch-toggle-slider">
+                      <span class="switch-on"><i class="fa-solid fa-check"></i></span>
+                      <span class="switch-off"><i class="fa-solid fa-xmark"></i></span>
+                    </span>
+                  </label>
                 </div>
               <?php endforeach; ?>
             </div>

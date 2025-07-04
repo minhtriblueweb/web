@@ -1,15 +1,11 @@
 <?php
 session_start();
-require_once __DIR__ . '/../init.php';
-$db = new Database();
-
-// Ngăn chặn truy cập trực tiếp
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
   http_response_code(403);
   exit('Forbidden');
 }
-
-// Nhận dữ liệu POST
+require_once __DIR__ . '/../init.php';
+$db = new Database();
 $id_parent = $_POST['id_parent'] ?? null;
 
 // Kiểm tra dữ liệu bắt buộc

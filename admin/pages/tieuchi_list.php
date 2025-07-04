@@ -4,7 +4,7 @@ $records_per_page = 10;
 $name_page = 'tiêu chí';
 $table = 'tbl_tieuchi';
 $current_page = max(1, isset($_GET['p']) ? (int)$_GET['p'] : 1);
-$total_pages = ceil($fn->count_data(['table' => $table]) / $records_per_page);
+$total_pages = ceil($fn->count_data(['table' => $table, 'keyword' => $_GET['keyword'] ?? '']) / $records_per_page);
 $show_tieuchi = $fn->show_data([
   'table' => $table,
   'records_per_page' => $records_per_page,
@@ -14,14 +14,10 @@ $show_tieuchi = $fn->show_data([
 $linkMulti = "index.php?page=deleteMulti&table=$table&";
 $linkDelete = "index.php?page=delete&table=$table&&id=";
 $linkEdit = "index.php?page=tieuchi_form&id=";
+$linkMan = "index.php?page=tieuchi_list";
 $linkAdd = "index.php?page=tieuchi_form";
-?>
-<?php
-$breadcrumb = [
-  ['label' => 'Bảng điều khiển', 'link' => 'index.php'],
-  ['label' => $name_page]
-];
-include 'templates/breadcrumb.php';
+$breadcrumb = [['label' => $name_page]];
+include TEMPLATE . 'breadcrumb.php';
 ?>
 <section class="content">
   <div class="card-footer text-sm sticky-top">
@@ -61,14 +57,14 @@ include 'templates/breadcrumb.php';
         </thead>
         <form action="" method="POST">
           <tbody>
-            <?php if ($show_tieuchi): ?>
-              <?php while ($row = $show_tieuchi->fetch_assoc()):
-                $id       = $row['id'];
-                $name     = $row['namevi'];
-                $numb     = $row['numb'];
-                $status   = $row['status'] ?? '';
-                $imgSrc   = !empty($row['file']) ? BASE_ADMIN . UPLOADS . $row['file'] : NO_IMG;
-                $linkEditId  = $linkEdit . $id;
+            <?php if (!empty($show_tieuchi)): ?>
+              <?php foreach ($show_tieuchi as $row):
+                $id = $row['id'];
+                $name = $row['namevi'];
+                $numb = $row['numb'];
+                $file = $row['file'];
+                $status = $row['status'] ?? '';
+                $linkEditId = $linkEdit . $id;
                 $linkDeleteId = $linkDelete . $id;
               ?>
                 <tr>
@@ -89,7 +85,11 @@ include 'templates/breadcrumb.php';
                   <!-- Ảnh -->
                   <td class="align-middle">
                     <a href="<?= $linkEditId ?>" title="<?= $name ?>">
-                      <img class="rounded img-preview" src="<?= $imgSrc ?>" alt="<?= $name ?>" />
+                      <?= $fn->getImage([
+                        'file' => $file,
+                        'class' => 'rounded img-preview',
+                        'alt' => $name,
+                      ]) ?>
                     </a>
                   </td>
 
@@ -97,9 +97,6 @@ include 'templates/breadcrumb.php';
                   <td class="align-middle">
                     <a class="text-dark text-break" href="<?= $linkEditId ?>" title="<?= $name ?>"><?= $name ?></a>
                     <div class="tool-action mt-2 w-clear">
-                      <a class="text-primary mr-3" href="<?= BASE . $slug ?>" target="_blank" title="Xem">
-                        <i class="far fa-eye mr-1"></i>View
-                      </a>
                       <a class="text-info mr-3" href="<?= $linkEditId ?>" title="Chỉnh sửa">
                         <i class="far fa-edit mr-1"></i>Edit
                       </a>
@@ -112,7 +109,12 @@ include 'templates/breadcrumb.php';
                   <?php foreach (['hienthi'] as $attr): ?>
                     <td class="align-middle text-center">
                       <label class="switch switch-success">
-                        <input type="checkbox" class="switch-input custom-control-input show-checkbox " id="show-checkbox-<?= $attr ?>-<?= $id ?>" data-table="<?= $table ?>" data-id="<?= $id ?>" data-attr="<?= $attr ?>" <?= (strpos($row['status'], $attr) !== false) ? 'checked' : '' ?>>
+                        <input type="checkbox" class="switch-input custom-control-input show-checkbox"
+                          id="show-checkbox-<?= $attr ?>-<?= $id ?>"
+                          data-table="<?= $table ?>"
+                          data-id="<?= $id ?>"
+                          data-attr="<?= $attr ?>"
+                          <?= (strpos($status, $attr) !== false) ? 'checked' : '' ?>>
                         <span class="switch-toggle-slider">
                           <span class="switch-on"><i class="fa-solid fa-check"></i></span>
                           <span class="switch-off"><i class="fa-solid fa-xmark"></i></span>
@@ -131,18 +133,17 @@ include 'templates/breadcrumb.php';
                     </a>
                   </td>
                 </tr>
-              <?php endwhile; ?>
+              <?php endforeach; ?>
             <?php else: ?>
               <tr>
                 <td colspan="100" class="text-center">Không có dữ liệu</td>
               </tr>
             <?php endif; ?>
           </tbody>
+
         </form>
       </table>
     </div>
   </div>
-  <div class="card-footer text-sm pb-0 mb-5">
-    <?= $fn->renderPagination($current_page, $total_pages); ?>
-  </div>
+  <?php if ($paging): ?><div class="card-footer text-sm p-3"><?= $paging ?></div><?php endif; ?>
 </section>

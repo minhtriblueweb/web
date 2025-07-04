@@ -4,7 +4,7 @@ $records_per_page = 10;
 $name_page = 'social';
 $table = 'tbl_social';
 $current_page = max(1, isset($_GET['p']) ? (int)$_GET['p'] : 1);
-$total_pages = ceil($fn->count_data(['table' => $table]) / $records_per_page);
+$total_pages = ceil($fn->count_data(['table' => $table, 'keyword' => $_GET['keyword'] ?? '']) / $records_per_page);
 $show_social = $fn->show_data([
   'table' => $table,
   'records_per_page' => $records_per_page,
@@ -14,14 +14,10 @@ $show_social = $fn->show_data([
 $linkMulti = "index.php?page=deleteMulti&table=$table&";
 $linkDelete = "index.php?page=delete&table=$table&id=";
 $linkEdit = "index.php?page=social_form&id=";
+$linkMan = "index.php?page=social_list";
 $linkAdd = "index.php?page=social_form";
-?>
-<?php
-$breadcrumb = [
-  ['label' => 'Bảng điều khiển', 'link' => 'index.php'],
-  ['label' => $name_page]
-];
-include 'templates/breadcrumb.php';
+$breadcrumb = [['label' => $name_page]];
+include TEMPLATE . 'breadcrumb.php';
 ?>
 <section class="content">
   <div class="card-footer text-sm sticky-top">
@@ -61,30 +57,35 @@ include 'templates/breadcrumb.php';
           </tr>
         </thead>
         <tbody>
-          <?php if ($show_social):
-            while ($row = $show_social->fetch_assoc()):
+          <?php if (!empty($show_social)): ?>
+            <?php foreach ($show_social as $row):
               $id = $row['id'];
-              $name     = $row['namevi'];
-              $link     = $row['link'];
-              $numb     = $row['numb'];
-              $status   = $row['status'] ?? '';
-              $file     = $row['file'];
-              $linkEditId  = $linkEdit . $id;
+              $name = $row['namevi'];
+              $link = $row['link'];
+              $numb = $row['numb'];
+              $status = $row['status'] ?? '';
+              $file = $row['file'];
+              $linkEditId = $linkEdit . $id;
               $linkDeleteId = $linkDelete . $id;
-          ?>
+            ?>
               <tr>
+                <!-- Checkbox chọn -->
                 <td class="align-middle">
                   <div class="custom-control custom-checkbox my-checkbox">
                     <input type="checkbox" class="custom-control-input select-checkbox" id="select-checkbox-<?= $id ?>" value="<?= $id ?>">
                     <label for="select-checkbox-<?= $id ?>" class="custom-control-label"></label>
                   </div>
                 </td>
+
+                <!-- Số thứ tự -->
                 <td class="align-middle">
                   <input type="number" class="form-control form-control-mini m-auto update-numb" min="0"
                     value="<?= $numb ?>" data-id="<?= $id ?>" data-table="<?= $table ?>">
                 </td>
+
+                <!-- Ảnh -->
                 <td class="align-middle text-center">
-                  <a href="<?= $linkEditId ?>" title="">
+                  <a href="<?= $linkEditId ?>" title="<?= $name ?>">
                     <?= $fn->getImage([
                       'file' => $file,
                       'class' => 'rounded img-preview',
@@ -92,18 +93,28 @@ include 'templates/breadcrumb.php';
                     ]) ?>
                   </a>
                 </td>
+
+                <!-- Tên -->
                 <td class="align-middle">
                   <a class="text-dark text-break" href="<?= $linkEditId ?>" title="<?= $name ?>">
                     <?= $name ?>
                   </a>
                 </td>
-                <td class="align-middle">
-                  <?= $link ?>
-                </td>
+
+                <!-- Link -->
+                <td class="align-middle"><?= $link ?></td>
+
+                <!-- Trạng thái -->
                 <?php foreach (['hienthi'] as $attr): ?>
                   <td class="align-middle text-center">
                     <label class="switch switch-success">
-                      <input type="checkbox" class="switch-input custom-control-input show-checkbox " id="show-checkbox-<?= $attr ?>-<?= $id ?>" data-table="<?= $table ?>" data-id="<?= $id ?>" data-attr="<?= $attr ?>" <?= (strpos($row['status'], $attr) !== false) ? 'checked' : '' ?>>
+                      <input type="checkbox"
+                        class="switch-input custom-control-input show-checkbox"
+                        id="show-checkbox-<?= $attr ?>-<?= $id ?>"
+                        data-table="<?= $table ?>"
+                        data-id="<?= $id ?>"
+                        data-attr="<?= $attr ?>"
+                        <?= (strpos($status, $attr) !== false) ? 'checked' : '' ?>>
                       <span class="switch-toggle-slider">
                         <span class="switch-on"><i class="fa-solid fa-check"></i></span>
                         <span class="switch-off"><i class="fa-solid fa-xmark"></i></span>
@@ -111,16 +122,14 @@ include 'templates/breadcrumb.php';
                     </label>
                   </td>
                 <?php endforeach; ?>
+
+                <!-- Hành động -->
                 <td class="align-middle text-center text-md text-nowrap">
-                  <a class="text-primary mr-2" href="<?= $linkEditId ?>" title="Chỉnh sửa">
-                    <i class="fas fa-edit"></i>
-                  </a>
-                  <a class="text-danger" id="delete-item" data-url="<?= $linkDeleteId ?>" title="Xóa">
-                    <i class="fas fa-trash-alt"></i>
-                  </a>
+                  <a class="text-primary mr-2" href="<?= $linkEditId ?>" title="Chỉnh sửa"><i class="fas fa-edit"></i></a>
+                  <a class="text-danger" id="delete-item" data-url="<?= $linkDeleteId ?>" title="Xóa"><i class="fas fa-trash-alt"></i></a>
                 </td>
               </tr>
-            <?php endwhile; ?>
+            <?php endforeach; ?>
           <?php else: ?>
             <tr>
               <td colspan="100" class="text-center">Không có dữ liệu</td>
@@ -130,7 +139,5 @@ include 'templates/breadcrumb.php';
       </table>
     </div>
   </div>
-  <div class="card-footer text-sm pb-0 mb-5">
-    <?= $fn->renderPagination($current_page, $total_pages); ?>
-  </div>
+  <?php if ($paging): ?><div class="card-footer text-sm p-3"><?= $paging ?></div><?php endif; ?>
 </section>

@@ -18,13 +18,9 @@ $linkDelete = "index.php?page=delete&table=$table&id=";
 $linkEdit = "index.php?page=danhmuc_c1_form&id=";
 $linkAdd = "index.php?page=danhmuc_c1_form";
 $linkMan = "index.php?page=danhmuc_c1_list";
+$breadcrumb = [['label' => $name_page]];
+include TEMPLATE . 'breadcrumb.php';
 ?>
-<?php
-$breadcrumb = [
-  ['label' => 'Bảng điều khiển', 'link' => 'index.php'],
-  ['label' => $name_page]
-];
-include 'templates/breadcrumb.php'; ?>
 <section class="content">
   <div class="card-footer text-sm sticky-top">
     <a class="btn btn-sm bg-gradient-primary text-white" href="<?= $linkAdd ?>" title="Thêm mới"><i class="fas fa-plus mr-2"></i>Thêm mới</a>

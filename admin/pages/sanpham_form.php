@@ -184,17 +184,20 @@ include TEMPLATE . 'breadcrumb.php';
               ];
               ?>
               <?php foreach ($checkboxes as $check => $label): ?>
-                <div class="form-group d-inline-block mb-2 mr-2">
-                  <label for="<?= $check ?>-checkbox" class="d-inline-block align-middle mb-0 mr-2"><?= $label ?>:</label>
-                  <div class="custom-control custom-checkbox d-inline-block align-middle">
-                    <input <?= $fn->is_checked($check, $result ?? null, $id ?? null) ?>
+                <div class="form-group d-inline-block mb-2 mr-4">
+                  <label for="<?= $check ?>-checkbox" class="d-inline-block align-middle mb-0 mr-3 form-label"><?= $label ?>:</label>
+                  <label class="switch switch-success">
+                    <input
                       type="checkbox"
-                      class="custom-control-input <?= $check ?>-checkbox"
                       name="<?= $check ?>"
+                      class="switch-input custom-control-input .show-checkbox"
                       id="<?= $check ?>-checkbox"
-                      value="<?= $check ?>" />
-                    <label for="<?= $check ?>-checkbox" class="custom-control-label"></label>
-                  </div>
+                      <?= $fn->is_checked($check, $result['status'] ?? '', $id ?? '') ?>>
+                    <span class="switch-toggle-slider">
+                      <span class="switch-on"><i class="fa-solid fa-check"></i></span>
+                      <span class="switch-off"><i class="fa-solid fa-xmark"></i></span>
+                    </span>
+                  </label>
                 </div>
               <?php endforeach; ?>
             </div>

@@ -37,13 +37,8 @@ $linkMan = "index.php?page=sanpham_list";
 $linkAdd = "index.php?page=sanpham_form";
 $linkGalleryList = "index.php?page=gallery_list&id=";
 $linkGallery = "index.php?page=gallery_form&id=";
-?>
-<?php
-$breadcrumb = [
-  ['label' => 'Bảng điều khiển', 'link' => 'index.php'],
-  ['label' => $name_page]
-];
-include 'templates/breadcrumb.php';
+$breadcrumb = [['label' => $name_page]];
+include TEMPLATE . 'breadcrumb.php';
 ?>
 <section class="content">
   <div class="card-footer text-sm sticky-top">
@@ -193,7 +188,5 @@ include 'templates/breadcrumb.php';
       </table>
     </div>
   </div>
-  <div class="card-footer text-sm pb-0 mb-5">
-    <?= $fn->renderPagination($current_page, $total_pages); ?>
-  </div>
+  <?php if ($paging): ?><div class="card-footer text-sm p-3"><?= $paging ?></div><?php endif; ?>
 </section>

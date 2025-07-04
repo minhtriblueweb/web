@@ -495,20 +495,35 @@ class Functions
     }
     return '';
   }
-
-  function is_checked($name, $result, $id, $default = true)
+  function is_checked($name, $status = '', $id = null, $default = true)
   {
+    // Nếu đang submit lại form
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-      return isset($_POST[$name]) && $_POST[$name] === $name ? 'checked' : '';
+      // Ưu tiên dạng name="status[hienthi]"
+      if (isset($_POST['status'][$name])) {
+        return $_POST['status'][$name] ? 'checked' : '';
+      }
+
+      // Hoặc name="hienthi"
+      if (isset($_POST[$name])) {
+        return $_POST[$name] ? 'checked' : '';
+      }
+
+      return '';
     }
 
-    if (!empty($id) && isset($result['status'])) {
-      $statuses = explode(',', $result['status']);
-      return in_array($name, $statuses) ? 'checked' : '';
+    // Nếu thêm mới (chưa có ID) → luôn checked theo $default
+    if (empty($id)) {
+      return $default ? 'checked' : '';
     }
 
-    return $default ? 'checked' : '';
+    // Nếu đang sửa → đọc từ status lưu trong DB
+    $statuses = array_filter(array_map('trim', explode(',', $status)));
+    return in_array($name, $statuses) ? 'checked' : '';
   }
+
+
+
   /* Dump */
   public function dump($value = '', $exit = false)
   {

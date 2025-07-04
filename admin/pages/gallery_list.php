@@ -5,22 +5,19 @@ $name_page = 'hình ảnh sản phẩm';
 if (isset($_GET['id']) && $_GET['id'] != NULL) {
   $id = $_GET['id'];
 }
-$get_id_sp = $fn->get_id('tbl_sanpham', $id);
+$result = ($id !== null) ? $db->rawQueryOne("SELECT * FROM tbl_sanpham WHERE id = ? LIMIT 1", [$id]) : [];
 $get_gallery = $fn->show_data(['table' => $table, 'id_parent' => $id]);
-if ($get_id_sp) {
-  $result = $get_id_sp->fetch_assoc();
-}
 $linkMulti = "index.php?page=deleteMulti&table=$table&id_parent=$id";
 $linkDelete = "index.php?page=delete&table=$table&id_parent=$id&id=";
 $linkGallery = "index.php?page=gallery_form&id=";
+$linkMan = "index.php?page=gallery_list&id=$id";
 $linkEdit = "index.php?page=gallery_form&id_child=";
 ?>
 <?php
 $breadcrumb = [
-  ['label' => 'Bảng điều khiển', 'link' => 'index.php'],
   ['label' => $name_page]
 ];
-include 'templates/breadcrumb.php';
+include TEMPLATE . 'breadcrumb.php';
 ?>
 <section class="content">
   <div class="card-footer text-sm sticky-top">
@@ -30,12 +27,9 @@ include 'templates/breadcrumb.php';
         class="far fa-trash-alt mr-2"></i>Xóa tất cả</a>
     <div class="form-inline form-search d-inline-block align-middle ml-3">
       <div class="input-group input-group-sm">
-        <input class="form-control form-control-navbar text-sm" type="search" id="keyword" placeholder="Tìm kiếm"
-          aria-label="Tìm kiếm" value=""
-          onkeypress="doEnter(event,'keyword','index.php?com=product&act=man_list&type=san-pham')" />
+        <input class="form-control form-control-navbar text-sm" type="search" id="keyword" placeholder="Tìm kiếm" aria-label="Tìm kiếm" value="<?= (isset($_GET['keyword'])) ? $_GET['keyword'] : '' ?>" onkeypress="doEnter(event,'keyword','<?= $linkMan ?>')">
         <div class="input-group-append bg-primary rounded-right">
-          <button class="btn btn-navbar text-white" type="button"
-            onclick="onSearch('keyword','index.php?com=product&act=man_list&type=san-pham')">
+          <button class="btn btn-navbar text-white" type="button" onclick="onSearch('keyword','<?= $linkMan ?>')">
             <i class="fas fa-search"></i>
           </button>
         </div>
@@ -64,9 +58,10 @@ include 'templates/breadcrumb.php';
           </tr>
         </thead>
         <tbody>
-          <?php if ($get_gallery): ?>
-            <?php while ($row = $get_gallery->fetch_assoc()): ?>
-              <?php $id = $row['id']; ?>
+          <?php if (!empty($get_gallery)): ?>
+            <?php foreach ($get_gallery as $row):
+              $id = $row['id'];
+            ?>
               <tr>
                 <!-- Checkbox chọn dòng -->
                 <td class="align-middle">
@@ -116,7 +111,7 @@ include 'templates/breadcrumb.php';
                   <a class="text-danger" id="delete-item" data-url="<?= $linkDelete . $id ?>" title="Xóa"><i class="fas fa-trash-alt"></i></a>
                 </td>
               </tr>
-            <?php endwhile; ?>
+            <?php endforeach; ?>
           <?php else: ?>
             <tr>
               <td colspan="100" class="text-center">Không có dữ liệu</td>

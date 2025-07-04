@@ -25,9 +25,7 @@ if (!empty($_POST["id"])) {
   }
 
   if ($id && $table && $id_temp) {
-    $query = "SELECT namevi, id FROM `$table` WHERE `$id_temp` = ? ORDER BY numb, id DESC";
-    $result = $db->rawQuery($query, [$id]);
-
+    $result = $db->rawQuery("SELECT namevi, id FROM `$table` WHERE `$id_temp` = ? ORDER BY numb, id DESC", [$id]);
     if (!empty($result)) {
       foreach ($result as $row) {
         $str .= '<option value="' . $row["id"] . '">' . htmlspecialchars($row["namevi"]) . '</option>';

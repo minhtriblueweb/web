@@ -6,7 +6,8 @@ $table = 'tbl_news';
 $name_page = $convert_type['vi'];
 $records_per_page = 10;
 $current_page = max(1, isset($_GET['p']) ? (int)$_GET['p'] : 1);
-$total_pages = ceil($fn->count_data(['table' => $table, 'type' => $type]) / $records_per_page);
+$total_pages = ceil($fn->count_data(['table' => $table, 'type' => $type, 'keyword' => $_GET['keyword'] ?? '']) / $records_per_page);
+$paging = $fn->renderPagination($current_page, $total_pages);
 $show_news = $fn->show_data([
   'table' => $table,
   'type' => $type,
@@ -18,12 +19,8 @@ $linkMulti = "index.php?page=deleteMulti&table=$table&type=$type";
 $linkDelete = "index.php?page=delete&table=$table&type=$type&id=";
 $linkEdit = "index.php?page=news_form&type=$type&id=";
 $linkAdd = "index.php?page=news_form&type=$type";
-?>
-<?php
-$breadcrumb = [
-  ['label' => 'Bảng điều khiển', 'link' => 'index.php'],
-  ['label' => $name_page]
-];
+$linkMan = "index.php?page=news_list&type=$type";
+$breadcrumb = [['label' => $name_page]];
 include 'templates/breadcrumb.php';
 ?>
 <section class="content">
@@ -65,8 +62,8 @@ include 'templates/breadcrumb.php';
         </thead>
         <form action="" method="POST">
           <tbody>
-            <?php if ($show_news): ?>
-              <?php while ($row = $show_news->fetch_assoc()):
+            <?php if (!empty($show_news)): ?>
+              <?php foreach ($show_news as $row):
                 $id = $row['id'];
                 $name = $row['namevi'];
                 $slug = $row['slugvi'];
@@ -76,7 +73,8 @@ include 'templates/breadcrumb.php';
                   <!-- Checkbox chọn -->
                   <td class="align-middle">
                     <div class="custom-control custom-checkbox my-checkbox">
-                      <input type="checkbox" class="custom-control-input select-checkbox" id="select-checkbox-<?= $id ?>" value="<?= $id ?>" name="checkbox_id<?= $id ?>" />
+                      <input type="checkbox" class="custom-control-input select-checkbox"
+                        id="select-checkbox-<?= $id ?>" value="<?= $id ?>" name="checkbox_id<?= $id ?>" />
                       <label for="select-checkbox-<?= $id ?>" class="custom-control-label"></label>
                     </div>
                   </td>
@@ -112,7 +110,10 @@ include 'templates/breadcrumb.php';
                   <?php foreach (['hienthi', 'noibat'] as $attr): ?>
                     <td class="align-middle text-center">
                       <label class="switch switch-success">
-                        <input type="checkbox" class="switch-input custom-control-input show-checkbox " id="show-checkbox-<?= $attr ?>-<?= $id ?>" data-table="<?= $table ?>" data-id="<?= $id ?>" data-attr="<?= $attr ?>" <?= (strpos($row['status'], $attr) !== false) ? 'checked' : '' ?>>
+                        <input type="checkbox" class="switch-input custom-control-input show-checkbox"
+                          id="show-checkbox-<?= $attr ?>-<?= $id ?>"
+                          data-table="<?= $table ?>" data-id="<?= $id ?>" data-attr="<?= $attr ?>"
+                          <?= (strpos($row['status'], $attr) !== false) ? 'checked' : '' ?>>
                         <span class="switch-toggle-slider">
                           <span class="switch-on"><i class="fa-solid fa-check"></i></span>
                           <span class="switch-off"><i class="fa-solid fa-xmark"></i></span>
@@ -120,13 +121,14 @@ include 'templates/breadcrumb.php';
                       </label>
                     </td>
                   <?php endforeach; ?>
+
                   <!-- Hành động -->
                   <td class="align-middle text-center text-md text-nowrap">
                     <a class="text-primary mr-2" href="<?= $linkEdit . $id ?>" title="Chỉnh sửa"><i class="fas fa-edit"></i></a>
                     <a class="text-danger" id="delete-item" data-url="<?= $linkDelete . $id ?>" title="Xoá"><i class="fas fa-trash-alt"></i></a>
                   </td>
                 </tr>
-              <?php endwhile; ?>
+              <?php endforeach; ?>
             <?php else: ?>
               <tr>
                 <td colspan="100" class="text-center">Không có dữ liệu</td>
@@ -137,7 +139,5 @@ include 'templates/breadcrumb.php';
       </table>
     </div>
   </div>
-  <div class="card-footer text-sm pb-0 mb-5">
-    <?= $fn->renderPagination($current_page, $total_pages); ?>
-  </div>
+  <?php if ($paging): ?><div class="card-footer text-sm p-3"><?= $paging ?></div><?php endif; ?>
 </section>

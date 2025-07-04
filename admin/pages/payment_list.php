@@ -16,13 +16,9 @@ $linkMulti = "index.php?page=deleteMulti&table=$table&";
 $linkDelete = "index.php?page=delete&table=$table&id=";
 $linkEdit = "index.php?page=payment_form&id=";
 $linkAdd = "index.php?page=payment_form";
-?>
-<?php
-$breadcrumb = [
-  ['label' => 'Bảng điều khiển', 'link' => 'index.php'],
-  ['label' => $name_page]
-];
-include 'templates/breadcrumb.php';
+$linkMan = "index.php?page=payment_list";
+$breadcrumb = [['label' => $name_page]];
+include TEMPLATE . 'breadcrumb.php';
 ?>
 <section class="content">
   <div class="card-footer text-sm sticky-top">
@@ -61,72 +57,84 @@ include 'templates/breadcrumb.php';
           </tr>
         </thead>
         <tbody>
-          <?php if ($show_payment): ?>
-            <?php while ($row = $show_payment->fetch_assoc()):
+          <?php if (!empty($show_payment)): ?>
+            <?php foreach ($show_payment as $row):
               $id = $row['id'];
               $name = $row['namevi'];
-              $numb     = $row['numb'];
+              $numb = $row['numb'];
               $file = $row['file'];
-              $linkEditId  = $linkEdit . $id;
+              $linkEditId = $linkEdit . $id;
               $linkDeleteId = $linkDelete . $id;
             ?>
-              <td class="align-middle">
-                <div class="custom-control custom-checkbox my-checkbox">
-                  <input type="checkbox" class="custom-control-input select-checkbox" id="select-checkbox-<?= $id ?>" value="<?= $id ?>">
-                  <label for="select-checkbox-<?= $id ?>" class="custom-control-label"></label>
-                </div>
-              </td>
-
-              <!-- Số thứ tự -->
-              <td class="align-middle">
-                <input type="number" class="form-control form-control-mini m-auto update-numb" min="0"
-                  value="<?= $numb ?>" data-id="<?= $id ?>" data-table="<?= $table ?>">
-              </td>
-              <td class="align-middle text-center">
-                <a href="<?= $linkEditId ?>" title="">
-                  <?= $fn->getImage([
-                    'file' => $file,
-                    'class' => 'rounded img-preview',
-                    'alt' => $name,
-                  ]) ?>
-                </a>
-              </td>
-              <td class="align-middle">
-                <a class="text-dark text-break" href="<?= $linkEditId ?>" title="<?= $name ?>">
-                  <?= $name ?>
-                </a>
-              </td>
-              <?php foreach (['hienthi'] as $attr): ?>
-                <td class="align-middle text-center">
-                  <label class="switch switch-success">
-                    <input type="checkbox" class="switch-input custom-control-input show-checkbox " id="show-checkbox-<?= $attr ?>-<?= $id ?>" data-table="<?= $table ?>" data-id="<?= $id ?>" data-attr="<?= $attr ?>" <?= (strpos($row['status'], $attr) !== false) ? 'checked' : '' ?>>
-                    <span class="switch-toggle-slider">
-                      <span class="switch-on"><i class="fa-solid fa-check"></i></span>
-                      <span class="switch-off"><i class="fa-solid fa-xmark"></i></span>
-                    </span>
-                  </label>
+              <tr>
+                <!-- Checkbox chọn -->
+                <td class="align-middle">
+                  <div class="custom-control custom-checkbox my-checkbox">
+                    <input type="checkbox" class="custom-control-input select-checkbox" id="select-checkbox-<?= $id ?>" value="<?= $id ?>">
+                    <label for="select-checkbox-<?= $id ?>" class="custom-control-label"></label>
+                  </div>
                 </td>
-              <?php endforeach; ?>
-              <td class="align-middle text-center text-md text-nowrap">
-                <a class="text-primary mr-2" href="<?= $linkEditId ?>" title="Chỉnh sửa">
-                  <i class="fas fa-edit"></i>
-                </a>
-                <a class="text-danger" id="delete-item" data-url="<?= $linkDeleteId ?>" title="Xóa">
-                  <i class="fas fa-trash-alt"></i>
-                </a>
-              </td>
+
+                <!-- Số thứ tự -->
+                <td class="align-middle">
+                  <input type="number" class="form-control form-control-mini m-auto update-numb" min="0"
+                    value="<?= $numb ?>" data-id="<?= $id ?>" data-table="<?= $table ?>">
+                </td>
+
+                <!-- Hình ảnh -->
+                <td class="align-middle text-center">
+                  <a href="<?= $linkEditId ?>" title="<?= $name ?>">
+                    <?= $fn->getImage([
+                      'file' => $file,
+                      'class' => 'rounded img-preview',
+                      'alt' => $name,
+                    ]) ?>
+                  </a>
+                </td>
+
+                <!-- Tên -->
+                <td class="align-middle">
+                  <a class="text-dark text-break" href="<?= $linkEditId ?>" title="<?= $name ?>">
+                    <?= $name ?>
+                  </a>
+                </td>
+
+                <!-- Trạng thái hiển thị -->
+                <?php foreach (['hienthi'] as $attr): ?>
+                  <td class="align-middle text-center">
+                    <label class="switch switch-success">
+                      <input type="checkbox" class="switch-input custom-control-input show-checkbox"
+                        id="show-checkbox-<?= $attr ?>-<?= $id ?>"
+                        data-table="<?= $table ?>" data-id="<?= $id ?>" data-attr="<?= $attr ?>"
+                        <?= (strpos($row['status'], $attr) !== false) ? 'checked' : '' ?>>
+                      <span class="switch-toggle-slider">
+                        <span class="switch-on"><i class="fa-solid fa-check"></i></span>
+                        <span class="switch-off"><i class="fa-solid fa-xmark"></i></span>
+                      </span>
+                    </label>
+                  </td>
+                <?php endforeach; ?>
+
+                <!-- Hành động -->
+                <td class="align-middle text-center text-md text-nowrap">
+                  <a class="text-primary mr-2" href="<?= $linkEditId ?>" title="Chỉnh sửa">
+                    <i class="fas fa-edit"></i>
+                  </a>
+                  <a class="text-danger" id="delete-item" data-url="<?= $linkDeleteId ?>" title="Xóa">
+                    <i class="fas fa-trash-alt"></i>
+                  </a>
+                </td>
               </tr>
-            <?php endwhile; ?>
+            <?php endforeach; ?>
           <?php else: ?>
             <tr>
               <td colspan="100" class="text-center">Không có dữ liệu</td>
             </tr>
           <?php endif; ?>
         </tbody>
+
       </table>
     </div>
   </div>
-  <div class="card-footer text-sm pb-0 mb-5">
-    <?= $fn->renderPagination($current_page, $total_pages); ?>
-  </div>
+  <?php if ($paging): ?><div class="card-footer text-sm p-3"><?= $paging ?></div><?php endif; ?>
 </section>

@@ -2,48 +2,38 @@
 session_start();
 require_once __DIR__ . '/../init.php';
 $db = new Database();
+$str = '<option value="0">Chọn danh mục</option>';
+
 if (!empty($_POST["id"])) {
-  $level = (!empty($_POST["level"])) ? htmlspecialchars($_POST["level"]) : 0;
-  $table = (!empty($_POST["table"])) ? htmlspecialchars($_POST["table"]) : '';
-  $id = (!empty($_POST["id"])) ? htmlspecialchars($_POST["id"]) : 0;
-  $type = (!empty($_POST["type"])) ? htmlspecialchars($_POST["type"]) : '';
-  $row = null;
+  $level = isset($_POST["level"]) ? (int)$_POST["level"] : 0;
+  $table = isset($_POST["table"]) ? preg_replace('/[^a-zA-Z0-9_]/', '', $_POST["table"]) : '';
+  $id = (int)$_POST["id"];
 
   switch ($level) {
-    case '0':
+    case 0:
       $id_temp = "id_list";
       break;
-
-    case '1':
+    case 1:
       $id_temp = "id_cat";
       break;
-
-    case '2':
+    case 2:
       $id_temp = "id_item";
       break;
-
     default:
       echo 'error ajax';
       exit();
-      break;
   }
 
-  if ($id) {
-    $query = "SELECT namevi, id FROM `$table` WHERE `$id_temp` = '$id' ORDER BY numb, id DESC";
-    $result = $db->select($query);
-    if ($result) {
-      $str = '<option value="0">Chọn danh mục</option>';
-      while ($kg = $result->fetch_assoc()) {
-        $str .= '<option value="' . $kg["id"] . '">' . $kg["namevi"] . '</option>';
+  if ($id && $table && $id_temp) {
+    $query = "SELECT namevi, id FROM `$table` WHERE `$id_temp` = ? ORDER BY numb, id DESC";
+    $result = $db->rawQuery($query, [$id]);
+
+    if (!empty($result)) {
+      foreach ($result as $row) {
+        $str .= '<option value="' . $row["id"] . '">' . htmlspecialchars($row["namevi"]) . '</option>';
       }
-    } else {
-      $str = '<option value="0">Chọn danh mục</option>';
     }
-  } else {
-    $str = '<option value="0">Chọn danh mục</option>';
   }
-} else {
-  $str = '<option value="0">Chọn danh mục</option>';
 }
 
 echo $str;

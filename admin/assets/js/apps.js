@@ -1486,7 +1486,6 @@ $(document).ready(function () {
       var child = $(this).data("child");
       var level = parseInt($(this).data("level"));
       var table = $(this).data("table");
-      var type = $(this).data("type");
       if ($("#" + child).length) {
         $.ajax({
           url: "api/category.php",
@@ -1495,7 +1494,6 @@ $(document).ready(function () {
             level: level,
             id: id,
             table: table,
-            type: type,
           },
           success: function (result) {
             var op = "<option value='0'>" + LANG["chondanhmuc"] + "</option>";

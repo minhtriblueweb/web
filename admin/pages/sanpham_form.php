@@ -120,7 +120,11 @@ include TEMPLATE . 'breadcrumb.php';
               </div>
               <div class="form-group col-xl-6 col-sm-4">
                 <label class="d-block" for="id_cat">Danh mục cấp 2:</label>
-                <?= $fn->getAjaxCategory('tbl_danhmuc_c2', $_POST['id_cat'] ?? ($result['id_cat'] ?? '')) ?>
+                <?= $fn->getAjaxCategory(
+                  'tbl_danhmuc_c2',
+                  $_POST['id_cat'] ?? ($result['id_cat'] ?? ''),
+                  $_POST['id_list'] ?? ($result['id_list'] ?? 0),
+                ) ?>
               </div>
             </div>
           </div>

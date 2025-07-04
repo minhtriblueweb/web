@@ -7,7 +7,6 @@ include_once($filepath . '/../helpers/format.php');
 class Functions
 {
   private $db;
-  private $d;
   private $fm;
 
   public function __construct()
@@ -78,58 +77,134 @@ class Functions
     $str .= '</select>';
     return $str;
   }
+  // public function getAjaxCategory($table = '', $selectedId = 0, $id_list = 0, $id_cat = 0, $title_select = 'Chọn danh mục')
+  // {
+  //   $table = preg_replace('/[^a-zA-Z0-9_]/', '', $table);
+  //   $params = [];
+  //   $where = ' WHERE 1';
+  //   $id = $name = 'id';
+  //   $data_table = $data_child = '';
+  //   $data_level = 'data-level="0"';
+  //   $class = 'form-control select2 select-category';
 
-  public function getAjaxCategory($table = '', $selectedId = 0, $title_select = 'Chọn danh mục')
+  //   // Xác định cấp và các điều kiện lọc
+  //   if (str_contains($table, '_c1')) {
+  //     $id = $name = 'id_list';
+  //     $data_level = 'data-level="0"';
+  //     $data_table = 'data-table="tbl_danhmuc_c2"';
+  //     $data_child = 'data-child="id_cat"';
+  //     // không cần where
+  //   } elseif (str_contains($table, '_c2')) {
+  //     $id = $name = 'id_cat';
+  //     $data_level = 'data-level="1"';
+  //     $data_table = 'data-table="tbl_danhmuc_c3"';
+  //     $data_child = 'data-child="id_item"';
+
+  //     if ($id_list > 0) {
+  //       $where .= ' AND id_list = ?';
+  //       $params[] = $id_list;
+  //     }
+  //   } elseif (str_contains($table, '_c3')) {
+  //     $id = $name = 'id_item';
+  //     $data_level = 'data-level="2"';
+
+  //     if ($id_list > 0) {
+  //       $where .= ' AND id_list = ?';
+  //       $params[] = $id_list;
+  //     }
+  //     if ($id_cat > 0) {
+  //       $where .= ' AND id_cat = ?';
+  //       $params[] = $id_cat;
+  //     }
+  //   }
+  //   $rows = $this->db->rawQuery("SELECT id, namevi FROM `$table` $where ORDER BY numb, id DESC", $params);
+  //   $str = '<select id="' . $id . '" name="' . $name . '" ' . $data_level . ' ' . $data_table . ' ' . $data_child . ' class="' . $class . '">';
+  //   $str .= '<option value="0">' . htmlspecialchars($title_select) . '</option>';
+
+  //   if (!empty($rows)) {
+  //     foreach ($rows as $row) {
+  //       $selected = ($selectedId == $row['id']) ? 'selected' : '';
+  //       $str .= '<option value="' . $row['id'] . '" ' . $selected . '>' . htmlspecialchars($row['namevi']) . '</option>';
+  //     }
+  //   } else {
+  //     $str .= '<option disabled>Không có dữ liệu</option>';
+  //   }
+
+  //   $str .= '</select>';
+  //   return $str;
+  // }
+  public function getAjaxCategory($table = '', $selectedId = 0, $id_list = null, $id_cat = null, $title_select = 'Chọn danh mục')
   {
+    $table = preg_replace('/[^a-zA-Z0-9_]/', '', $table);
     $params = [];
     $where = ' WHERE 1';
-    $name = $id = $data_table = $data_child = '';
-    $data_level = 'data-level="0"';
     $class = 'form-control select2 select-category';
 
-    // Escape bảng an toàn
-    $table = preg_replace('/[^a-zA-Z0-9_]/', '', $table);
-    $rows = [];
+    // Cấu hình theo cấp
+    $levels = [
+      '_c1' => [
+        'field' => 'id_list',
+        'data_level' => '0',
+        'data_table' => 'tbl_danhmuc_c2',
+        'data_child' => 'id_cat',
+        'filters' => []
+      ],
+      '_c2' => [
+        'field' => 'id_cat',
+        'data_level' => '1',
+        'data_table' => 'tbl_danhmuc_c3',
+        'data_child' => 'id_item',
+        'filters' => [
+          'id_list' => $id_list
+        ]
+      ],
+      '_c3' => [
+        'field' => 'id_item',
+        'data_level' => '2',
+        'data_table' => '',
+        'data_child' => '',
+        'filters' => [
+          'id_list' => $id_list,
+          'id_cat' => $id_cat
+        ]
+      ]
+    ];
 
-    if (str_contains($table, '_c1')) {
-      $id = $name = 'id_list';
-      $data_table = 'data-table="tbl_danhmuc_c2"';
-      $data_child = 'data-child="id_cat"';
-      $data_level = 'data-level="0"';
-
-      $rows = $this->db->rawQuery("SELECT id, namevi FROM `$table` ORDER BY numb, id DESC");
-    } elseif (str_contains($table, '_c2')) {
-      $id = $name = 'id_cat';
-      $data_table = 'data-table="tbl_danhmuc_c3"';
-      $data_child = 'data-child="id_item"';
-      $data_level = 'data-level="1"';
-
-      $id_list = isset($_REQUEST['id_list']) ? (int)$_REQUEST['id_list'] : 0;
-
-      if ($id_list > 0) {
-        $where .= ' AND id_list = ?';
-        $params[] = $id_list;
-        $rows = $this->db->rawQuery("SELECT id, namevi FROM `$table` $where ORDER BY numb, id DESC", $params);
+    // Xác định cấp theo tên bảng
+    $matched = null;
+    foreach ($levels as $key => $conf) {
+      if (str_contains($table, $key)) {
+        $matched = $conf;
+        break;
       }
-    } elseif (str_contains($table, '_c3')) {
-      $id = $name = 'id_item';
-      $data_level = 'data-level="2"';
-
-      $id_list = isset($_REQUEST['id_list']) ? (int)$_REQUEST['id_list'] : 0;
-      $id_cat = isset($_REQUEST['id_cat']) ? (int)$_REQUEST['id_cat'] : 0;
-
-      if ($id_list > 0 && $id_cat > 0) {
-        $where .= ' AND id_list = ? AND id_cat = ?';
-        array_push($params, $id_list, $id_cat);
-        $rows = $this->db->rawQuery("SELECT id, namevi FROM `$table` $where ORDER BY numb, id DESC", $params);
-      }
-    } else {
-      $id = $name = 'id';
-      $rows = $this->db->rawQuery("SELECT id, namevi FROM `$table` ORDER BY numb, id DESC");
     }
 
-    // Render select
-    $str = '<select id="' . $id . '" name="' . $name . '" ' . $data_level . ' ' . $data_table . ' ' . $data_child . ' class="' . $class . '">';
+    // Mặc định nếu không khớp cấp
+    if (!$matched) {
+      $field = $name = 'id';
+      $data_level = '';
+      $data_table = '';
+      $data_child = '';
+    } else {
+      $field = $name = $matched['field'];
+      $data_level = 'data-level="' . $matched['data_level'] . '"';
+      $data_table = 'data-table="' . $matched['data_table'] . '"';
+      $data_child = 'data-child="' . $matched['data_child'] . '"';
+
+      // Áp dụng điều kiện lọc
+      foreach ($matched['filters'] as $filterField => $filterValue) {
+        if ($filterValue > 0) {
+          $where .= " AND {$filterField} = ?";
+          $params[] = $filterValue;
+        }
+      }
+    }
+
+    // Query
+    $rows = $this->db->rawQuery("SELECT id, namevi FROM `$table` $where ORDER BY numb, id DESC", $params);
+
+    // Render HTML select
+    $str = '<select id="' . $field . '" name="' . $name . '" ' . $data_level . ' ' . $data_table . ' ' . $data_child . ' class="' . $class . '">';
     $str .= '<option value="0">' . htmlspecialchars($title_select) . '</option>';
 
     if (!empty($rows)) {

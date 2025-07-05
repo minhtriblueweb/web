@@ -14,6 +14,28 @@ class Functions
     $this->db = new Database();
     $this->fm = new Format();
   }
+  function buildActiveLinks($link)
+  {
+    parse_str((string)parse_url($link, PHP_URL_QUERY), $params);
+
+    if (!isset($params['page'])) return [$link]; // Không có page thì giữ nguyên
+
+    $base = $params['page']; // vd: product_man
+    $baseParts = explode('_', $base); // ['product', 'man']
+
+    // Tự sinh các biến thể active
+    $activeLinks = [$link];
+    $prefix = $baseParts[0] ?? '';
+    $suffix = $baseParts[1] ?? '';
+
+    $suffixes = ['man', 'form', 'edit', 'add', 'copy', 'gallery', 'gallery_form'];
+    foreach ($suffixes as $sfx) {
+      $activeLinks[] = '?page=' . $prefix . '_' . $sfx;
+    }
+
+    return array_unique($activeLinks);
+  }
+
   /* Alert */
   public function alert($notify = '')
   {
@@ -532,6 +554,24 @@ class Functions
     echo "</pre>";
     if ($exit) exit();
   }
+  public function checkTitle($data = array())
+  {
+    global $config;
+
+    $result = array();
+
+    foreach ($config['website']['lang'] as $k => $v) {
+      if (isset($data['name' . $k])) {
+        $title = trim($data['name' . $k]);
+
+        if (empty($title)) {
+          $result[] = 'Tiêu đề (' . $v . ') không được trống';
+        }
+      }
+    }
+
+    return $result;
+  }
   public function checkSlug(array $data = []): string|false
   {
     $slug = trim($data['slug'] ?? '');
@@ -560,9 +600,20 @@ class Functions
     if (in_array($slug, $reserved)) {
       return "Đường dẫn đã tồn tại. Vui lòng chọn đường dẫn khác để tránh trùng lặp.";
     }
-
-    // Danh sách các bảng có thể chứa slug
-    $tables = ['tbl_danhmuc_c1', 'tbl_danhmuc_c2', 'tbl_sanpham', 'tbl_news'];
+    $tables = array(
+      "tbl_product_list",
+      "tbl_product_cat",
+      "tbl_product_item",
+      "tbl_product_sub",
+      "tbl_product_brand",
+      "tbl_product",
+      "tbl_news_list",
+      "tbl_news_cat",
+      "tbl_news_item",
+      "tbl_news_sub",
+      "tbl_news",
+      "tbl_tags"
+    );
 
     foreach ($tables as $tbl) {
       // Escape tên cột slug

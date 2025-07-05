@@ -8,10 +8,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['upload'])) {
 }
 ?>
 <?php
-$breadcrumb = [
-  ['label' => 'Bảng điều khiển', 'link' => 'index.php'],
-  ['label' => $name_page]
-];
+$breadcrumb = [['label' => $name_page]];
 include 'templates/breadcrumb.php';
 ?>
 <section class="content">

@@ -1,23 +1,26 @@
 <?php
-$message = '';
-$name_page = 'danh mục cấp 2';
-$type = 'danhmuc_c2';
-$table = "tbl_{$type}";
-$linkMan = "index.php?page={$type}_list";
-$thumb_width = 100;
-$thumb_height = 100;
-$thumb_zc = 1;
+$name = 'danhmuc_c2';
+$pageConfig = [
+  'message'      => '',
+  'name_page'    => 'danh mục cấp 2',
+  'type'         => $name,
+  'thumb_width'  => 100,
+  'thumb_height' => 100,
+  'thumb_zc'     => 1,
+  'table'        => "tbl_$name",
+  'linkMan'      => "index.php?page={$name}_list",
+  'id'           => (isset($_GET['id']) && is_numeric($_GET['id'])) ? (int)$_GET['id'] : null,
+];
+extract($pageConfig);
 $result = $seo_data = [];
-$show_danhmuc = $fn->show_data(['table' => 'tbl_danhmuc_c1']);
-$id = isset($_GET['id']) && is_numeric($_GET['id']) ? (int)$_GET['id'] : null;
-$result = ($id !== null) ? $db->rawQueryOne("SELECT * FROM `$table` WHERE id = ? LIMIT 1", [$id]) : [];
-$seo_data = !empty($result) ? $seo->get_seo($id, $type) : [];
+if ($id !== null) {
+  $result = $db->rawQueryOne("SELECT * FROM `$table` WHERE id = ? LIMIT 1", [$id]);
+  $seo_data = $result ? $seo->get_seo($id, $type) : [];
+}
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && (isset($_POST['add']) || isset($_POST['edit']))) {
   $message = $danhmuc->save_danhmuc_c2($_POST, $_FILES, $id);
 }
-$breadcrumb = [
-  ['label' => (!empty($id) ? 'Cập nhật ' : 'Thêm mới ') . $name_page]
-];
+$breadcrumb = [['label' => ($id !== null ? 'Cập nhật ' : 'Thêm mới ') . $name_page]];
 include TEMPLATE . 'breadcrumb.php';
 ?>
 <section class="content">
@@ -51,9 +54,8 @@ include TEMPLATE . 'breadcrumb.php';
                     <li class="nav-item">
                       <a class="nav-link <?= ($k == 'vi') ? 'active' : '' ?>"
                         id="tabs-lang-article-<?= $k ?>"
-                        data-toggle="pill"
+                        data-toggle="pill" role="tab"
                         href="#tabs-content-article-<?= $k ?>"
-                        role="tab"
                         aria-controls="tabs-content-article-<?= $k ?>"
                         aria-selected="<?= ($k == 'vi') ? 'true' : 'false' ?>">
                         <?= $v ?>
@@ -77,8 +79,7 @@ include TEMPLATE . 'breadcrumb.php';
                           class="form-control for-seo text-sm"
                           name="name<?= $k ?>" id="name<?= $k ?>"
                           placeholder="Tiêu đề (<?= $k ?>)"
-                          value="<?= $_POST['name' . $k] ?? ($result['name' . $k] ?? '') ?>"
-                          <?= ($k == 'vi') ? 'required' : '' ?> />
+                          value="<?= $_POST['name' . $k] ?? ($result['name' . $k] ?? '') ?>" <?= ($k == 'vi') ? 'required' : '' ?> />
                       </div>
 
                       <!-- Mô tả -->
@@ -111,7 +112,7 @@ include TEMPLATE . 'breadcrumb.php';
           </div>
           <div class="card-body">
             <div class="form-group-category">
-              <?= $fn->getAjaxCategory('tbl_danhmuc_c1', $_POST['id_list'] ?? ($result['id_list'] ?? '')) ?>
+              <?= $fn->getAjaxCategory('tbl_danhmuc_c1', $_POST['id_list'] ?? $result['id_list'] ?? '') ?>
             </div>
           </div>
         </div>

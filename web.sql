@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Máy chủ: 127.0.0.1
--- Thời gian đã tạo: Th7 01, 2025 lúc 11:59 AM
+-- Thời gian đã tạo: Th7 05, 2025 lúc 07:00 AM
 -- Phiên bản máy phục vụ: 10.4.32-MariaDB
 -- Phiên bản PHP: 8.2.12
 
@@ -159,100 +159,6 @@ INSERT INTO `tbl_danhgia` (`id`, `namevi`, `nameen`, `addressvi`, `addressen`, `
 (9, 'Hoàng W E B', '', 'Thới An', '', 'Đã mua hàng bên này cũng khá lâu rồi, rất hài lòng về sản phẩm cũng như dịch vụ bên này', '', 'hoang-w-e-b-44d5_100x100x1.webp', 'hienthi', 1, '2025-06-23 01:01:08', '2025-06-24 15:35:28'),
 (10, 'Chị Thanh Tuyền', '', 'Gò Kông', '', 'Tôi rất ấn tượng với cách công ty chăm sóc và lắng nghe khách hàng. Cảm ơn vì trải nghiệm tuyệt vời!', '', 'chi-thanh-tuyen-386f_100x100x1.webp', 'hienthi', 1, '2025-06-23 01:01:08', '2025-06-24 15:35:01'),
 (11, 'Nguyễn Huy Tuấn', '', 'Kiên Giang', '', 'Tôi đã mua hàng ở đây nhiều lần và luôn cảm thấy rất hài lòng. Chất lượng đáng tin cậy.', '', 'nguyen-huy-tuan-a65d_100x100x1.webp', 'hienthi', 1, '2025-06-23 01:01:08', '2025-06-24 13:29:21');
-
--- --------------------------------------------------------
-
---
--- Cấu trúc bảng cho bảng `tbl_danhmuc_c1`
---
-
-CREATE TABLE `tbl_danhmuc_c1` (
-  `id` int(10) NOT NULL,
-  `slugvi` text NOT NULL,
-  `slugen` text NOT NULL,
-  `namevi` text NOT NULL,
-  `nameen` text NOT NULL,
-  `descvi` text NOT NULL,
-  `descen` text NOT NULL,
-  `contentvi` text NOT NULL,
-  `contenten` text NOT NULL,
-  `file` text NOT NULL,
-  `status` text NOT NULL,
-  `numb` int(11) NOT NULL,
-  `date_created` datetime NOT NULL DEFAULT current_timestamp(),
-  `date_updated` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
-  `type` varchar(30) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Đang đổ dữ liệu cho bảng `tbl_danhmuc_c1`
---
-
-INSERT INTO `tbl_danhmuc_c1` (`id`, `slugvi`, `slugen`, `namevi`, `nameen`, `descvi`, `descen`, `contentvi`, `contenten`, `file`, `status`, `numb`, `date_created`, `date_updated`, `type`) VALUES
-(2, 'rubik-co-ban', 'rubik-co-ban-tieng-anh', 'Rubik Cơ bản', 'Rubik Cơ bản tiếng anh', 'Việc học Rubik theo thứ tự từ 2x2 → 3x3 → 4x4 → 5x5 giúp người chơi nâng cao kỹ năng logic, tư duy không gian và kiên nhẫn.', '', '<h2 style=\"font-size: 20px; font-weight: bold;\"><span style=\"line-height:2;\">Giới thiệu Rubik Cơ Bản từ 2x2 đến 5x5</span></h2>\r\n\r\n<h3 style=\"font-size: 18px; font-weight: bold;\"><span style=\"line-height:2;\">1. Rubik 2x2x2 – Mini Cube</span></h3>\r\n\r\n<p style=\"font-size: 16px;\"><span style=\"line-height:2;\"><strong>Cấu trúc:</strong> Gồm 8 mảnh góc, không có cạnh hay tâm.</span></p>\r\n\r\n<p style=\"font-size: 16px;\"><span style=\"line-height:2;\"><strong>Độ khó:</strong> Dễ nhất trong các loại Rubik, thích hợp cho người mới học.</span></p>\r\n\r\n<p style=\"font-size: 16px;\"><span style=\"line-height:2;\"><strong>Mục tiêu:</strong> Xếp các màu đồng nhất trên mỗi mặt.</span></p>\r\n\r\n<p style=\"font-size: 16px;\"><span style=\"line-height:2;\"><strong>Điểm thú vị:</strong> Là phiên bản đơn giản của Rubik 3x3, giúp học viên làm quen với khái niệm xoay và định hướng góc.</span></p>\r\n\r\n<h3 style=\"font-size: 18px; font-weight: bold;\"><span style=\"line-height:2;\">2. Rubik 3x3x3 – Standard Cube</span></h3>\r\n\r\n<p style=\"font-size: 16px;\"><span style=\"line-height:2;\"><strong>Cấu trúc:</strong> Gồm 26 mảnh: 8 góc, 12 cạnh, 6 tâm cố định.</span></p>\r\n\r\n<p style=\"font-size: 16px;\"><span style=\"line-height:2;\"><strong>Độ khó:</strong> Trung bình, phổ biến nhất và là nền tảng cho các biến thể phức tạp hơn.</span></p>\r\n\r\n<p style=\"font-size: 16px;\"><span style=\"line-height:2;\"><strong>Mục tiêu:</strong> Sắp xếp để mỗi mặt chỉ có một màu duy nhất.</span></p>\r\n\r\n<p style=\"font-size: 16px;\"><span style=\"line-height:2;\"><strong>Điểm thú vị:</strong> Có hơn 43 tỷ tỷ hoán vị khác nhau, nhưng luôn có thể giải được trong dưới 20 bước.</span></p>\r\n\r\n<h3 style=\"font-size: 18px; font-weight: bold;\"><span style=\"line-height:2;\">3. Rubik 4x4x4 – Rubik Revenge</span></h3>\r\n\r\n<p style=\"font-size: 16px;\"><span style=\"line-height:2;\"><strong>Cấu trúc:</strong> Gồm 4 tầng trên mỗi trục, không có tâm cố định.</span></p>\r\n\r\n<p style=\"font-size: 16px;\"><span style=\"line-height:2;\"><strong>Độ khó:</strong> Cao hơn vì phát sinh thêm các lỗi parity (trường hợp đặc biệt không xuất hiện ở 3x3).</span></p>\r\n\r\n<p style=\"font-size: 16px;\"><span style=\"line-height:2;\"><strong>Mục tiêu:</strong> Ghép cặp các mảnh trung tâm và cạnh trước khi giải như 3x3.</span></p>\r\n\r\n<p style=\"font-size: 16px;\"><span style=\"line-height:2;\"><strong>Điểm thú vị:</strong> Là thử thách lớn cho người đã quen với Rubik 3x3.</span></p>\r\n\r\n<h3 style=\"font-size: 18px; font-weight: bold;\"><span style=\"line-height:2;\">4. Rubik 5x5x5 – Professor\'s Cube</span></h3>\r\n\r\n<p style=\"font-size: 16px;\"><span style=\"line-height:2;\"><strong>Cấu trúc:</strong> Gồm 5 tầng, có tâm cố định và nhiều mảnh trung tâm, cạnh.</span></p>\r\n\r\n<p style=\"font-size: 16px;\"><span style=\"line-height:2;\"><strong>Độ khó:</strong> Cao hơn 4x4 do có thêm mảnh cần ghép, tuy nhiên ít lỗi parity hơn.</span></p>\r\n\r\n<p style=\"font-size: 16px;\"><span style=\"line-height:2;\"><strong>Mục tiêu:</strong> Ghép các mảnh để có thể giải như Rubik 3x3.</span></p>\r\n\r\n<p style=\"font-size: 16px;\"><span style=\"line-height:2;\"><strong>Điểm thú vị:</strong> Được xem là cấp độ \"giáo sư\" – dành cho những người đã thành thạo 3x3 và 4x4.</span></p>\r\n', '', 'rubik-co-ban-958f_50x50x1.jpg', 'hienthi,noibat', 1, '2025-06-22 11:52:48', '2025-06-30 22:58:20', 'danhmuc_c1'),
-(3, 'rubik-bien-the', '', 'Rubik biến thể', '', '', '', '', '', 'c7a1c964e4_50x50x1.jpg', 'hienthi,noibat', 3, '2025-06-22 11:52:57', '2025-06-26 11:21:24', NULL),
-(4, 'rubik-nang-cao', 'rubik-nang-cao', 'Rubik nâng cao', 'Rubik nâng cao', 'Rubik nâng cao là những khối lập phương có kích thước từ 6x6x6 trở lên, dành cho người chơi đã có kinh nghiệm với các dòng cơ bản như 3x3 hoặc 5x5. Những khối Rubik này không chỉ có số lượng mảnh tăng lên đáng kể, mà còn yêu cầu người chơi thành thạo kỹ thuật ghép tâm, ghép cạnh, và xử lý các lỗi đặc biệt như parity. Mỗi cấp độ đều mang đến những thử thách riêng biệt, từ thao tác xoay phức tạp đến khối lượng bước giải khổng lồ, đòi hỏi sự kiên trì, chính xác và tư duy logic vượt trội. Rubik nâng cao không chỉ là một trò chơi trí tuệ, mà còn là biểu tượng của niềm đam mê và sự chinh phục giới hạn bản thân trong thế giới speedcubing.', '', '<h2 style=\"font-size: 20px; font-weight: bold; color: red;\">Giới thiệu Rubik Nâng Cao</h2>\r\n\r\n<p style=\"font-size: 16px;\">Rubik nâng cao là những khối lập phương có kích thước từ 6x6x6 trở lên, dành cho người chơi đã có kinh nghiệm với các dòng cơ bản như 3x3 hoặc 5x5. Những khối Rubik này không chỉ có số lượng mảnh tăng lên đáng kể, mà còn yêu cầu người chơi thành thạo kỹ thuật ghép tâm, ghép cạnh, và xử lý các lỗi đặc biệt như parity. Mỗi cấp độ đều mang đến những thử thách riêng biệt, từ thao tác xoay phức tạp đến khối lượng bước giải khổng lồ, đòi hỏi sự kiên trì, chính xác và tư duy logic vượt trội. Rubik nâng cao không chỉ là một trò chơi trí tuệ, mà còn là biểu tượng của niềm đam mê và sự chinh phục giới hạn bản thân trong thế giới speedcubing.</p>\r\n\r\n<h3 style=\"font-size: 18px; font-weight: bold; color: blue;\">1. Rubik 6x6x6</h3>\r\n\r\n<p style=\"font-size: 16px;\"><strong>Cấu trúc:</strong> Gồm 6 tầng mỗi cạnh, không có tâm cố định, nhiều mảnh cạnh và tâm nhỏ cần ghép.</p>\r\n\r\n<p style=\"font-size: 16px;\"><strong>Độ khó:</strong> Khó hơn 5x5 do số lượng mảnh tăng và lỗi parity xuất hiện nhiều hơn.</p>\r\n\r\n<p style=\"font-size: 16px;\"><strong>Mục tiêu:</strong> Ghép tất cả các mảnh về đúng vị trí trước khi giải như 3x3.</p>\r\n\r\n<p style=\"font-size: 16px;\"><strong>Điểm thú vị:</strong> Là cấp độ mở rộng tiếp theo của dòng Rubik Even (số chẵn), đòi hỏi sự kiên nhẫn và chính xác.</p>\r\n\r\n<h3 style=\"font-size: 18px; font-weight: bold; color: blue;\">2. Rubik 7x7x7</h3>\r\n\r\n<p style=\"font-size: 16px;\"><strong>Cấu trúc:</strong> Gồm 7 tầng, có tâm cố định, số lượng mảnh tăng nhiều.</p>\r\n\r\n<p style=\"font-size: 16px;\"><strong>Độ khó:</strong> Cao hơn 6x6 nhưng dễ hơn về mặt parity vì là rubik lẻ (odd).</p>\r\n\r\n<p style=\"font-size: 16px;\"><strong>Mục tiêu:</strong> Tương tự 5x5 nhưng thêm nhiều bước ghép các mảnh nhỏ.</p>\r\n\r\n<p style=\"font-size: 16px;\"><strong>Điểm thú vị:</strong> Còn gọi là \"Ultimate Cube\", cân bằng giữa độ phức tạp và tính giải trí.</p>\r\n\r\n<h3 style=\"font-size: 18px; font-weight: bold; color: blue;\">3. Rubik 8x8x8</h3>\r\n\r\n<p style=\"font-size: 16px;\"><strong>Cấu trúc:</strong> 8 tầng mỗi trục, là khối lập phương chẵn, không có tâm cố định.</p>\r\n\r\n<p style=\"font-size: 16px;\"><strong>Độ khó:</strong> Rất cao, do số mảnh tăng mạnh và parity phức tạp hơn.</p>\r\n\r\n<p style=\"font-size: 16px;\"><strong>Mục tiêu:</strong> Giải theo trình tự: ghép tâm, ghép cạnh, sau đó giải như 3x3.</p>\r\n\r\n<p style=\"font-size: 16px;\"><strong>Điểm thú vị:</strong> Là thử thách nặng về kỹ thuật, đòi hỏi người chơi phải kiểm soát từng tầng một cách chính xác.</p>\r\n\r\n<h3 style=\"font-size: 18px; font-weight: bold; color: blue;\">4. Rubik 9x9x9</h3>\r\n\r\n<p style=\"font-size: 16px;\"><strong>Cấu trúc:</strong> Gồm 9 tầng, là dạng Rubik lẻ, có tâm cố định.</p>\r\n\r\n<p style=\"font-size: 16px;\"><strong>Độ khó:</strong> Khó ở khâu ghép mảnh vì số lượng mảnh nhỏ nhiều, nhưng dễ hơn 8x8 về mặt parity.</p>\r\n\r\n<p style=\"font-size: 16px;\"><strong>Mục tiêu:</strong> Giống với 7x7, nhưng cần thêm nhiều bước lặp hơn khi ghép tâm và cạnh.</p>\r\n\r\n<p style=\"font-size: 16px;\"><strong>Điểm thú vị:</strong> Cảm giác cực kỳ \"khổng lồ\" khi cầm và xoay, phù hợp cho người chơi muốn thử thách độ bền và kỹ thuật.</p>\r\n\r\n<h3 style=\"font-size: 18px; font-weight: bold; color: blue;\">5. Rubik 10x10x10</h3>\r\n\r\n<p style=\"font-size: 16px;\"><strong>Cấu trúc:</strong> 10 tầng, là khối Rubik chẵn, không có tâm cố định.</p>\r\n\r\n<p style=\"font-size: 16px;\"><strong>Độ khó:</strong> Vô cùng cao, số lượng bước giải lớn, parity rất phức tạp.</p>\r\n\r\n<p style=\"font-size: 16px;\"><strong>Mục tiêu:</strong> Giải giống 6x6 hoặc 8x8 nhưng mất nhiều thời gian và công đoạn hơn.</p>\r\n\r\n<p style=\"font-size: 16px;\"><strong>Điểm thú vị:</strong> Thường không được giải bằng tay thường xuyên mà chủ yếu để trưng bày hoặc phá kỷ lục.</p>\r\n\r\n<h3 style=\"font-size: 18px; font-weight: bold; color: blue;\">6. Rubik 11x11x11</h3>\r\n\r\n<p style=\"font-size: 16px;\"><strong>Cấu trúc:</strong> Rubik lớn nhất sản xuất đại trà, với 11 tầng mỗi trục, có tâm cố định.</p>\r\n\r\n<p style=\"font-size: 16px;\"><strong>Độ khó:</strong> Cấp độ cao nhất trong dòng Rubik cổ điển, số lượng mảnh và bước giải khổng lồ.</p>\r\n\r\n<p style=\"font-size: 16px;\"><strong>Mục tiêu:</strong> Giải qua các bước ghép tâm, cạnh, sau đó như Rubik 3x3.</p>\r\n\r\n<p style=\"font-size: 16px;\"><strong>Điểm thú vị:</strong> Là minh chứng cho sự kiên trì và đam mê của người chơi Rubik chuyên sâu.</p>\r\n', '', 'db97ce63ff_50x50x1.jpg', 'hienthi,noibat', 2, '2025-06-22 11:53:04', '2025-07-01 11:40:03', 'danhmuc_c1'),
-(11, 'rubik-bien-the-di-hinh', '', 'Rubik Biến Thể Dị Hình', '', '', '', '', '', 'rubik-bien-the-di-hinh-22a8_50x50x1.jpg', 'hienthi,noibat', 4, '2025-06-24 12:59:01', '2025-07-01 13:04:24', 'danhmuc_c1'),
-(13, 'rubik-dau-giai-wca', '', 'Rubik Đấu Giải WCA', '', '', '', '', '', 'rubik-dau-giai-wca-76a1_50x50x1.png', 'hienthi,noibat', 5, '2025-06-26 11:27:10', '2025-06-26 11:27:20', NULL),
-(14, 'rubik-suu-tam', '', 'Rubik Sưu Tầm ', '', '', '', '', '', 'rubik-suu-tam--ebc3_50x50x1.jpg', 'hienthi,noibat', 6, '2025-06-26 11:28:10', '2025-06-26 11:28:19', NULL),
-(15, 'phu-kien-rubik', '', 'Phụ Kiện Rubik', '', '', '', '', '', 'phu-kien-rubik-8fd4_50x50x1.jpg', 'hienthi,noibat', 4, '2025-06-26 11:29:50', '2025-06-26 13:26:40', NULL),
-(16, 'discount', '', 'Discount', '', '', '', '', '', 'discount-d4ed_50x50x1.jpg', 'hienthi,noibat', 10, '2025-06-26 11:31:47', '2025-06-26 11:31:47', NULL),
-(17, 'xep-hinh-nam-cham', '', 'Xếp Hình Nam Châm', '', '', '', '', '', 'xep-hinh-nam-cham-8993_50x50x1.jpg', 'hienthi,noibat', 9, '2025-06-26 11:32:17', '2025-06-26 11:33:14', NULL),
-(18, 'board-game', '', 'Board Game', '', '', '', '', '', 'board-game-3b89_50x50x1.jpg', 'hienthi,noibat', 8, '2025-06-26 11:34:24', '2025-06-26 11:34:24', NULL),
-(19, 'mo-hinh-tinh', 'mo-hinh-tinh', 'Mô Hình Tĩnh', 'Mô Hình Tĩnh', '', '', '', '', 'mo-hinh-tinh-45a4_50x50x1.jpg', 'hienthi,noibat', 9, '2025-06-26 11:35:07', '2025-06-26 11:35:45', NULL);
-
--- --------------------------------------------------------
-
---
--- Cấu trúc bảng cho bảng `tbl_danhmuc_c2`
---
-
-CREATE TABLE `tbl_danhmuc_c2` (
-  `id` int(11) NOT NULL,
-  `slugvi` text NOT NULL,
-  `slugen` text NOT NULL,
-  `namevi` text NOT NULL,
-  `nameen` text NOT NULL,
-  `descvi` text NOT NULL,
-  `descen` text NOT NULL,
-  `contentvi` text NOT NULL,
-  `contenten` text NOT NULL,
-  `id_list` int(11) NOT NULL,
-  `file` text NOT NULL,
-  `status` text NOT NULL,
-  `numb` int(11) NOT NULL,
-  `date_created` datetime NOT NULL DEFAULT current_timestamp(),
-  `date_updated` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
-  `type` varchar(30) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Đang đổ dữ liệu cho bảng `tbl_danhmuc_c2`
---
-
-INSERT INTO `tbl_danhmuc_c2` (`id`, `slugvi`, `slugen`, `namevi`, `nameen`, `descvi`, `descen`, `contentvi`, `contenten`, `id_list`, `file`, `status`, `numb`, `date_created`, `date_updated`, `type`) VALUES
-(2, 'rubik-2x2x2', '', 'Rubik 2x2x2', '', '', '', '', '', 2, '382a4a72a1_100x100x1.jpg', 'hienthi,noibat', 1, '2025-06-22 12:06:59', '2025-06-30 23:39:57', 'danhmuc_c2'),
-(3, 'rubik-3x3x3', '', 'Rubik 3x3x3', '', '', '', '', '', 2, '135469cc02_100x100x1.jpg', 'hienthi,noibat', 2, '2025-06-22 12:07:31', '2025-06-30 23:41:11', 'danhmuc_c2'),
-(6, 'rubik-5x5x5', '', 'Rubik 5x5x5', '', '', '', '', '', 2, '6f80aa2466_100x100x1.jpg', 'hienthi,noibat', 4, '2025-06-22 23:48:30', '2025-07-01 13:45:06', 'danhmuc_c2'),
-(7, 'rubik-4x4x4', '', 'Rubik 4x4x4', '', '', '', '', '', 2, '762dd7eb24_100x100x1.jpg', 'hienthi,noibat', 3, '2025-06-24 09:07:38', '2025-06-30 23:41:28', 'danhmuc_c2'),
-(8, 'rubik-6x6x6', '', 'rubik 6x6x6', '', '', '', '', '', 4, 'rubik-6x6x6-1876_100x100x1.jpg', 'hienthi,noibat', 5, '2025-06-24 15:38:39', '2025-06-24 15:41:38', NULL),
-(9, 'rubik-7x7x7', '', 'Rubik 7x7x7', '', '', '', '', '', 4, 'rubik-7x7x7-c70a_100x100x1.jpg', 'hienthi,noibat', 6, '2025-06-24 15:43:12', '2025-06-24 15:43:35', NULL),
-(11, 'rubik-bien-the-3-mat-pyraminx', '', 'Rubik biến thể 3 mặt (Pyraminx)', '', '', '', '', '', 3, 'rubik-bien-the-3-mat-pyraminx--b300_100x100x1.jpg', 'hienthi,noibat', 1, '2025-06-26 11:23:27', '2025-07-01 15:01:41', 'danhmuc_c2'),
-(12, 'rubik-bien-the-12-mat-megaminx', '', 'Rubik biến thể 12 mặt (Megaminx)', '', '', '', '', '', 3, 'rubik-bien-the-12-mat-megaminx--f4db_100x100x1.webp', 'hienthi,noibat', 3, '2025-06-26 11:25:17', '2025-06-26 13:21:36', NULL),
-(13, 'rubik-8x8x8', '', 'Rubik 8x8x8', '', '', '', '', '', 4, 'ribik-8x8x8-4fc3_100x100x1.jpg', 'hienthi,noibat', 7, '2025-06-26 11:37:01', '2025-07-01 11:40:48', 'danhmuc_c2'),
-(14, 'rubik-9x9x9', '', 'Rubik 9x9x9', '', 'Qiyi 9x9 Cube Stickerless 9x9x9 Xếp hình Khối lập phương Thần tài cho trẻ em Quà tặng Đồ chơi Xếp hình Giáo dục Quà tặng Khối lập phương ban đầu', '', '<p>Qiyi 9x9 Cube Stickerless 9x9x9 Xếp hình Khối lập phương Thần tài cho trẻ em Quà tặng Đồ chơi Xếp hình Giáo dục Quà tặng Khối lập phương ban đầu</p>\r\n', '', 4, 'rubik-9x9x9-8f11_100x100x1.jpg', 'hienthi,noibat', 8, '2025-06-26 13:20:06', '2025-06-26 13:20:06', NULL),
-(15, 'rubik-bien-the-6-mat', '', 'Rubik Biến Thể 6 mặt', '', '', '', '', '', 3, 'rubik-bien-the-6-mat-26c3_100x100x1.jpg', 'hienthi,noibat', 2, '2025-06-26 13:21:15', '2025-06-30 23:40:10', 'danhmuc_c2'),
-(16, 'rubik-bien-the-khac', '', 'Rubik Biến Thể Khác', '', '', '', '', '', 3, 'rubik-bien-the-khac-5064_100x100x1.jpg', 'hienthi,noibat', 4, '2025-06-26 13:21:53', '2025-06-26 13:22:59', NULL),
-(17, 'rubik-bien-the-cao-cap', '', 'Rubik Biến Thể Cao Cấp', '', '', '', '', '', 3, 'rubik-bien-the-cao-cap-2541_100x100x1.jpg', 'hienthi,noibat', 5, '2025-06-26 13:22:15', '2025-07-01 13:45:58', 'danhmuc_c2'),
-(18, 'stickers-de-can-dan-rubik', '', 'Stickers - Đề can dán rubik', '', '', '', '', '', 15, 'stickers-de-can-dan-rubik-2022_100x100x1.jpg', 'hienthi,noibat', 10, '2025-06-26 13:24:30', '2025-06-26 13:33:36', NULL),
-(19, 'core-oc', '', 'Core & Ốc', '', '', '', '', '', 15, 'core-oc-b98f_100x100x1.jpg', 'hienthi,noibat', 10, '2025-06-26 13:26:26', '2025-06-26 13:33:37', NULL),
-(20, 'silicone-dau-boi-tron', '', 'Silicone - Dầu bôi trơn', '', '', '', '', '', 15, 'silicone-dau-boi-tron-b396_100x100x1.jpg', 'hienthi,noibat', 10, '2025-06-26 13:27:16', '2025-06-26 13:33:37', NULL),
-(21, 'stand-de-rubik', '', 'Stand - Đế Rubik', '', '', '', '', '', 15, 'stand-de-rubik-3d58_100x100x1.jpg', 'hienthi,noibat', 10, '2025-06-26 13:27:43', '2025-06-26 13:33:37', NULL),
-(22, 'magnetic-nam-cham', '', 'Magnetic - Nam Châm', '', '', '', '', '', 15, 'magnetic-nam-cham-a15e_100x100x1.jpg', 'hienthi,noibat', 10, '2025-06-26 13:28:40', '2025-06-26 13:33:38', NULL),
-(23, 'hop-nhua-rubik', '', 'Hộp nhựa Rubik', '', '', '', '', '', 15, 'hop-nhua-rubik-68fb_100x100x1.jpg', 'hienthi,noibat', 10, '2025-06-26 13:29:02', '2025-06-26 13:33:39', NULL),
-(24, 'tui-vai-dung-rubik-gancube-bag', '', 'Túi Vải Đựng Rubik GanCube Bag ', '', '', '', '', '', 15, 'tui-vai-dung-rubik-gancube-bag--80d7_100x100x1.webp', 'hienthi,noibat', 10, '2025-06-26 13:30:39', '2025-06-26 13:33:40', NULL),
-(25, 'tshirt-ao-phong-rubik', '', 'Tshirt - Áo phông Rubik', '', '', '', '', '', 15, 'tshirt-ao-phong-rubik-59b8_100x100x1.jpg', 'hienthi,noibat', 10, '2025-06-26 13:31:14', '2025-06-26 13:34:19', NULL),
-(26, 'guide-books-sach-huong-dan', '', 'Guide books - Sách hướng dẫn', '', '', '', '', '', 15, 'guide-books-sach-huong-dan-2c12_100x100x1.jpg', 'hienthi,noibat', 10, '2025-06-26 13:31:48', '2025-06-26 13:34:18', NULL);
 
 -- --------------------------------------------------------
 
@@ -1139,10 +1045,10 @@ INSERT INTO `tbl_payment` (`id`, `namevi`, `contenten`, `nameen`, `contentvi`, `
 -- --------------------------------------------------------
 
 --
--- Cấu trúc bảng cho bảng `tbl_sanpham`
+-- Cấu trúc bảng cho bảng `tbl_product`
 --
 
-CREATE TABLE `tbl_sanpham` (
+CREATE TABLE `tbl_product` (
   `id` int(11) NOT NULL,
   `slugvi` text NOT NULL,
   `slugen` text NOT NULL,
@@ -1168,13 +1074,107 @@ CREATE TABLE `tbl_sanpham` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Đang đổ dữ liệu cho bảng `tbl_sanpham`
+-- Đang đổ dữ liệu cho bảng `tbl_product`
 --
 
-INSERT INTO `tbl_sanpham` (`id`, `slugvi`, `slugen`, `namevi`, `nameen`, `descvi`, `descen`, `contentvi`, `contenten`, `file`, `id_list`, `id_cat`, `regular_price`, `sale_price`, `discount`, `code`, `type`, `status`, `numb`, `views`, `date_created`, `date_updated`) VALUES
-(9, 'rubik-tam-giac-sieu-dep', '', 'Rubik Tam Giác siêu đẹp', '', '', '', '', '', 'rubik-tam-giac-sieu-dep-431f_500x500x1.webp', 2, 2, '', '', 0, '', 'sanpham', 'hienthi,noibat,banchay', 1, 45, '2025-06-24 11:01:15', '2025-06-30 21:59:51'),
-(10, 'rubik-sieu-dep-trai', '', 'Rubik siêu đẹp trai', '', '', '', '', '', 'rubik-sieu-dep-trai-66f4_500x500x1.webp', 2, 3, '', '', 0, '', 'sanpham', 'hienthi,noibat,banchay', 1, 7, '2025-06-24 15:16:15', '2025-06-29 16:49:25'),
-(16, 'rubik-3x3x3-khoi-lap-phuong-do-choi-tri-tue-danh-cho-be-tren-3-tuoi', '', 'Rubik 3x3x3 khối lập phương đồ chơi trí tuệ dành cho bé trên 3 tuổi', '', '<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">Vừa chơi vừa học: Đồ chơi Rubik 3x3x3 khối lập phương là đồ chơi giúp bé tăng sự tập trung trí tuệ, tư duy logic để rèn luyện trí nhớ</span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">Phát triển kỹ năng cho trẻ: Khối rubik lập phương với những màu sắc các mặt khác nhau giúp bé tăng khả năng nhận biết màu sắc. Xoay các khối rubick giúp bé rèn luyện thêm sự kiên trì và kỹ năng vận động khéo léo của tay.</span></span></p>\r\n', '', '<h1><span style=\"line-height:2;\"><span style=\"font-size:16px;\">Chi tiết sản phẩm đồ chơi rubik 3x3x3 khối lập phương đồ chơi trí tuệ dành cho bé trên 3 tuổi</span></span></h1>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">Mã sản phẩm:</span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">Thương hiệu: <a href=\"https://v-toys.vn/\">V-toys</a></span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">Xuất xứ: Việt Nam</span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">Màu sắc: Theo ảnh sản phẩm hoặc có thể thay đổi</span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">Size:</span></span></p>\r\n\r\n<h3><span style=\"line-height:2;\"><span style=\"font-size:16px;\">Hướng dẫn cách chơi rubik 3x3x3 khối lập phương</span></span></h3>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\"><strong>Bước 1:</strong></span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">Bạn phải quay đúng một mặt, nhưng phải quay đúng luật, nghĩa là khi quay xong 1 mặt thì sẽ hình thành tầng một xung quanh mặt vừa lắp đúng. Đầu tiên phải xoay được một hình chữ thập, sau đó nhét các ô đúng vào 4 góc. Tất cả đều có công thức: Quay tầng 3 của mặt đó về bên trái, cạnh bên phải lên trên. Sau đó quay trở lại: tầng 3 về bên phải, cạnh phải xuống dưới. Cứ làm liên tục như vậy cho tới khi được góc cùng màu trở về vị trí thích hợp</span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\"><strong>Bước 2:</strong></span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">Sau khi hoàn thành bước 1, bạn lật mặt kề mặt đúng, tầng 2 bạn hãy để ý cái tâm, bạn phải quay sang phải hoặc trái để cho màu của tâm trùng với màu của tầng một. Sau khi tâm trùng với tầng 1, bạn lấy 1 mặt bất kì làm mặt chính (ngoại trừ mặt đối diện mặt làm đúng ở bước 1). Bạn lấy tầng 3 của mặt chính, quay về một phía sao cho đủ 2 điều kiện: điều kiện 1 là màu giữa tầng 3 mặt chính phải trùng với màu tâm mặt chính, điều kiện 2 là màu kề màu giữa tầng 3 (ở phía mặt dưới) trùng màu với tâm kế bên (phải trùng màu với màu tâm của mặt trái hoặc mặt phải mặt chính).</span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">Nếu trùng màu tâm mặt phải, công thức: giữ mặt chính, tầng 3 qua trái, cạnh bên phải mặt chính quay xuống, tầng 3 qua phải, cạnh bên phải mặt chính quay lên, tầng 3 qua phải, mặt chính qua phải, tầng 3 qua trái, mặt chính qua trái.</span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">Nếu trùng màu tâm mặt trái, công thức: giữ mặt chính, tầng 3 qua phải, cạnh bên trái mặt chính quay xuống, tầng 3 qua trái, cạnh bên trái mặt chính quay lên, tầng 3 qua trái, mặt chính qua trái, tầng 3 qua phải, mặt chính qua phải.</span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\"><strong>Bước 3:</strong></span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">Đây là bước khó nhất trong các bước. Sau khi hoàn thành bước 2, bạn quay rubik xuống mặt đối diện mặt đúng ở bước 1 làm mặt chính, bạn nhìn vào 4 góc ở mặt chính, kiếm 2 góc hội tụ các điều kiện: 3 màu của góc phải trùng với 3 màu của 3 tâm gồm: tâm mặt chính, tâm 2 mặt có chứa góc, không nhất thiết 3 màu của góc phải nằm chính xác. Sau khi xác định hai góc hội tụ đủ các điều kiện trên, bạn hãy xác định mặt nào chứa 2 góc đó (nằm phía trên mặt chính) và lấy mặt đó làm mặt chính. Công thức: Mặt bên phải mặt chính quay xuống, tầng 3 quay qua trái, mặt bên phải mặt chính quay lên, mặt chính quay qua phải, tầng 3 quay qua trái (nếu trường hợp 2 góc hội tụ điều kiện thì đáy trái 2 lần), mặt chính quay qua trái, mặt bên phải mặt chính quay xuống, tầng 3 quay qua phải, mặt bên phải mặt chính quay lên, tầng 3 qua trái 2 lần. Sau khi quay xong, bạn lật mặt đáy, nhìn 4 góc, lúc này cả bốn góc sẽ đúng vị trí nhưng chưa hẳn chính xác. Bạn lật trở lại mặt chính vừa quay và thực hiện công thức: mặt bên phải mặt chính quay xuống, tầng 3 quay qua trái, mặt bên phải mặt chính quay lên, tầng 3 quay qua trái, mặt bên phải mặt chính quay xuống, tầng 3 quay qua trái 2 lần, mặt bên phải mặt chính quay lên, tầng 3 quay qua trái 2 lần. Lúc này góc phía dưới bên phải mặt chính (tức là màu nằm bên phải tầng 3 của mặt chính) sẽ trùng màu với tâm mặt chính (nếu không trùng thì cứ thực hiện công thức trên thêm 1 lần nữa) và màu bên phải màu trên sẽ trùng màu với tâm của mặt phải mặt chính. Lúc này ta lấy mặt phải mặt chính làm mặt chính và ta thực hiện công thức trên cho tới khi nào màu tầng 3 bên phải mặt chính phù hợp với điều kiện vừa rồi (có thể mặt chính sẽ đúng màu). Ta lật mặt đối mặt chính làm mặt chính thực hiện công thức trên và điều kiện cũng như trên.</span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\"><strong>Bước 4:</strong></span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">Đây là bước cuối cùng, bạn hãy chú ý mặt đáy của mặt chính ở bước 3, lúc này nó có thể xuất hiện các hình sau: chữ X, mũi tên, chữ H hoặc mặt đáy sẽ đúng màu.</span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">Nếu là chữ X: Lấy mặt chính(mc) ở bước 3, thực hiện công thức: trái mc lên, phải mc lên, mc quay qua phải một cái, trái mc xuống, phải mc xuống, tầng 3 qua trái hai cái, thực hiện 2 lần như thế. Lúc này mặt đáy mc sẽ ra hình mũi tên hoặc màu đúng</span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">Nếu là mũi tên: Bạn hãy quan sát mặt đáy, quay mặt đáy về chiều 11h (tức chiều phía trên bên trái),lật lên và lấy mặt bên phải đầu mũi tên làm mặt chính, thực hiện công thức chữ X</span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">Nếu mặt đáy đúng màu: Bạn hãy lấy màu bất kì trên mặt đáy làm mặt chính (nếu mặt nào màu đã đúng thì không lấy làm mc) và thực hiện công thức 10 bước: trái mc lên, phải mc lên, mc quay qua phải một cái, trái mc xuống, phải mc xuống, tầng 3 qua phải một cái, trái mc lên, phải mc lên, mc quay qua phải một cái, trái mc xuống, phải mc xuống, tầng 3 qua phải một cái, trái mc lên, phải mc lên, mc qua phải hai cái, trái mc xuống, phải mc xuống, tầng 3 qua phải 1cái, thực hiện thêm 5 lần nữa(nhớ mc chỉ qua phải một cái),đếm bước 10 thì tầng 3 qua phải hai cái.</span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">Chữ H: bạn hãy lấy mặt trên hoặc dưới chữ H làm mc, thực hiện công thức chữ X, cho đến khi một trong 2 mặt hai bên chữ H đúng màu, lấy mặt đó làm mc, thực hiện công thức chữ X, thực hiện cho đến khi 2 mặt hai bên chữ H đúng màu hết. Khi đó ta lấy mặt trên hoặc dưới chữ H làm mc, thực hiện công thức 10 bước, lúc này khối rubik sẽ được hoàn thiện.</span></span></p>\r\n', '', 'rubik-3x3x3-khoi-lap-phuong-do-choi-tri-tue-danh-cho-be-tren-3-tuoi-4322_500x500x1.webp', 2, 3, '', '', 0, '', 'sanpham', 'banchay,hienthi,noibat', 1, 5, '2025-06-30 16:45:55', '2025-07-01 14:10:05');
+INSERT INTO `tbl_product` (`id`, `slugvi`, `slugen`, `namevi`, `nameen`, `descvi`, `descen`, `contentvi`, `contenten`, `file`, `id_list`, `id_cat`, `regular_price`, `sale_price`, `discount`, `code`, `type`, `status`, `numb`, `views`, `date_created`, `date_updated`) VALUES
+(9, 'rubik-tam-giac-sieu-dep', '', 'Rubik Tam Giác siêu đẹp', '', '', '', '', '', 'rubik-tam-giac-sieu-dep-431f_500x500x1.webp', 4, 8, '', '', 0, '', 'sanpham', 'hienthi,noibat,banchay', 1, 47, '2025-06-24 11:01:15', '2025-07-04 16:53:09'),
+(10, 'rubik-sieu-dep-trai', '', 'Rubik siêu đẹp trai', '', '', '', '', '', 'rubik-sieu-dep-trai-66f4_500x500x1.webp', 2, 3, '', '', 0, '', 'sanpham', 'hienthi,noibat,banchay', 1, 11, '2025-06-24 15:16:15', '2025-07-03 11:34:33'),
+(16, 'rubik-3x3x3-khoi-lap-phuong-do-choi-tri-tue-danh-cho-be-tren-3-tuoi', '', 'Rubik 3x3x3 khối lập phương đồ chơi trí tuệ dành cho bé trên 3 tuổi', '', '<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">Vừa chơi vừa học: Đồ chơi Rubik 3x3x3 khối lập phương là đồ chơi giúp bé tăng sự tập trung trí tuệ, tư duy logic để rèn luyện trí nhớ</span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">Phát triển kỹ năng cho trẻ: Khối rubik lập phương với những màu sắc các mặt khác nhau giúp bé tăng khả năng nhận biết màu sắc. Xoay các khối rubick giúp bé rèn luyện thêm sự kiên trì và kỹ năng vận động khéo léo của tay.</span></span></p>\r\n', '', '<h1><span style=\"line-height:2;\"><span style=\"font-size:16px;\">Chi tiết sản phẩm đồ chơi rubik 3x3x3 khối lập phương đồ chơi trí tuệ dành cho bé trên 3 tuổi</span></span></h1>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">Mã sản phẩm:</span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">Thương hiệu: <a href=\"https://v-toys.vn/\">V-toys</a></span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">Xuất xứ: Việt Nam</span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">Màu sắc: Theo ảnh sản phẩm hoặc có thể thay đổi</span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">Size:</span></span></p>\r\n\r\n<h3><span style=\"line-height:2;\"><span style=\"font-size:16px;\">Hướng dẫn cách chơi rubik 3x3x3 khối lập phương</span></span></h3>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\"><strong>Bước 1:</strong></span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">Bạn phải quay đúng một mặt, nhưng phải quay đúng luật, nghĩa là khi quay xong 1 mặt thì sẽ hình thành tầng một xung quanh mặt vừa lắp đúng. Đầu tiên phải xoay được một hình chữ thập, sau đó nhét các ô đúng vào 4 góc. Tất cả đều có công thức: Quay tầng 3 của mặt đó về bên trái, cạnh bên phải lên trên. Sau đó quay trở lại: tầng 3 về bên phải, cạnh phải xuống dưới. Cứ làm liên tục như vậy cho tới khi được góc cùng màu trở về vị trí thích hợp</span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\"><strong>Bước 2:</strong></span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">Sau khi hoàn thành bước 1, bạn lật mặt kề mặt đúng, tầng 2 bạn hãy để ý cái tâm, bạn phải quay sang phải hoặc trái để cho màu của tâm trùng với màu của tầng một. Sau khi tâm trùng với tầng 1, bạn lấy 1 mặt bất kì làm mặt chính (ngoại trừ mặt đối diện mặt làm đúng ở bước 1). Bạn lấy tầng 3 của mặt chính, quay về một phía sao cho đủ 2 điều kiện: điều kiện 1 là màu giữa tầng 3 mặt chính phải trùng với màu tâm mặt chính, điều kiện 2 là màu kề màu giữa tầng 3 (ở phía mặt dưới) trùng màu với tâm kế bên (phải trùng màu với màu tâm của mặt trái hoặc mặt phải mặt chính).</span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">Nếu trùng màu tâm mặt phải, công thức: giữ mặt chính, tầng 3 qua trái, cạnh bên phải mặt chính quay xuống, tầng 3 qua phải, cạnh bên phải mặt chính quay lên, tầng 3 qua phải, mặt chính qua phải, tầng 3 qua trái, mặt chính qua trái.</span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">Nếu trùng màu tâm mặt trái, công thức: giữ mặt chính, tầng 3 qua phải, cạnh bên trái mặt chính quay xuống, tầng 3 qua trái, cạnh bên trái mặt chính quay lên, tầng 3 qua trái, mặt chính qua trái, tầng 3 qua phải, mặt chính qua phải.</span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\"><strong>Bước 3:</strong></span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">Đây là bước khó nhất trong các bước. Sau khi hoàn thành bước 2, bạn quay rubik xuống mặt đối diện mặt đúng ở bước 1 làm mặt chính, bạn nhìn vào 4 góc ở mặt chính, kiếm 2 góc hội tụ các điều kiện: 3 màu của góc phải trùng với 3 màu của 3 tâm gồm: tâm mặt chính, tâm 2 mặt có chứa góc, không nhất thiết 3 màu của góc phải nằm chính xác. Sau khi xác định hai góc hội tụ đủ các điều kiện trên, bạn hãy xác định mặt nào chứa 2 góc đó (nằm phía trên mặt chính) và lấy mặt đó làm mặt chính. Công thức: Mặt bên phải mặt chính quay xuống, tầng 3 quay qua trái, mặt bên phải mặt chính quay lên, mặt chính quay qua phải, tầng 3 quay qua trái (nếu trường hợp 2 góc hội tụ điều kiện thì đáy trái 2 lần), mặt chính quay qua trái, mặt bên phải mặt chính quay xuống, tầng 3 quay qua phải, mặt bên phải mặt chính quay lên, tầng 3 qua trái 2 lần. Sau khi quay xong, bạn lật mặt đáy, nhìn 4 góc, lúc này cả bốn góc sẽ đúng vị trí nhưng chưa hẳn chính xác. Bạn lật trở lại mặt chính vừa quay và thực hiện công thức: mặt bên phải mặt chính quay xuống, tầng 3 quay qua trái, mặt bên phải mặt chính quay lên, tầng 3 quay qua trái, mặt bên phải mặt chính quay xuống, tầng 3 quay qua trái 2 lần, mặt bên phải mặt chính quay lên, tầng 3 quay qua trái 2 lần. Lúc này góc phía dưới bên phải mặt chính (tức là màu nằm bên phải tầng 3 của mặt chính) sẽ trùng màu với tâm mặt chính (nếu không trùng thì cứ thực hiện công thức trên thêm 1 lần nữa) và màu bên phải màu trên sẽ trùng màu với tâm của mặt phải mặt chính. Lúc này ta lấy mặt phải mặt chính làm mặt chính và ta thực hiện công thức trên cho tới khi nào màu tầng 3 bên phải mặt chính phù hợp với điều kiện vừa rồi (có thể mặt chính sẽ đúng màu). Ta lật mặt đối mặt chính làm mặt chính thực hiện công thức trên và điều kiện cũng như trên.</span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\"><strong>Bước 4:</strong></span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">Đây là bước cuối cùng, bạn hãy chú ý mặt đáy của mặt chính ở bước 3, lúc này nó có thể xuất hiện các hình sau: chữ X, mũi tên, chữ H hoặc mặt đáy sẽ đúng màu.</span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">Nếu là chữ X: Lấy mặt chính(mc) ở bước 3, thực hiện công thức: trái mc lên, phải mc lên, mc quay qua phải một cái, trái mc xuống, phải mc xuống, tầng 3 qua trái hai cái, thực hiện 2 lần như thế. Lúc này mặt đáy mc sẽ ra hình mũi tên hoặc màu đúng</span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">Nếu là mũi tên: Bạn hãy quan sát mặt đáy, quay mặt đáy về chiều 11h (tức chiều phía trên bên trái),lật lên và lấy mặt bên phải đầu mũi tên làm mặt chính, thực hiện công thức chữ X</span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">Nếu mặt đáy đúng màu: Bạn hãy lấy màu bất kì trên mặt đáy làm mặt chính (nếu mặt nào màu đã đúng thì không lấy làm mc) và thực hiện công thức 10 bước: trái mc lên, phải mc lên, mc quay qua phải một cái, trái mc xuống, phải mc xuống, tầng 3 qua phải một cái, trái mc lên, phải mc lên, mc quay qua phải một cái, trái mc xuống, phải mc xuống, tầng 3 qua phải một cái, trái mc lên, phải mc lên, mc qua phải hai cái, trái mc xuống, phải mc xuống, tầng 3 qua phải 1cái, thực hiện thêm 5 lần nữa(nhớ mc chỉ qua phải một cái),đếm bước 10 thì tầng 3 qua phải hai cái.</span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">Chữ H: bạn hãy lấy mặt trên hoặc dưới chữ H làm mc, thực hiện công thức chữ X, cho đến khi một trong 2 mặt hai bên chữ H đúng màu, lấy mặt đó làm mc, thực hiện công thức chữ X, thực hiện cho đến khi 2 mặt hai bên chữ H đúng màu hết. Khi đó ta lấy mặt trên hoặc dưới chữ H làm mc, thực hiện công thức 10 bước, lúc này khối rubik sẽ được hoàn thiện.</span></span></p>\r\n', '', 'rubik-3x3x3-khoi-lap-phuong-do-choi-tri-tue-danh-cho-be-tren-3-tuoi-4322_500x500x1.webp', 2, 7, '', '', 0, '', 'sanpham', 'hienthi,noibat,banchay', 1, 43, '2025-06-30 16:45:55', '2025-07-04 16:48:51');
+
+-- --------------------------------------------------------
+
+--
+-- Cấu trúc bảng cho bảng `tbl_product_cat`
+--
+
+CREATE TABLE `tbl_product_cat` (
+  `id` int(11) NOT NULL,
+  `slugvi` text NOT NULL,
+  `slugen` text NOT NULL,
+  `namevi` text NOT NULL,
+  `nameen` text NOT NULL,
+  `descvi` text NOT NULL,
+  `descen` text NOT NULL,
+  `contentvi` text NOT NULL,
+  `contenten` text NOT NULL,
+  `id_list` int(11) NOT NULL,
+  `file` text NOT NULL,
+  `status` text NOT NULL,
+  `numb` int(11) NOT NULL,
+  `date_created` datetime NOT NULL DEFAULT current_timestamp(),
+  `date_updated` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `type` varchar(30) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Đang đổ dữ liệu cho bảng `tbl_product_cat`
+--
+
+INSERT INTO `tbl_product_cat` (`id`, `slugvi`, `slugen`, `namevi`, `nameen`, `descvi`, `descen`, `contentvi`, `contenten`, `id_list`, `file`, `status`, `numb`, `date_created`, `date_updated`, `type`) VALUES
+(2, 'rubik-2x2x2', '', 'Rubik 2x2x2', '', '', '', '', '', 2, '382a4a72a1_100x100x1.jpg', 'hienthi,noibat', 1, '2025-06-22 12:06:59', '2025-06-30 23:39:57', 'danhmuc_c2'),
+(3, 'rubik-3x3x3', '', 'Rubik 3x3x3', '', '', '', '', '', 2, '135469cc02_100x100x1.jpg', 'hienthi,noibat', 2, '2025-06-22 12:07:31', '2025-06-30 23:41:11', 'danhmuc_c2'),
+(6, 'rubik-5x5x5', '', 'Rubik 5x5x5', '', '', '', '', '', 2, '6f80aa2466_100x100x1.jpg', 'hienthi,noibat', 4, '2025-06-22 23:48:30', '2025-07-01 13:45:06', 'danhmuc_c2'),
+(7, 'rubik-4x4x4', '', 'Rubik 4x4x4', '', '', '', '', '', 2, '762dd7eb24_100x100x1.jpg', 'hienthi,noibat', 3, '2025-06-24 09:07:38', '2025-06-30 23:41:28', 'danhmuc_c2'),
+(8, 'rubik-6x6x6', '', 'rubik 6x6x6', '', '', '', '', '', 4, 'rubik-6x6x6-1876_100x100x1.jpg', 'hienthi,noibat', 5, '2025-06-24 15:38:39', '2025-06-24 15:41:38', NULL),
+(9, 'rubik-7x7x7', '', 'Rubik 7x7x7', '', '', '', '', '', 4, 'rubik-7x7x7-c70a_100x100x1.jpg', 'hienthi,noibat', 6, '2025-06-24 15:43:12', '2025-06-24 15:43:35', NULL),
+(11, 'rubik-bien-the-3-mat-pyraminx', '', 'Rubik biến thể 3 mặt (Pyraminx)', '', '', '', '', '', 3, 'rubik-bien-the-3-mat-pyraminx--b300_100x100x1.jpg', 'hienthi,noibat', 1, '2025-06-26 11:23:27', '2025-07-04 16:43:06', 'danhmuc_c2'),
+(12, 'rubik-bien-the-12-mat-megaminx', '', 'Rubik biến thể 12 mặt (Megaminx)', '', '', '', '', '', 3, 'rubik-bien-the-12-mat-megaminx--f4db_100x100x1.webp', 'hienthi,noibat', 3, '2025-06-26 11:25:17', '2025-06-26 13:21:36', NULL),
+(13, 'rubik-8x8x8', '', 'Rubik 8x8x8', '', '', '', '', '', 4, 'ribik-8x8x8-4fc3_100x100x1.jpg', 'hienthi,noibat', 7, '2025-06-26 11:37:01', '2025-07-01 11:40:48', 'danhmuc_c2'),
+(14, 'rubik-9x9x9', '', 'Rubik 9x9x9', '', 'Qiyi 9x9 Cube Stickerless 9x9x9 Xếp hình Khối lập phương Thần tài cho trẻ em Quà tặng Đồ chơi Xếp hình Giáo dục Quà tặng Khối lập phương ban đầu', '', '<p>Qiyi 9x9 Cube Stickerless 9x9x9 Xếp hình Khối lập phương Thần tài cho trẻ em Quà tặng Đồ chơi Xếp hình Giáo dục Quà tặng Khối lập phương ban đầu</p>\r\n', '', 4, 'rubik-9x9x9-8f11_100x100x1.jpg', 'hienthi,noibat', 8, '2025-06-26 13:20:06', '2025-06-26 13:20:06', NULL),
+(15, 'rubik-bien-the-6-mat', '', 'Rubik Biến Thể 6 mặt', '', '', '', '', '', 3, 'rubik-bien-the-6-mat-26c3_100x100x1.jpg', 'hienthi,noibat', 2, '2025-06-26 13:21:15', '2025-06-30 23:40:10', 'danhmuc_c2'),
+(16, 'rubik-bien-the-khac', '', 'Rubik Biến Thể Khác', '', '', '', '', '', 3, 'rubik-bien-the-khac-5064_100x100x1.jpg', 'hienthi,noibat', 4, '2025-06-26 13:21:53', '2025-06-26 13:22:59', NULL),
+(17, 'rubik-bien-the-cao-cap', '', 'Rubik Biến Thể Cao Cấp', '', '', '', '', '', 3, 'rubik-bien-the-cao-cap-2541_100x100x1.jpg', 'hienthi,noibat', 5, '2025-06-26 13:22:15', '2025-07-01 13:45:58', 'danhmuc_c2'),
+(18, 'stickers-de-can-dan-rubik', '', 'Stickers - Đề can dán rubik', '', '', '', '', '', 15, 'stickers-de-can-dan-rubik-2022_100x100x1.jpg', 'hienthi,noibat', 10, '2025-06-26 13:24:30', '2025-06-26 13:33:36', NULL),
+(19, 'core-oc', '', 'Core & Ốc', '', '', '', '', '', 15, 'core-oc-b98f_100x100x1.jpg', 'hienthi,noibat', 10, '2025-06-26 13:26:26', '2025-06-26 13:33:37', NULL),
+(20, 'silicone-dau-boi-tron', '', 'Silicone - Dầu bôi trơn', '', '', '', '', '', 15, 'silicone-dau-boi-tron-b396_100x100x1.jpg', 'hienthi,noibat', 10, '2025-06-26 13:27:16', '2025-06-26 13:33:37', NULL),
+(21, 'stand-de-rubik', '', 'Stand - Đế Rubik', '', '', '', '', '', 15, 'stand-de-rubik-3d58_100x100x1.jpg', 'hienthi,noibat', 10, '2025-06-26 13:27:43', '2025-06-26 13:33:37', NULL),
+(22, 'magnetic-nam-cham', '', 'Magnetic - Nam Châm', '', '', '', '', '', 15, 'magnetic-nam-cham-a15e_100x100x1.jpg', 'hienthi,noibat', 10, '2025-06-26 13:28:40', '2025-06-26 13:33:38', NULL),
+(23, 'hop-nhua-rubik', '', 'Hộp nhựa Rubik', '', '', '', '', '', 15, 'hop-nhua-rubik-68fb_100x100x1.jpg', 'hienthi,noibat', 10, '2025-06-26 13:29:02', '2025-06-26 13:33:39', NULL),
+(24, 'tui-vai-dung-rubik-gancube-bag', '', 'Túi Vải Đựng Rubik GanCube Bag ', '', '', '', '', '', 15, 'tui-vai-dung-rubik-gancube-bag--80d7_100x100x1.webp', 'hienthi,noibat', 10, '2025-06-26 13:30:39', '2025-06-26 13:33:40', NULL),
+(25, 'tshirt-ao-phong-rubik', '', 'Tshirt - Áo phông Rubik', '', '', '', '', '', 15, 'tshirt-ao-phong-rubik-59b8_100x100x1.jpg', 'hienthi,noibat', 10, '2025-06-26 13:31:14', '2025-06-26 13:34:19', NULL),
+(26, 'guide-books-sach-huong-dan', '', 'Guide books - Sách hướng dẫn', '', '', '', '', '', 15, 'guide-books-sach-huong-dan-2c12_100x100x1.jpg', 'hienthi,noibat', 10, '2025-06-26 13:31:48', '2025-06-26 13:34:18', NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Cấu trúc bảng cho bảng `tbl_product_list`
+--
+
+CREATE TABLE `tbl_product_list` (
+  `id` int(10) NOT NULL,
+  `slugvi` text NOT NULL,
+  `slugen` text NOT NULL,
+  `namevi` text NOT NULL,
+  `nameen` text NOT NULL,
+  `descvi` text NOT NULL,
+  `descen` text NOT NULL,
+  `contentvi` text NOT NULL,
+  `contenten` text NOT NULL,
+  `file` text NOT NULL,
+  `status` text NOT NULL,
+  `numb` int(11) NOT NULL,
+  `date_created` datetime NOT NULL DEFAULT current_timestamp(),
+  `date_updated` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `type` varchar(30) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Đang đổ dữ liệu cho bảng `tbl_product_list`
+--
+
+INSERT INTO `tbl_product_list` (`id`, `slugvi`, `slugen`, `namevi`, `nameen`, `descvi`, `descen`, `contentvi`, `contenten`, `file`, `status`, `numb`, `date_created`, `date_updated`, `type`) VALUES
+(2, 'rubik-co-ban', 'rubik-co-ban-tieng-anh', 'Rubik Cơ bản', 'Rubik Cơ bản tiếng anh', 'Việc học Rubik theo thứ tự từ 2x2 → 3x3 → 4x4 → 5x5 giúp người chơi nâng cao kỹ năng logic, tư duy không gian và kiên nhẫn.', '', '<h2 style=\"font-size: 20px; font-weight: bold;\"><span style=\"line-height:2;\">Giới thiệu Rubik Cơ Bản từ 2x2 đến 5x5</span></h2>\r\n\r\n<h3 style=\"font-size: 18px; font-weight: bold;\"><span style=\"line-height:2;\">1. Rubik 2x2x2 – Mini Cube</span></h3>\r\n\r\n<p style=\"font-size: 16px;\"><span style=\"line-height:2;\"><strong>Cấu trúc:</strong> Gồm 8 mảnh góc, không có cạnh hay tâm.</span></p>\r\n\r\n<p style=\"font-size: 16px;\"><span style=\"line-height:2;\"><strong>Độ khó:</strong> Dễ nhất trong các loại Rubik, thích hợp cho người mới học.</span></p>\r\n\r\n<p style=\"font-size: 16px;\"><span style=\"line-height:2;\"><strong>Mục tiêu:</strong> Xếp các màu đồng nhất trên mỗi mặt.</span></p>\r\n\r\n<p style=\"font-size: 16px;\"><span style=\"line-height:2;\"><strong>Điểm thú vị:</strong> Là phiên bản đơn giản của Rubik 3x3, giúp học viên làm quen với khái niệm xoay và định hướng góc.</span></p>\r\n\r\n<h3 style=\"font-size: 18px; font-weight: bold;\"><span style=\"line-height:2;\">2. Rubik 3x3x3 – Standard Cube</span></h3>\r\n\r\n<p style=\"font-size: 16px;\"><span style=\"line-height:2;\"><strong>Cấu trúc:</strong> Gồm 26 mảnh: 8 góc, 12 cạnh, 6 tâm cố định.</span></p>\r\n\r\n<p style=\"font-size: 16px;\"><span style=\"line-height:2;\"><strong>Độ khó:</strong> Trung bình, phổ biến nhất và là nền tảng cho các biến thể phức tạp hơn.</span></p>\r\n\r\n<p style=\"font-size: 16px;\"><span style=\"line-height:2;\"><strong>Mục tiêu:</strong> Sắp xếp để mỗi mặt chỉ có một màu duy nhất.</span></p>\r\n\r\n<p style=\"font-size: 16px;\"><span style=\"line-height:2;\"><strong>Điểm thú vị:</strong> Có hơn 43 tỷ tỷ hoán vị khác nhau, nhưng luôn có thể giải được trong dưới 20 bước.</span></p>\r\n\r\n<h3 style=\"font-size: 18px; font-weight: bold;\"><span style=\"line-height:2;\">3. Rubik 4x4x4 – Rubik Revenge</span></h3>\r\n\r\n<p style=\"font-size: 16px;\"><span style=\"line-height:2;\"><strong>Cấu trúc:</strong> Gồm 4 tầng trên mỗi trục, không có tâm cố định.</span></p>\r\n\r\n<p style=\"font-size: 16px;\"><span style=\"line-height:2;\"><strong>Độ khó:</strong> Cao hơn vì phát sinh thêm các lỗi parity (trường hợp đặc biệt không xuất hiện ở 3x3).</span></p>\r\n\r\n<p style=\"font-size: 16px;\"><span style=\"line-height:2;\"><strong>Mục tiêu:</strong> Ghép cặp các mảnh trung tâm và cạnh trước khi giải như 3x3.</span></p>\r\n\r\n<p style=\"font-size: 16px;\"><span style=\"line-height:2;\"><strong>Điểm thú vị:</strong> Là thử thách lớn cho người đã quen với Rubik 3x3.</span></p>\r\n\r\n<h3 style=\"font-size: 18px; font-weight: bold;\"><span style=\"line-height:2;\">4. Rubik 5x5x5 – Professor\'s Cube</span></h3>\r\n\r\n<p style=\"font-size: 16px;\"><span style=\"line-height:2;\"><strong>Cấu trúc:</strong> Gồm 5 tầng, có tâm cố định và nhiều mảnh trung tâm, cạnh.</span></p>\r\n\r\n<p style=\"font-size: 16px;\"><span style=\"line-height:2;\"><strong>Độ khó:</strong> Cao hơn 4x4 do có thêm mảnh cần ghép, tuy nhiên ít lỗi parity hơn.</span></p>\r\n\r\n<p style=\"font-size: 16px;\"><span style=\"line-height:2;\"><strong>Mục tiêu:</strong> Ghép các mảnh để có thể giải như Rubik 3x3.</span></p>\r\n\r\n<p style=\"font-size: 16px;\"><span style=\"line-height:2;\"><strong>Điểm thú vị:</strong> Được xem là cấp độ \"giáo sư\" – dành cho những người đã thành thạo 3x3 và 4x4.</span></p>\r\n', '', 'rubik-co-ban-958f_50x50x1.jpg', 'hienthi,noibat', 1, '2025-06-22 11:52:48', '2025-07-04 16:19:16', 'danhmuc_c1'),
+(3, 'rubik-bien-the', '', 'Rubik biến thể', '', '', '', '', '', 'c7a1c964e4_50x50x1.jpg', 'hienthi,noibat', 3, '2025-06-22 11:52:57', '2025-07-03 16:53:44', 'danhmuc_c1'),
+(4, 'rubik-nang-cao', 'rubik-nang-cao', 'Rubik nâng cao', 'Rubik nâng cao', 'Rubik nâng cao là những khối lập phương có kích thước từ 6x6x6 trở lên, dành cho người chơi đã có kinh nghiệm với các dòng cơ bản như 3x3 hoặc 5x5. Những khối Rubik này không chỉ có số lượng mảnh tăng lên đáng kể, mà còn yêu cầu người chơi thành thạo kỹ thuật ghép tâm, ghép cạnh, và xử lý các lỗi đặc biệt như parity. Mỗi cấp độ đều mang đến những thử thách riêng biệt, từ thao tác xoay phức tạp đến khối lượng bước giải khổng lồ, đòi hỏi sự kiên trì, chính xác và tư duy logic vượt trội. Rubik nâng cao không chỉ là một trò chơi trí tuệ, mà còn là biểu tượng của niềm đam mê và sự chinh phục giới hạn bản thân trong thế giới speedcubing.', '', '<h2 style=\"font-size: 20px; font-weight: bold; color: red;\">Giới thiệu Rubik Nâng Cao</h2>\r\n\r\n<p style=\"font-size: 16px;\">Rubik nâng cao là những khối lập phương có kích thước từ 6x6x6 trở lên, dành cho người chơi đã có kinh nghiệm với các dòng cơ bản như 3x3 hoặc 5x5. Những khối Rubik này không chỉ có số lượng mảnh tăng lên đáng kể, mà còn yêu cầu người chơi thành thạo kỹ thuật ghép tâm, ghép cạnh, và xử lý các lỗi đặc biệt như parity. Mỗi cấp độ đều mang đến những thử thách riêng biệt, từ thao tác xoay phức tạp đến khối lượng bước giải khổng lồ, đòi hỏi sự kiên trì, chính xác và tư duy logic vượt trội. Rubik nâng cao không chỉ là một trò chơi trí tuệ, mà còn là biểu tượng của niềm đam mê và sự chinh phục giới hạn bản thân trong thế giới speedcubing.</p>\r\n\r\n<h3 style=\"font-size: 18px; font-weight: bold; color: blue;\">1. Rubik 6x6x6</h3>\r\n\r\n<p style=\"font-size: 16px;\"><strong>Cấu trúc:</strong> Gồm 6 tầng mỗi cạnh, không có tâm cố định, nhiều mảnh cạnh và tâm nhỏ cần ghép.</p>\r\n\r\n<p style=\"font-size: 16px;\"><strong>Độ khó:</strong> Khó hơn 5x5 do số lượng mảnh tăng và lỗi parity xuất hiện nhiều hơn.</p>\r\n\r\n<p style=\"font-size: 16px;\"><strong>Mục tiêu:</strong> Ghép tất cả các mảnh về đúng vị trí trước khi giải như 3x3.</p>\r\n\r\n<p style=\"font-size: 16px;\"><strong>Điểm thú vị:</strong> Là cấp độ mở rộng tiếp theo của dòng Rubik Even (số chẵn), đòi hỏi sự kiên nhẫn và chính xác.</p>\r\n\r\n<h3 style=\"font-size: 18px; font-weight: bold; color: blue;\">2. Rubik 7x7x7</h3>\r\n\r\n<p style=\"font-size: 16px;\"><strong>Cấu trúc:</strong> Gồm 7 tầng, có tâm cố định, số lượng mảnh tăng nhiều.</p>\r\n\r\n<p style=\"font-size: 16px;\"><strong>Độ khó:</strong> Cao hơn 6x6 nhưng dễ hơn về mặt parity vì là rubik lẻ (odd).</p>\r\n\r\n<p style=\"font-size: 16px;\"><strong>Mục tiêu:</strong> Tương tự 5x5 nhưng thêm nhiều bước ghép các mảnh nhỏ.</p>\r\n\r\n<p style=\"font-size: 16px;\"><strong>Điểm thú vị:</strong> Còn gọi là \"Ultimate Cube\", cân bằng giữa độ phức tạp và tính giải trí.</p>\r\n\r\n<h3 style=\"font-size: 18px; font-weight: bold; color: blue;\">3. Rubik 8x8x8</h3>\r\n\r\n<p style=\"font-size: 16px;\"><strong>Cấu trúc:</strong> 8 tầng mỗi trục, là khối lập phương chẵn, không có tâm cố định.</p>\r\n\r\n<p style=\"font-size: 16px;\"><strong>Độ khó:</strong> Rất cao, do số mảnh tăng mạnh và parity phức tạp hơn.</p>\r\n\r\n<p style=\"font-size: 16px;\"><strong>Mục tiêu:</strong> Giải theo trình tự: ghép tâm, ghép cạnh, sau đó giải như 3x3.</p>\r\n\r\n<p style=\"font-size: 16px;\"><strong>Điểm thú vị:</strong> Là thử thách nặng về kỹ thuật, đòi hỏi người chơi phải kiểm soát từng tầng một cách chính xác.</p>\r\n\r\n<h3 style=\"font-size: 18px; font-weight: bold; color: blue;\">4. Rubik 9x9x9</h3>\r\n\r\n<p style=\"font-size: 16px;\"><strong>Cấu trúc:</strong> Gồm 9 tầng, là dạng Rubik lẻ, có tâm cố định.</p>\r\n\r\n<p style=\"font-size: 16px;\"><strong>Độ khó:</strong> Khó ở khâu ghép mảnh vì số lượng mảnh nhỏ nhiều, nhưng dễ hơn 8x8 về mặt parity.</p>\r\n\r\n<p style=\"font-size: 16px;\"><strong>Mục tiêu:</strong> Giống với 7x7, nhưng cần thêm nhiều bước lặp hơn khi ghép tâm và cạnh.</p>\r\n\r\n<p style=\"font-size: 16px;\"><strong>Điểm thú vị:</strong> Cảm giác cực kỳ \"khổng lồ\" khi cầm và xoay, phù hợp cho người chơi muốn thử thách độ bền và kỹ thuật.</p>\r\n\r\n<h3 style=\"font-size: 18px; font-weight: bold; color: blue;\">5. Rubik 10x10x10</h3>\r\n\r\n<p style=\"font-size: 16px;\"><strong>Cấu trúc:</strong> 10 tầng, là khối Rubik chẵn, không có tâm cố định.</p>\r\n\r\n<p style=\"font-size: 16px;\"><strong>Độ khó:</strong> Vô cùng cao, số lượng bước giải lớn, parity rất phức tạp.</p>\r\n\r\n<p style=\"font-size: 16px;\"><strong>Mục tiêu:</strong> Giải giống 6x6 hoặc 8x8 nhưng mất nhiều thời gian và công đoạn hơn.</p>\r\n\r\n<p style=\"font-size: 16px;\"><strong>Điểm thú vị:</strong> Thường không được giải bằng tay thường xuyên mà chủ yếu để trưng bày hoặc phá kỷ lục.</p>\r\n\r\n<h3 style=\"font-size: 18px; font-weight: bold; color: blue;\">6. Rubik 11x11x11</h3>\r\n\r\n<p style=\"font-size: 16px;\"><strong>Cấu trúc:</strong> Rubik lớn nhất sản xuất đại trà, với 11 tầng mỗi trục, có tâm cố định.</p>\r\n\r\n<p style=\"font-size: 16px;\"><strong>Độ khó:</strong> Cấp độ cao nhất trong dòng Rubik cổ điển, số lượng mảnh và bước giải khổng lồ.</p>\r\n\r\n<p style=\"font-size: 16px;\"><strong>Mục tiêu:</strong> Giải qua các bước ghép tâm, cạnh, sau đó như Rubik 3x3.</p>\r\n\r\n<p style=\"font-size: 16px;\"><strong>Điểm thú vị:</strong> Là minh chứng cho sự kiên trì và đam mê của người chơi Rubik chuyên sâu.</p>\r\n', '', 'db97ce63ff_50x50x1.jpg', 'hienthi,noibat', 2, '2025-06-22 11:53:04', '2025-07-01 11:40:03', 'danhmuc_c1'),
+(11, 'rubik-bien-the-di-hinh', '', 'Rubik Biến Thể Dị Hình', '', '', '', '', '', 'rubik-bien-the-di-hinh-22a8_50x50x1.jpg', 'hienthi,noibat', 4, '2025-06-24 12:59:01', '2025-07-01 13:04:24', 'danhmuc_c1'),
+(13, 'rubik-dau-giai-wca', '', 'Rubik Đấu Giải WCA', '', '', '', '', '', 'rubik-dau-giai-wca-76a1_50x50x1.png', 'hienthi,noibat', 5, '2025-06-26 11:27:10', '2025-06-26 11:27:20', NULL),
+(14, 'rubik-suu-tam', '', 'Rubik Sưu Tầm ', '', '', '', '', '', 'rubik-suu-tam--ebc3_50x50x1.jpg', 'hienthi,noibat', 6, '2025-06-26 11:28:10', '2025-06-26 11:28:19', NULL),
+(15, 'phu-kien-rubik', '', 'Phụ Kiện Rubik', '', '', '', '', '', 'phu-kien-rubik-8fd4_50x50x1.jpg', 'hienthi,noibat', 4, '2025-06-26 11:29:50', '2025-06-26 13:26:40', NULL),
+(16, 'discount', '', 'Discount', '', '', '', '', '', 'discount-d4ed_50x50x1.jpg', 'hienthi,noibat', 10, '2025-06-26 11:31:47', '2025-06-26 11:31:47', NULL),
+(17, 'xep-hinh-nam-cham', '', 'Xếp Hình Nam Châm', '', '', '', '', '', 'xep-hinh-nam-cham-8993_50x50x1.jpg', 'hienthi,noibat', 9, '2025-06-26 11:32:17', '2025-06-26 11:33:14', NULL),
+(18, 'board-game', '', 'Board Game', '', '', '', '', '', 'board-game-3b89_50x50x1.jpg', 'hienthi,noibat', 8, '2025-06-26 11:34:24', '2025-06-26 11:34:24', NULL),
+(19, 'mo-hinh-tinh', 'mo-hinh-tinh', 'Mô Hình Tĩnh', 'Mô Hình Tĩnh', '', '', '', '', 'mo-hinh-tinh-45a4_50x50x1.jpg', 'hienthi,noibat', 9, '2025-06-26 11:35:07', '2025-06-26 11:35:45', NULL);
 
 -- --------------------------------------------------------
 
@@ -1203,9 +1203,9 @@ CREATE TABLE `tbl_seo` (
 INSERT INTO `tbl_seo` (`id`, `id_parent`, `type`, `titlevi`, `keywordsvi`, `descriptionvi`, `titleen`, `keywordsen`, `descriptionen`, `schemavi`, `schemaen`) VALUES
 (321, 2, 'danhmuc_c2', 'Rubik 2x2x2 - Rubik TMT', 'Rubik 2x2x2 - Rubik TMT', 'Việc học Rubik theo thứ tự từ 2x2 → 3x3 → 4x4 → 5x5 giúp người chơi nâng cao kỹ năng logic, tư duy không gian và kiên nhẫn.', '', '', '', '', ''),
 (319, 10, 'sanpham', 'Rubik siêu đẹp trai', 'Rubik siêu đẹp trai', '', '', '', '', '', ''),
-(320, 11, 'danhmuc_c2', 'Rubik biến thể 3 mặt (Pyraminx) rất xịn ', 'Rubik biến thể 3 mặt (Pyraminx)', 'Weilong WRM V10 FerroCore là sản phẩm hợp tác đặc biệt giữa Moyu, CubeHead, và The Cubicle, mang đến sự đột phá trong dòng Rubik flagship của Moyu.', '', '', '', '', ''),
+(320, 11, 'danhmuc_c2', 'Rubik biến thể 3 mặt (Pyraminx)', 'Rubik biến thể 3 mặt (Pyraminx)', '', '', '', '', '', ''),
 (318, 11, 'tintuc', 'Weilong WRM V10 FerroCore: Siêu phẩm Rubik đỉnh cao từ Moyu và CubeHea', 'Weilong WRM V10 FerroCore: Siêu phẩm Rubik đỉnh cao từ Moyu và CubeHea', 'Weilong WRM V10 FerroCore là sản phẩm hợp tác đặc biệt giữa Moyu, CubeHead, và The Cubicle, mang đến sự đột phá trong dòng Rubik flagship của Moyu.', '', '', '', '', ''),
-(313, 2, 'danhmuc_c1', 'Rubik cơ bản | Thế Giới Rubik TMT', 'Rubik Cơ bản', 'Việc học Rubik theo thứ tự từ 2x2 → 3x3 → 4x4 → 5x5 giúp người chơi nâng cao kỹ năng logic, tư duy không gian và kiên nhẫn.', 'Rubik Cơ bản tiếng anh', 'Rubik Cơ bản tiếng anh', '', '', ''),
+(313, 2, 'danhmuc_c1', 'Rubik Cơ bản', 'Rubik Cơ bản', 'Việc học Rubik theo thứ tự từ 2x2 → 3x3 → 4x4 → 5x5 giúp người chơi nâng cao kỹ năng logic, tư duy không gian và kiên nhẫn.', 'Rubik Cơ bản tiếng anh', 'Rubik Cơ bản tiếng anh', '', '', ''),
 (312, 16, 'sanpham', 'Rubik 3x3x3 khối lập phương đồ chơi trí tuệ dành cho bé trên 3 tuổi', 'Rubik 3x3x3 khối lập phương đồ chơi trí tuệ dành cho bé trên 3 tuổi', 'Vừa chơi vừa học: Đồ chơi Rubik 3x3x3 khối lập phương là đồ chơi giúp bé tăng sự tập trung trí tuệ, tư duy logic để rèn luyện trí nhớ Phát triển kỹ năng cho tr', '', '', '', '', ''),
 (322, 15, 'danhmuc_c2', 'Rubik Biến Thể 6 mặt - TMT', 'Rubik Biến Thể 6 mặt', '', '', '', '', '', ''),
 (323, 3, 'danhmuc_c2', 'Rubik 3x3x3', 'Rubik 3x3x3', '', '', '', '', '', ''),
@@ -1220,7 +1220,8 @@ INSERT INTO `tbl_seo` (`id`, `id_parent`, `type`, `titlevi`, `keywordsvi`, `desc
 (333, 5, 'huongdanchoi', 'Các giai đoạn để trở thành 1 PRO rubik', 'Các giai đoạn để trở thành 1 PRO rubik', 'Nhằm giúp cho những người mới chơi hoặc đã biết chơi có cách rubik nâng cao và các giai đoạn rubik 1 cách nhanh hơn mình xin post bài này', '', '', '', '', ''),
 (334, 4, 'huongdanchoi', 'HƯỚNG DẪN XOAY RUBIK 3X3 THEO CÁCH ĐƠN GIẢN NHẤT', 'HƯỚNG DẪN XOAY RUBIK 3X3 THEO CÁCH ĐƠN GIẢN NHẤT', 'Rubik từ lâu được biết đến là một trong những trò chơi giải đố trí tuệ giúp người chơi phát triển tư duy. Trong đó, Rubik 3x3x3 là phiên bản Rubik cơ bản và đượ', '', '', '', '', ''),
 (335, 4, 'danhmuc_c1', 'Rubik nâng cao - 0328 732 834', 'Rubik nâng cao', 'Rubik nâng cao là những khối lập phương có kích thước từ 6x6x6 trở lên, dành cho người chơi đã có kinh nghiệm với các dòng cơ bản như 3x3 hoặc 5x5. Những khối R', 'Rubik nâng cao', 'Rubik nâng cao', '', '', ''),
-(337, 11, 'danhmuc_c1', 'Rubik Biến Thể Dị Hình', 'Rubik Biến Thể Dị Hình', 'Weilong WRM V10 FerroCore là sản phẩm hợp tác đặc biệt giữa Moyu, CubeHead, và The Cubicle, mang đến sự đột phá trong dòng Rubik flagship của Moyu.', '', '', '', '', '');
+(337, 11, 'danhmuc_c1', 'Rubik Biến Thể Dị Hình', 'Rubik Biến Thể Dị Hình', 'Weilong WRM V10 FerroCore là sản phẩm hợp tác đặc biệt giữa Moyu, CubeHead, và The Cubicle, mang đến sự đột phá trong dòng Rubik flagship của Moyu.', '', '', '', '', ''),
+(340, 3, 'danhmuc_c1', 'Rubik biến thể', 'Rubik biến thể', '', '', '', '', '', '');
 
 -- --------------------------------------------------------
 
@@ -12323,18 +12324,6 @@ ALTER TABLE `tbl_danhgia`
   ADD PRIMARY KEY (`id`);
 
 --
--- Chỉ mục cho bảng `tbl_danhmuc_c1`
---
-ALTER TABLE `tbl_danhmuc_c1`
-  ADD PRIMARY KEY (`id`);
-
---
--- Chỉ mục cho bảng `tbl_danhmuc_c2`
---
-ALTER TABLE `tbl_danhmuc_c2`
-  ADD PRIMARY KEY (`id`);
-
---
 -- Chỉ mục cho bảng `tbl_district`
 --
 ALTER TABLE `tbl_district`
@@ -12359,9 +12348,21 @@ ALTER TABLE `tbl_payment`
   ADD PRIMARY KEY (`id`);
 
 --
--- Chỉ mục cho bảng `tbl_sanpham`
+-- Chỉ mục cho bảng `tbl_product`
 --
-ALTER TABLE `tbl_sanpham`
+ALTER TABLE `tbl_product`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Chỉ mục cho bảng `tbl_product_cat`
+--
+ALTER TABLE `tbl_product_cat`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Chỉ mục cho bảng `tbl_product_list`
+--
+ALTER TABLE `tbl_product_list`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -12447,18 +12448,6 @@ ALTER TABLE `tbl_danhgia`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
--- AUTO_INCREMENT cho bảng `tbl_danhmuc_c1`
---
-ALTER TABLE `tbl_danhmuc_c1`
-  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
-
---
--- AUTO_INCREMENT cho bảng `tbl_danhmuc_c2`
---
-ALTER TABLE `tbl_danhmuc_c2`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
-
---
 -- AUTO_INCREMENT cho bảng `tbl_district`
 --
 ALTER TABLE `tbl_district`
@@ -12483,16 +12472,28 @@ ALTER TABLE `tbl_payment`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
--- AUTO_INCREMENT cho bảng `tbl_sanpham`
+-- AUTO_INCREMENT cho bảng `tbl_product`
 --
-ALTER TABLE `tbl_sanpham`
+ALTER TABLE `tbl_product`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
+
+--
+-- AUTO_INCREMENT cho bảng `tbl_product_cat`
+--
+ALTER TABLE `tbl_product_cat`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
+
+--
+-- AUTO_INCREMENT cho bảng `tbl_product_list`
+--
+ALTER TABLE `tbl_product_list`
+  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
 
 --
 -- AUTO_INCREMENT cho bảng `tbl_seo`
 --
 ALTER TABLE `tbl_seo`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=340;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=341;
 
 --
 -- AUTO_INCREMENT cho bảng `tbl_seopage`

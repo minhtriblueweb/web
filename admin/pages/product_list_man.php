@@ -1,7 +1,7 @@
 <?php
 $redirect_url = $_GET['page'];
 $name_page = 'danh mục cấp 1';
-$table = 'tbl_danhmuc_c1';
+$table = 'tbl_product_list';
 $records_per_page = 10;
 $current_page = max(1, isset($_GET['p']) ? (int)$_GET['p'] : 1);
 $total_records = $fn->count_data(['table' => $table, 'keyword' => $_GET['keyword'] ?? '']);
@@ -15,9 +15,9 @@ $show_danhmuc = $fn->show_data([
 ]);
 $linkMulti = "index.php?page=deleteMulti&table=$table";
 $linkDelete = "index.php?page=delete&table=$table&id=";
-$linkEdit = "index.php?page=danhmuc_c1_form&id=";
-$linkAdd = "index.php?page=danhmuc_c1_form";
-$linkMan = "index.php?page=danhmuc_c1_list";
+$linkEdit = "index.php?page=product_list_form&id=";
+$linkAdd = "index.php?page=product_list_form";
+$linkMan = "index.php?page=product_list_man";
 $breadcrumb = [['label' => $name_page]];
 include TEMPLATE . 'breadcrumb.php';
 ?>

@@ -16,12 +16,9 @@ if (!empty($id)) {
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && array_intersect(['add', 'edit'], array_keys($_POST))) {
   $message = $social->save_social($_POST, $_FILES, $id);
 }
-
 ?>
 <?php
-$breadcrumb = [
-  ['label' => (!empty($id) ? 'Cập nhật ' : 'Thêm mới ') . $name_page]
-];
+$breadcrumb = [['label' => (!empty($id) ? 'Cập nhật ' : 'Thêm mới ') . $name_page]];
 include TEMPLATE . 'breadcrumb.php';
 ?>
 <section class="content">

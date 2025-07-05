@@ -1272,22 +1272,22 @@ $(document).ready(function () {
   $(document).ready(function () {
     const currentQuery = window.location.search;
 
-    $(".sidebar .nav-link[data-active]").each(function () {
-      const activeList = $(this).data("active").split(",").map(s => s.trim());
+    // $(".sidebar .nav-link[data-active]").each(function () {
+    //   const activeList = $(this).data("active").split(",").map(s => s.trim());
 
-      // So sánh đúng query string
-      if (activeList.includes(currentQuery)) {
-        $(this).addClass("active");
-      }
-    });
+    //   // So sánh đúng query string
+    //   if (activeList.includes(currentQuery)) {
+    //     $(this).addClass("active");
+    //   }
+    // });
 
     // Mở nhóm menu nếu có menu con active
-    $(".menu-group").each(function () {
-      if ($(this).find(".nav-link.active").length > 0) {
-        $(this).addClass("menu-open");
-        $(this).find("> .nav-link").addClass("active");
-      }
-    });
+    // $(".menu-group").each(function () {
+    //   if ($(this).find(".nav-link.active").length > 0) {
+    //     $(this).addClass("menu-open");
+    //     $(this).find("> .nav-link").addClass("active");
+    //   }
+    // });
   });
 
 

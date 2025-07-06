@@ -4,7 +4,7 @@ include_once($filepath . '/../lib/database.php');
 include_once($filepath . '/../helpers/format.php');
 ?>
 <?php
-class sanpham
+class product
 {
   private $db;
   private $fn;
@@ -274,6 +274,197 @@ class sanpham
         $this->seo->save_seo($data_prepared['type'], $insert_id, $data, $langs);
       }
       $msg = $inserted ? "Thêm sản phẩm thành công" : "Thêm sản phẩm thất bại";
+    }
+    $this->fn->transfer($msg, $this->fn->getRedirectPath(['table' => $table]), !empty($id) ? $result : $inserted);
+  }
+  public function slug_exists_lv2($slug_lv2, $slug_lv1)
+  {
+    $row_lv1 = $this->db->rawQueryOne("SELECT id FROM tbl_danhmuc_c1 WHERE slugvi = ? LIMIT 1", [$slug_lv1]);
+    if ($row_lv1) {
+      $id_list = $row_lv1['id'];
+      $row_lv2 = $this->db->rawQueryOne("SELECT id FROM tbl_danhmuc_c2 WHERE slugvi = ? AND id_list = ? LIMIT 1", [$slug_lv2, $id_list]);
+      return $row_lv2 ? true : false;
+    }
+    return false;
+  }
+
+  public function save_product_list($data, $files, $id = null)
+  {
+    global $config;
+    $langs = array_keys($config['website']['lang']);
+    $fields_multi = ['slug', 'name', 'desc', 'content'];
+    $fields_common = ['numb', 'type'];
+    $table = 'tbl_product_list';
+    $data_prepared = [];
+    foreach ($langs as $lang) {
+      foreach ($fields_multi as $field) {
+        $key = $field . $lang;
+        $data_prepared[$key] = $data[$key] ?? '';
+      }
+    }
+    foreach ($fields_common as $field) {
+      $data_prepared[$field] = $data[$field] ?? '';
+    }
+    $status_flags = ['hienthi', 'noibat'];
+    $status_values = [];
+    foreach ($status_flags as $flag) {
+      if (!empty($data[$flag])) $status_values[] = $flag;
+    }
+    $data_prepared['status'] = implode(',', $status_values);
+    foreach ($langs as $lang) {
+      $slug_key = 'slug' . $lang;
+      $checkSlugData = [];
+      $checkSlugData['slug'] = $data_prepared[$slug_key];
+      $checkSlugData['table'] = $table;
+      $checkSlugData['exclude_id'] = $id ?? '';
+      $checkSlugData['lang'] = $lang;
+      $checkSlug = $this->fn->checkSlug($checkSlugData);
+      if ($checkSlug) return $checkSlug;
+    }
+    $thumb_filename = '';
+    $old_file_path = '';
+    if (!empty($id)) {
+      $old = $this->db->rawQueryOne("SELECT file FROM $table WHERE id = ?", [(int)$id]);
+      if ($old && !empty($old['file'])) {
+        $old_file_path = UPLOADS . $old['file'];
+      }
+    }
+    $width = (int)($data['thumb_width'] ?? 0);
+    $height = (int)($data['thumb_height'] ?? 0);
+    $thumb_size = $width . 'x' . $height;
+    $thumb_filename = $this->fn->Upload([
+      'file' => $files['file'],
+      'custom_name' => $data_prepared['namevi'],
+      'thumb' => $thumb_size,
+      'old_file_path' => $old_file_path,
+      'watermark' => true,
+      'convert_webp' => true
+    ]);
+
+    if (!empty($id)) {
+      $fields = [];
+      $params = [];
+      foreach ($data_prepared as $key => $val) {
+        $fields[] = "`$key` = ?";
+        $params[] = $val;
+      }
+      if (!empty($thumb_filename)) {
+        $fields[] = "`file` = ?";
+        $params[] = $thumb_filename;
+      }
+      $params[] = (int)$id;
+      $result = $this->db->execute("UPDATE $table SET " . implode(', ', $fields) . " WHERE id = ?", $params);
+      if ($result) {
+        $this->seo->save_seo($data_prepared['type'], (int)$id, $data, $langs);
+      }
+      $msg = $result ? "Cập nhật danh mục thành công" : "Cập nhật danh mục thất bại";
+    } else {
+      $columns = array_keys($data_prepared);
+      $placeholders = array_fill(0, count($columns), '?');
+      $params = array_values($data_prepared);
+      if (!empty($thumb_filename)) {
+        $columns[] = 'file';
+        $placeholders[] = '?';
+        $params[] = $thumb_filename;
+      }
+      $inserted = $this->db->execute("INSERT INTO $table (" . implode(', ', $columns) . ") VALUES (" . implode(', ', $placeholders) . ")", $params);
+      $insert_id = $inserted ? $this->db->getInsertId() : 0;
+      if ($insert_id) {
+        $this->seo->save_seo($data_prepared['type'], $insert_id, $data, $langs);
+      }
+      $msg = $inserted ? "Thêm danh mục thành công" : "Thêm danh mục thất bại";
+    }
+    $this->fn->transfer($msg, "index.php?page=product_list_man", !empty($id) ? $result : $inserted);
+  }
+
+  public function save_danhmuc_c2($data, $files, $id = null)
+  {
+    global $config;
+    $langs = array_keys($config['website']['lang']);
+
+    $fields_multi = ['slug', 'name', 'desc', 'content'];
+    $fields_common = ['id_list', 'numb', 'type'];
+    $table = 'tbl_danhmuc_c2';
+    $data_escaped = [];
+    foreach ($langs as $lang) {
+      foreach ($fields_multi as $field) {
+        $key = $field . $lang;
+        $data_prepared[$key] = $data[$key] ?? '';
+      }
+    }
+    foreach ($fields_common as $field) {
+      $data_prepared[$field] = $data[$field] ?? '';
+    }
+    $status_flags = ['hienthi', 'noibat'];
+    $status_values = [];
+    foreach ($status_flags as $flag) {
+      if (!empty($data[$flag])) $status_values[] = $flag;
+    }
+    $data_prepared['status'] = implode(',', $status_values);
+    foreach ($langs as $lang) {
+      $slug_key = 'slug' . $lang;
+      $error = $this->fn->checkSlug([
+        'slug' => $data_prepared[$slug_key],
+        'table' => $table,
+        'exclude_id' => $id ?? '',
+        'lang' => $lang
+      ]);
+      if ($error) return $error;
+    }
+    $thumb_filename = '';
+    $old_file_path = '';
+    if (!empty($id)) {
+      $old = $this->db->rawQueryOne("SELECT file FROM $table WHERE id = ?", [(int)$id]);
+      if ($old && !empty($old['file'])) {
+        $old_file_path = "uploads/" . $old['file'];
+      }
+    }
+    $width = (int)($data['thumb_width'] ?? 0);
+    $height = (int)($data['thumb_height'] ?? 0);
+    $zc = (int)($data['thumb_zc'] ?? 0);
+    $thumb_size = $width . 'x' . $height . 'x' . $zc;
+    $thumb_filename = $this->fn->Upload([
+      'file' => $files['file'],
+      'custom_name' => $data_escaped['namevi'],
+      'thumb' => $thumb_size,
+      'old_file_path' => $old_file_path,
+      'watermark' => false,
+      'convert_webp' => false
+    ]);
+    if (!empty($id)) {
+      $fields = [];
+      $params = [];
+      foreach ($data_prepared as $key => $val) {
+        $fields[] = "`$key` = ?";
+        $params[] = $val;
+      }
+      if (!empty($thumb_filename)) {
+        $fields[] = "`file` = ?";
+        $params[] = $thumb_filename;
+      }
+      $params[] = (int)$id;
+      $sql = "UPDATE $table SET " . implode(', ', $fields) . " WHERE id = ?";
+      $result = $this->db->execute($sql, $params);
+      if ($result) {
+        $this->seo->save_seo($data_prepared['type'], (int)$id, $data, $langs);
+      }
+      $msg = $result ? "Cập nhật danh mục thành công" : "Cập nhật danh mục thất bại";
+    } else {
+      $columns = array_keys($data_prepared);
+      $placeholders = array_fill(0, count($columns), '?');
+      $params = array_values($data_prepared);
+      if (!empty($thumb_filename)) {
+        $columns[] = 'file';
+        $placeholders[] = '?';
+        $params[] = $thumb_filename;
+      }
+      $sql = "INSERT INTO $table (" . implode(', ', $columns) . ") VALUES (" . implode(', ', $placeholders) . ")";
+      $inserted = $this->db->execute($sql, $params);
+      $insert_id = $inserted ? $this->db->getInsertId() : 0;
+      if ($insert_id) {
+        $this->seo->save_seo($data_prepared['type'], $insert_id, $data, $langs);
+      }
+      $msg = $inserted ? "Thêm danh mục thành công" : "Thêm danh mục thất bại";
     }
     $this->fn->transfer($msg, $this->fn->getRedirectPath(['table' => $table]), !empty($id) ? $result : $inserted);
   }

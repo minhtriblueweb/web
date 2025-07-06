@@ -43,8 +43,7 @@ define('NO_IMG', BASE_ADMIN . 'assets/img/noimage.png');
 // 7. Khởi tạo các class tiện ích mở rộng
 $classes = [
   'breadcrumbs',
-  'danhmuc',
-  'sanpham',
+  'product',
   'slideshow',
   'tieuchi',
   'danhgia',

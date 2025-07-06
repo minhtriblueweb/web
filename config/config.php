@@ -15,7 +15,7 @@ $config = [
     'debug-js' => false
   ],
 
-  // Cấu hình cơ sở dữ liệu (chuẩn dùng cho PDO/PDODb)
+  // Cấu hình cơ sở dữ liệu
   'database' => [
     'type' => 'mysql',
     'host' => 'localhost',

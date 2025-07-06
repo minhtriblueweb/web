@@ -1,107 +1,159 @@
 <?php
-// current page info
-$currentQuery = $_SERVER['QUERY_STRING'] ?? '';
-
 $sidebarMenu = [
   [
     'title' => 'Bảng điều khiển',
     'icon' => 'fas fa-tachometer-alt',
-    'link' => '?page=dashboard',
+    'active' => ['?page=dashboard', 'index.php'],
   ],
   [
     'title' => 'Sản phẩm',
     'icon' => 'fas fa-boxes',
     'children' => [
-      ['title' => 'Danh mục cấp 1', 'link' => '?page=product_list_man'],
-      ['title' => 'Danh mục cấp 2', 'link' => '?page=product_cat_man'],
-      ['title' => 'Sản phẩm', 'link' => '?page=product_man']
+      [
+        'title' => 'Danh mục cấp 1',
+        'active' => ['?page=product_list_man', '?page=product_list_form']
+      ],
+      [
+        'title' => 'Danh mục cấp 2',
+        'active' => ['?page=product_cat_man', '?page=product_cat_form']
+      ],
+      [
+        'title' => 'Sản phẩm',
+        'active' => ['?page=product_man', '?page=product_form', '?page=gallery_man', '?page=gallery_form']
+      ],
     ]
   ],
   [
     'title' => 'Danh sách bài viết',
     'icon' => 'far fa-newspaper',
     'children' => [
-      ['title' => 'Tin tức', 'link' => '?page=news_list&type=tintuc', 'forms' => ['news_form&type=tintuc']],
-      ['title' => 'Chính sách', 'link' => '?page=news_list&type=chinhsach', 'forms' => ['news_form&type=chinhsach']],
-      ['title' => 'Tiêu chí', 'link' => '?page=tieuchi_list', 'forms' => ['tieuchi_form']],
-      ['title' => 'Đánh giá khách hàng', 'link' => '?page=danhgia_list', 'forms' => ['danhgia_form']],
-      ['title' => 'Hướng dẫn chơi', 'link' => '?page=news_list&type=huongdanchoi', 'forms' => ['news_form&type=huongdanchoi']]
+      [
+        'title' => 'Tin tức',
+        'active' => ['?page=news_list&type=tintuc', '?page=news_form&type=tintuc']
+      ],
+      [
+        'title' => 'Chính sách',
+        'active' => ['?page=news_list&type=chinhsach', '?page=news_form&type=chinhsach']
+      ],
+      [
+        'title' => 'Tiêu chí',
+        'active' => ['?page=tieuchi_list', '?page=tieuchi_form']
+      ],
+      [
+        'title' => 'Đánh giá khách hàng',
+        'active' => ['?page=danhgia_list', '?page=danhgia_form']
+      ],
+      [
+        'title' => 'Hướng dẫn chơi',
+        'active' => ['?page=news_list&type=huongdanchoi', '?page=news_form&type=huongdanchoi']
+      ],
     ]
   ],
   [
     'title' => 'Quản lý trang tĩnh',
     'icon' => 'fas fa-bookmark',
     'children' => [
-      ['title' => 'Giới thiệu', 'link' => '?page=static_list&type=gioithieu'],
-      ['title' => 'Liên hệ', 'link' => '?page=static_list&type=lienhe'],
-      ['title' => 'Mua hàng', 'link' => '?page=static_list&type=muahang'],
-      ['title' => 'Footer', 'link' => '?page=static_list&type=footer'],
-      ['title' => 'Hỗ trợ khách hàng', 'link' => '?page=static_list&type=hotrokhachhang'],
-      ['title' => 'Hỗ trợ 24/7', 'link' => '?page=static_list&type=hotro247']
+      [
+        'title' => 'Giới thiệu',
+        'active' => ['?page=static&type=gioithieu']
+      ],
+      [
+        'title' => 'Liên hệ',
+        'active' => ['?page=static&type=lienhe']
+      ],
+      [
+        'title' => 'Mua hàng',
+        'active' => ['?page=static&type=muahang']
+      ],
+      [
+        'title' => 'Footer',
+        'active' => ['?page=static&type=footer']
+      ]
     ]
   ],
   [
     'title' => 'Quản lý hình ảnh - video',
     'icon' => 'fas fa-photo-video',
     'children' => [
-      ['title' => 'Logo', 'link' => '?page=setting_list&type=logo'],
-      ['title' => 'Watermark', 'link' => '?page=watermark'],
-      ['title' => 'Favicon', 'link' => '?page=setting_list&type=favicon'],
-      ['title' => 'Slideshow', 'link' => '?page=slideshow_list', 'forms' => ['slideshow_form']],
-      ['title' => 'Social', 'link' => '?page=social_list', 'forms' => ['social_form']],
-      ['title' => 'Phương thức thanh toán', 'link' => '?page=payment_list', 'forms' => ['payment_form']]
-    ]
-  ],
-  [
-    'title' => 'Quản lý SEO page',
-    'icon' => 'fas fa-share-alt',
-    'children' => [
-      ['title' => 'Trang chủ', 'link' => '?page=seopage_list&type=trangchu'],
-      ['title' => 'Giới thiệu', 'link' => '?page=seopage_list&type=gioithieu'],
-      ['title' => 'Sản phẩm', 'link' => '?page=seopage_list&type=sanpham'],
-      ['title' => 'Tin tức', 'link' => '?page=seopage_list&type=tintuc'],
-      ['title' => 'Mua hàng', 'link' => '?page=seopage_list&type=muahang'],
-      ['title' => 'Hướng dẫn chơi', 'link' => '?page=seopage_list&type=huongdanchoi'],
-      ['title' => 'Liên Hệ', 'link' => '?page=seopage_list&type=lienhe']
+      [
+        'title' => 'Logo',
+        'active' => ['?page=setting_list&type=logo']
+      ],
+      [
+        'title' => 'Watermark',
+        'active' => ['?page=watermark']
+      ],
+      [
+        'title' => 'Favicon',
+        'active' => ['?page=setting_list&type=favicon']
+      ],
+      [
+        'title' => 'Slideshow',
+        'active' => ['?page=slideshow_list', '?page=slideshow_form']
+      ],
+      [
+        'title' => 'Social',
+        'active' => ['?page=social_list', '?page=social_form']
+      ],
+      [
+        'title' => 'Phương thức thanh toán',
+        'active' => ['?page=payment_list', '?page=payment_porm']
+      ]
     ]
   ],
   [
     'title' => 'Thiết lập thông tin',
     'icon' => 'fas fa-cogs',
-    'link' => '?page=setting_list'
+    'active' => ['?page=setting']
   ]
 ];
+$currentPage = $_GET['page'] ?? '';
+$currentType = $_GET['type'] ?? '';
 ?>
+
 <aside class="main-sidebar sidebar-dark-primary elevation-4 text-sm">
-  <a class="brand-link" href="?page=dashboard"><img class="brand-image" src="./assets/img/chuky.png" /></a>
+  <a class="brand-link" href="?page=dashboard">
+    <img class="brand-image" src="./assets/img/chuky.png" />
+  </a>
   <div class="sidebar">
     <nav class="mt-3">
       <ul class="nav nav-pills nav-sidebar flex-column nav-child-indent text-sm" data-widget="treeview" role="menu" data-accordion="false">
-        <?php foreach ($sidebarMenu as $menu):
-          $hasChildren = !empty($menu['children']);
-          $link = $menu['link'] ?? '#';
-          $activeLinks = $fn->buildActiveLinks($link);
-        ?>
-          <li class="nav-item <?= $hasChildren ? 'has-treeview menu-group' : '' ?>">
-            <a class="nav-link" href="<?= $link ?>" data-active="<?= implode(',', $activeLinks) ?>">
-              <i class="nav-icon <?= $menu['icon'] ?>"></i>
+        <?php foreach ($sidebarMenu as $menu): ?>
+          <?php
+          $isActiveGroup = false;
+          $link = $menu['active'][0] ?? '#';
+
+          if (!empty($menu['children'])) {
+            foreach ($menu['children'] as $child) {
+              if ($fn->isItemActive($child['active'], $currentPage, $currentType)) {
+                $isActiveGroup = true;
+                break;
+              }
+            }
+          } else {
+            $isActiveGroup = $fn->isItemActive($menu['active'], $currentPage, $currentType);
+          }
+          ?>
+          <li class="nav-item <?= !empty($menu['children']) ? 'has-treeview' : '' ?> <?= $isActiveGroup ? 'menu-open' : '' ?>">
+            <a class="nav-link <?= $isActiveGroup ? 'active' : '' ?>" href="<?= $link ?>" title="<?= $menu['title'] ?>">
+              <i class="nav-icon text-sm <?= $menu['icon'] ?>"></i>
               <p>
                 <?= $menu['title'] ?>
-                <?php if ($hasChildren): ?>
+                <?php if (!empty($menu['children'])): ?>
                   <i class="right fas fa-angle-left"></i>
                 <?php endif; ?>
               </p>
             </a>
-
-            <?php if ($hasChildren): ?>
+            <?php if (!empty($menu['children'])): ?>
               <ul class="nav nav-treeview">
-                <?php foreach ($menu['children'] as $child):
-                  $childLink = $child['link'] ?? '#';
-                  $childActiveLinks = $fn->buildActiveLinks($childLink);
-                ?>
+                <?php foreach ($menu['children'] as $child): ?>
+                  <?php
+                  $childLink = $child['active'][0] ?? '#';
+                  $isChildActive = $fn->isItemActive($child['active'], $currentPage, $currentType);
+                  ?>
                   <li class="nav-item">
-                    <a class="nav-link" href="<?= $childLink ?>" data-active="<?= implode(',', $childActiveLinks) ?>">
-                      <i class="nav-icon far fa-caret-square-right"></i>
+                    <a class="nav-link <?= $isChildActive ? 'active' : '' ?>" href="<?= $childLink ?>" title="<?= $child['title'] ?>">
+                      <i class="nav-icon text-sm far fa-caret-square-right"></i>
                       <p><?= $child['title'] ?></p>
                     </a>
                   </li>
@@ -110,31 +162,9 @@ $sidebarMenu = [
             <?php endif; ?>
           </li>
         <?php endforeach; ?>
-
       </ul>
     </nav>
   </div>
 </aside>
-
-<!-- Active Highlight Script -->
-<script>
-  document.addEventListener("DOMContentLoaded", function() {
-    const currentQuery = window.location.search;
-
-    document.querySelectorAll(".sidebar .nav-link[data-active]").forEach(function(el) {
-      const activeList = el.getAttribute("data-active").split(",").map(s => s.trim());
-      if (activeList.includes(currentQuery)) {
-        el.classList.add("active");
-      }
-    });
-
-    document.querySelectorAll(".menu-group").forEach(function(group) {
-      if (group.querySelector(".nav-link.active")) {
-        group.classList.add("menu-open");
-        group.querySelector(".nav-link").classList.add("active");
-      }
-    });
-  });
-</script>
 
 <div class="content-wrapper">

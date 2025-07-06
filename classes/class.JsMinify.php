@@ -79,69 +79,36 @@ class JsMinify
 
     return '<script src="' . $cacheLink . '?v=' . filemtime($cacheFile) . '"></script>';
   }
-
   private function compress($js)
   {
-    // Remove single-line code comments
     $js = preg_replace('/^[\t ]*?\/\/.*\s?/m', '', $js);
-
-    // Remove end-of-line code comments
     $js = preg_replace('/([\s;})]+)\/\/.*/m', '\\1', $js);
-
-    // Remove multi-line code comments
-    // $js = preg_replace('/\/\*[\s\S]*?\*\//', '', $js);
     $js = preg_replace('/(\s+)\/\*([^\/]*)\*\/(\s+)/s', "\n", $js);
-
-    // Remove leading whitespace
     $js = preg_replace('/^\s*/m', '', $js);
-
-    // Replace multiple tabs with a single space
     $js = preg_replace('/\t+/m', ' ', $js);
-
-    // Remove newlines
     $js = preg_replace('/[\r\n]+/', '', $js);
-
-    // Split input JavaScript by single and double quotes
     $js_substrings = preg_split('/([\'"])/', $js, -1, PREG_SPLIT_DELIM_CAPTURE);
-
-    // Empty variable for minified JavaScript
     $js = '';
-
     foreach ($js_substrings as $substring) {
-      // Check if substring is split delimiter
-      if ($substring === '\'' or $substring === '"') {
-        // If so, check whether minification is unlocked
+      if ($substring === '\'' || $substring === '"') {
         if ($this->lock['status'] === false) {
-          // If so, lock it and set lock character
           $this->lock['status'] = true;
           $this->lock['char'] = $substring;
         } else {
-          // If not, check if substring is lock character
           if ($substring === $this->lock['char']) {
-            // If so, unlock minification
             $this->lock['status'] = false;
             $this->lock['char'] = '';
           }
         }
-
-        // Add substring to minified output
         $js .= $substring;
         continue;
       }
-
-      // Minify current substring if minification is unlocked
       if ($this->lock['status'] === false) {
-        // Remove unnecessary semicolons
         $substring = str_replace(';}', '}', $substring);
-
-        // Remove spaces round operators
         $substring = preg_replace('/ *([<>=+\-!\|{(},;&:?]+) */', '\\1', $substring);
       }
-
-      // Add substring to minified output
       $js .= $substring;
     }
-
     return trim($js);
   }
 

@@ -13,59 +13,19 @@
 <script type="text/javascript">
   var PHP_VERSION = 80309;
   var CONFIG_BASE = "<?= BASE ?>";
+  var LANGS = "<?= implode(',', array_keys($config['website']['lang'])) ?>";
   var TOKEN = "4cfd9a6ec93f31ec5006af2f97389efa";
   var ADMIN = "admin";
-  var ASSET = "<?php echo BASE ?>";
+  var ASSET = "<?= BASE ?>";
   var LINK_FILTER = "<?= $_SERVER['PHP_SELF'] . '?page=' . ($_GET['page'] ?? '') ?>";
-  var ID = 0;
-  var COM = "";
-  var ACT = "";
-  var TYPE = "";
+  var ID = <?= (!empty($id)) ? $id : 0 ?>;
+  var TYPE = '<?= (!empty($type)) ? $type : '' ?>';
   var HASH = "<?= VERSION ?>";
   var ACTIVE_GALLERY = false;
   var BASE64_QUERY_STRING = "";
   var LOGIN_PAGE = false;
-  var MAX_DATE = "2024/09/08";
-  var CHARTS = {
-    month: "09",
-    series: [
-      15000, 16000, 18000, 28089, 16000, 19000, 22000, 15000, 8500, 12000, 15968, 5896, 14369, 13985, 17859, 18596,
-      24158, 24658, 20148, 12058, 17896, 0,
-      0, 0, 0, 0, 0, 0, 0, 0, 0,
-    ],
-    labels: [
-      "D1",
-      "D2",
-      "D3",
-      "D4",
-      "D5",
-      "D6",
-      "D7",
-      "D8",
-      "D9",
-      "D10",
-      "D11",
-      "D12",
-      "D13",
-      "D14",
-      "D15",
-      "D16",
-      "D17",
-      "D18",
-      "D19",
-      "D20",
-      "D21",
-      "D22",
-      "D23",
-      "D24",
-      "D25",
-      "D26",
-      "D27",
-      "D28",
-      "D29",
-      "D30",
-    ],
-  };
+  var MAX_DATE = '<?= date("Y/m/d", time()) ?>';
+  var CHARTS = <?= (!empty($charts)) ? json_encode($charts) : '{}' ?>;
   var ADD_OR_EDIT_PERMISSIONS = false;
   var IMPORT_IMAGE_EXCELL = false;
   var ORDER_ADVANCED_SEARCH = false;

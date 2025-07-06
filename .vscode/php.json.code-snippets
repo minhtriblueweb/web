@@ -18,17 +18,12 @@
   },
   "rename-table": {
     "prefix": "rename",
-    "body": [
-      "RENAME TABLE `${1:old_table}` TO `${2:new_table}`;"
-    ],
+    "body": ["RENAME TABLE `${1:old_table}` TO `${2:new_table}`;"],
     "description": "SQL: RENAME TABLE `old_table` TO `new_table`"
   },
   "Dump Fn": {
     "prefix": "Dump",
-    "body": [
-      "<?php",
-      "\\$fn->dump(${1:\\$data});"
-    ],
+    "body": ["\\$fn->dump(${1:\\$data});"],
     "description": "Gọi hàm dump() từ $fn để debug dữ liệu"
-  },
+  }
 }

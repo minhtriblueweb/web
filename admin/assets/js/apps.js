@@ -723,24 +723,85 @@ function seoChange() {
 }
 
 /* Slug */
+var sluglang = LANGS;
+let lastSlug = {};
+let lastSlugStatus = {};
+let slugVersion = {};
+let debounceTimers = {};
+
+function slugPress() {
+  sluglang.split(',').forEach(lang => {
+    const slug = $(`#slug${lang}`).val();
+    if (slug) {
+      lastSlug[lang] = slug;
+      slugCheck(lang);
+    }
+  });
+}
+
+$(document).ready(function () {
+  sluglang.split(',').forEach(lang => {
+    lastSlug[lang] = '';
+    lastSlugStatus[lang] = false;
+    slugVersion[lang] = 0;
+  });
+
+  slugPress();
+
+  if ($("#slugchange").length) {
+    $("body").on("click", "#slugchange", function () {
+      slugChange($(this));
+    });
+  }
+
+  sluglang.split(',').forEach(function (lang) {
+    const $nameInput = $(`#name${lang}`);
+    const $slugInput = $(`#slug${lang}`);
+
+    if ($nameInput.length) {
+      $nameInput.on('input', function () {
+        const title = $(this).val();
+        const slug = slugConvert(title);
+        const oldSlug = $slugInput.val();
+
+        if (slug !== oldSlug) {
+          $slugInput.val(slug);
+        }
+
+        slugPreviewTitleSeo(title, lang);
+
+        clearTimeout(debounceTimers[lang]);
+        debounceTimers[lang] = setTimeout(() => {
+          if (lastSlug[lang] !== slug) {
+            lastSlug[lang] = slug;
+            slugCheck(lang);
+          }
+        }, 400);
+      });
+    }
+
+    if ($slugInput.length) {
+      $slugInput.on('input', function () {
+        const slug = $(this).val();
+
+        clearTimeout(debounceTimers[lang]);
+        debounceTimers[lang] = setTimeout(() => {
+          if (lastSlug[lang] !== slug) {
+            lastSlug[lang] = slug;
+            slugCheck(lang);
+          }
+        }, 400);
+      });
+    }
+  });
+});
+
 function slugConvert(slug, focus = false) {
   slug = slug.toLowerCase();
-  slug = slug.replace(/á|à|ả|ạ|ã|ă|ắ|ằ|ẳ|ẵ|ặ|â|ấ|ầ|ẩ|ẫ|ậ/gi, "a");
-  slug = slug.replace(/é|è|ẻ|ẽ|ẹ|ê|ế|ề|ể|ễ|ệ/gi, "e");
-  slug = slug.replace(/i|í|ì|ỉ|ĩ|ị/gi, "i");
-  slug = slug.replace(/ó|ò|ỏ|õ|ọ|ô|ố|ồ|ổ|ỗ|ộ|ơ|ớ|ờ|ở|ỡ|ợ/gi, "o");
-  slug = slug.replace(/ú|ù|ủ|ũ|ụ|ư|ứ|ừ|ử|ữ|ự/gi, "u");
-  slug = slug.replace(/ý|ỳ|ỷ|ỹ|ỵ/gi, "y");
-  slug = slug.replace(/đ/gi, "d");
-  slug = slug.replace(
-    /\`|\~|\!|\@|\#|\||\$|\%|\^|\&|\*|\(|\)|\+|\=|\,|\.|\/|\?|\>|\<|\'|\"|\:|\;|_/gi,
-    ""
-  );
-  slug = slug.replace(/ /gi, "-");
-  slug = slug.replace(/\-\-\-\-\-/gi, "-");
-  slug = slug.replace(/\-\-\-\-/gi, "-");
-  slug = slug.replace(/\-\-\-/gi, "-");
-  slug = slug.replace(/\-\-/gi, "-");
+  slug = slug.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+  slug = slug.replace(/đ/g, "d");
+  slug = slug.replace(/[^a-z0-9\- ]/g, "");
+  slug = slug.replace(/\s+/g, "-").replace(/\-+/g, "-");
 
   if (!focus) {
     slug = "@" + slug + "@";
@@ -749,203 +810,89 @@ function slugConvert(slug, focus = false) {
 
   return slug;
 }
+
 function slugPreview(title, lang, focus = false) {
-  var slug = slugConvert(title, focus);
-
-  $("#slug" + lang).val(slug);
-  $("#slugurlpreview" + lang + " strong").html(slug);
-  $("#seourlpreview" + lang + " strong").html(slug);
+  const slug = slugConvert(title, focus);
+  $(`#slug${lang}`).val(slug);
+  $(`#slugurlpreview${lang} strong`).text(slug);
+  $(`#seourlpreview${lang} strong`).text(slug);
 }
+
 function slugPreviewTitleSeo(title, lang) {
-  if ($("#title" + lang).length) {
-    var titleSeo = $("#title" + lang).val();
-    if (!titleSeo) {
-      if (title) $("#title-seo-preview" + lang).html(title);
-      else $("#title-seo-preview" + lang).html("Title");
-    }
+  const $title = $(`#title${lang}`);
+  if ($title.length && !$title.val()) {
+    $(`#title-seo-preview${lang}`).text(title || 'Title');
   }
 }
-function slugPress() {
-  var sluglang = "vi,en";
-  var inputArticle = $(".card-article input.for-seo");
-  var id = $(".slug-id").val();
-  var seourlstatic = true;
-  // var seourlstatic = $(".slug-seo-preview").data("seourlstatic");
 
-  inputArticle.each(function (index) {
-    var name = $(this).attr("id");
-    var lang = name.substr(name.length - 2);
-    if (sluglang.indexOf(lang) >= 0) {
-      if ($("#" + name).length) {
-        $("body").on("keyup", "#" + name, function (e) {
-          var keyCode = e.keyCode || e.which;
-          var title = $("#" + name).val();
-
-          if (keyCode != 13) {
-            if ((!id || $("#slugchange").prop("checked")) && seourlstatic) {
-              /* Slug preivew */
-              slugPreview(title, lang);
-            }
-
-            /* Slug preivew title seo */
-            slugPreviewTitleSeo(title, lang);
-
-            /* slug Alert */
-            slugAlert(2, lang);
-          }
-        });
-      }
-
-      if ($("#slug" + lang).length) {
-        $("body").on("keyup", "#slug" + lang, function (e) {
-          var keyCode = e.keyCode || e.which;
-          var title = $("#slug" + lang).val();
-
-          if (keyCode != 13) {
-            /* Slug preivew */
-            slugPreview(title, lang, true);
-
-            /* slug Alert */
-            slugAlert(2, lang);
-          }
-        });
-      }
-    }
-  });
-}
-function slugChange(obj) {
-  if (obj.is(":checked")) {
-    /* Load slug theo tiêu đề mới */
-    slugStatus(1);
-    $(".slug-input").attr("readonly", true);
-  } else {
-    /* Load slug theo tiêu đề cũ */
-    slugStatus(0);
-    $(".slug-input").attr("readonly", false);
-  }
-}
-function slugStatus(status) {
-  var sluglang = "vi,en";
-  var inputArticle = $(".card-article input.for-seo");
-
-  inputArticle.each(function (index) {
-    var name = $(this).attr("id");
-    var lang = name.substr(name.length - 2);
-    if (sluglang.indexOf(lang) >= 0) {
-      var title = "";
-      if (status == 1) {
-        if ($("#" + name).length) {
-          title = $("#" + name).val();
-
-          /* Slug preivew */
-          slugPreview(title, lang);
-
-          /* Slug preivew title seo */
-          slugPreviewTitleSeo(title, lang);
-        }
-      } else if (status == 0) {
-        if ($("#slug-default" + lang).length) {
-          title = $("#slug-default" + lang).val();
-
-          /* Slug preivew */
-          slugPreview(title, lang);
-
-          /* Slug preivew title seo */
-          slugPreviewTitleSeo(title, lang);
-        }
-      }
-    }
-  });
-}
-
-let lastSlugStatus = {};
-var sluglang = 'vi,en';
-function slugAlert(res, lang = 'vi') {
+function handleSlugStatus(status, lang, message = '') {
   const msgValid = "Đường dẫn hợp lệ.";
-  const msgInvalid = res.message || "Đường dẫn đã tồn tại.";
-  const $slugInput = $(`#slug${lang}`);
+  const msgInvalid = message || "Đường dẫn đã tồn tại.";
   const $success = $(`#alert-slug-success${lang}`);
   const $danger = $(`#alert-slug-danger${lang}`);
 
-  if ($slugInput.length === 0) return;
-
-  if (res.status === 1) {
+  if (status === 1) {
     $danger.addClass("d-none");
     $success.removeClass("d-none").find("span").text(msgValid);
     lastSlugStatus[lang] = true;
-  } else if (res.status === 0) {
-    $success.addClass("d-none");
-    $danger.removeClass("d-none").find("span").text(msgInvalid);
-    lastSlugStatus[lang] = false;
   } else {
+    $success.addClass("d-none");
+    if (status === 0) {
+      $danger.removeClass("d-none").find("span").text(msgInvalid);
+    } else {
+      $danger.addClass("d-none");
+    }
     lastSlugStatus[lang] = false;
-    toggleSlugAlert(lang);
-    return;
   }
 
-  // ✅ Chỉ cần 'vi' hợp lệ là bật nút
-  $(".submit-check").prop("disabled", lastSlugStatus['vi'] !== true);
+  const isViValid = lastSlugStatus['vi'] === true;
+  let otherValid = true;
+
+  sluglang.split(',').forEach(l => {
+    if (l === 'vi') return;
+    const $slugInput = $(`#slug${l}`);
+    const slugVal = $slugInput.length ? $slugInput.val().trim() : '';
+    if (slugVal !== '') {
+      if (lastSlugStatus[l] !== true) {
+        otherValid = false;
+      }
+    }
+  });
+
+  const canSubmit = isViValid && otherValid;
+  $(".submit-check").prop("disabled", !canSubmit);
 }
 
-function toggleSlugAlert(lang = 'vi') {
-  const $slugInput = $(`#slug${lang}`);
-  if ($slugInput.length === 0) return;
-  $(`#alert-slug-success${lang}`).addClass("d-none");
-  $(`#alert-slug-danger${lang}`).addClass("d-none");
-  lastSlugStatus[lang] = false;
-  const allValid = Object.values(lastSlugStatus).every(status => status === true);
-  $(".submit-check").prop("disabled", !allValid);
-}
-function slugCheck(lang = 'vi') {
+function slugCheck(lang) {
   const slug = $(`#slug${lang}`).val();
   const id = $(".slug-id").val();
   const table = $(".slug-table").val();
-  if (slug) {
-    $.ajax({
-      url: "api/slug.php",
-      type: "POST",
-      dataType: "json",
-      data: {
-        slug: slug,
-        id: id,
-        table: table,
-        lang: lang
-      },
-      success: function (res) {
-        slugAlert(res, lang);
-      },
-    });
-  } else {
-    toggleSlugAlert(lang); // reset alert nếu không có slug
+
+  if (!slug) {
+    handleSlugStatus(-1, lang);
+    return;
   }
-}
-let lastSlug = {};
-setInterval(function () {
-  const langs = sluglang.split(',');
-  langs.forEach(function (lang) {
-    const $input = $(`#slug${lang}`);
-    const current = $input.val();
-    if (lastSlug[lang] !== current) {
-      lastSlug[lang] = current;
-      slugCheck(lang);
+
+  slugVersion[lang]++;
+  const currentVersion = slugVersion[lang];
+
+  $.ajax({
+    url: "api/slug.php",
+    type: "POST",
+    dataType: "json",
+    data: { slug, id, table, lang },
+    success: function (res) {
+      if (slugVersion[lang] === currentVersion) {
+        handleSlugStatus(res.status, lang, res.message);
+      }
+    },
+    error: function () {
+      if (slugVersion[lang] === currentVersion) {
+        handleSlugStatus(-1, lang);
+      }
     }
   });
-}, 500);
-sluglang.split(',').forEach(function (lang) {
-  $(`#name${lang}`).on('input change paste keyup blur', function () {
-    const nameVal = $(this).val();
-    const newSlug = slugConvert(nameVal);
-    const $slug = $(`#slug${lang}`);
-    const oldSlug = $slug.val();
-
-    $slug.val(newSlug); // gán dù giống hay khác
-
-    // ✅ Luôn gọi slugCheck để đảm bảo kiểm tra lại
-    lastSlug[lang] = null; // reset để tránh bị chặn bởi setInterval
-    slugCheck(lang);       // bắt buộc gọi kiểm tra lại
-  });
-});
-
+}
 
 /* Reader image */
 function readImage(inputFile, elementPhoto) {
@@ -1272,22 +1219,22 @@ $(document).ready(function () {
   $(document).ready(function () {
     const currentQuery = window.location.search;
 
-    // $(".sidebar .nav-link[data-active]").each(function () {
-    //   const activeList = $(this).data("active").split(",").map(s => s.trim());
+    $(".sidebar .nav-link[data-active]").each(function () {
+      const activeList = $(this).data("active").split(",").map(s => s.trim());
 
-    //   // So sánh đúng query string
-    //   if (activeList.includes(currentQuery)) {
-    //     $(this).addClass("active");
-    //   }
-    // });
+      // So sánh đúng query string
+      if (activeList.includes(currentQuery)) {
+        $(this).addClass("active");
+      }
+    });
 
     // Mở nhóm menu nếu có menu con active
-    // $(".menu-group").each(function () {
-    //   if ($(this).find(".nav-link.active").length > 0) {
-    //     $(this).addClass("menu-open");
-    //     $(this).find("> .nav-link").addClass("active");
-    //   }
-    // });
+    $(".menu-group").each(function () {
+      if ($(this).find(".nav-link.active").length > 0) {
+        $(this).addClass("menu-open");
+        $(this).find("> .nav-link").addClass("active");
+      }
+    });
   });
 
 
@@ -1867,14 +1814,6 @@ $(document).ready(function () {
         notifyDialog(LANG["dulieuhinhanhkhonghople"]);
         return false;
       }
-    });
-  }
-
-  /* Slug */
-  slugPress();
-  if ($("#slugchange").length) {
-    $("body").on("click", "#slugchange", function () {
-      slugChange($(this));
     });
   }
 

@@ -1,14 +1,13 @@
 <?php
-$name = 'danhmuc_c1';
+$name = 'product_list';
 $pageConfig = [
   'message'      => '',
   'name_page'    => 'danh mục cấp 1',
   'type'         => $name,
-  'thumb_width'  => 50,
-  'thumb_height' => 50,
-  'thumb_zc'     => 1,
+  'thumb_width'  => 500,
+  'thumb_height' => 500,
   'table'        => "tbl_$name",
-  'linkMan'      => "index.php?page={$name}_list",
+  'linkMan'      => "index.php?page={$name}_man",
   'id'           => (isset($_GET['id']) && is_numeric($_GET['id'])) ? (int)$_GET['id'] : null,
 ];
 extract($pageConfig);
@@ -18,7 +17,7 @@ if ($id !== null) {
   $seo_data = $result ? $seo->get_seo($id, $type) : [];
 }
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && (isset($_POST['add']) || isset($_POST['edit']))) {
-  $message = $danhmuc->save_danhmuc($_POST, $_FILES, $id);
+  $message = $product->save_product_list($_POST, $_FILES, $id);
 }
 $breadcrumb = [['label' => ($id !== null ? 'Cập nhật ' : 'Thêm mới ') . $name_page]];
 include TEMPLATE . 'breadcrumb.php';
@@ -164,10 +163,10 @@ include TEMPLATE . 'breadcrumb.php';
         </div>
       </div>
     </div>
+
     <?php include TEMPLATE . 'seo.php'; ?>
     <input type="hidden" name="type" value="<?= $type ?>">
     <input type="hidden" name="thumb_width" value="<?= $thumb_width ?>">
     <input type="hidden" name="thumb_height" value="<?= $thumb_height ?>">
-    <input type="hidden" name="thumb_zc" value="<?= $thumb_zc ?>">
   </form>
 </section>

@@ -8,6 +8,9 @@
   var RECAPTCHA_ACTIVE = true;
   var RECAPTCHA_SITEKEY = "6Lcy4r0ZAAAAAKCm-yZWmkiZK6GO49G--KW30rNS";
   var PATH_JSON = "./assets/jsons/";
+  var logo_img = "<?= $logo ?>";
+  var IDLIST = "";
+  var TOTALPAGE = "";
   var LANG = {
     no_keywords: "Chưa nhập từ khóa tìm kiếm",
     delete_product_from_cart: "Bạn muốn xóa sản phẩm này khỏi giỏ hàng ? ",
@@ -23,9 +26,6 @@
     huy: "Hủy",
     chinhsach: "Chính Sách",
   };
-  var logo_img = "<?= $logo ?>";
-  var IDLIST = "";
-  var TOTALPAGE = "";
 </script>
 <?php
 $jsFiles = [

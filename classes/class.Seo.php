@@ -20,35 +20,29 @@ class Seo
   public function get_seo(int $id_parent, string $type = '', string $lang = 'vi'): array
   {
     global $default_seo;
-
     $sql = "SELECT * FROM tbl_seo WHERE `id_parent` = ?" . ($type ? " AND `type` = ?" : "");
     $params = [$id_parent];
     if ($type) $params[] = $type;
-
     $row = $this->db->rawQueryOne($sql, $params);
     if (!$row) {
       $this->set($default_seo);
       return $default_seo;
     }
-
     $title = $row["title{$lang}"] ?? '';
     $data = array_merge($default_seo, [
       'h1'          => $title,
       'title'       => $title,
       'keywords'    => $row["keywords{$lang}"] ?? '',
       'description' => $row["description{$lang}"] ?? '',
-      'url'         => BASE . ($row["slug{$lang}"] ?? $row['slug'] ?? ''),
+      'url'         => BASE . ($row["slug{$lang}"] ?? ''),
       'image'       => !empty($row['file']) ? BASE_ADMIN . UPLOADS . $row['file'] : ''
     ]);
-
-    $this->set($data); // Gán vào $this->data để dùng $seo->get('...')
-
+    $this->set($data);
     return $row + $data;
   }
   public function get_seopage(array $row, string $lang = 'vi'): array
   {
     global $default_seo;
-
     $title = $row["title{$lang}"] ?? '';
     $data = array_merge($default_seo, [
       'h1'    => $title,
@@ -58,9 +52,7 @@ class Seo
       'url'   => BASE . ($row["slug{$lang}"] ?? ''),
       'image' => !empty($row['file']) ? BASE_ADMIN . UPLOADS . $row['file'] : ''
     ]);
-
-    $this->set($data); // GÁN vào bên trong class Seo
-
+    $this->set($data);
     return $data;
   }
   public function set($key = '', $value = '')

@@ -1,22 +1,24 @@
 <?php
-$message = '';
-$name_page = 'sản phẩm';
-$type = 'sanpham';
-$table = "tbl_{$type}";
-$linkMan = "index.php?page={$type}_list";
-$thumb_width = 500;
-$thumb_height = 500;
-$thumb_zc = 1;
-$result = $seo_data = [];
-$id = isset($_GET['id']) && is_numeric($_GET['id']) ? (int)$_GET['id'] : null;
-$result = ($id !== null) ? $db->rawQueryOne("SELECT * FROM `$table` WHERE id = ? LIMIT 1", [$id]) : [];
-$seo_data = !empty($result) ? $seo->get_seo($id, $type) : [];
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && (isset($_POST['add']) || isset($_POST['edit']))) {
-  $message = $sanpham->save_sanpham($_POST, $_FILES, $id);
-}
-$breadcrumb = [
-  ['label' => (!empty($id) ? 'Cập nhật ' : 'Thêm mới ') . $name_page]
+$type = 'product';
+$pageConfig = [
+  'message'      => '',
+  'name_page'    => 'sản phẩm',
+  'thumb_width'  => 500,
+  'thumb_height' => 500,
+  'table'        => "tbl_{$type}",
+  'linkMan'      => "index.php?page={$type}_man",
+  'id'           => (isset($_GET['id']) && is_numeric($_GET['id'])) ? (int)$_GET['id'] : null,
 ];
+extract($pageConfig);
+$result = $seo_data = [];
+if ($id !== null) {
+  $result = $db->rawQueryOne("SELECT * FROM `$table` WHERE id = ? LIMIT 1", [$id]);
+  $seo_data = $result ? $seo->get_seo($id, $type) : [];
+}
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && (isset($_POST['add']) || isset($_POST['edit']))) {
+  $message = $product->save_product($_POST, $_FILES, $id);
+}
+$breadcrumb = [['label' => ($id !== null ? 'Cập nhật ' : 'Thêm mới ') . $name_page]];
 include TEMPLATE . 'breadcrumb.php';
 ?>
 <section class="content">
@@ -116,14 +118,14 @@ include TEMPLATE . 'breadcrumb.php';
             <div class="form-group-category row">
               <div class="form-group col-xl-6 col-sm-4">
                 <label class="d-block" for="id_list">Danh mục cấp 1:</label>
-                <?= $fn->getAjaxCategory('tbl_danhmuc_c1', $_POST['id_list'] ?? ($result['id_list'] ?? '')) ?>
+                <?= $fn->getAjaxCategory('tbl_product_list', $_POST['id_list'] ?? $result['id_list'] ?? '') ?>
               </div>
               <div class="form-group col-xl-6 col-sm-4">
                 <label class="d-block" for="id_cat">Danh mục cấp 2:</label>
                 <?= $fn->getAjaxCategory(
-                  'tbl_danhmuc_c2',
-                  $_POST['id_cat'] ?? ($result['id_cat'] ?? ''),
-                  $_POST['id_list'] ?? ($result['id_list'] ?? 0),
+                  'tbl_product_cat',
+                  $_POST['id_cat'] ?? $result['id_cat'] ?? '',
+                  $_POST['id_list'] ?? $result['id_list'] ?? 0,
                 ) ?>
               </div>
             </div>
@@ -259,6 +261,5 @@ include TEMPLATE . 'breadcrumb.php';
     <input type="hidden" name="type" value="<?= $type ?>">
     <input type="hidden" name="thumb_width" value="<?= $thumb_width ?>">
     <input type="hidden" name="thumb_height" value="<?= $thumb_height ?>">
-    <input type="hidden" name="thumb_zc" value="<?= $thumb_zc ?>">
   </form>
 </section>

@@ -5,7 +5,7 @@ $pageConfig = [
   'name_page'    => 'danh mục cấp 2',
   'thumb_width'  => 100,
   'thumb_height' => 100,
-  'table'        => "tbl_$type",
+  'table'        => "tbl_{$type}",
   'linkMan'      => "index.php?page={$type}_man",
   'id'           => (isset($_GET['id']) && is_numeric($_GET['id'])) ? (int)$_GET['id'] : null,
 ];

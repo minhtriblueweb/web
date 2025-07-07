@@ -47,8 +47,6 @@ class Functions
     $params = [];
     $where = ' WHERE 1';
     $name = $id = '';
-
-    // Xác định cấp danh mục và điều kiện
     if (str_contains($table, '_list')) {
       $name = $id = 'id_list'; // cấp 1
     } elseif (str_contains($table, '_cat')) {
@@ -68,14 +66,9 @@ class Functions
     } else {
       $name = $id = 'id';
     }
-
-    // Truy vấn
     $rows = $this->db->rawQuery("SELECT id, namevi FROM `$table` $where ORDER BY numb, id DESC", $params);
-
-    // Tạo <select>
     $str = '<select id="' . $id . '" name="' . $name . '" onchange="onchangeCategory($(this))" class="form-control filter-category select2">';
     $str .= '<option value="0">' . htmlspecialchars($title_select) . '</option>';
-
     if (!empty($rows)) {
       foreach ($rows as $row) {
         $selected = ($selectedId == $row['id']) ? 'selected' : '';
@@ -84,7 +77,6 @@ class Functions
     } else {
       $str .= '<option disabled>Không có dữ liệu</option>';
     }
-
     $str .= '</select>';
     return $str;
   }
@@ -94,17 +86,15 @@ class Functions
     $params = [];
     $where = ' WHERE 1';
     $class = 'form-control select2 select-category';
-
-    // Cấu hình theo cấp
     $levels = [
-      '_c1' => [
+      '_list' => [
         'field' => 'id_list',
         'data_level' => '0',
         'data_table' => 'tbl_product_cat',
         'data_child' => 'id_cat',
         'filters' => []
       ],
-      '_c2' => [
+      '_cat' => [
         'field' => 'id_cat',
         'data_level' => '1',
         'data_table' => 'tbl_product_item',
@@ -113,7 +103,7 @@ class Functions
           'id_list' => $id_list
         ]
       ],
-      '_c3' => [
+      '_item' => [
         'field' => 'id_item',
         'data_level' => '2',
         'data_table' => '',
@@ -124,8 +114,6 @@ class Functions
         ]
       ]
     ];
-
-    // Xác định cấp theo tên bảng
     $matched = null;
     foreach ($levels as $key => $conf) {
       if (str_contains($table, $key)) {
@@ -133,8 +121,6 @@ class Functions
         break;
       }
     }
-
-    // Mặc định nếu không khớp cấp
     if (!$matched) {
       $field = $name = 'id';
       $data_level = '';
@@ -145,8 +131,6 @@ class Functions
       $data_level = 'data-level="' . $matched['data_level'] . '"';
       $data_table = 'data-table="' . $matched['data_table'] . '"';
       $data_child = 'data-child="' . $matched['data_child'] . '"';
-
-      // Áp dụng điều kiện lọc
       foreach ($matched['filters'] as $filterField => $filterValue) {
         if ($filterValue > 0) {
           $where .= " AND {$filterField} = ?";
@@ -154,14 +138,9 @@ class Functions
         }
       }
     }
-
-    // Query
     $rows = $this->db->rawQuery("SELECT id, namevi FROM `$table` $where ORDER BY numb, id DESC", $params);
-
-    // Render HTML select
     $str = '<select id="' . $field . '" name="' . $name . '" ' . $data_level . ' ' . $data_table . ' ' . $data_child . ' class="' . $class . '">';
     $str .= '<option value="0">' . htmlspecialchars($title_select) . '</option>';
-
     if (!empty($rows)) {
       foreach ($rows as $row) {
         $selected = ($selectedId == $row['id']) ? 'selected' : '';
@@ -170,7 +149,6 @@ class Functions
     } else {
       $str .= '<option disabled>Không có dữ liệu</option>';
     }
-
     $str .= '</select>';
     return $str;
   }
@@ -314,38 +292,35 @@ class Functions
   {
     if (!$file) return true;
 
-    // Tên file gốc không có thư mục
-    $filename = basename($file); // vd: abc.jpg
-    $filenameNoExt = pathinfo($filename, PATHINFO_FILENAME); // abc
+    $filename = basename($file); // hoa-de-ban.jpg
+    $filenameNoExt = pathinfo($filename, PATHINFO_FILENAME); // hoa-de-ban
     $ext = pathinfo($filename, PATHINFO_EXTENSION); // jpg
 
-    // Thư mục uploads/
     $baseDir = rtrim(UPLOADS, '/');
 
-    // ✅ Xoá gốc .jpg / .png / .webp trong uploads/
+    // ✅ Xoá ảnh gốc
     $mainFile = $baseDir . '/' . $filename;
     if (file_exists($mainFile)) @unlink($mainFile);
 
-    // Nếu là JPG/PNG, cũng thử xoá .webp tương ứng
+    // ✅ Xoá bản webp của ảnh gốc nếu có
     if (in_array(strtolower($ext), ['jpg', 'jpeg', 'png'])) {
       $webpMain = $baseDir . '/' . $filenameNoExt . '.webp';
       if (file_exists($webpMain)) @unlink($webpMain);
     }
 
-    // ✅ Xoá các thumbnail trong uploads/500x500x1/... và bản .webp nếu có
-    $thumbDirs = glob($baseDir . '/*x*x*', GLOB_ONLYDIR);
+    // ✅ Tìm và xoá trong thư mục uploads/*x*x[1-3]/
+    $thumbDirs = glob($baseDir . '/*x*x[1-4]', GLOB_ONLYDIR);
     foreach ($thumbDirs as $dir) {
-      // Xoá bản jpg/png
       $thumbFile = $dir . '/' . $filename;
       if (file_exists($thumbFile)) @unlink($thumbFile);
 
-      // Xoá bản webp
       $thumbWebp = $dir . '/' . $filenameNoExt . '.webp';
       if (file_exists($thumbWebp)) @unlink($thumbWebp);
     }
 
     return true;
   }
+
   public function delete(int $id, string $table, string $type = '', $id_parent = null)
   {
     $id = (int)$id;
@@ -570,6 +545,18 @@ class Functions
     }
     return false;
   }
+  private function generateUniqueFilename($upload_dir, $slug_name, $ext)
+  {
+    $i = 0;
+    do {
+      $suffix = $i > 0 ? '-' . $i : '';
+      $filename = $slug_name . $suffix . '.' . $ext;
+      $file_path = rtrim($upload_dir, '/') . '/' . $filename;
+      $i++;
+    } while (file_exists($file_path));
+
+    return $filename;
+  }
   private function cropTransparentOrWhiteBorder($image)
   {
     $w = imagesx($image);
@@ -616,18 +603,6 @@ class Functions
     imagecopy($new_img, $image, 0, 0, $min_x, $min_y, $crop_width, $crop_height);
 
     return $new_img;
-  }
-  private function generateUniqueFilename($upload_dir, $slug_name, $ext)
-  {
-    $i = 0;
-    do {
-      $suffix = $i > 0 ? '-' . $i : '';
-      $filename = $slug_name . $suffix . '.' . $ext;
-      $file_path = rtrim($upload_dir, '/') . '/' . $filename;
-      $i++;
-    } while (file_exists($file_path));
-
-    return $filename;
   }
   private function applyOpacity($image, $opacity)
   {
@@ -732,8 +707,8 @@ class Functions
     if (!isset($ext_map[$image_type])) return false;
     $ext = $ext_map[$image_type];
     $image = $create_func[$image_type]($source_path);
-
     if (!$image) return false;
+
     $is_webp = ($image_type === IMAGETYPE_WEBP);
     if (in_array($image_type, [IMAGETYPE_PNG, IMAGETYPE_WEBP])) {
       imagepalettetotruecolor($image);
@@ -741,43 +716,127 @@ class Functions
       imagesavealpha($image, true);
     }
 
-    $thumb = imagecreatetruecolor($thumb_width, $thumb_height);
+    $canvas = imagecreatetruecolor($thumb_width, $thumb_height);
+
     if (is_array($background) && count($background) === 4 && $background[3] == 127 && ($convert_webp || $is_webp)) {
-      imagealphablending($thumb, false);
-      imagesavealpha($thumb, true);
-      imagefill($thumb, 0, 0, imagecolorallocatealpha($thumb, 0, 0, 0, 127));
+      imagealphablending($canvas, false);
+      imagesavealpha($canvas, true);
+      imagefill($canvas, 0, 0, imagecolorallocatealpha($canvas, 0, 0, 0, 127));
     } elseif (is_array($background) && count($background) === 4) {
-      $bg = imagecolorallocatealpha($thumb, ...$background);
-      imagefill($thumb, 0, 0, $bg);
+      $bg = imagecolorallocatealpha($canvas, ...$background);
+      imagefill($canvas, 0, 0, $bg);
     } else {
-      imagefill($thumb, 0, 0, imagecolorallocate($thumb, 255, 255, 255));
+      imagefill($canvas, 0, 0, imagecolorallocate($canvas, 255, 255, 255));
     }
 
-    $src_ratio = $width_orig / $height_orig;
-    $dst_ratio = $thumb_width / $thumb_height;
+    if ($zoom_crop == 3) {
+      // Resize giữ nguyên tỉ lệ, 1 chiều = khung
+      $src_ratio = $width_orig / $height_orig;
+      $dst_ratio = $thumb_width / $thumb_height;
 
-    if ($zoom_crop === 3 || $zoom_crop === 2) {
-      $dst_w = $thumb_width;
-      $dst_h = ($src_ratio > $dst_ratio) ? intval($thumb_width / $src_ratio) : intval($thumb_height * $src_ratio);
-      $dst_x = intval(($thumb_width - $dst_w) / 2);
-      $dst_y = intval(($thumb_height - $dst_h) / 2);
+      if ($src_ratio > $dst_ratio) {
+        // Ảnh ngang → fix chiều rộng, cao theo tỷ lệ
+        $resize_w = $thumb_width;
+        $resize_h = intval($thumb_width / $src_ratio);
+      } else {
+        // Ảnh dọc → fix chiều cao, rộng theo tỷ lệ
+        $resize_h = $thumb_height;
+        $resize_w = intval($thumb_height * $src_ratio);
+      }
+
+      // Resize ảnh đúng kích thước mới
+      $canvas = imagecreatetruecolor($resize_w, $resize_h);
+
+      // Xử lý nền
+      if (is_array($background) && count($background) === 4 && $background[3] == 127 && ($convert_webp || $is_webp)) {
+        imagealphablending($canvas, false);
+        imagesavealpha($canvas, true);
+        $fill = imagecolorallocatealpha($canvas, 0, 0, 0, 127);
+        imagefill($canvas, 0, 0, $fill);
+      } elseif (is_array($background) && count($background) === 4) {
+        $bg = imagecolorallocatealpha($canvas, ...$background);
+        imagefill($canvas, 0, 0, $bg);
+      } else {
+        imagefill($canvas, 0, 0, imagecolorallocate($canvas, 255, 255, 255));
+      }
+
+      imagecopyresampled($canvas, $image, 0, 0, 0, 0, $resize_w, $resize_h, $width_orig, $height_orig);
+
+      // Cập nhật thumb_width / height mới để lưu đúng
+      $thumb_width = $resize_w;
+      $thumb_height = $resize_h;
+    } elseif ($zoom_crop == 4) {
+      // Resize như crop = 3 (giữ tỉ lệ, không cắt)
+      $src_ratio = $width_orig / $height_orig;
+      $dst_ratio = $thumb_width / $thumb_height;
+
+      if ($src_ratio > $dst_ratio) {
+        $resize_w = $thumb_width;
+        $resize_h = intval($thumb_width / $src_ratio);
+      } else {
+        $resize_h = $thumb_height;
+        $resize_w = intval($thumb_height * $src_ratio);
+      }
+
+      $temp_canvas = imagecreatetruecolor($resize_w, $resize_h);
+
+      // Chuẩn bị nền trong suốt hoặc trắng tuỳ yêu cầu
+      if (is_array($background) && count($background) === 4 && $background[3] == 127 && ($convert_webp || $is_webp)) {
+        imagealphablending($temp_canvas, false);
+        imagesavealpha($temp_canvas, true);
+        $fill = imagecolorallocatealpha($temp_canvas, 0, 0, 0, 127);
+        imagefill($temp_canvas, 0, 0, $fill);
+      } elseif (is_array($background) && count($background) === 4) {
+        $bg = imagecolorallocatealpha($temp_canvas, ...$background);
+        imagefill($temp_canvas, 0, 0, $bg);
+      } else {
+        imagefill($temp_canvas, 0, 0, imagecolorallocate($temp_canvas, 255, 255, 255));
+      }
+
+      // Resize ban đầu
+      imagecopyresampled($temp_canvas, $image, 0, 0, 0, 0, $resize_w, $resize_h, $width_orig, $height_orig);
+
+      // Cắt bỏ viền trắng hoặc trong suốt
+      $cropped = $this->cropTransparentOrWhiteBorder($temp_canvas);
+      if ($cropped) {
+        imagedestroy($canvas); // canvas gốc 500x500
+        $canvas = $cropped;
+        $thumb_width = imagesx($canvas);
+        $thumb_height = imagesy($canvas);
+      } else {
+        $canvas = $temp_canvas;
+      }
+    } elseif ($zoom_crop == 2) {
+      // Fit vào thumbnail, không crop, canh giữa
+      $src_ratio = $width_orig / $height_orig;
+      $dst_ratio = $thumb_width / $thumb_height;
+
+      if ($src_ratio > $dst_ratio) {
+        $resize_w = $thumb_width;
+        $resize_h = intval($thumb_width / $src_ratio);
+      } else {
+        $resize_h = $thumb_height;
+        $resize_w = intval($thumb_height * $src_ratio);
+      }
+
+      $dst_x = intval(($thumb_width - $resize_w) / 2);
+      $dst_y = intval(($thumb_height - $resize_h) / 2);
+
+      imagecopyresampled($canvas, $image, $dst_x, $dst_y, 0, 0, $resize_w, $resize_h, $width_orig, $height_orig);
     } else {
+      // Crop giữa (zoom_crop = 1)
+      $src_ratio = $width_orig / $height_orig;
+      $dst_ratio = $thumb_width / $thumb_height;
+
       $src_w = ($src_ratio > $dst_ratio) ? intval($height_orig * $dst_ratio) : $width_orig;
       $src_h = ($src_ratio > $dst_ratio) ? $height_orig : intval($width_orig / $dst_ratio);
       $src_x = intval(($width_orig - $src_w) / 2);
       $src_y = intval(($height_orig - $src_h) / 2);
-      imagecopyresampled($thumb, $image, 0, 0, $src_x, $src_y, $thumb_width, $thumb_height, $src_w, $src_h);
+
+      imagecopyresampled($canvas, $image, 0, 0, $src_x, $src_y, $thumb_width, $thumb_height, $src_w, $src_h);
     }
 
-    if ($zoom_crop >= 2) {
-      imagecopyresampled($thumb, $image, $dst_x, $dst_y, 0, 0, $dst_w, $dst_h, $width_orig, $height_orig);
-      if ($zoom_crop === 3 && ($cropped = $this->cropTransparentOrWhiteBorder($thumb))) {
-        imagedestroy($thumb);
-        $thumb = $cropped;
-      }
-    }
-
-    $upload_dir = UPLOADS . "/{$thumb_width}x{$thumb_height}x{$zoom_crop}/";
+    $upload_dir = UPLOADS . "/{$m[1]}x{$m[2]}x{$zoom_crop}/";
     if (!is_dir($upload_dir)) mkdir($upload_dir, 0755, true);
 
     $filename = pathinfo($source_path, PATHINFO_FILENAME);
@@ -785,9 +844,9 @@ class Functions
     $thumb_path = $upload_dir . $filename . '.' . $thumb_ext;
 
     $success = match ($thumb_ext) {
-      'webp' => imagewebp($thumb, $thumb_path, 100),
-      'jpg'  => imagejpeg($thumb, $thumb_path, 90),
-      'png'  => imagepng($thumb, $thumb_path),
+      'webp' => imagewebp($canvas, $thumb_path, 100),
+      'jpg'  => imagejpeg($canvas, $thumb_path, 90),
+      'png'  => imagepng($canvas, $thumb_path),
       default => false
     };
 
@@ -796,19 +855,21 @@ class Functions
     }
 
     imagedestroy($image);
-    imagedestroy($thumb);
+    imagedestroy($canvas);
     return $success ? $thumb_path : false;
   }
-
-  public function ImageUpload($file_path, $original_name, $old_file_path, $thumb_base_name, $background, $watermark = false, $convert_webp = false, $save_original = true)
+  public function ImageUpload($file_path, $old_file_path, $thumb_base_name, $background, $watermark = false, $convert_webp = false, $save_original = true)
   {
     if (!preg_match('/^(\d+)x(\d+)$/', $thumb_base_name, $m)) return basename($file_path);
 
-    $ext = strtolower(pathinfo($file_path, PATHINFO_EXTENSION));
     $filename = pathinfo($file_path, PATHINFO_FILENAME);
     $thumb_created = false;
 
-    for ($zc = 1; $zc <= 3; $zc++) {
+    if (!empty($old_file_path)) {
+      $this->deleteFile($old_file_path);
+    }
+
+    for ($zc = 1; $zc <= 4; $zc++) {
       $thumb = $this->createFixedThumbnail($file_path, "{$m[1]}x{$m[2]}x{$zc}", $background, $watermark, $convert_webp);
       if ($zc === 1 && $thumb) $thumb_created = basename($thumb);
     }
@@ -837,7 +898,6 @@ class Functions
       unlink($file_path);
     }
 
-    if (!empty($old_file_path) && file_exists($old_file_path)) unlink($old_file_path);
     return $thumb_created ?: basename($file_path);
   }
 
@@ -860,7 +920,6 @@ class Functions
       return preg_match('/^(\d+)x(\d+)(x\d+)?$/', $options['thumb'] ?? '')
         ? $this->ImageUpload(
           $target_path,
-          $f['name'],
           $options['old_file_path'] ?? '',
           $options['thumb'],
           $options['background'] ?? [255, 255, 255, 0],

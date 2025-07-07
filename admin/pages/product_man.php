@@ -1,14 +1,14 @@
 <?php
 $redirect_url = $_GET['page'];
 $name_page = 'sản phẩm';
-$table = 'tbl_sanpham';
+$table = 'tbl_product';
 // cấp 1
 $show_danhmuc_c1 = $fn->show_data([
-  'table' => 'tbl_danhmuc_c1'
+  'table' => 'tbl_product_list'
 ]);
 // cấp 2
 $show_danhmuc_c2 = $fn->show_data([
-  'table' => 'tbl_danhmuc_c2',
+  'table' => 'tbl_product_cat',
   'id_list' => $_GET['id_list'] ?? '',
 ]);
 // phân trang
@@ -32,10 +32,10 @@ $show_sanpham = $fn->show_data([
 ]);
 $linkMulti = "index.php?page=deleteMulti&table=$table";
 $linkDelete = "index.php?page=delete&table=$table&id=";
-$linkEdit = "index.php?page=sanpham_form&id=";
-$linkMan = "index.php?page=sanpham_list";
-$linkAdd = "index.php?page=sanpham_form";
-$linkGalleryList = "index.php?page=gallery_list&id=";
+$linkEdit = "index.php?page=product_form&id=";
+$linkMan = "index.php?page=product_man";
+$linkAdd = "index.php?page=product_form";
+$linkGalleryList = "index.php?page=gallery_man&id=";
 $linkGallery = "index.php?page=gallery_form&id=";
 $breadcrumb = [['label' => $name_page]];
 include TEMPLATE . 'breadcrumb.php';
@@ -57,10 +57,10 @@ include TEMPLATE . 'breadcrumb.php';
   </div>
   <div class="card-footer form-group-category text-sm bg-light row">
     <div class="form-group col-xl-2 col-lg-3 col-md-4 col-sm-4 mb-2">
-      <?= $fn->getLinkCategory('tbl_danhmuc_c1',  $_GET['id_list'] ?? '') ?>
+      <?= $fn->getLinkCategory('tbl_product_list',  $_GET['id_list'] ?? '') ?>
     </div>
     <div class="form-group col-xl-2 col-lg-3 col-md-4 col-sm-4 mb-2">
-      <?= $fn->getLinkCategory('tbl_danhmuc_c2',  $_GET['id_cat'] ?? '') ?>
+      <?= $fn->getLinkCategory('tbl_product_cat',  $_GET['id_cat'] ?? '') ?>
     </div>
   </div>
   <div class="card card-primary card-outline text-sm mb-0">
@@ -151,12 +151,12 @@ include TEMPLATE . 'breadcrumb.php';
 
                   <!-- Danh mục cấp 1 -->
                   <td class="align-middle">
-                    <?= $sanpham->get_name_danhmuc($row['id_list'], 'tbl_danhmuc_c1') ?>
+                    <?= $product->get_name_danhmuc($row['id_list'], 'tbl_product_list') ?>
                   </td>
 
                   <!-- Danh mục cấp 2 -->
                   <td class="align-middle">
-                    <?= $sanpham->get_name_danhmuc($row['id_cat'], 'tbl_danhmuc_c2') ?>
+                    <?= $product->get_name_danhmuc($row['id_cat'], 'tbl_product_cat') ?>
                   </td>
                   <!-- Checkbox Hiển thị, bán chạy -->
                   <?php foreach (['hienthi', 'noibat', 'banchay'] as $attr): ?>

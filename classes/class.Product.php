@@ -414,7 +414,7 @@ class product
     $thumb_size = $width . 'x' . $height;
     $thumb_filename = $this->fn->Upload([
       'file' => $files['file'],
-      'custom_name' => $data_escaped['namevi'],
+      'custom_name' =>  $data_prepared['namevi'],
       'thumb' => $thumb_size,
       'old_file_path' => $old_file_path,
       'watermark' => false,

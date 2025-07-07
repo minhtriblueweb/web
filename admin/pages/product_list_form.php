@@ -1,13 +1,12 @@
 <?php
-$name = 'product_list';
+$type = 'product_list';
 $pageConfig = [
   'message'      => '',
   'name_page'    => 'danh mục cấp 1',
-  'type'         => $name,
-  'thumb_width'  => 500,
-  'thumb_height' => 500,
-  'table'        => "tbl_$name",
-  'linkMan'      => "index.php?page={$name}_man",
+  'thumb_width'  => 50,
+  'thumb_height' => 50,
+  'table'        => "tbl_$type",
+  'linkMan'      => "index.php?page={$type}_man",
   'id'           => (isset($_GET['id']) && is_numeric($_GET['id'])) ? (int)$_GET['id'] : null,
 ];
 extract($pageConfig);

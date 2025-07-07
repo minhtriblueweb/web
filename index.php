@@ -6,9 +6,10 @@ include_once 'lib/router.php';
 
 // SEO mặc định
 $data_seo = $default_seo;
+
+// SOURCES
 $sources_file = SOURCES . $page;
 $pageFile       = 'pages/' . $page;
-
 require_once SOURCES . "allpage.php";
 
 if (file_exists($sources_file)) {

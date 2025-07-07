@@ -9,22 +9,26 @@
             <img src="<?= $img_main ?>" alt="<?= $img_alt ?>" />
           </a>
         </div>
-
         <?php if (!empty($get_gallery)): ?>
           <div class="gallery-thumb-pro">
             <div class="slick-pro-detail">
-              <?php
-              echo '<div><a class="thumb-pro-detail" data-zoom-id="Zoom-1" href="' . $img_main . '"><img class="" src="' . $img_main . '" /></a></div>';
-              foreach ($get_gallery as $gallery):
+              <div>
+                <a class="thumb-pro-detail" data-zoom-id="Zoom-1" href="<?= $img_main ?>">
+                  <img src="<?= $img_main ?>" />
+                </a>
+              </div>
+              <?php foreach ($get_gallery as $gallery):
                 $img_src = !empty($gallery['file']) ? BASE_ADMIN . UPLOADS . $gallery['file'] : NO_IMG;
               ?>
-                <div><a href="<?= $img_src ?>" class="thumb-pro-detail" data-zoom-id="Zoom-1">
+                <div>
+                  <a href="<?= $img_src ?>" class="thumb-pro-detail" data-zoom-id="Zoom-1">
                     <?= $fn->getImage([
                       'file' => $gallery['file'],
                       'class' => '',
                       'lazy' => true
                     ]) ?>
-                  </a></div>
+                  </a>
+                </div>
               <?php endforeach; ?>
             </div>
             <div class="slick-arrow-control">
@@ -36,7 +40,7 @@
       </div>
 
       <div class="right-pro-detail">
-        <p class="title-pro-detail mb-3"><?= $row_sp['namevi'] ?></p>
+        <p class="title-pro-detail mb-3"><?= $row_sp['name' . $lang] ?></p>
         <ul class="attr-pro-detail">
           <?php if (!empty($row_sp['code'])): ?>
             <li>
@@ -72,11 +76,10 @@
       </div>
 
       <div class="policy-detail">
-        <?php $show_tieuchi = $fn->show_data(['table' => 'tbl_tieuchi', 'status' => 'hienthi', 'select' => "file, name{$lang}"]); ?>
         <?php if (!empty($show_tieuchi)): ?>
           <?php foreach ($show_tieuchi as $row_tc): ?>
             <div class="list-policy">
-              <div class="i-policy hover-glass">
+              <div class="i-policy">
                 <?= $fn->getImage([
                   'file' => $row_tc['file'],
                   'class' => 'me-3',
@@ -101,7 +104,7 @@
       </ul>
       <div class="tab-content" id="tabsProDetailContent">
         <div class="tab-pane fade show active" id="info-pro-detail" role="tabpanel">
-          <div class="content-main content-ck" id="toc-content"><?= $row_sp['contentvi'] ?></div>
+          <div class="content-main content-ck" id="toc-content"><?= $row_sp['content' . $lang] ?></div>
         </div>
         <div class="tab-pane fade" id="commentfb-pro-detail" role="tabpanel"></div>
       </div>
@@ -121,7 +124,7 @@
           $regular_price = $row_lq['regular_price'];
           ?>
           <div class="item-product">
-            <a class="text-decoration-none" href="san-pham/<?= $slug ?>" title="<?= htmlspecialchars($name) ?>">
+            <a class="text-decoration-none" href="<?= $slug ?>" title="<?= htmlspecialchars($name) ?>">
               <div class="images">
                 <?= $fn->getImage([
                   'file' => $row_lq['file'],

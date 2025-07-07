@@ -49,16 +49,16 @@ class Functions
     $name = $id = '';
 
     // Xác định cấp danh mục và điều kiện
-    if (str_contains($table, '_c1')) {
+    if (str_contains($table, '_list')) {
       $name = $id = 'id_list'; // cấp 1
-    } elseif (str_contains($table, '_c2')) {
+    } elseif (str_contains($table, '_cat')) {
       $name = $id = 'id_cat';
       $id_list = $_REQUEST['id_list'] ?? 0;
       if ((int)$id_list > 0) {
         $where .= ' AND id_list = ?';
         $params[] = (int)$id_list;
       }
-    } elseif (str_contains($table, '_c3')) {
+    } elseif (str_contains($table, '_item')) {
       $name = $id = 'id_item';
       $id_cat = $_REQUEST['id_cat'] ?? 0;
       if ((int)$id_cat > 0) {
@@ -100,14 +100,14 @@ class Functions
       '_c1' => [
         'field' => 'id_list',
         'data_level' => '0',
-        'data_table' => 'tbl_danhmuc_c2',
+        'data_table' => 'tbl_product_cat',
         'data_child' => 'id_cat',
         'filters' => []
       ],
       '_c2' => [
         'field' => 'id_cat',
         'data_level' => '1',
-        'data_table' => 'tbl_danhmuc_c3',
+        'data_table' => 'tbl_product_item',
         'data_child' => 'id_item',
         'filters' => [
           'id_list' => $id_list
@@ -961,7 +961,6 @@ class Functions
     $pagination_html .= '</ul>';
     return $pagination_html;
   }
-
   public function getImage(array $data = []): string
   {
     $file    = $data['file'] ?? '';
@@ -976,9 +975,27 @@ class Functions
     $loading = $lazy ? ' loading="lazy"' : '';
 
     $errorImg = BASE_ADMIN . 'assets/img/noimage.png';
-    $src = empty($file)
-      ? NO_IMG
-      : rtrim(BASE_ADMIN . UPLOADS, '/') . '/' . ltrim(htmlspecialchars($file), '/');
+
+    // Zoom crop (zc) mặc định là 1
+    $zoomCrop = isset($data['zc']) ? (int)$data['zc'] : 1;
+
+    $src = '';
+    if (!empty($file)) {
+      $thumbPath = '';
+
+      if (!empty($data['thumb'])) {
+        $opt = is_array($data['thumb']) ? $data['thumb'] : json_decode($data['thumb'], true);
+        if (!empty($opt['w']) && !empty($opt['h'])) {
+          $thumbFolder = $opt['w'] . 'x' . $opt['h'] . 'x' . $zoomCrop;
+          $thumbPath = rtrim(BASE_ADMIN . UPLOADS, '/') . '/' . $thumbFolder . '/' . ltrim($file, '/');
+        }
+      }
+
+      $src = !empty($thumbPath) ? $thumbPath : rtrim(BASE_ADMIN . UPLOADS, '/') . '/' . ltrim($file, '/');
+      $src = htmlspecialchars($src);
+    } else {
+      $src = NO_IMG;
+    }
 
     return '<img src="' . $src . '"'
       . (!empty($class) ? ' class="' . htmlspecialchars($class) . '"' : '')

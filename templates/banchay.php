@@ -1,6 +1,6 @@
 <?php
 $sanpham_banchay = $fn->show_data([
-  'table'  => 'tbl_sanpham',
+  'table'  => 'tbl_product',
   'status' => 'hienthi,banchay',
   'select' => "id, file, slug{$lang}, name{$lang}, sale_price, regular_price, views"
 ]);

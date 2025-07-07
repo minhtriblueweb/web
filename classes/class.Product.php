@@ -153,26 +153,15 @@ class product
     return $result;
   }
 
-  public function update_views_by_slug($slug)
+  public function update_views($slug)
   {
-    $query = "SELECT * FROM tbl_sanpham WHERE slugvi = '$slug'";
-    $result = $this->db->select($query);
-    if ($result && $result->num_rows > 0) {
-      $product = $result->fetch_assoc();
+    $product = $this->db->rawQueryOne("SELECT * FROM tbl_product WHERE slugvi = ?", [$slug]);
+    if (!empty($product)) {
       $new_views = $product['views'] + 1;
-      $update_query = "UPDATE tbl_sanpham SET views = '$new_views' WHERE slugvi = '$slug'";
-      $this->db->update($update_query);
+      $this->db->rawQuery("UPDATE tbl_product SET views = ? WHERE slugvi = ?", [$new_views, $slug]);
       return $product;
     }
     return false;
-  }
-
-  public function get_sanpham_by_slug($slug)
-  {
-    $slug = mysqli_real_escape_string($this->db->link, $slug);
-    $query = "SELECT * FROM tbl_sanpham WHERE slugvi = '$slug' AND FIND_IN_SET('hienthi', status) LIMIT 1";
-    $result = $this->db->select($query);
-    return $result ? $result->fetch_assoc() : false;
   }
 
   public function get_name_danhmuc($id, $table)
@@ -337,10 +326,11 @@ class product
       'custom_name' => $data_prepared['namevi'],
       'thumb' => $thumb_size,
       'old_file_path' => $old_file_path,
-      'watermark' => true,
-      'convert_webp' => true
+      'watermark' => false,
+      'convert_webp' => false
     ]);
-
+    $thumb = ['w' => $width, 'h' => $height];
+    $data_prepared['thumb'] = json_encode($thumb);
     if (!empty($id)) {
       $fields = [];
       $params = [];
@@ -377,14 +367,14 @@ class product
     $this->fn->transfer($msg, "index.php?page=product_list_man", !empty($id) ? $result : $inserted);
   }
 
-  public function save_danhmuc_c2($data, $files, $id = null)
+  public function save_product_cat($data, $files, $id = null)
   {
     global $config;
     $langs = array_keys($config['website']['lang']);
 
     $fields_multi = ['slug', 'name', 'desc', 'content'];
     $fields_common = ['id_list', 'numb', 'type'];
-    $table = 'tbl_danhmuc_c2';
+    $table = 'tbl_product_cat';
     $data_escaped = [];
     foreach ($langs as $lang) {
       foreach ($fields_multi as $field) {
@@ -403,26 +393,25 @@ class product
     $data_prepared['status'] = implode(',', $status_values);
     foreach ($langs as $lang) {
       $slug_key = 'slug' . $lang;
-      $error = $this->fn->checkSlug([
-        'slug' => $data_prepared[$slug_key],
-        'table' => $table,
-        'exclude_id' => $id ?? '',
-        'lang' => $lang
-      ]);
-      if ($error) return $error;
+      $checkSlugData = [];
+      $checkSlugData['slug'] = $data_prepared[$slug_key];
+      $checkSlugData['table'] = $table;
+      $checkSlugData['exclude_id'] = $id ?? '';
+      $checkSlugData['lang'] = $lang;
+      $checkSlug = $this->fn->checkSlug($checkSlugData);
+      if ($checkSlug) return $checkSlug;
     }
     $thumb_filename = '';
     $old_file_path = '';
     if (!empty($id)) {
       $old = $this->db->rawQueryOne("SELECT file FROM $table WHERE id = ?", [(int)$id]);
       if ($old && !empty($old['file'])) {
-        $old_file_path = "uploads/" . $old['file'];
+        $old_file_path = UPLOADS . $old['file'];
       }
     }
     $width = (int)($data['thumb_width'] ?? 0);
     $height = (int)($data['thumb_height'] ?? 0);
-    $zc = (int)($data['thumb_zc'] ?? 0);
-    $thumb_size = $width . 'x' . $height . 'x' . $zc;
+    $thumb_size = $width . 'x' . $height;
     $thumb_filename = $this->fn->Upload([
       'file' => $files['file'],
       'custom_name' => $data_escaped['namevi'],
@@ -431,6 +420,8 @@ class product
       'watermark' => false,
       'convert_webp' => false
     ]);
+    $thumb = ['w' => $width, 'h' => $height];
+    $data_prepared['thumb'] = json_encode($thumb);
     if (!empty($id)) {
       $fields = [];
       $params = [];
@@ -443,8 +434,7 @@ class product
         $params[] = $thumb_filename;
       }
       $params[] = (int)$id;
-      $sql = "UPDATE $table SET " . implode(', ', $fields) . " WHERE id = ?";
-      $result = $this->db->execute($sql, $params);
+      $result = $this->db->execute("UPDATE $table SET " . implode(', ', $fields) . " WHERE id = ?", $params);
       if ($result) {
         $this->seo->save_seo($data_prepared['type'], (int)$id, $data, $langs);
       }
@@ -458,15 +448,14 @@ class product
         $placeholders[] = '?';
         $params[] = $thumb_filename;
       }
-      $sql = "INSERT INTO $table (" . implode(', ', $columns) . ") VALUES (" . implode(', ', $placeholders) . ")";
-      $inserted = $this->db->execute($sql, $params);
+      $inserted = $this->db->execute("INSERT INTO $table (" . implode(', ', $columns) . ") VALUES (" . implode(', ', $placeholders) . ")", $params);
       $insert_id = $inserted ? $this->db->getInsertId() : 0;
       if ($insert_id) {
         $this->seo->save_seo($data_prepared['type'], $insert_id, $data, $langs);
       }
       $msg = $inserted ? "Thêm danh mục thành công" : "Thêm danh mục thất bại";
     }
-    $this->fn->transfer($msg, $this->fn->getRedirectPath(['table' => $table]), !empty($id) ? $result : $inserted);
+    $this->fn->transfer($msg, "index.php?page=product_cat_man", !empty($id) ? $result : $inserted);
   }
 }
 ?>

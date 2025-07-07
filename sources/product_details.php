@@ -7,7 +7,7 @@ if (empty($slug)) {
 }
 
 // Lấy thông tin sản phẩm theo ngôn ngữ
-$row_sp = $db->fetchOne("SELECT * FROM tbl_sanpham WHERE FIND_IN_SET('hienthi', status) AND slug{$lang} = ?", [$slug]);
+$row_sp = $db->fetchOne("SELECT * FROM tbl_product WHERE FIND_IN_SET('hienthi', status) AND slug{$lang} = ?", [$slug]);
 
 if (!$row_sp) {
   http_response_code(404);
@@ -15,7 +15,7 @@ if (!$row_sp) {
   exit();
 }
 
-$sanpham->update_views_by_slug($slug);
+$product->update_views($slug);
 
 $id = $row_sp['id'];
 $id_list = $row_sp['id_list'];
@@ -23,11 +23,11 @@ $id_cat = $row_sp['id_cat'];
 
 // Lấy thông tin danh mục C1, C2 theo JOIN và ngôn ngữ
 $dm_data = $fn->show_data_join([
-  'table'  => 'tbl_sanpham',
+  'table'  => 'tbl_product',
   'alias'  => 'sp',
   'join'   => "
-    INNER JOIN tbl_danhmuc_c1 c1 ON sp.id_list = c1.id
-    LEFT JOIN tbl_danhmuc_c2 c2 ON sp.id_cat = c2.id
+    INNER JOIN tbl_product_list c1 ON sp.id_list = c1.id
+    LEFT JOIN tbl_product_cat c2 ON sp.id_cat = c2.id
   ",
   'select' => "
     c1.name{$lang} AS dm_c1_name,
@@ -49,14 +49,14 @@ $dm_c2_slug = $dm['dm_c2_slug'] ?? '';
 $records_per_page = 8;
 $current_page = max(1, (int)($_GET['page'] ?? 1));
 $total_records = $fn->count_data([
-  'table' => 'tbl_sanpham',
+  'table' => 'tbl_product',
   'status' => 'hienthi',
   'exclude_id' => $id
 ]);
 $total_pages = max(1, ceil($total_records / $records_per_page));
 
 $sanpham_lienquan = $fn->show_data([
-  'table' => 'tbl_sanpham',
+  'table' => 'tbl_product',
   'status' => 'hienthi',
   'exclude_id' => $id,
   'select' => "id, file, name{$lang}, slug{$lang}, regular_price, sale_price, views",
@@ -69,11 +69,14 @@ $get_gallery = $fn->show_data([
   'table' => 'tbl_gallery',
   'status' => 'hienthi',
   'id_parent' => $id,
-  'select' => "id, file"
+  'select' => "file"
 ]);
 
+// Lấy tiêu chí
+$show_tieuchi = $fn->show_data(['table' => 'tbl_tieuchi', 'status' => 'hienthi', 'select' => "file, name{$lang}"]);
+
 // SEO
-$data_seo = $seo->get_seo($id, 'sanpham');
+$data_seo = $seo->get_seo($id, 'product');
 
 // Ảnh chính sản phẩm
 $img_main = !empty($row_sp['file']) ? BASE_ADMIN . UPLOADS . $row_sp['file'] : NO_IMG;

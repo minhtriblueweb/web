@@ -1,7 +1,7 @@
 <?php
 // Lấy sản phẩm
 $sp_all = $fn->show_data([
-  'table'  => 'tbl_sanpham',
+  'table'  => 'tbl_product',
   'status' => 'hienthi',
   'select' => "id, file, slug{$lang}, name{$lang}, sale_price, regular_price, views, id_list, id_cat"
 ]);

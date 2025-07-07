@@ -4,15 +4,15 @@ $records_per_page = 20;
 $current_page = max(1, (int)($_GET['page'] ?? 1));
 
 $total_records = $fn->count_data([
-  'table' => 'tbl_sanpham',
+  'table' => 'tbl_product',
   'status' => 'hienthi',
   'keyword' => $keyword
 ]);
 
 $total_pages = ceil($total_records / $records_per_page);
 
-$show_sanpham = $fn->show_data([
-  'table' => 'tbl_sanpham',
+$show_product = $fn->show_data([
+  'table' => 'tbl_product',
   'status' => 'hienthi',
   'keyword' => $keyword,
   'records_per_page' => $records_per_page,

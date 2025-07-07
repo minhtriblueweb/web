@@ -23,16 +23,16 @@ $show_social = $cache->get(
 
 // Lấy danh mục cấp 1
 $dm_c1_all = $fn->show_data([
-  'table'  => 'tbl_danhmuc_c1',
+  'table'  => 'tbl_product_list',
   'status' => 'hienthi,noibat',
-  'select' => "id, file, slug{$lang}, name{$lang}"
+  'select' => "id, file, slug{$lang}, name{$lang},thumb"
 ]);
 
 // Lấy danh mục cấp 2
 $dm_c2_all = $fn->show_data([
-  'table'  => 'tbl_danhmuc_c2',
+  'table'  => 'tbl_product_cat',
   'status' => 'hienthi,noibat',
-  'select' => "id, id_list, slug{$lang}, name{$lang}"
+  'select' => "id, id_list, slug{$lang}, name{$lang},thumb"
 ]);
 
 // Gom nhóm cấp 2 theo id_list

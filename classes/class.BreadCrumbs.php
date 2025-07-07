@@ -16,7 +16,7 @@ class breadcrumbs
   {
     global $configBase;
     $html = '<ol class="breadcrumb">';
-    $html .= '<li class="breadcrumb-item"><a class="text-decoration-none" href="' . $configBase . '"><span>Trang chủ</span></a></li>';
+    $html .= '<li class="breadcrumb-item"><a class="text-decoration-none text-capitalize" href="' . $configBase . '"><span>Trang chủ</span></a></li>';
 
     $json = [];
     foreach ($this->data as $i => $item) {
@@ -24,11 +24,11 @@ class breadcrumbs
       $class = $isLast ? 'active' : '';
       $slug = !empty($item['slug']) ? $configBase . $item['slug'] : '#';
 
-      $html .= '<li class="breadcrumb-item ' . $class . '">';
+      $html .= '<li class="text-capitalize breadcrumb-item ' . $class . '">';
       if ($isLast) {
         $html .= '<span>' . htmlspecialchars($item['name']) . '</span>';
       } else {
-        $html .= '<a class="text-decoration-none" href="' . $slug . '"><span>' . htmlspecialchars($item['name']) . '</span></a>';
+        $html .= '<a class="text-decoration-none text-capitalize" href="' . $slug . '"><span>' . htmlspecialchars($item['name']) . '</span></a>';
       }
       $html .= '</li>';
 

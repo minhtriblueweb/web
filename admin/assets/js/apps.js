@@ -705,22 +705,22 @@ function seoChange() {
   var seolang = $('#seo-create').val() || 'vi,en';
   var seolangArray = seolang.split(',');
   var elementSeo = $('.card-seo .check-seo');
-
-  elementSeo.each(function (index) {
+  elementSeo.each(function () {
     var element = $(this).attr('id');
     var lang = element.substr(element.length - 2);
-
-    if (seolang.indexOf(lang) >= 0) {
-      // ✅ Gọi preview ngay khi form load
+    if (seolangArray.includes(lang)) {
+      var $input = $('#' + element);
       seoPreview(lang);
-
-      // ✅ Gán sự kiện cập nhật realtime
+      seoCount($input);
       $('body').on('keyup', '#' + element, function () {
         seoPreview(lang);
+        seoCount($(this));
       });
     }
   });
 }
+
+
 
 /* Slug */
 var sluglang = LANGS;

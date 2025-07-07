@@ -1,4 +1,4 @@
-<div class="wrap-main wrap-home w-clear" style="background:#fff">
+<div class="wrap-main wrap-home w-clear">
   <div class="wrap-product-list">
     <div class="title-list-hot mt-4">
       <h2>Liên Hệ</h2>

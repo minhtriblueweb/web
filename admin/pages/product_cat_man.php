@@ -3,7 +3,7 @@ $redirect_url = $_GET['page'];
 $name_page = 'danh mục cấp 2';
 // phân trang
 $records_per_page = 10;
-$table = 'tbl_danhmuc_c2';
+$table = 'tbl_product_cat';
 $current_page = max(1, isset($_GET['p']) ? (int)$_GET['p'] : 1);
 $total_records = $fn->count_data([
   'table' => $table,
@@ -13,25 +13,23 @@ $total_records = $fn->count_data([
 $total_pages = ceil($total_records / $records_per_page);
 $paging = $fn->renderPagination($current_page, $total_pages);
 // lọc danh mục cấp 2
-$show_danhmuc_c2 = $fn->show_data([
+$show_product_cat = $fn->show_data([
   'table' => $table,
   'id_list' => $_GET['id_list'] ?? '',
   'records_per_page' => $records_per_page,
   'current_page' => $current_page,
   'keyword' => $_GET['keyword'] ?? ''
 ]);
-$show_danhmuc_c1 = $fn->show_data(['table' => 'tbl_danhmuc_c1']);
+$show_product_list = $fn->show_data(['table' => 'tbl_product_list']);
 // Link
 $linkMulti = "index.php?page=deleteMulti&table=$table";
 $linkDelete = "index.php?page=delete&table=$table&id=";
-$linkEdit = "index.php?page=danhmuc_c2_form&id=";
-$linkMan = "index.php?page=danhmuc_c2_list";
-$linkAdd = "index.php?page=danhmuc_c2_form";
+$linkEdit = "index.php?page=product_cat_form&id=";
+$linkMan = "index.php?page=product_cat_list";
+$linkAdd = "index.php?page=product_cat_form";
 ?>
 <?php
-$breadcrumb = [
-  ['label' => $name_page]
-];
+$breadcrumb = [['label' => $name_page]];
 include TEMPLATE . 'breadcrumb.php';
 ?>
 <section class="content">
@@ -51,7 +49,7 @@ include TEMPLATE . 'breadcrumb.php';
   </div>
   <div class="card-footer form-group-category text-sm bg-light row">
     <div class="form-group col-xl-2 col-lg-3 col-md-4 col-sm-4 mb-2">
-      <?= $fn->getLinkCategory('tbl_danhmuc_c1',  $_GET['id_list'] ?? '') ?>
+      <?= $fn->getLinkCategory('tbl_product_list',  $_GET['id_list'] ?? '') ?>
     </div>
   </div>
   <form class="validation-form" novalidate method="post" action="">
@@ -78,8 +76,8 @@ include TEMPLATE . 'breadcrumb.php';
             </tr>
           </thead>
           <tbody>
-            <?php if (!empty($show_danhmuc_c2)): ?>
-              <?php foreach ($show_danhmuc_c2 as $row):
+            <?php if (!empty($show_product_cat)): ?>
+              <?php foreach ($show_product_cat as $row):
                 $id = $row['id'];
                 $name = $row['namevi'];
                 $file = $row['file'];

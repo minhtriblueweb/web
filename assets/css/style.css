@@ -2184,7 +2184,6 @@ img:not([src]) {
 
 .wrap-service {
   position: relative;
-  padding: 40px 0;
 }
 
 .slick-service {
@@ -3863,7 +3862,6 @@ img:not([src]) {
 .footer {
   color: #333;
   position: relative;
-  margin-top: 30px;
   background: #f2f2f2 url(../images/at-footer.png) no-repeat center;
 }
 

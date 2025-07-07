@@ -1,8 +1,8 @@
 <?php
 $show_danhmuc = $fn->show_data([
-  'table'  => 'tbl_danhmuc_c2',
+  'table'  => 'tbl_product_cat',
   'status' => 'hienthi,noibat',
-  'select' => "id, file, slug{$lang}, name{$lang}"
+  'select' => "file, slug{$lang}, name{$lang},thumb"
 ]);
 ?>
 
@@ -21,12 +21,7 @@ $show_danhmuc = $fn->show_data([
           <a href="<?= $slug ?>" title="<?= $name ?>">
             <div class="item-list">
               <div class="item-list-img">
-                <?= $fn->getImage([
-                  'file'  => $dm['file'],
-                  'alt'   => $name,
-                  'title' => $name,
-                  'width' => 100
-                ]) ?>
+                <?= $fn->getImage(['file'  => $dm['file'], 'alt'   => $name, 'title' => $name, 'width' => 100, 'zc' => 1]) ?>
               </div>
               <div class="item-list-name">
                 <h3 class="m-0"><?= $name ?></h3>

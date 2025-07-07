@@ -1,6 +1,4 @@
-<?php require_once ROOT . '/sources/search.php'; ?>
 <div class="wrap-main wrap-home w-clear">
-  <?php include ROOT . '/templates/breadcrumb.php'; ?>
   <div class="wrap-product-list">
     <div class="wrap-content" style="background: unset;">
       <div class="title-list-hot text-center">
@@ -12,9 +10,9 @@
 
   <div class="wrap-main wrap-template w-clear" style="margin: 0 auto !important;">
     <div class="content-main">
-      <?php if (!empty($show_sanpham)): ?>
+      <?php if (!empty($show_product)): ?>
         <div class="grid-product">
-          <?php foreach ($show_sanpham as $sp): ?>
+          <?php foreach ($show_product as $sp): ?>
             <?php
             $slug = $sp['slug' . $lang];
             $name = htmlspecialchars($sp['name' . $lang]);

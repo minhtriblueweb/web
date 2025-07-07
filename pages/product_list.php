@@ -1,45 +1,38 @@
 <div class="wrap-main wrap-home w-clear">
-  <!-- DANH MỤC -->
-  <?php if (!empty($dm)): ?>
-    <div class="wrap-product-list">
-      <div class="wrap-content" style="background: unset;">
+  <div class="wrap-product-list">
+    <div class="wrap-content" style="background: unset;">
+      <?php if (!empty($dm_c2_all)): ?>
         <div class="grid-list-no-index">
-          <?php foreach ($dm as $row_dm): ?>
+          <?php foreach ($dm_c2_all as $c2): ?>
             <div class="item-list-noindex">
-              <a title="<?= $row_dm['name' . $lang] ?>" href="<?= $row_dm['slug' . $lang] ?>">
-                <h3 class="m-0"><?= $row_dm['name' . $lang] ?></h3>
+              <a href="<?= $c2['slugvi'] ?>">
+                <h3 class="m-0 text-capitalize"><?= htmlspecialchars($c2['namevi']) ?></h3>
               </a>
             </div>
           <?php endforeach; ?>
         </div>
-      </div>
-    </div>
-  <?php endif; ?>
-
-  <!-- TITLE -->
-  <div class="wrap-product-list">
-    <div class="wrap-content" style="background: unset;">
-      <div class="title-list-hot text-center">
-        <h2>Sản Phẩm</h2>
-        (<?= $total_records ?> sản phẩm)
-      </div>
+      <?php endif; ?>
     </div>
   </div>
 
-  <!-- DANH SÁCH SẢN PHẨM -->
+  <div class="title-list-hot text-center text-capitalize">
+    <h2><?= htmlspecialchars($dm['name' . $lang]) ?></h2>
+    (<?= $total ?> sản phẩm)
+  </div>
+
   <div class="wrap-main wrap-template w-clear" style="margin: 0 auto !important;">
     <div class="content-main">
-      <?php if (!empty($show_sanpham)): ?>
-        <div class="grid-product">
-          <?php foreach ($show_sanpham as $sp): ?>
+      <?php if (!empty($sp_all)): ?>
+        <div class="grid-product" data-perpage="<?= $per_page ?>" data-list="1" data-curpage="<?= $page ?>" data-total="<?= $total ?>">
+          <?php foreach ($sp_all as $sp): ?>
             <?php
             $slug = $sp['slug' . $lang];
             $name = htmlspecialchars($sp['name' . $lang]);
-            $sale = $sp['sale_price'];
-            $regular = $sp['regular_price'];
-            $views = $sp['views'];
+            $sale = $sp['sale_price'] ?? '';
+            $regular = $sp['regular_price'] ?? '';
+            $views = $sp['views'] ?? 0;
             ?>
-            <div class="item-product" data-aos="fade-up" data-aos-duration="1000">
+            <div class="item-product" data-aos="fade-up" data-aos-duration="500">
               <a href="<?= $slug ?>">
                 <div class="images">
                   <?= $fn->getImage([
@@ -54,10 +47,10 @@
                   <div class="title">
                     <h3><?= $name ?></h3>
                     <p class="price-product">
-                      <?php if (!empty($sale) && !empty($regular)): ?>
+                      <?php if ($sale && $regular): ?>
                         <span class="price-new"><?= $sale ?>₫</span>
                         <span class="price-old"><?= $regular ?>₫</span>
-                      <?php elseif (!empty($regular)): ?>
+                      <?php elseif ($regular): ?>
                         <span class="price-new"><?= $regular ?>₫</span>
                       <?php else: ?>
                         <span class="price-new">Liên hệ</span>
@@ -78,11 +71,29 @@
           <strong>Không tìm thấy kết quả</strong>
         </div>
       <?php endif; ?>
-
-      <!-- PHÂN TRANG -->
       <div class="mt-3">
-        <?= $fn->renderPagination_tc($current_page, $total_pages, BASE . 'san-pham/page-'); ?>
+        <?= $fn->renderPagination_tc($page, $total_pages, BASE . $dm['slug' . $lang] . '/page-'); ?>
       </div>
+
+      <?php if (!empty($dm['content' . $lang])): ?>
+        <div class="desc-list mt-4">
+          <div class="noidung_anhien">
+            <div class="wrap-toc">
+              <div class="meta-toc2">
+                <a class="mucluc-dropdown-list_button">Mục Lục</a>
+                <div class="box-readmore">
+                  <ul class="toc-list" data-toc="article" data-toc-headings="h1,h2,h3"></ul>
+                </div>
+              </div>
+            </div>
+            <div class="content-main content-ck pro_tpl" id="toc-content">
+              <?= $dm['content' . $lang] ?>
+            </div>
+            <p class="anhien xemthemnd">Xem thêm nội dung</p>
+            <p class="anhien anbot">Ẩn bớt nội dung</p>
+          </div>
+        </div>
+      <?php endif; ?>
     </div>
   </div>
 </div>

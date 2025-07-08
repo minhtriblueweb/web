@@ -7,7 +7,7 @@ if (empty($slug)) {
 }
 
 // Lấy thông tin sản phẩm theo ngôn ngữ
-$row_sp = $db->fetchOne("SELECT * FROM tbl_product WHERE FIND_IN_SET('hienthi', status) AND slug{$lang} = ?", [$slug]);
+$row_sp = $db->rawQueryOne("SELECT * FROM tbl_product WHERE FIND_IN_SET('hienthi', status) AND slug{$lang} = ? LIMIT 1", [$slug]);
 
 if (!$row_sp) {
   http_response_code(404);
@@ -51,6 +51,7 @@ $current_page = max(1, (int)($_GET['page'] ?? 1));
 $total_records = $fn->count_data([
   'table' => 'tbl_product',
   'status' => 'hienthi',
+  'type' => 'product',
   'exclude_id' => $id
 ]);
 $total_pages = max(1, ceil($total_records / $records_per_page));
@@ -59,7 +60,7 @@ $sanpham_lienquan = $fn->show_data([
   'table' => 'tbl_product',
   'status' => 'hienthi',
   'exclude_id' => $id,
-  'select' => "id, file, name{$lang}, slug{$lang}, regular_price, sale_price, views",
+  'select' => "id, thumb,file, name{$lang}, slug{$lang}, regular_price, sale_price, views",
   'records_per_page' => $records_per_page,
   'current_page' => $current_page
 ]);
@@ -69,7 +70,7 @@ $get_gallery = $fn->show_data([
   'table' => 'tbl_gallery',
   'status' => 'hienthi',
   'id_parent' => $id,
-  'select' => "file"
+  'select' => "file,thumb"
 ]);
 
 // Lấy tiêu chí

@@ -16,7 +16,7 @@ $show_sanpham = $fn->show_data([
   'status' => 'hienthi',
   'records_per_page' => $records_per_page,
   'current_page' => $current_page,
-  'select' => "id, name{$lang}, slug{$lang}, file, sale_price, regular_price, views"
+  'select' => "id, thumb, name{$lang}, slug{$lang}, file, sale_price, regular_price, views"
 ]);
 
 // Lấy dữ liệu SEO

@@ -1043,6 +1043,13 @@ img:not([src]) {
   color: #333333;
 }
 
+.box-ul-left>ul>li a span {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+
 .box-ul-left>ul>li a img {
   margin-right: 15px;
 }

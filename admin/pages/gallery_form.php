@@ -1,30 +1,23 @@
 <?php
-$id = $_GET['id'] ?? null;
+$id        = $_GET['id'] ?? null;
+$id_child  = $_GET['id_child'] ?? null;
 $name_page = 'hình ảnh sản phẩm';
-$redirectUrl = 'gallery_list&id=' . $id;
+$linkMan   = 'index.php?page=gallery_man&id=' . $id;
 $thumb_width = 500;
 $thumb_height = 500;
-$thumb_zc = 1;
-$id_child = $_GET['id_child'] ?? null;
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add']) && $id) {
-  $insert = $sanpham->them_gallery($_POST, $_FILES, $id);
+  $insert = $product->them_gallery($_POST, $_FILES, $id);
 }
-if ($id_child) {
-  $get_img = $sanpham->get_img_gallery($id_child);
-  if ($get_img) {
-    $result = $get_img->fetch_assoc();
-    $id_parent = $result['id_parent'] ?? null;
-    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['edit']) && $id_parent) {
-      $update = $sanpham->upload_gallery($_POST, $_FILES, $id_child, $id_parent);
-    }
-  }
+if (
+  $id_child &&
+  ($result = $db->rawQueryOne("SELECT * FROM tbl_gallery WHERE id = ? LIMIT 1", [$id_child])) &&
+  ($id_parent = $result['id_parent'] ?? null) &&
+  $_SERVER['REQUEST_METHOD'] === 'POST' &&
+  isset($_POST['edit'])
+) {
+  $update = $product->upload_gallery($_POST, $_FILES, $id_child, $id_parent);
 }
-
-?>
-<?php
-$breadcrumb = [
-  ['label' => (!empty($id) ? 'Cập nhật ' : 'Thêm mới ') . $name_page]
-];
+$breadcrumb = [['label' => (!empty($id) ? 'Thêm mới ' : 'Cập nhật ') . $name_page]];
 include TEMPLATE . 'breadcrumb.php';
 ?>
 <section class="content">
@@ -34,7 +27,7 @@ include TEMPLATE . 'breadcrumb.php';
         class="btn btn-sm bg-gradient-primary">
         <i class="far fa-save mr-2"></i>Lưu
       </button>
-      <a class="btn btn-sm bg-gradient-danger" href="index.php?page=<?= $redirectUrl ?>" title="Thoát"><i class="fas fa-sign-out-alt mr-2"></i>Thoát</a>
+      <a class="btn btn-sm bg-gradient-danger" href="<?= $linkMan ?>" title="Thoát"><i class="fas fa-sign-out-alt mr-2"></i>Thoát</a>
     </div>
     <div class="row">
       <?php if (!empty($id)) : ?>
@@ -154,6 +147,5 @@ include TEMPLATE . 'breadcrumb.php';
     </div>
     <input type="hidden" name="thumb_width" value="<?= $thumb_width ?>">
     <input type="hidden" name="thumb_height" value="<?= $thumb_height ?>">
-    <input type="hidden" name="thumb_zc" value="<?= $thumb_zc ?>">
   </form>
 </section>

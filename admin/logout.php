@@ -1,6 +1,6 @@
 <?php
-require_once '../init.php';
-Session::init();
-Session::destroy();
+session_start();
+session_unset();
+session_destroy();
 header('Location: dang-nhap');
 exit();

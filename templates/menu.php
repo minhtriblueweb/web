@@ -14,7 +14,7 @@
             <li>
               <a title="<?= $name ?>" href="<?= $slug ?>">
                 <span>
-                  <?= $fn->getImage(['file' => $dm['file'], 'width' => 25, 'thumb' => $dm['thumb'], 'zc' => 1, 'alt' => $name, 'title' => $name, 'lazy' => false]) ?>
+                  <?= $fn->getImage(['file' => $dm['file'], 'width' => 25, 'thumb' => $dm['thumb'], 'zc' => 4, 'alt' => $name, 'title' => $name, 'lazy' => false]) ?>
                 </span>
                 <?= $name ?>
                 <?= $has_sub ? '<i class="fa-solid fa-angle-right"></i>' : '' ?>

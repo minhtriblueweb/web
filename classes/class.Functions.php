@@ -199,7 +199,6 @@ class Functions
     $sql = $where ? ' WHERE ' . implode(' AND ', $where) : '';
     return ['sql' => $sql, 'params' => $params];
   }
-
   public function show_data(array $options = [])
   {
     if (empty($options['table'])) return [];
@@ -230,16 +229,19 @@ class Functions
     }
     return $data;
   }
-
-  public function show_data_join(array $options = [])
+  public function show_data_join(array $options = []): array
   {
     $select = $options['select'] ?? '*';
     $table = $options['table'] ?? '';
-    $alias = $options['alias'] ?? '';
     $join = $options['join'] ?? '';
+    $alias = $options['alias'] ?? '';
+    $order_by = $options['order_by'] ?? ($alias ? "$alias.id DESC" : "id DESC");
     $where = [];
     $bindings = [];
 
+    if (empty($table)) return [];
+
+    // Xử lý điều kiện WHERE
     if (!empty($options['where'])) {
       foreach ($options['where'] as $key => $val) {
         $where[] = "$key = ?";
@@ -247,24 +249,46 @@ class Functions
       }
     }
 
+    // Từ khóa tìm kiếm
+    if (!empty($options['keyword'])) {
+      $keyword = trim($options['keyword']);
+      if ($keyword !== '') {
+        $where[] = "(p.namevi LIKE ? OR p.nameen LIKE ?)";
+        $bindings[] = "%$keyword%";
+        $bindings[] = "%$keyword%";
+      }
+    }
+
+    // Build SQL
     $sql = "SELECT $select FROM `$table`";
     if (!empty($alias)) $sql .= " $alias";
     if (!empty($join)) $sql .= " $join";
     if (!empty($where)) $sql .= " WHERE " . implode(" AND ", $where);
-    if (!empty($options['order_by'])) $sql .= " ORDER BY " . $options['order_by'];
-    if (!empty($options['limit'])) $sql .= " LIMIT " . (int)$options['limit'];
+    $sql .= " ORDER BY $order_by";
 
+    // Phân trang hoặc limit
+    if (!empty($options['records_per_page']) && !empty($options['current_page'])) {
+      $limit = (int)$options['records_per_page'];
+      $offset = ((int)$options['current_page'] - 1) * $limit;
+      $sql .= " LIMIT $limit OFFSET $offset";
+    } elseif (!empty($options['limit'])) {
+      $limit = (int)$options['limit'];
+      $offset = isset($options['offset']) ? (int)$options['offset'] : 0;
+      $sql .= " LIMIT $limit OFFSET $offset";
+    }
+
+    // Thực thi truy vấn
     $result = $this->db->rawQuery($sql, $bindings);
-
     $data = [];
+
     if ($result instanceof mysqli_result) {
       while ($row = $result->fetch_assoc()) {
         $data[] = $row;
       }
     }
+
     return $data;
   }
-
   public function count_data(array $options = []): int
   {
     if (empty($options['table'])) return 0;
@@ -274,7 +298,44 @@ class Functions
     $count = $this->db->rawQueryValue($sql, $whereData['params']);
     return is_numeric($count) ? (int)$count : 0;
   }
+  public function count_data_join(array $options = []): int
+  {
+    $table = $options['table'] ?? '';
+    if (empty($table)) return 0;
 
+    $alias = $options['alias'] ?? '';
+    $join = $options['join'] ?? '';
+    $where = [];
+    $bindings = [];
+
+    // WHERE key = ?
+    if (!empty($options['where'])) {
+      foreach ($options['where'] as $key => $val) {
+        $where[] = "$key = ?";
+        $bindings[] = $val;
+      }
+    }
+
+    // Keyword tìm trong namevi, nameen (alias p)
+    if (!empty($options['keyword'])) {
+      $keyword = trim($options['keyword']);
+      if ($keyword !== '') {
+        $where[] = "(p.namevi LIKE ? OR p.nameen LIKE ?)";
+        $bindings[] = "%$keyword%";
+        $bindings[] = "%$keyword%";
+      }
+    }
+
+    // Build SQL
+    $sql = "SELECT COUNT(*) AS total FROM `$table`";
+    if (!empty($alias)) $sql .= " $alias";
+    if (!empty($join)) $sql .= " $join";
+    if (!empty($where)) $sql .= " WHERE " . implode(" AND ", $where);
+
+    // Thực thi và trả kết quả
+    $row = $this->db->rawQueryOne($sql, $bindings);
+    return (int)($row['total'] ?? 0);
+  }
   function transfer($msg, $page = 'dashboard', $numb = true)
   {
     $_SESSION['transfer_data'] = [
@@ -291,33 +352,23 @@ class Functions
   public function deleteFile($file = '')
   {
     if (!$file) return true;
-
-    $filename = basename($file); // hoa-de-ban.jpg
-    $filenameNoExt = pathinfo($filename, PATHINFO_FILENAME); // hoa-de-ban
-    $ext = pathinfo($filename, PATHINFO_EXTENSION); // jpg
-
+    $filename = basename($file);
+    $filenameNoExt = pathinfo($filename, PATHINFO_FILENAME);
+    $ext = pathinfo($filename, PATHINFO_EXTENSION);
     $baseDir = rtrim(UPLOADS, '/');
-
-    // ✅ Xoá ảnh gốc
     $mainFile = $baseDir . '/' . $filename;
     if (file_exists($mainFile)) @unlink($mainFile);
-
-    // ✅ Xoá bản webp của ảnh gốc nếu có
     if (in_array(strtolower($ext), ['jpg', 'jpeg', 'png'])) {
       $webpMain = $baseDir . '/' . $filenameNoExt . '.webp';
       if (file_exists($webpMain)) @unlink($webpMain);
     }
-
-    // ✅ Tìm và xoá trong thư mục uploads/*x*x[1-3]/
     $thumbDirs = glob($baseDir . '/*x*x[1-4]', GLOB_ONLYDIR);
     foreach ($thumbDirs as $dir) {
       $thumbFile = $dir . '/' . $filename;
       if (file_exists($thumbFile)) @unlink($thumbFile);
-
       $thumbWebp = $dir . '/' . $filenameNoExt . '.webp';
       if (file_exists($thumbWebp)) @unlink($thumbWebp);
     }
-
     return true;
   }
 
@@ -325,28 +376,19 @@ class Functions
   {
     $id = (int)$id;
     $table = mysqli_real_escape_string($this->db->link, $table);
-
-    // Lấy file (nếu có) và id_parent nếu là gallery
     $row = $this->db->rawQueryOne("SELECT file" . ($table === 'tbl_gallery' ? ", id_parent" : "") . " FROM `$table` WHERE id = ?", [$id]);
-
-    // Xoá file vật lý nếu có
     !empty($row['file']) && $this->deleteFile(UPLOADS . $row['file']);
-    // Xoá dữ liệu chính
     $delete_result = $this->db->execute("DELETE FROM `$table` WHERE id = ?", [$id]);
-    // Xoá SEO
     if (!empty($type)) {
       $this->db->execute("DELETE FROM `tbl_seo` WHERE id_parent = ? AND `type` = ?", [$id, $type]);
     } else {
       $this->db->execute("DELETE FROM `tbl_seo` WHERE id_parent = ?", [$id]);
     }
-
-    // Redirect
     $redirectPath = $this->getRedirectPath([
       'table' => $table,
       'type' => $type,
       'id_parent' => $table === 'tbl_gallery' ? ($id_parent ?? $row['id_parent'] ?? 0) : $id_parent
     ]);
-
     $this->transfer(
       $delete_result ? "Xóa dữ liệu thành công!" : "Xóa dữ liệu thất bại!",
       $redirectPath,

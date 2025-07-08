@@ -25,6 +25,8 @@
                     <?= $fn->getImage([
                       'file' => $gallery['file'],
                       'class' => '',
+                      'thumb' => $gallery['thumb'],
+                      'zc' => 1,
                       'lazy' => true
                     ]) ?>
                   </a>

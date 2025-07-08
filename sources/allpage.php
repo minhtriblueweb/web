@@ -32,7 +32,7 @@ $dm_c1_all = $fn->show_data([
 $dm_c2_all = $fn->show_data([
   'table'  => 'tbl_product_cat',
   'status' => 'hienthi,noibat',
-  'select' => "id, id_list, slug{$lang}, name{$lang},thumb"
+  'select' => "id, file,id_list, slug{$lang}, name{$lang},thumb"
 ]);
 
 // Gom nhóm cấp 2 theo id_list

@@ -1,50 +1,74 @@
 <?php
 session_start();
+
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
   http_response_code(403);
   exit('Forbidden');
 }
+
 require_once __DIR__ . '/../init.php';
+
 $db = new Database();
+
+// Lấy dữ liệu POST
 $id_parent = $_POST['id_parent'] ?? null;
+$com = $_POST['com'] ?? null;
+$type = $_POST['type'] ?? null;
+$colfiler = $_POST['colfiler'] ?? null;
+$cmd = $_POST['cmd'] ?? null;
 
 // Kiểm tra dữ liệu bắt buộc
-if (!$id_parent || !$com || !$type) {
+if (!$id_parent || !$com || !$type || $cmd !== 'refresh') {
   http_response_code(400);
-  exit('Missing required parameters.');
+  exit('Missing or invalid parameters.');
 }
 
-// Truy vấn danh sách tệp tin từ bảng files
 $id_parent = (int)$id_parent;
 
-$query = "SELECT * FROM tbl_gallery WHERE id_parent = '$id_parent'";
-$result = $db->select($query);
+// Truy vấn gallery theo id_parent
+$rows = $db->rawQuery("SELECT * FROM tbl_gallery WHERE id_parent = ? ORDER BY numb, id DESC", [$id_parent]);
 
-if ($result) {
-  $html = '';
-  while ($row = $result->fetch_assoc()) {
-    $html .= '
-      <li class="jFiler-item">
-        <div class="jFiler-item-container">
-          <div class="jFiler-item-inner">
-            <div class="jFiler-item-thumb">
-              <img src="' . htmlspecialchars($row['filepath']) . '" alt="' . htmlspecialchars($row['filename']) . '" />
-            </div>
-            <div class="jFiler-item-info">
-              <span class="jFiler-item-title">' . htmlspecialchars($row['filename']) . '</span>
-            </div>
-          </div>
-        </div>
-      </li>';
-  }
-  echo $html;
-} else {
-  echo "Query failed.";
+if (!$rows) {
+  echo '';
+  exit;
 }
 
+// Tạo HTML
+$html = '';
+foreach ($rows as $row) {
+  $id = (int)$row['id'];
+  $thumb = htmlspecialchars($row['file']);
+  $folder = htmlspecialchars($row['folder'] ?? 'product'); // fallback
+  $filename = htmlspecialchars($row['filename'] ?? $thumb);
 
+  $html .= '
+    <li class="jFiler-item my-jFiler-item my-jFiler-item-' . $id . '" data-id="' . $id . '">
+      <div class="jFiler-item-container">
+        <div class="jFiler-item-inner">
+          <div class="jFiler-item-thumb">
+            <img src="../upload/' . $folder . '/' . $thumb . '" alt="' . $filename . '">
+          </div>
+          <div class="jFiler-item-assets">
+            <ul class="list-inline">
+              <li>
+                <input type="number" class="form-control form-control-sm" name="numb[' . $id . ']" value="' . (int)$row['numb'] . '">
+              </li>
+              <li>
+                <input type="checkbox" class="filer-checkbox" value="' . $id . '">
+              </li>
+              <li>
+                <a class="delete-filer text-danger" title="Xoá" onclick="deleteFiler(\'' . $id . ',' . $folder . '\')">
+                  <i class="fas fa-trash-alt"></i>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </li>';
+}
 
-
+echo $html;
 
 // $id = (!empty($_POST['id'])) ? htmlspecialchars($_POST['id']) : 0;
 // $id_parent = (!empty($_POST['id_parent'])) ? htmlspecialchars($_POST['id_parent']) : 0;

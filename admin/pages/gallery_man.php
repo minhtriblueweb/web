@@ -2,11 +2,23 @@
 $redirect_url = $_GET['page'];
 $table = 'tbl_gallery';
 $name_page = 'hình ảnh sản phẩm';
+$rp = 10;
+$p  = max(1, isset($_GET['p']) ? (int)$_GET['p'] : 1);
+$t  = $fn->count_data(['table' => $table]);
+$tp = ceil($t / $rp);
+$paging = $fn->renderPagination($p, $tp);
+
 if (isset($_GET['id']) && $_GET['id'] != NULL) {
   $id = $_GET['id'];
 }
 $parent = ($id !== null) ? $db->rawQueryOne("SELECT id,name{$lang} FROM tbl_product WHERE id = ? LIMIT 1", [$id]) : [];
-$get_gallery = $fn->show_data(['table' => $table, 'id_parent' => $id]);
+$get_gallery = $fn->show_data([
+  'table' => $table,
+  'id_parent' => $id,
+  'records_per_page' => $rp,
+  'current_page' => $p,
+  'keyword' => $_GET['keyword'] ?? ''
+]);
 $linkMulti = "index.php?page=gallery_man&id=$id&delete_multiple=1";
 $linkDelete = "index.php?page=gallery_man&id=$id&delete=";
 $linkGallery = "index.php?page=gallery_form&id=";
@@ -118,4 +130,5 @@ include TEMPLATE . 'breadcrumb.php';
       </table>
     </div>
   </div>
+  <?php if ($paging): ?><div class="card-footer text-sm p-3"><?= $paging ?></div><?php endif; ?>
 </section>

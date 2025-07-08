@@ -128,23 +128,38 @@ class product
       $result
     );
   }
+
   public function them_gallery($data, $files, $id_parent)
   {
     $id_parent = (int)$id_parent;
     $table = 'tbl_gallery';
-    $parent = $this->db->rawQueryOne("SELECT namevi FROM tbl_product WHERE id = ? LIMIT 1", [$id_parent]);
-    $parent_name = $parent['namevi'] ?? '';
     $result = false;
 
-    for ($i = 0; $i < 6; $i++) {
-      $file_key = "file$i";
-      if (!empty($files[$file_key]['name']) && $files[$file_key]['error'] == 0) {
-        $width = (int)($data['thumb_width'] ?? 0);
-        $height = (int)($data['thumb_height'] ?? 0);
-        $thumb_size = $width . 'x' . $height;
+    // Lấy tên sản phẩm cha để đặt tên ảnh
+    $parent = $this->db->rawQueryOne("SELECT namevi FROM tbl_product WHERE id = ? LIMIT 1", [$id_parent]);
+    $parent_name = $parent['namevi'] ?? 'gallery';
+
+    // Kích thước thumbnail (dạng 600x400)
+    $width = (int)($data['thumb_width'] ?? 0);
+    $height = (int)($data['thumb_height'] ?? 0);
+    $thumb_size = "{$width}x{$height}";
+    $thumb = json_encode(['w' => $width, 'h' => $height]);
+
+    // Tổng số ảnh
+    $total = count($files['files']['name']);
+
+    for ($i = 0; $i < $total; $i++) {
+      if (!empty($files['files']['name'][$i]) && $files['files']['error'][$i] == 0) {
+        $file = [
+          'name' => $files['files']['name'][$i],
+          'type' => $files['files']['type'][$i],
+          'tmp_name' => $files['files']['tmp_name'][$i],
+          'error' => $files['files']['error'][$i],
+          'size' => $files['files']['size'][$i]
+        ];
 
         $thumb_filename = $this->fn->Upload([
-          'file' => $files[$file_key],
+          'file' => $file,
           'custom_name' => $parent_name,
           'thumb' => $thumb_size,
           'old_file_path' => '',
@@ -153,41 +168,91 @@ class product
         ]);
 
         if (!empty($thumb_filename)) {
-          $thumb = json_encode(['w' => $width, 'h' => $height]);
-          $status_flags = ['hienthi'];
-          $status_values = [];
-
-          foreach ($status_flags as $flag) {
-            $flag_key = $flag . $i;
-            if (!empty($data[$flag_key])) {
-              $status_values[] = $flag;
-            }
-          }
-
-          $fields = ['id_parent', 'file', 'thumb', 'numb', 'status'];
-          $placeholders = array_fill(0, count($fields), '?');
+          $status = !empty($data['hienthi_all']) ? 'hienthi' : '';
           $params = [
             $id_parent,
             $thumb_filename,
             $thumb,
-            (int)($data["numb$i"] ?? 0),
-            implode(',', $status_values)
+            (int)($data['numb'][$i] ?? 0),
+            $status
           ];
 
-          $result = $this->db->execute(
-            "INSERT INTO `$table` (" . implode(', ', $fields) . ") VALUES (" . implode(', ', $placeholders) . ")",
-            $params
-          );
+          $sql = "INSERT INTO `$table` (`id_parent`, `file`, `thumb`, `numb`, `status`) VALUES (?, ?, ?, ?, ?)";
+          $result = $this->db->execute($sql, $params);
         }
       }
     }
 
+    // Chuyển hướng
     $this->fn->transfer(
       $result ? "Cập nhật hình ảnh thành công" : "Cập nhật hình ảnh thất bại!",
       $this->fn->getRedirectPath(['table' => $table, 'id_parent' => $id_parent]),
       $result
     );
   }
+
+
+
+  // public function them_gallery($data, $files, $id_parent)
+  // {
+  //   $id_parent = (int)$id_parent;
+  //   $table = 'tbl_gallery';
+  //   $parent = $this->db->rawQueryOne("SELECT namevi FROM tbl_product WHERE id = ? LIMIT 1", [$id_parent]);
+  //   $parent_name = $parent['namevi'] ?? '';
+  //   $result = false;
+
+  //   for ($i = 0; $i < 6; $i++) {
+  //     $file_key = "file$i";
+  //     if (!empty($files[$file_key]['name']) && $files[$file_key]['error'] == 0) {
+  //       $width = (int)($data['thumb_width'] ?? 0);
+  //       $height = (int)($data['thumb_height'] ?? 0);
+  //       $thumb_size = $width . 'x' . $height;
+
+  //       $thumb_filename = $this->fn->Upload([
+  //         'file' => $files[$file_key],
+  //         'custom_name' => $parent_name,
+  //         'thumb' => $thumb_size,
+  //         'old_file_path' => '',
+  //         'watermark' => true,
+  //         'convert_webp' => true
+  //       ]);
+
+  //       if (!empty($thumb_filename)) {
+  //         $thumb = json_encode(['w' => $width, 'h' => $height]);
+  //         $status_flags = ['hienthi'];
+  //         $status_values = [];
+
+  //         foreach ($status_flags as $flag) {
+  //           $flag_key = $flag . $i;
+  //           if (!empty($data[$flag_key])) {
+  //             $status_values[] = $flag;
+  //           }
+  //         }
+
+  //         $fields = ['id_parent', 'file', 'thumb', 'numb', 'status'];
+  //         $placeholders = array_fill(0, count($fields), '?');
+  //         $params = [
+  //           $id_parent,
+  //           $thumb_filename,
+  //           $thumb,
+  //           (int)($data["numb$i"] ?? 0),
+  //           implode(',', $status_values)
+  //         ];
+
+  //         $result = $this->db->execute(
+  //           "INSERT INTO `$table` (" . implode(', ', $fields) . ") VALUES (" . implode(', ', $placeholders) . ")",
+  //           $params
+  //         );
+  //       }
+  //     }
+  //   }
+
+  //   $this->fn->transfer(
+  //     $result ? "Cập nhật hình ảnh thành công" : "Cập nhật hình ảnh thất bại!",
+  //     $this->fn->getRedirectPath(['table' => $table, 'id_parent' => $id_parent]),
+  //     $result
+  //   );
+  // }
 
   public function update_views($slug)
   {

@@ -178,212 +178,39 @@ function deleteAll(url) {
   document.location = url + "&listid=" + listid;
 }
 
+
 /* Create sort filer */
-var sortable;
-function createSortFiler() {
-  if ($("#jFilerSortable").length) {
-    sortable = new Sortable.create(document.getElementById("jFilerSortable"), {
-      animation: 600,
-      swap: true,
-      disabled: true,
-      // swapThreshold: 0.25,
-      ghostClass: "ghostclass",
-      multiDrag: true,
-      selectedClass: "selected",
-      forceFallback: false,
-      fallbackTolerance: 3,
-      onEnd: function () {
-        /* Get all filer sort */
-        listid = new Array();
-        jFilerItems = $("#jFilerSortable").find(".my-jFiler-item");
-        jFilerItems.each(function (index) {
-          listid.push($(this).data("id"));
-        });
+$(document).ready(function () {
+  $('#filer-gallery').on('change', function () {
+    const files = this.files;
+    const $preview = $('#preview-gallery');
+    const colClass = $('.col-filer').val() || 'col-3';
 
-        /* Update number */
-        var id_parent = ID;
-        var com = COM;
-        var kind = ACT;
-        var type = TYPE;
-        var colfiler = $(".col-filer").val();
-        var actfiler = $(".act-filer").val();
-        $.ajax({
-          url: "api/filer.php",
-          type: "POST",
-          dataType: "json",
-          async: false,
-          data: {
-            id_parent: id_parent,
-            listid: listid,
-            com: com,
-            kind: actfiler,
-            type: type,
-            colfiler: colfiler,
-            cmd: "updateNumb",
-            hash: HASH,
-          },
-          success: function (result) {
-            var arrid = result.id;
-            var arrnumb = result.numb;
-            for (var i = 0; i < arrid.length; i++)
-              $(".my-jFiler-item-" + arrid[i])
-                .find("input[type=number]")
-                .val(arrnumb[i]);
-          },
-        });
-      },
+    $preview.empty(); // Clear preview on every change
+
+    if (!files.length) return;
+
+    Array.from(files).forEach((file, index) => {
+      const allowedExt = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
+      const ext = file.name.split('.').pop().toLowerCase();
+
+      if (!allowedExt.includes(ext)) return;
+
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        const imgHtml = `
+          <div class="${colClass} mb-3">
+            <div class="border p-1 shadow-sm rounded">
+              <img src="${e.target.result}" class="img-fluid" alt="Ảnh ${index + 1}">
+            </div>
+          </div>
+        `;
+        $preview.append(imgHtml);
+      };
+      reader.readAsDataURL(file);
     });
-  }
-}
-
-/* Destroy sort filer */
-function destroySortFiler() {
-  try {
-    var destroy = sortable.destroy();
-  } catch (e) { }
-}
-
-/* Refresh filer when complete action */
-function refreshFiler() {
-  $(".sort-filer, .check-all-filer").removeClass("active");
-  $(".sort-filer").attr("disabled", false);
-  $(".alert-sort-filer").hide();
-
-  if ($(".check-all-filer").find("i").hasClass("fas fa-check-square")) {
-    $(".check-all-filer")
-      .find("i")
-      .toggleClass("far fa-square fas fa-check-square");
-  }
-
-  $(".my-jFiler-items .jFiler-items-list")
-    .find("input.filer-checkbox")
-    .each(function () {
-      $(this).prop("checked", false);
-    });
-}
-
-/* Refresh filer if empty */
-function refreshFilerIfEmpty() {
-  var id_parent = ID;
-  var com = COM;
-  var type = TYPE;
-  var colfiler = $(".col-filer").val();
-  var actfiler = $(".act-filer").val();
-  var cmd = "refresh";
-
-  $.ajax({
-    type: "POST",
-    dataType: "html",
-    url: "api/filer.php",
-    async: false,
-    data: {
-      id_parent: id_parent,
-      com: com,
-      kind: actfiler,
-      type: type,
-      colfiler: colfiler,
-      cmd: cmd,
-      hash: HASH,
-    },
-    success: function (result) {
-      $(".jFiler-items-list").first().find(".jFiler-item").remove();
-      destroySortFiler();
-      $tmp =
-        '<div class="form-group form-group-gallery">' +
-        '<label class="label-filer">' +
-        LANG["albumhientai"] +
-        ":</label>" +
-        '<div class="action-filer mb-3">' +
-        '<a class="btn btn-sm bg-gradient-primary text-white check-all-filer mr-1"><i class="far fa-square mr-2"></i>' +
-        LANG["chontatca"] +
-        "</a>" +
-        '<button type="button" class="btn btn-sm bg-gradient-success text-white sort-filer mr-1"><i class="fas fa-random mr-2"></i>' +
-        LANG["sapxep"] +
-        "</button>" +
-        '<a class="btn btn-sm bg-gradient-danger text-white delete-all-filer"><i class="far fa-trash-alt mr-2"></i>' +
-        LANG["xoatatca"] +
-        "</a>" +
-        "</div>" +
-        '<div class="alert my-alert alert-sort-filer alert-info text-sm text-white bg-gradient-info"><i class="fas fa-info-circle mr-2"></i>' +
-        LANG["cothechonnhieuhinhdedichuyen"] +
-        "</div>" +
-        '<div class="jFiler-items my-jFiler-items jFiler-row">' +
-        '<ul class="jFiler-items-list jFiler-items-grid row scroll-bar" id="jFilerSortable">' +
-        result +
-        "</ul></div></div>";
-      $("#filer-gallery").parents(".form-group").after($tmp);
-      createSortFiler();
-    },
   });
-}
-
-/* Delete filer */
-function deleteFiler(string) {
-  var str = string.split(",");
-  var id = str[0];
-  var folder = str[1];
-  var cmd = "delete";
-
-  $.ajax({
-    type: "POST",
-    url: "api/filer.php",
-    data: {
-      id: id,
-      folder: folder,
-      cmd: cmd,
-    },
-  });
-
-  $(".my-jFiler-item-" + id).remove();
-
-  if ($(".my-jFiler-items ul li").length == 0) {
-    $(".form-group-gallery").remove();
-  }
-}
-
-/* Delete all filer */
-function deleteAllFiler(folder) {
-  var listid = "";
-  var cmd = "delete-all";
-
-  $("input.filer-checkbox").each(function () {
-    if (this.checked) listid = listid + "," + this.value;
-  });
-
-  listid = listid.substr(1);
-
-  if (listid == "") {
-    notifyDialog(LANG["banhaychonitnhat1mucdexoa"]);
-    return false;
-  }
-
-  $.ajax({
-    type: "POST",
-    url: "api/filer.php",
-    data: {
-      listid: listid,
-      folder: folder,
-      cmd: cmd,
-    },
-  });
-
-  listid = listid.split(",");
-
-  for (var i = 0; i < listid.length; i++) {
-    $(".my-jFiler-item-" + listid[i]).remove();
-  }
-
-  if ($(".my-jFiler-items ul li").length == 0) {
-    $(".form-group-gallery").remove();
-  }
-
-  refreshFiler();
-}
-
-/* Push OneSignal */
-function pushOneSignal(url) {
-  document.location = url;
-}
+});
 
 /* HoldOn */
 function holdonOpen(
@@ -392,18 +219,22 @@ function holdonOpen(
   backgroundColor = "rgba(0,0,0,0.8)",
   textColor = "white"
 ) {
-  var options = {
-    theme: theme,
-    message: text,
-    backgroundColor: backgroundColor,
-    textColor: textColor,
-  };
+  if (typeof HoldOn !== 'undefined') {
+    HoldOn.open({
+      theme,
+      message: text,
+      backgroundColor,
+      textColor
+    });
+  }
+}
 
-  HoldOn.open(options);
-}
 function holdonClose() {
-  HoldOn.close();
+  if (typeof HoldOn !== 'undefined') {
+    HoldOn.close();
+  }
 }
+
 
 /* Go to element */
 function goToByScroll(id, minusTop) {
@@ -2016,36 +1847,21 @@ $(document).ready(function () {
     $("#filer-gallery").filer({
       limit: null,
       maxSize: null,
-      extensions: [
-        "jpg",
-        "png",
-        "jpeg",
-        "JPG",
-        "PNG",
-        "JPEG",
-        "Png",
-        "webp",
-        "WEBP",
-      ],
+      extensions: ["jpg", "png", "jpeg", "webp", "JPG", "PNG", "JPEG", "WEBP"],
       changeInput:
-        '<div class="jFiler-input-dragDrop"><div class="jFiler-input-inner"><div class="jFiler-input-icon"><i class="icon-jfi-cloud-up-o"></i></div><div class="jFiler-input-text"><h3>' +
-        LANG["keovathahinhvaoday"] +
-        '</h3> <span style="display:inline-block; margin: 15px 0">' +
-        LANG["hoac"] +
-        '</span></div><a class="jFiler-input-choose-btn blue">' +
-        LANG["chonhinh"] +
-        "</a></div></div>",
+        '<div class="jFiler-input-dragDrop">' +
+        '<div class="jFiler-input-inner">' +
+        '<div class="jFiler-input-icon"><i class="icon-jfi-cloud-up-o"></i></div>' +
+        '<div class="jFiler-input-text"><h3>' + LANG["keovathahinhvaoday"] + '</h3>' +
+        '<span style="display:inline-block; margin: 15px 0">' + LANG["hoac"] + '</span></div>' +
+        '<a class="jFiler-input-choose-btn blue">' + LANG["chonhinh"] + '</a>' +
+        '</div></div>',
       theme: "dragdropbox",
       showThumbs: true,
       addMore: true,
       allowDuplicates: false,
       clipBoardPaste: false,
-      dragDrop: {
-        dragEnter: null,
-        dragLeave: null,
-        drop: null,
-        dragContainer: null,
-      },
+      dragDrop: {},
       captions: {
         button: LANG["themhinh"],
         feedback: LANG["vuilongchonhinhanh"],
@@ -2054,163 +1870,53 @@ $(document).ready(function () {
         removeConfirmation: LANG["banmuonloaibohinhanhnay"],
         errors: {
           filesLimit: "Chỉ được upload mỗi lần {{fi-limit}} " + LANG["hinhanh"],
-          filesType:
-            LANG["chihotrotaptinlahinhanhcodinhdang"] + ": {{fi-extensions}}",
-          filesSize:
-            LANG["hinhanh"] +
-            " {{fi-name}} " +
-            LANG["cokichthuocqualonvuilonguploadhinhanhcokichthuoctoida"] +
-            " {{fi-maxSize}} MB.",
-          filesSizeAll:
-            LANG[
-            "nhunghinhanhbanchoncokichthuocqualonvuilongchonnhunghinhanhcokichthuoctoida"
-            ] + " {{fi-maxSize}} MB.",
+          filesType: LANG["chihotrotaptinlahinhanhcodinhdang"] + ": {{fi-extensions}}",
+          filesSize: LANG["hinhanh"] + " {{fi-name}} " + LANG["cokichthuocqualonvuilonguploadhinhanhcokichthuoctoida"] + " {{fi-maxSize}} MB.",
+          filesSizeAll: LANG["nhunghinhanhbanchoncokichthuocqualonvuilongchonnhunghinhanhcokichthuoctoida"] + " {{fi-maxSize}} MB.",
         },
       },
       afterShow: function () {
-        var jFilerItems = $(
-          ".my-jFiler-items .jFiler-items-list li.jFiler-item"
-        );
-        var jFilerItemsLength = 0;
-        var jFilerItemsLast = 0;
-        if (jFilerItems.length) {
-          jFilerItemsLength = jFilerItems.length;
-          jFilerItemsLast = parseInt(
-            jFilerItems.last().find("input[type=number]").val()
-          );
-        }
-        $(".jFiler-items-list li.jFiler-item").each(function (index) {
-          var colClass = $(".col-filer").val();
-          var parent = $(this).parent();
-          if (!parent.is("#jFilerSortable")) {
-            jFilerItemsLast += 1;
-            $(this).find("input[type=number]").val(jFilerItemsLast);
-          }
-          if (!$(this).hasClass(colClass))
-            $("li.jFiler-item").addClass(colClass);
-        });
-      },
-      uploadFile: {
-        url: "api/upload.php",
-        data: $("#filer-gallery").data(),
-        type: "POST",
-        enctype: "multipart/form-data",
-        dataType: "json",
-        async: false,
-        beforeSend: function () {
-          holdonOpen();
-        },
-        success: function (data, el) {
-          try {
-            if (typeof data === 'string') data = JSON.parse(data);
-          } catch (e) {
-            console.error("JSON parse error:", e, data);
-            holdonClose(); // Đóng loading nếu lỗi
-            return;
-          }
+        const colClass = $(".col-filer").val();
+        let lastOrder = 0;
 
-          if (data["success"] == true) {
-            var parent = el.find(".jFiler-jProgressBar").parent();
-            el.find(".jFiler-jProgressBar").fadeOut("slow", function () {
-              $('<div class="jFiler-item-others text-success"><i class="icon-jfi-check-circle"></i> Success</div>')
-                .hide().appendTo(parent).fadeIn("slow");
-            });
-          } else {
-            var parent = el.find(".jFiler-jProgressBar").parent();
-            el.find(".jFiler-jProgressBar").fadeOut("slow", function () {
-              $('<div class="jFiler-item-others text-error"><i class="icon-jfi-minus-circle"></i> Error</div>')
-                .hide().appendTo(parent).fadeIn("slow");
-            });
-          }
-        },
-        error: function (el) {
-          var parent = el.find(".jFiler-jProgressBar").parent();
-          el.find(".jFiler-jProgressBar").fadeOut("slow", function () {
-            $(
-              '<div class = "jFiler-item-others text-error"><i class = "icon-jfi-minus-circle"></i> Error</div>'
-            )
-              .hide()
-              .appendTo(parent)
-              .fadeIn("slow");
-          });
-        },
-        onComplete: function () {
-          refreshFiler();
-          if ($(".my-jFiler-item-info").length) {
-            $(".jFiler-items-list").first().find(".jFiler-item").remove();
-            $(".my-jFiler-item-info").trigger("change");
-          } else {
-            refreshFilerIfEmpty();
-          }
-          holdonClose();
-        },
-        statusCode: {},
-        onProgress: function () { },
+        $(".jFiler-items-list li.jFiler-item").each(function () {
+          lastOrder++;
+          $(this).find("input[name='numb-filer[]']").val(lastOrder);
+          $(this).addClass(colClass);
+        });
       },
       templates: {
         box: '<ul class="jFiler-items-list jFiler-items-grid row scroll-bar"></ul>',
         item:
-          '<li class="jFiler-item">\
-	                        <div class="jFiler-item-container">\
-	                            <div class="jFiler-item-inner">\
-	                                <div class="jFiler-item-thumb">\
-	                                    <div class="jFiler-item-status"></div>\
-	                                    <div class="jFiler-item-thumb-overlay">\
-	                                        <div class="jFiler-item-info">\
-	                                            <div style="display:table-cell;vertical-align: middle;">\
-	                                                <span class="jFiler-item-title"><b title="{{fi-name}}">{{fi-name}}</b></span>\
-	                                                <span class="jFiler-item-others">{{fi-size2}}</span>\
-	                                            </div>\
-	                                        </div>\
-	                                    </div>\
-	                                    {{fi-image}}\
-	                                </div>\
-	                                <div class="jFiler-item-assets jFiler-row">\
-	                                    <ul class="list-inline pull-left">\
-	                                        <li>{{fi-progressBar}}</li>\
-	                                    </ul>\
-	                                    <ul class="list-inline pull-right">\
-	                                        <li><a class="icon-jfi-trash jFiler-item-trash-action"></a></li>\
-	                                    </ul>\
-	                                </div>\
-	                                <input type="number" class="form-control form-control-sm mb-1" name="numb-filer[]" placeholder="' +
-          LANG["sothutu"] +
-          '"/>\
-	                                <input type="text" class="form-control form-control-sm" name="name-filer[]" placeholder="Tiêu đề"/>\
-	                            </div>\
-	                        </div>\
-	                    </li>',
-        itemAppend:
-          '<li class="jFiler-item">\
-	                            <div class="jFiler-item-container">\
-	                                <div class="jFiler-item-inner">\
-	                                    <div class="jFiler-item-thumb">\
-	                                        <div class="jFiler-item-status"></div>\
-	                                        <div class="jFiler-item-thumb-overlay">\
-	                                            <div class="jFiler-item-info">\
-	                                                <div style="display:table-cell;vertical-align: middle;">\
-	                                                    <span class="jFiler-item-title"><b title="{{fi-name}}">{{fi-name}}</b></span>\
-	                                                    <span class="jFiler-item-others">{{fi-size2}}</span>\
-	                                                </div>\
-	                                            </div>\
-	                                        </div>\
-	                                        {{fi-image}}\
-	                                    </div>\
-	                                    <div class="jFiler-item-assets jFiler-row">\
-	                                        <ul class="list-inline pull-left">\
-	                                            <li><span class="jFiler-item-others">{{fi-icon}}</span></li>\
-	                                        </ul>\
-	                                        <ul class="list-inline pull-right">\
-	                                            <li><a class="icon-jfi-trash jFiler-item-trash-action"></a></li>\
-	                                        </ul>\
-	                                    </div>\
-	                                    <input type="number" class="form-control form-control-sm mb-1" name="numb-filer[]" placeholder="' +
-          LANG["sothutu"] +
-          '"/>\
-	                                	<input type="text" class="form-control form-control-sm" name="name-filer[]" placeholder="Tiêu đề"/>\
-	                                </div>\
-	                            </div>\
-	                        </li>',
+          '<li class="jFiler-item">' +
+          '  <div class="jFiler-item-container">' +
+          '    <div class="jFiler-item-inner">' +
+          '      <div class="jFiler-item-thumb">' +
+          '        <div class="jFiler-item-status"></div>' +
+          '        <div class="jFiler-item-thumb-overlay">' +
+          '          <div class="jFiler-item-info">' +
+          '            <div style="display:table-cell;vertical-align: middle;">' +
+          '              <span class="jFiler-item-title"><b title="{{fi-name}}">{{fi-name}}</b></span>' +
+          '              <span class="jFiler-item-others">{{fi-size2}}</span>' +
+          '            </div>' +
+          '          </div>' +
+          '        </div>' +
+          '        {{fi-image}}' +
+          '      </div>' +
+          '      <div class="jFiler-item-assets jFiler-row">' +
+          '        <ul class="list-inline pull-left">' +
+          '          <li>{{fi-progressBar}}</li>' +
+          '        </ul>' +
+          '        <ul class="list-inline pull-right">' +
+          '          <li><a class="icon-jfi-trash jFiler-item-trash-action"></a></li>' +
+          '        </ul>' +
+          '      </div>' +
+          '      <input type="number" class="form-control form-control-sm mb-1" name="numb-filer[]" placeholder="' + LANG["sothutu"] + '"/>' +
+          '      <input type="text" class="form-control form-control-sm" name="name-filer[]" placeholder="Tiêu đề"/>' +
+          '    </div>' +
+          '  </div>' +
+          '</li>',
+        itemAppend: null,
         progressBar: '<div class="bar"></div>',
         itemAppendToEnd: true,
         canvasImage: false,
@@ -2221,7 +1927,7 @@ $(document).ready(function () {
           progressBar: ".bar",
           remove: ".jFiler-item-trash-action",
         },
-      },
+      }
     });
   }
 

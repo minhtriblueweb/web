@@ -25,5 +25,10 @@
     "prefix": "Dump",
     "body": ["\\$fn->dump(${1:\\$data});"],
     "description": "Gọi hàm dump() từ $fn để debug dữ liệu"
+  },
+  "PHP Block Comment": {
+    "prefix": "cmt",
+    "body": ["<?php", "/*  ", "$1", "*/", "?>"],
+    "description": "PHP mở/đóng comment dạng <?php  /*  */ ?>"
   }
 }

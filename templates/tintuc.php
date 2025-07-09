@@ -24,11 +24,15 @@ $show_tintuc = $fn->show_data([
           <div class="item-service">
             <div class="images">
               <a class="scale-img hover-glass text-decoration-none" href="<?= $slug ?>" title="<?= $name ?>">
-                <?= $fn->getImage([
+                <?= $fn->getImageCustom([
+                  'width' => 540,
+                  'height' => 360,
+                  'zc' => 1,
                   'file' => $row_tintuc['file'],
                   'class' => 'w-100',
                   'alt' => $name,
-                  'title' => $name
+                  'title' => $name,
+                  'lazy' => true
                 ]) ?>
               </a>
             </div>

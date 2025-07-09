@@ -4,11 +4,11 @@
       <div class="footer-banner">
         <div class="logo-footer">
           <a href="./">
-            <?= $fn->getImage([
+            <?= $fn->getImageCustom([
               'file' => $logo,
               'alt' => $web_name,
               'title' => $web_name,
-              'lazy' => false
+              'lazy' => true
             ]) ?>
           </a>
         </div>
@@ -25,13 +25,15 @@
               $link = $row['link'];
               ?>
               <a class="hvr-icon-rotate me-2" href="<?= $link ?>" target="_blank" rel="noopener noreferrer">
-                <?= $fn->getImage([
+                <?= $fn->getImageCustom([
+                  'width' => 50,
+                  'height' => 50,
+                  'zc' => 1,
                   'file'   => $row['file'],
                   'class'  => 'hvr-icon',
-                  'width'  => 50,
-                  'alt'    => $name,
-                  'title'  => $name,
-                  'lazy'   => true
+                  'alt' => $name,
+                  'title' => $name,
+                  'lazy' => true
                 ]) ?>
               </a>
             <?php endforeach; ?>
@@ -54,12 +56,8 @@
             <?php if (!empty($show_chinhsach)): ?>
               <ul class="footer-ul">
                 <?php foreach ($show_chinhsach as $row): ?>
-                  <?php
-                  $name = $row['name' . $lang];
-                  $slug = $row['slug' . $lang];
-                  ?>
                   <li>
-                    <a class="transition" href="<?= $slug ?>" title="<?= $name ?>"><?= $name ?></a>
+                    <a class="transition" href="<?= $row['slug' . $lang] ?>" title="<?= $row['name' . $lang] ?>"><?= $row['name' . $lang] ?></a>
                   </li>
                 <?php endforeach; ?>
               </ul>
@@ -78,10 +76,16 @@
               ?>
               <?php if (!empty($show_phuongthuctt)): ?>
                 <?php foreach ($show_phuongthuctt as $row_pt): ?>
-                  <?php $name = $row_pt['name' . $lang]; ?>
                   <span class="ibank scale-img">
-                    <img src="<?= empty($row_pt['file']) ? NO_IMG : BASE_ADMIN . UPLOADS . $row_pt['file'] ?>"
-                      alt="<?= $name ?>" title="<?= $name ?>" />
+                    <?= $fn->getImageCustom([
+                      'file' =>  $row_pt['file'],
+                      'width' => 72,
+                      'height' => 40,
+                      'zc' => 1,
+                      'alt' => $row_pt['name' . $lang],
+                      'title' => $row_pt['name' . $lang],
+                      'lazy' => true
+                    ]) ?>
                   </span>
                 <?php endforeach; ?>
               <?php endif; ?>
@@ -159,11 +163,12 @@
       ?>
       <a href="<?= $link ?>" class="floating-support__item" target="_blank">
         <div class="floating-support__item__icon">
-          <?= $fn->getImage([
-            'file'   => $row_social['file'],
-            'alt'    => $name,
-            'title'  => $name,
-            'class'  => 'tada'
+          <?= $fn->getImageCustom([
+            'file' =>  $row_social['file'],
+            'class'  => 'tada',
+            'alt'   => $name,
+            'title' => $name,
+            'lazy' => true
           ]) ?>
         </div>
         <div class="floating-support__item__content">

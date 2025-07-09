@@ -1,26 +1,20 @@
 RewriteEngine On
 
-# Nếu truy cập file hoặc thư mục thật thì không rewrite
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^thumb/([0-9]+)x([0-9]+)x([1-4])/(.+)$ admin/thumb.php?w=$1&h=$2&zc=$3&src=$4 [L,QSA]
 
-# Chuyển tất cả truy vấn sang index.php?page=ten-trang
+RewriteCond %{REQUEST_FILENAME} -f [OR]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^ - [L]
+
+# 3. Rewrite tất cả truy vấn còn lại → index.php?page=ten-trang
 RewriteRule ^(.+)$ index.php?page=$1 [QSA,L]
-<FilesMatch ".(ico|pdf|flv)$">
-    Header set Cache-Control "max-age=29030400, public"
-</FilesMatch>
 
-<FilesMatch ".(jpg|jpeg|png|gif|swf)$">
+# 4. Cache headers
+<IfModule mod_headers.c>
+  <FilesMatch "\.(ico|pdf|flv|jpg|jpeg|png|gif|swf|xml|txt|css|js|html|htm|php|ttf|otf|eot|woff|woff2)$">
     Header set Cache-Control "max-age=604800, public"
-</FilesMatch>
-
-<FilesMatch ".(xml|txt|css|js)$">
-    Header set Cache-Control "max-age=604800, proxy-revalidate"
-</FilesMatch>
-
-<FilesMatch ".(html|htm|php)$">
-    Header set Cache-Control "max-age=604800, private, proxy-revalidate"
-</FilesMatch>
-<FilesMatch "\.(ttf|otf|eot|woff|woff2)$">
-  Header set Access-Control-Allow-Origin "*"
-</FilesMatch>
+  </FilesMatch>
+  <FilesMatch "\.(ttf|otf|eot|woff|woff2)$">
+    Header set Access-Control-Allow-Origin "*"
+  </FilesMatch>
+</IfModule>

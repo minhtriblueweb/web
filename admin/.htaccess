@@ -1,7 +1,10 @@
 RewriteEngine On
 
-RewriteRule "trang-chu" "index.php"
-RewriteRule "dang-nhap" "login.php"
+# Không rewrite nếu là file hoặc thư mục thật
+RewriteCond %{REQUEST_FILENAME} -f [OR]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^ - [L]
 
-
-
+# Routing nội bộ (nếu có)
+RewriteRule ^trang-chu$ index.php [L]
+RewriteRule ^dang-nhap$ login.php [L]

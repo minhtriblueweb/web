@@ -5,30 +5,22 @@
         <div class="d-flex justify-content-center align-items-center">
           <a id="Zoom-1" class="MagicZoom"
             data-options="zoomMode: magnifier; zoomPosition: inner; hint: off; rightClick: true; expandCaption: false; history: false;"
-            href="<?= $img_main ?>" title="<?= $img_alt ?>">
-            <img src="<?= $img_main ?>" alt="<?= $img_alt ?>" />
+            href="<?= $fn->getImageCustom(['file' => $row_sp['file'],  'src_only' => true]) ?>" title="<?= $row_sp['name' . $lang] ?>">
+            <?= $fn->getImageCustom(['file' => $row_sp['file'], 'alt' => $row_sp['name' . $lang], 'title' => $row_sp['name' . $lang], 'width' => 500, 'height' => 500, 'zc' => 1, 'lazy' => true]) ?>
           </a>
         </div>
         <?php if (!empty($get_gallery)): ?>
           <div class="gallery-thumb-pro">
             <div class="slick-pro-detail">
               <div>
-                <a class="thumb-pro-detail" data-zoom-id="Zoom-1" href="<?= $img_main ?>">
-                  <img src="<?= $img_main ?>" />
+                <a class="thumb-pro-detail" data-zoom-id="Zoom-1" href="<?= $fn->getImageCustom(['file' => $row_sp['file'],  'src_only' => true]) ?>">
+                  <?= $fn->getImage(['file' => $row_sp['file'], 'class' => '', 'lazy' => true]) ?>
                 </a>
               </div>
-              <?php foreach ($get_gallery as $gallery):
-                $img_src = !empty($gallery['file']) ? BASE_ADMIN . UPLOADS . $gallery['file'] : NO_IMG;
-              ?>
+              <?php foreach ($get_gallery as $gallery): ?>
                 <div>
-                  <a href="<?= $img_src ?>" class="thumb-pro-detail" data-zoom-id="Zoom-1">
-                    <?= $fn->getImage([
-                      'file' => $gallery['file'],
-                      'class' => '',
-                      'thumb' => $gallery['thumb'],
-                      'zc' => 1,
-                      'lazy' => true
-                    ]) ?>
+                  <a href=" <?= $fn->getImageCustom(['file' => $gallery['file'], 'src_only' => true]) ?>" class="thumb-pro-detail" data-zoom-id="Zoom-1">
+                    <?= $fn->getImageCustom(['file' => $gallery['file'], 'class' => '', 'thumb' => $gallery['thumb'], 'zc' => 1, 'lazy' => true]) ?>
                   </a>
                 </div>
               <?php endforeach; ?>

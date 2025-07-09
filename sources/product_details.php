@@ -79,10 +79,6 @@ $show_tieuchi = $fn->show_data(['table' => 'tbl_tieuchi', 'status' => 'hienthi',
 // SEO
 $data_seo = $seo->get_seo($id, 'product');
 
-// Ảnh chính sản phẩm
-$img_main = !empty($row_sp['file']) ? BASE_ADMIN . UPLOADS . $row_sp['file'] : NO_IMG;
-$img_alt = $row_sp['name' . $lang];
-
 // Breadcrumbs
 $breadcrumbs->set('san-pham', 'Sản phẩm');
 if (!empty($dm_c1_slug) && !empty($dm_c1_name)) {

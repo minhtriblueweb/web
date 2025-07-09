@@ -17,11 +17,12 @@ $slides = $fn->show_data([
             ?>
             <div class="slideshow-item">
               <a class="slideshow-image" href="<?= $link ?>" target="_blank" title="<?= $name ?>">
-                <?= $fn->getImage([
+                <?= $fn->getImageCustom([
                   'file'   => $slide['file'],
-                  'alt'    => $name,
+                  'thumb' => false,
                   'title'  => $name,
-                  'lazy'   => false
+                  'alt'    => $name,
+                  'lazy'   => true
                 ]) ?>
               </a>
             </div>

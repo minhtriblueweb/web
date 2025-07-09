@@ -325,17 +325,16 @@ class Functions
         $bindings[] = "%$keyword%";
       }
     }
-
-    // Build SQL
-    $sql = "SELECT COUNT(*) AS total FROM `$table`";
+    $idColumn = !empty($alias) ? "$alias.id" : "id";
+    $sql = "SELECT COUNT(DISTINCT $idColumn) AS total FROM `$table`";
     if (!empty($alias)) $sql .= " $alias";
     if (!empty($join)) $sql .= " $join";
     if (!empty($where)) $sql .= " WHERE " . implode(" AND ", $where);
 
-    // Thực thi và trả kết quả
     $row = $this->db->rawQueryOne($sql, $bindings);
     return (int)($row['total'] ?? 0);
   }
+
   function transfer($msg, $page = 'dashboard', $numb = true)
   {
     $_SESSION['transfer_data'] = [
@@ -371,59 +370,54 @@ class Functions
     }
     return true;
   }
-
-  public function delete(int $id, string $table, string $type = '', $id_parent = null)
+  public function delete(int $id, string $table, string $type = '')
   {
     $id = (int)$id;
     $table = mysqli_real_escape_string($this->db->link, $table);
-    $row = $this->db->rawQueryOne("SELECT file" . ($table === 'tbl_gallery' ? ", id_parent" : "") . " FROM `$table` WHERE id = ?", [$id]);
-    !empty($row['file']) && $this->deleteFile(UPLOADS . $row['file']);
+
+    $row = $this->db->rawQueryOne("SELECT file FROM `$table` WHERE id = ?", [$id]);
+    if (!empty($row['file'])) {
+      $this->deleteFile(UPLOADS . $row['file']);
+    }
+
     $delete_result = $this->db->execute("DELETE FROM `$table` WHERE id = ?", [$id]);
+
     if (!empty($type)) {
       $this->db->execute("DELETE FROM `tbl_seo` WHERE id_parent = ? AND `type` = ?", [$id, $type]);
     } else {
       $this->db->execute("DELETE FROM `tbl_seo` WHERE id_parent = ?", [$id]);
     }
-    $redirectPath = $this->getRedirectPath([
-      'table' => $table,
-      'type' => $type,
-      'id_parent' => $table === 'tbl_gallery' ? ($id_parent ?? $row['id_parent'] ?? 0) : $id_parent
-    ]);
+
     $this->transfer(
       $delete_result ? "Xóa dữ liệu thành công!" : "Xóa dữ liệu thất bại!",
-      $redirectPath,
+      $this->getRedirectPath(['table' => $table, 'type' => $type]),
       $delete_result
     );
   }
-  public function deleteMultiple(string $listid, string $table, string $type = '', $id_parent = null)
+  public function deleteMultiple(string $listid, string $table, string $type = '')
   {
     $ids = array_filter(array_map('intval', explode(',', $listid)));
     if (empty($ids)) {
       $this->transfer("Danh sách ID không hợp lệ!", $this->getRedirectPath([
         'table' => $table,
-        'type' => $type,
-        'id_parent' => $id_parent
+        'type' => $type
       ]), false);
     }
 
-    // Chuẩn bị câu truy vấn SELECT
     $placeholders = implode(',', array_fill(0, count($ids), '?'));
-    $resultSelect = $this->db->rawQuery("SELECT id, file" . ($table === 'tbl_gallery' ? ", id_parent" : "") . " FROM `$table` WHERE id IN ($placeholders)", $ids);
+    $rows = $this->db->rawQuery("SELECT id, file FROM `$table` WHERE id IN ($placeholders)", $ids);
+
     $seo_delete_ids = [];
-    $last_id_parent = 0;
-    if (!empty($resultSelect) && is_iterable($resultSelect)) {
-      foreach ($resultSelect as $row) {
-        if (!empty($row['file'])) {
-          $this->deleteFile(UPLOADS . $row['file']);
-        }
-        if ($table === 'tbl_gallery' && isset($row['id_parent'])) {
-          $last_id_parent = $row['id_parent'];
-        }
-        $seo_delete_ids[] = (int)$row['id'];
+
+    foreach ($rows as $row) {
+      if (!empty($row['file'])) {
+        $this->deleteFile(UPLOADS . $row['file']);
       }
+      $seo_delete_ids[] = (int)$row['id'];
     }
-    $queryDelete = "DELETE FROM `$table` WHERE id IN ($placeholders)";
-    $resultDelete = $this->db->execute($queryDelete, $ids);
+
+    $delete_result = $this->db->execute("DELETE FROM `$table` WHERE id IN ($placeholders)", $ids);
+
     foreach ($seo_delete_ids as $seo_id) {
       if (!empty($type)) {
         $this->db->execute("DELETE FROM `tbl_seo` WHERE id_parent = ? AND `type` = ?", [$seo_id, $type]);
@@ -431,18 +425,13 @@ class Functions
         $this->db->execute("DELETE FROM `tbl_seo` WHERE id_parent = ?", [$seo_id]);
       }
     }
-    $redirectPath = $this->getRedirectPath([
-      'table' => $table,
-      'type' => $type,
-      'id_parent' => $table === 'tbl_gallery' ? $last_id_parent : $id_parent
-    ]);
+
     $this->transfer(
-      $resultDelete ? "Xóa dữ liệu thành công!" : "Xóa dữ liệu thất bại!",
-      $redirectPath,
-      $resultDelete
+      $delete_result ? "Xóa dữ liệu thành công!" : "Xóa dữ liệu thất bại!",
+      $this->getRedirectPath(['table' => $table, 'type' => $type]),
+      $delete_result
     );
   }
-
   public function convert_type(string $type)
   {
     $type = trim($type);
@@ -734,7 +723,9 @@ class Functions
     imagedestroy($watermark);
     return true;
   }
-  public function createFixedThumbnail($source_path, $thumb_name, $background = false, $add_watermark = false, $convert_webp = false)
+
+  /*
+   public function createFixedThumbnail($source_path, $thumb_name, $background = false, $add_watermark = false, $convert_webp = false)
   {
     if (!file_exists($source_path) || !preg_match('/^(\d+)x(\d+)(x(\d+))?$/', $thumb_name, $m)) return false;
 
@@ -942,7 +933,6 @@ class Functions
 
     return $thumb_created ?: basename($file_path);
   }
-
   public function Upload(array $options)
   {
     $f = $options['file'] ?? [];
@@ -973,6 +963,382 @@ class Functions
     }
 
     return '';
+  }
+  public function getImage(array $data = []): string
+  {
+    $file    = $data['file'] ?? '';
+    $class   = $data['class'] ?? '';
+    $alt     = htmlspecialchars($data['alt'] ?? pathinfo($file, PATHINFO_FILENAME));
+    $title   = htmlspecialchars($data['title'] ?? $alt);
+    $id      = !empty($data['id']) ? ' id="' . htmlspecialchars($data['id']) . '"' : '';
+    $style   = !empty($data['style']) ? ' style="' . htmlspecialchars($data['style']) . '"' : '';
+    $width   = isset($data['width']) ? ' width="' . (int)$data['width'] . '"' : '';
+    $height  = isset($data['height']) ? ' height="' . (int)$data['height'] . '"' : '';
+    $lazy    = array_key_exists('lazy', $data) ? (bool)$data['lazy'] : true;
+    $loading = $lazy ? ' loading="lazy"' : '';
+
+    $errorImg = BASE_ADMIN . 'assets/img/noimage.png';
+
+    // Zoom crop (zc) mặc định là 1
+    $zoomCrop = isset($data['zc']) ? (int)$data['zc'] : 1;
+
+    $src = '';
+    if (!empty($file)) {
+      $thumbPath = '';
+
+      if (!empty($data['thumb'])) {
+        $opt = is_array($data['thumb']) ? $data['thumb'] : json_decode($data['thumb'], true);
+        if (!empty($opt['w']) && !empty($opt['h'])) {
+          $thumbFolder = $opt['w'] . 'x' . $opt['h'] . 'x' . $zoomCrop;
+          $thumbPath = rtrim(BASE_ADMIN . UPLOADS, '/') . '/' . $thumbFolder . '/' . ltrim($file, '/');
+        }
+      }
+
+      $src = !empty($thumbPath) ? $thumbPath : rtrim(BASE_ADMIN . UPLOADS, '/') . '/' . ltrim($file, '/');
+      $src = htmlspecialchars($src);
+    } else {
+      $src = NO_IMG;
+    }
+
+    return '<img src="' . $src . '"'
+      . (!empty($class) ? ' class="' . htmlspecialchars($class) . '"' : '')
+      . $id
+      . $style
+      . $width
+      . $height
+      . ' alt="' . $alt . '"'
+      . ' title="' . $title . '"'
+      . $loading
+      . ' onerror="this.src=\'' . $errorImg . '\'"'
+      . '>';
+  }
+  public function getImageSrc(array $data = []): string
+  {
+    $file = $data['file'] ?? '';
+    $zoomCrop = isset($data['zc']) ? (int)$data['zc'] : 1;
+    $basePath = rtrim(BASE_ADMIN . UPLOADS, '/');
+
+    if (!empty($file)) {
+      if (!empty($data['thumb'])) {
+        $opt = is_array($data['thumb']) ? $data['thumb'] : json_decode($data['thumb'], true);
+        if (!empty($opt['w']) && !empty($opt['h'])) {
+          $thumbFolder = $opt['w'] . 'x' . $opt['h'] . 'x' . $zoomCrop;
+          return $basePath . '/' . $thumbFolder . '/' . ltrim($file, '/');
+        }
+      }
+      return $basePath . '/' . ltrim($file, '/');
+    }
+
+    return NO_IMG;
+  }
+  */
+  public function createFixedThumbnail($source_path, $thumb_name, $background = false, $add_watermark = false, $convert_webp = false)
+  {
+    if (!file_exists($source_path) || !preg_match('/^(\d+)x(\d+)(x([1-4]))?$/', $thumb_name, $m)) return false;
+
+    [$thumb_width, $thumb_height] = [(int)$m[1], (int)$m[2]];
+    $zoom_crop = isset($m[4]) ? (int)$m[4] : 1;
+
+    [$width_orig, $height_orig, $image_type] = getimagesize($source_path);
+    $ext_map = [IMAGETYPE_JPEG => 'jpg', IMAGETYPE_PNG => 'png', IMAGETYPE_WEBP => 'webp'];
+    $create_func = [IMAGETYPE_JPEG => 'imagecreatefromjpeg', IMAGETYPE_PNG => 'imagecreatefrompng', IMAGETYPE_WEBP => 'imagecreatefromwebp'];
+
+    if (!isset($ext_map[$image_type])) return false;
+    $ext = $ext_map[$image_type];
+    $image = @$create_func[$image_type]($source_path);
+    if (!$image) return false;
+
+    $is_webp = ($image_type === IMAGETYPE_WEBP);
+    if (in_array($image_type, [IMAGETYPE_PNG, IMAGETYPE_WEBP])) {
+      imagepalettetotruecolor($image);
+      imagealphablending($image, true);
+      imagesavealpha($image, true);
+    }
+
+    $canvas = imagecreatetruecolor($thumb_width, $thumb_height);
+    if (is_array($background) && count($background) === 4 && $background[3] == 127 && ($convert_webp || $is_webp)) {
+      imagealphablending($canvas, false);
+      imagesavealpha($canvas, true);
+      imagefill($canvas, 0, 0, imagecolorallocatealpha($canvas, 0, 0, 0, 127));
+    } elseif (is_array($background) && count($background) === 4) {
+      $bg = imagecolorallocatealpha($canvas, ...$background);
+      imagefill($canvas, 0, 0, $bg);
+    } else {
+      imagefill($canvas, 0, 0, imagecolorallocate($canvas, 255, 255, 255));
+    }
+
+    // Tính resize / crop tuỳ theo zc
+    if ($zoom_crop == 3 || $zoom_crop == 4 || $zoom_crop == 2) {
+      $src_ratio = $width_orig / $height_orig;
+      $dst_ratio = $thumb_width / $thumb_height;
+
+      if ($src_ratio > $dst_ratio) {
+        $resize_w = $thumb_width;
+        $resize_h = intval($thumb_width / $src_ratio);
+      } else {
+        $resize_h = $thumb_height;
+        $resize_w = intval($thumb_height * $src_ratio);
+      }
+
+      if ($zoom_crop == 2) {
+        $dst_x = intval(($thumb_width - $resize_w) / 2);
+        $dst_y = intval(($thumb_height - $resize_h) / 2);
+        imagecopyresampled($canvas, $image, $dst_x, $dst_y, 0, 0, $resize_w, $resize_h, $width_orig, $height_orig);
+      } elseif ($zoom_crop == 3) {
+        $canvas = imagecreatetruecolor($resize_w, $resize_h);
+        imagefill($canvas, 0, 0, imagecolorallocate($canvas, 255, 255, 255));
+        imagecopyresampled($canvas, $image, 0, 0, 0, 0, $resize_w, $resize_h, $width_orig, $height_orig);
+        $thumb_width = $resize_w;
+        $thumb_height = $resize_h;
+      } elseif ($zoom_crop == 4) {
+        $temp_canvas = imagecreatetruecolor($resize_w, $resize_h);
+        imagealphablending($temp_canvas, false);
+        imagesavealpha($temp_canvas, true);
+        imagefill($temp_canvas, 0, 0, imagecolorallocatealpha($temp_canvas, 0, 0, 0, 127));
+        imagecopyresampled($temp_canvas, $image, 0, 0, 0, 0, $resize_w, $resize_h, $width_orig, $height_orig);
+        $cropped = $this->cropTransparentOrWhiteBorder($temp_canvas);
+        if ($cropped) {
+          imagedestroy($canvas);
+          $canvas = $cropped;
+          $thumb_width = imagesx($canvas);
+          $thumb_height = imagesy($canvas);
+        } else {
+          $canvas = $temp_canvas;
+        }
+      }
+    } else {
+      // zc = 1
+      $src_ratio = $width_orig / $height_orig;
+      $dst_ratio = $thumb_width / $thumb_height;
+
+      $src_w = ($src_ratio > $dst_ratio) ? intval($height_orig * $dst_ratio) : $width_orig;
+      $src_h = ($src_ratio > $dst_ratio) ? $height_orig : intval($width_orig / $dst_ratio);
+      $src_x = intval(($width_orig - $src_w) / 2);
+      $src_y = intval(($height_orig - $src_h) / 2);
+
+      imagecopyresampled($canvas, $image, 0, 0, $src_x, $src_y, $thumb_width, $thumb_height, $src_w, $src_h);
+    }
+
+    // Tạo đường dẫn lưu
+    $relative_path = str_replace(['\\', '//'], '/', str_replace(UPLOADS, '', $source_path));
+    $upload_dir = UPLOADS . "/thumb/{$m[1]}x{$m[2]}x{$zoom_crop}/";
+    if (!is_dir($upload_dir)) mkdir($upload_dir, 0755, true);
+    $thumb_ext = ($convert_webp || $is_webp) ? 'webp' : $ext;
+    $thumb_path = $upload_dir . basename($source_path, '.' . pathinfo($source_path, PATHINFO_EXTENSION)) . '.' . $thumb_ext;
+
+
+    $success = match ($thumb_ext) {
+      'webp' => imagewebp($canvas, $thumb_path, 100),
+      'jpg' => imagejpeg($canvas, $thumb_path, 90),
+      'png' => imagepng($canvas, $thumb_path),
+      default => false
+    };
+
+    if ($success && $add_watermark && method_exists($this, 'addWatermark')) {
+      $this->addWatermark($thumb_path, $thumb_path);
+    }
+
+    imagedestroy($image);
+    imagedestroy($canvas);
+
+    return $success ? $thumb_path : false;
+  }
+  public function ImageUpload($file_path, $old_file_path = '', $thumb_base_name = '', $background = [], $watermark = false, $convert_webp = false, $save_original = true)
+  {
+    if (!file_exists($file_path)) return false;
+
+    if (!empty($old_file_path)) {
+      $this->deleteFile($old_file_path);
+    }
+
+    $filename = pathinfo($file_path, PATHINFO_FILENAME);
+    $ext = pathinfo($file_path, PATHINFO_EXTENSION);
+    $webp_path = UPLOADS . $filename . '.webp';
+
+    if ($convert_webp) {
+      $img = match (exif_imagetype($file_path)) {
+        IMAGETYPE_JPEG => imagecreatefromjpeg($file_path),
+        IMAGETYPE_PNG  => imagecreatefrompng($file_path),
+        default        => null
+      };
+      if ($img) {
+        imagepalettetotruecolor($img);
+        imagealphablending($img, true);
+        imagesavealpha($img, true);
+        imagewebp($img, $webp_path, 100);
+        imagedestroy($img);
+        if (!$save_original) unlink($file_path);
+        return basename($webp_path);
+      }
+    }
+
+    if (!$save_original) unlink($file_path);
+    return basename($file_path);
+  }
+  public function Upload(array $options)
+  {
+    $f = $options['file'] ?? [];
+    if (empty($f['name']) || empty($f['tmp_name'])) return '';
+
+    $ext = strtolower(pathinfo($f['name'], PATHINFO_EXTENSION));
+    $upload_dir = UPLOADS;
+    if (!is_dir($upload_dir)) mkdir($upload_dir, 0777, true);
+
+    $filename = !empty($options['custom_name'])
+      ? $this->generateUniqueFilename($upload_dir, $this->to_slug($options['custom_name']) . '_' . substr(md5(uniqid()), 0, 4), $ext)
+      : substr(md5(time() . rand()), 0, 10) . '.' . $ext;
+
+    $target_path = $upload_dir . $filename;
+
+    if (move_uploaded_file($f['tmp_name'], $target_path)) {
+      return $this->ImageUpload(
+        $target_path,
+        $options['old_file_path'] ?? '',
+        '',
+        [],
+        $options['watermark'] ?? false,
+        $options['convert_webp'] ?? false,
+        true
+      );
+    }
+
+    return '';
+  }
+  public function getImage(array $data = []): string
+  {
+    $defaults = [
+      'file' => '',
+      'alt' => '',
+      'title' => '',
+      'class' => 'lazy',
+      'id' => '',
+      'width' => 100,
+      'height' => 100,
+      'zc' => 1,
+      'thumb' => true,
+      'lazy' => true,
+      'style' => '',
+      'src_only' => false,
+      'attr' => '',
+    ];
+    $opt = array_merge($defaults, $data);
+    $filename = ltrim(str_replace(UPLOADS, '', $opt['file']), '/');
+    if (empty($filename)) {
+      $src = NO_IMG;
+    } else {
+      if ($opt['thumb']) {
+        $src = BASE . "thumb/{$opt['width']}x{$opt['height']}x{$opt['zc']}/{$filename}";
+      } else {
+        $src = BASE_ADMIN . UPLOADS . $filename;
+      }
+    }
+    if ($opt['src_only']) return $src;
+    $class = !empty($opt['class']) ? ' class="' . htmlspecialchars($opt['class']) . '"' : '';
+    $id = !empty($opt['id']) ? ' id="' . htmlspecialchars($opt['id']) . '"' : '';
+    $style = !empty($opt['style']) ? ' style="' . htmlspecialchars($opt['style']) . '"' : '';
+    $attr = !empty($opt['attr']) ? ' ' . $opt['attr'] : '';
+    $width = $opt['width'] ? ' width="' . (int)$opt['width'] . '"' : '';
+    $height = $opt['height'] ? ' height="' . (int)$opt['height'] . '"' : '';
+    $alt = htmlspecialchars($opt['alt'] ?: pathinfo($filename, PATHINFO_FILENAME));
+    $title = htmlspecialchars($opt['title'] ?: $alt);
+    $loading = $opt['lazy'] ? ' loading="lazy"' : '';
+    $error = BASE_ADMIN . 'assets/img/noimage.png';
+
+    return '<img src="' . htmlspecialchars($src) . '"'
+      . $class . $id . $style . $width . $height . $attr
+      . ' alt="' . $alt . '" title="' . $title . '"'
+      . $loading
+      . ' onerror="this.src=\'' . $error . '\'"'
+      . '>';
+  }
+  public function getImageCustom(array $data = []): string
+  {
+    global $config;
+
+    $defaults = [
+      'class' => '',
+      'id' => '',
+      'lazy' => true,
+      'thumb' => null,
+      'zc' => 1,
+      'width' => '',
+      'height' => '',
+      'file' => '',
+      'alt' => '',
+      'title' => '',
+      'style' => '',
+      'srcset' => false,
+      'sizes' => [],
+      'attr' => '',
+      'src_only' => false // ✅ Thêm option này
+    ];
+
+    $opt = array_merge($defaults, $data);
+
+    $file = ltrim(str_replace(UPLOADS, '', $opt['file']), '/');
+
+    if (!isset($data['thumb'])) {
+      $opt['thumb'] = $opt['width'] && $opt['height'] && $opt['zc'];
+    }
+
+    $src = empty($file)
+      ? NO_IMG
+      : ($opt['thumb']
+        ? BASE . "thumb/{$opt['width']}x{$opt['height']}x{$opt['zc']}/{$file}"
+        : BASE_ADMIN . UPLOADS . $file);
+
+    // ✅ Nếu chỉ cần đường dẫn ảnh thì return tại đây
+    if ($opt['src_only']) return $src;
+
+    // Xử lý srcset nếu cần
+    $srcset = $sizes = '';
+    if (
+      $opt['srcset'] &&
+      !empty($config['website']['point-srcset']) &&
+      $opt['thumb'] &&
+      $opt['width'] &&
+      $opt['height']
+    ) {
+      $rat = $opt['width'] / $opt['height'];
+      $srcsets = [];
+
+      foreach ($config['website']['point-srcset'] as $breakpoint => $scale) {
+        $w = round($breakpoint / $scale);
+        if ($w > $opt['width']) continue;
+        $h = round($w / $rat);
+        $srcsets[] = BASE . "thumb/{$w}x{$h}x{$opt['zc']}/{$file} {$w}w";
+        $opt['sizes'][] = "(max-width:{$breakpoint}px) {$w}px";
+      }
+
+      $srcsets[] = BASE . "thumb/{$opt['width']}x{$opt['height']}x{$opt['zc']}/{$file} {$opt['width']}w";
+      $opt['sizes'][] = "{$opt['width']}px";
+
+      $srcset = ' srcset="' . implode(', ', $srcsets) . '"';
+      $sizes = ' sizes="' . implode(', ', $opt['sizes']) . '"';
+    }
+
+    $alt = htmlspecialchars($opt['alt'] ?: pathinfo($file, PATHINFO_FILENAME));
+    $title = htmlspecialchars($opt['title'] ?: $alt);
+    $style = trim($opt['style']);
+
+    if (empty($opt['height']) && strpos($style, 'height') === false) {
+      $style .= ($style ? '; ' : '') . 'height:auto';
+    }
+
+    return '<img src="' . htmlspecialchars($src) . '"'
+      . ($opt['width'] ? ' width="' . (int)$opt['width'] . '"' : '')
+      . (!empty($opt['height']) && $opt['height'] !== 'auto'
+        ? ' height="' . (int)$opt['height'] . '"'
+        : '')
+      . ($opt['class'] ? ' class="' . htmlspecialchars($opt['class']) . '"' : '')
+      . ($opt['id'] ? ' id="' . htmlspecialchars($opt['id']) . '"' : '')
+      . ($style ? ' style="' . htmlspecialchars($style) . '"' : '')
+      . ($opt['lazy'] ? ' loading="lazy"' : '')
+      . ($opt['attr'] ? ' ' . $opt['attr'] : '')
+      . $srcset . $sizes
+      . ' alt="' . $alt . '" title="' . $title . '"'
+      . ' onerror="this.src=\'' . NO_IMG . '\'"'
+      . '>';
   }
 
   function renderPagination($current_page, $total_pages, $base_url = 'index.php')
@@ -1062,56 +1428,6 @@ class Functions
     $pagination_html .= '</ul>';
     return $pagination_html;
   }
-  public function getImage(array $data = []): string
-  {
-    $file    = $data['file'] ?? '';
-    $class   = $data['class'] ?? '';
-    $alt     = htmlspecialchars($data['alt'] ?? pathinfo($file, PATHINFO_FILENAME));
-    $title   = htmlspecialchars($data['title'] ?? $alt);
-    $id      = !empty($data['id']) ? ' id="' . htmlspecialchars($data['id']) . '"' : '';
-    $style   = !empty($data['style']) ? ' style="' . htmlspecialchars($data['style']) . '"' : '';
-    $width   = isset($data['width']) ? ' width="' . (int)$data['width'] . '"' : '';
-    $height  = isset($data['height']) ? ' height="' . (int)$data['height'] . '"' : '';
-    $lazy    = array_key_exists('lazy', $data) ? (bool)$data['lazy'] : true;
-    $loading = $lazy ? ' loading="lazy"' : '';
-
-    $errorImg = BASE_ADMIN . 'assets/img/noimage.png';
-
-    // Zoom crop (zc) mặc định là 1
-    $zoomCrop = isset($data['zc']) ? (int)$data['zc'] : 1;
-
-    $src = '';
-    if (!empty($file)) {
-      $thumbPath = '';
-
-      if (!empty($data['thumb'])) {
-        $opt = is_array($data['thumb']) ? $data['thumb'] : json_decode($data['thumb'], true);
-        if (!empty($opt['w']) && !empty($opt['h'])) {
-          $thumbFolder = $opt['w'] . 'x' . $opt['h'] . 'x' . $zoomCrop;
-          $thumbPath = rtrim(BASE_ADMIN . UPLOADS, '/') . '/' . $thumbFolder . '/' . ltrim($file, '/');
-        }
-      }
-
-      $src = !empty($thumbPath) ? $thumbPath : rtrim(BASE_ADMIN . UPLOADS, '/') . '/' . ltrim($file, '/');
-      $src = htmlspecialchars($src);
-    } else {
-      $src = NO_IMG;
-    }
-
-    return '<img src="' . $src . '"'
-      . (!empty($class) ? ' class="' . htmlspecialchars($class) . '"' : '')
-      . $id
-      . $style
-      . $width
-      . $height
-      . ' alt="' . $alt . '"'
-      . ' title="' . $title . '"'
-      . $loading
-      . ' onerror="this.src=\'' . $errorImg . '\'"'
-      . '>';
-  }
-
-
   public function to_slug($string)
   {
     $search = array(

@@ -12,7 +12,8 @@ $config = [
     ],
     'lang-doc' => 'vi|en',
     'debug-css' => false,
-    'debug-js' => false
+    'debug-js' => false,
+    'point-srcset' => array(380 => 2, 555 => 2, 768 => 3, 1024 => 4)
   ],
 
   // Cấu hình cơ sở dữ liệu

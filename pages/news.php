@@ -13,11 +13,15 @@
               <div class="item-service">
                 <div class="images">
                   <a class="scale-img hover-glass text-decoration-none" href="<?= $row['slug' . $lang] ?>" title="<?= $row['name' . $lang] ?>">
-                    <?= $fn->getImage([
+                    <?= $fn->getImageCustom([
+                      'width' => 540,
+                      'height' => 360,
+                      'zc' => 1,
                       'file' => $row['file'],
                       'class' => 'w-100',
                       'alt' => $row['name' . $lang],
                       'title' => $row['name' . $lang],
+                      'lazy' => true
                     ]) ?>
                   </a>
                 </div>

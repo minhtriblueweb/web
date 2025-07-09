@@ -15,10 +15,13 @@ if (!empty($tieuchi)):
             <div class="item-criterion hvr-icon-rotate">
               <div class="images">
                 <a class="hvr-icon" title="<?= $row['name' . $lang] ?>">
-                  <?= $fn->getImage([
-                    'file' => $row['file'],
+                  <?= $fn->getImageCustom([
+                    'file' =>  $row['file'],
                     'width' => 40,
                     'height' => 40,
+                    'zc' => 1,
+                    'alt' => $row['name' . $lang],
+                    'title' => $row['name' . $lang],
                     'lazy' => true
                   ]) ?>
                 </a>

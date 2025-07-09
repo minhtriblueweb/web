@@ -43,13 +43,7 @@
             <div class="item-product">
               <a href="<?= BASE . $slug ?>">
                 <div class="images">
-                  <?= $fn->getImage([
-                    'file' => $sp['file'],
-                    'class' => 'w-100',
-                    'alt' => $name,
-                    'title' => $name,
-                    'lazy' => true
-                  ]) ?>
+                  <?= $fn->getImageCustom(['file'  => $sp['file'], 'class' => 'w-100', 'alt'   => $name, 'title' => $name, 'width' => 500, 'height' => 500, 'zc' => 1, 'lazy'  => true]) ?>
                 </div>
                 <div class="content">
                   <div class="title">

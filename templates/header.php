@@ -8,17 +8,14 @@
           <div class="social-header">
             <p>Kết nối :</p>
             <?php foreach ($show_social as $row): ?>
-              <?php
-              $name = $row['name' . $lang] ?? '';
-              ?>
               <a href="<?= $row['link'] ?>" class="hvr-icon-rotate me-2" target="_blank" rel="noopener noreferrer">
-                <?= $fn->getImage([
+                <?= $fn->getImageCustom([
                   'file'   => $row['file'],
                   'width'  => 20,
                   'height' => 20,
-                  'class'  => 'hvr-icon',
-                  'alt'    => $name,
-                  'title'  => $name,
+                  'zc' => 1,
+                  'alt' => $row['name' . $lang],
+                  'title' => $row['name' . $lang],
                   'lazy'   => false
                 ]) ?>
               </a>
@@ -34,10 +31,10 @@
       <div class="banner-header">
         <div class="logo">
           <a href="./">
-            <?= $fn->getImage([
+            <?= $fn->getImageCustom([
               'file' => $logo,
-              'width' => 300,
-              'height' => 'auto',
+              'width'  => 300,
+              'thumb'  => false,
               'alt' => $web_name,
               'title' => $web_name,
               'lazy' => false

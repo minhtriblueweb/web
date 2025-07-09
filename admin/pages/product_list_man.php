@@ -63,7 +63,7 @@ include TEMPLATE . 'breadcrumb.php';
             <?php if (!empty($show_danhmuc)): ?>
               <?php foreach ($show_danhmuc as $row):
                 $id = $row['id'];
-                $name = $row['namevi'];
+                $name = $row['name' . $lang];
                 $file = $row['file'];
               ?>
                 <tr>
@@ -86,11 +86,7 @@ include TEMPLATE . 'breadcrumb.php';
                   <!-- Ảnh -->
                   <td class="align-middle">
                     <a href="<?= $linkEdit . $id ?>" title="<?= $name ?>">
-                      <?= $fn->getImage([
-                        'file' => $file,
-                        'class' => 'rounded img-preview',
-                        'alt' => $name,
-                      ]) ?>
+                      <?= $fn->getImage(['file' => $file, 'class' => 'rounded img-preview', 'alt' => $name, 'thumb' => false]) ?>
                     </a>
                   </td>
 

@@ -25,7 +25,7 @@ include TEMPLATE . 'breadcrumb.php';
   <form class="validation-form" novalidate method="post" action="" enctype="multipart/form-data">
     <div class="card-footer text-sm sticky-top">
       <button type="submit" name="<?= !empty($id) ? "edit" : "add"; ?>"
-        class="btn btn-sm bg-gradient-primary submit-check" disabled>
+        class="btn btn-sm bg-gradient-primary submit-check btn-submit-HoldOn" disabled>
         <i class="far fa-save mr-2"></i>Lưu
       </button>
       <button type="reset" class="btn btn-sm bg-gradient-secondary">
@@ -225,9 +225,8 @@ include TEMPLATE . 'breadcrumb.php';
         </div>
       </div>
     </div>
-    <?php
-    /*
-<div class="card card-primary card-outline text-sm">
+
+    <div class="card card-primary card-outline text-sm">
       <div class="card-header">
         <h3 class="card-title">Bộ sưu tập Sản phẩm</h3>
         <div class="card-tools">
@@ -241,22 +240,27 @@ include TEMPLATE . 'breadcrumb.php';
           <label for="filer-gallery" class="label-filer-gallery mb-3">
             Album: (.jpg|.gif|.png|.jpeg|.webp)
           </label>
-          <input
-            type="file"
-            name="files[]"
-            id="filer-gallery"
-            multiple="multiple"
-            data-id_parent="<?= $id ?? 0 ?>"
-            data-hash="<?= $fn->generateHash() ?>"
-            class="form-control-file" />
+          <input type="file" name="files[]" id="filer-gallery" multiple="multiple">
+          <input type="hidden" name="id_parent" value="<?= $id ?>">
           <input type="hidden" class="col-filer" value="col-xl-2 col-lg-3 col-md-3 col-sm-4 col-6">
-          <input type="hidden" class="act-filer" value="man">
-          <input type="hidden" class="folder-filer" value="product">
+        </div>
+        <div class="form-group d-inline-block mb-2 mr-5">
+          <label for="hienthi_all-checkbox" class="d-inline-block align-middle mb-0 mr-3 form-label">Hiển thị tất cả:</label>
+          <label class="switch switch-success">
+            <input
+              type="checkbox"
+              name="hienthi_all"
+              class="switch-input custom-control-input"
+              id="hienthi_all-checkbox"
+              value="hienthi" checked>
+            <span class="switch-toggle-slider">
+              <span class="switch-on"><i class="fa-solid fa-check"></i></span>
+              <span class="switch-off"><i class="fa-solid fa-xmark"></i></span>
+            </span>
+          </label>
         </div>
       </div>
     </div>
-    */
-    ?>
     <?php include TEMPLATE . 'seo.php'; ?>
     <input type="hidden" name="type" value="<?= $type ?>">
     <input type="hidden" name="thumb_width" value="<?= $thumb_width ?>">

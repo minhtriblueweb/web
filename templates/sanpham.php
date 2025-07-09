@@ -49,8 +49,11 @@ foreach ($sp_all ?? [] as $row) {
               <div class="item-product">
                 <a href="<?= $sp['slug' . $lang] ?>">
                   <div class="images">
-                    <?= $fn->getImage([
+                    <?= $fn->getImageCustom([
                       'file' => $sp['file'],
+                      'width' => 500,
+                      'height' => 500,
+                      'zc' => 1,
                       'class' => 'w-100',
                       'alt' => $name,
                       'title' => $name

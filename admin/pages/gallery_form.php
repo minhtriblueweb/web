@@ -6,7 +6,7 @@ $linkMan   = 'index.php?page=gallery_man&id=' . $id;
 $thumb_width = 500;
 $thumb_height = 500;
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add']) && $id) {
-  $product->them_gallery($_POST, $_FILES, $id);
+  $product->add_gallery($_POST, $_FILES, $id);
 }
 if (
   $id_child &&
@@ -24,62 +24,13 @@ include TEMPLATE . 'breadcrumb.php';
   <form class="validation-form" novalidate method="post" action="" enctype="multipart/form-data">
     <div class="card-footer text-sm sticky-top">
       <button type="submit" name="<?= !empty($id) ? "add" : "edit"; ?>"
-        class="btn btn-sm bg-gradient-primary">
+        class="btn btn-sm bg-gradient-primary btn-submit-HoldOn">
         <i class="far fa-save mr-2"></i>Lưu
       </button>
       <a class="btn btn-sm bg-gradient-danger" href="<?= $linkMan ?>" title="Thoát"><i class="fas fa-sign-out-alt mr-2"></i>Thoát</a>
     </div>
     <div class="row">
       <?php if (!empty($id)) : ?>
-        <?php
-        /*
-<?php for ($i = 0; $i < 6; $i++) { ?>
-          <div class="col-sm-4 col-6">
-            <div class="card card-primary card-outline text-sm">
-              <div class="card-header">
-                <h3 class="card-title"><?= $name_page ?> <?= $i + 1; ?>: </h3>
-                <div class="card-tools">
-                  <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
-                </div>
-              </div>
-              <div class="card-body">
-                <div class="form-group">
-                  <div class="upload-file">
-                    <p>Upload hình ảnh:</p>
-                    <div class="photoUpload-zone w-100">
-                      <div class="photoUpload-detail" id="photoUpload-preview<?= $i; ?>">
-                        <img class="rounded" src="<?= NO_IMG ?>" alt="Alt Photo" />
-                      </div>
-                      <label class="photoUpload-file" id="photo-zone<?= $i; ?>" for="file-zone<?= $i; ?>">
-                        <input type="file" name="file<?= $i; ?>" id="file-zone<?= $i; ?>" />
-                        <p class="photoUpload-choose btn btn-sm bg-gradient-success">
-                          Chọn hình
-                        </p>
-                      </label>
-                    </div>
-                  </div>
-                </div>
-                <div class="form-group">
-                  <div class="form-group d-inline-block mb-2 mr-2">
-                    <label for="hienthi-checkbox<?= $i; ?>" class="d-inline-block align-middle mb-0 mr-2">Hiển thị:</label>
-                    <div class="custom-control custom-checkbox d-inline-block align-middle">
-                      <input type="checkbox" class="custom-control-input" name="hienthi<?= $i; ?>"
-                        id="hienthi-checkbox<?= $i; ?>" value="hienthi" checked="">
-                      <label for="hienthi-checkbox<?= $i; ?>" class="custom-control-label"></label>
-                    </div>
-                  </div>
-                </div>
-                <div class="form-group">
-                  <label for="numb<?= $i; ?>" class="d-inline-block align-middle mb-0 mr-2">Số thứ tự:</label>
-                  <input type="number" class="form-control form-control-mini d-inline-block align-middle text-sm" min="0"
-                    name="numb<?= $i; ?>" id="numb<?= $i; ?>" placeholder="Số thứ tự" value="<?= $i + 1; ?>">
-                </div>
-              </div>
-            </div>
-          </div>
-        <?php } ?>
-       */
-        ?>
         <div class="col-12">
           <div class="card card-primary card-outline text-sm">
             <div class="card-header">
@@ -96,11 +47,10 @@ include TEMPLATE . 'breadcrumb.php';
                   Album: (.jpg|.gif|.png|.jpeg|.webp)
                 </label>
                 <input type="file" name="files[]" id="filer-gallery" multiple="multiple">
-                <input type="hidden" name="thumb_width" value="<?= $thumb_width ?>">
-                <input type="hidden" name="thumb_height" value="<?= $thumb_height ?>">
                 <input type="hidden" name="id_parent" value="<?= $id ?>">
                 <input type="hidden" class="col-filer" value="col-xl-2 col-lg-3 col-md-3 col-sm-4 col-6">
               </div>
+
               <div class="form-group d-inline-block mb-2 mr-5">
                 <label for="hienthi_all-checkbox" class="d-inline-block align-middle mb-0 mr-3 form-label">Hiển thị tất cả:</label>
                 <label class="switch switch-success">
@@ -214,5 +164,7 @@ include TEMPLATE . 'breadcrumb.php';
         </div>
       <?php endif; ?>
     </div>
+    <input type="hidden" name="thumb_width" value="<?= $thumb_width ?>">
+    <input type="hidden" name="thumb_height" value="<?= $thumb_height ?>">
   </form>
 </section>

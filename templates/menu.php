@@ -14,7 +14,14 @@
             <li>
               <a title="<?= $name ?>" href="<?= $slug ?>">
                 <span>
-                  <?= $fn->getImage(['file' => $dm['file'], 'width' => 25, 'thumb' => $dm['thumb'], 'zc' => 4, 'alt' => $name, 'title' => $name, 'lazy' => false]) ?>
+                  <?= $fn->getImageCustom([
+                    'file' => $dm['file'],
+                    'width' => 25,
+                    'height' => 25,
+                    'zc' => 1,
+                    'alt' => $name,
+                    'title' => $name,
+                  ]) ?>
                 </span>
                 <?= $name ?>
                 <?= $has_sub ? '<i class="fa-solid fa-angle-right"></i>' : '' ?>
@@ -59,7 +66,7 @@
     <div class="box-banner">
       <div class="logo-mobile">
         <a href="./">
-          <?= $fn->getImage([
+          <?= $fn->getImageCustom([
             'file' => $logo,
             'alt' => $web_name,
             'title' => $web_name,

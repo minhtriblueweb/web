@@ -13,7 +13,14 @@
           <a href="<?= $slug ?>" title="<?= $name ?>">
             <div class="item-list">
               <div class="item-list-img">
-                <?= $fn->getImage(['file'  => $dm['file'], 'alt'   => $name, 'title' => $name, 'thumb' => $dm['thumb'], 'zc' => 1]) ?>
+                <?= $fn->getImageCustom([
+                  'file'  => $dm['file'],
+                  'alt'   => $name,
+                  'title' => $name,
+                  'width' => 100,
+                  'height' => 100,
+                  'zc' => 1
+                ]) ?>
               </div>
               <div class="item-list-name">
                 <h3 class="m-0"><?= $name ?></h3>

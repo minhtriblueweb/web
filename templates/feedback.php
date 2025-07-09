@@ -24,11 +24,14 @@ $show_danhgia = $fn->show_data([
             <div class="content">
               <a class="scale-img hover-glass text-decoration-none"
                 title="<?= $name ?>" style="width: 100px; height: 100px;">
-                <?= $fn->getImage([
-                  'file'  => $row['file'],
+                <?= $fn->getImageCustom([
+                  'file' =>  $row['file'],
                   'width' => 100,
+                  'height' => 100,
+                  'zc' => 1,
                   'alt'   => $name,
-                  'title' => $name
+                  'title' => $name,
+                  'lazy' => true
                 ]) ?>
               </a>
               <div class="title">

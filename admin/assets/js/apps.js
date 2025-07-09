@@ -1841,27 +1841,39 @@ $(document).ready(function () {
 
     return false;
   });
-
   /* Filer */
+  $(".btn-submit-HoldOn").on("click", function () {
+    HoldOn.open({
+      theme: "sk-circle",
+      message: "Đang tải lên..."
+    });
+  });
   if ($("#filer-gallery").length) {
     $("#filer-gallery").filer({
       limit: null,
       maxSize: null,
-      extensions: ["jpg", "png", "jpeg", "webp", "JPG", "PNG", "JPEG", "WEBP"],
+      extensions: ["jpg", "png", "jpeg", "webp"],
       changeInput:
         '<div class="jFiler-input-dragDrop">' +
-        '<div class="jFiler-input-inner">' +
-        '<div class="jFiler-input-icon"><i class="icon-jfi-cloud-up-o"></i></div>' +
-        '<div class="jFiler-input-text"><h3>' + LANG["keovathahinhvaoday"] + '</h3>' +
-        '<span style="display:inline-block; margin: 15px 0">' + LANG["hoac"] + '</span></div>' +
-        '<a class="jFiler-input-choose-btn blue">' + LANG["chonhinh"] + '</a>' +
-        '</div></div>',
+        '  <div class="jFiler-input-inner">' +
+        '    <div class="jFiler-input-icon"><i class="icon-jfi-cloud-up-o"></i></div>' +
+        '    <div class="jFiler-input-text">' +
+        '      <h3>' + LANG["keovathahinhvaoday"] + '</h3>' +
+        '      <span>' + LANG["hoac"] + '</span>' +
+        '    </div>' +
+        '    <a class="jFiler-input-choose-btn blue">' + LANG["chonhinh"] + '</a>' +
+        '  </div>' +
+        '</div>',
       theme: "dragdropbox",
       showThumbs: true,
       addMore: true,
       allowDuplicates: false,
       clipBoardPaste: false,
-      dragDrop: {},
+      dragDrop: {
+        dragEnter: function () { },
+        dragLeave: function () { },
+        drop: function () { }
+      },
       captions: {
         button: LANG["themhinh"],
         feedback: LANG["vuilongchonhinhanh"],
@@ -1875,15 +1887,24 @@ $(document).ready(function () {
           filesSizeAll: LANG["nhunghinhanhbanchoncokichthuocqualonvuilongchonnhunghinhanhcokichthuoctoida"] + " {{fi-maxSize}} MB.",
         },
       },
-      afterShow: function () {
-        const colClass = $(".col-filer").val();
-        let lastOrder = 0;
-
-        $(".jFiler-items-list li.jFiler-item").each(function () {
-          lastOrder++;
-          $(this).find("input[name='numb-filer[]']").val(lastOrder);
-          $(this).addClass(colClass);
+      afterShow: null,
+      onSelect: function () {
+        HoldOn.open({
+          theme: "sk-circle",
+          message: "Đang xử lý hình ảnh..."
         });
+        setTimeout(function () {
+          const colClass = $(".col-filer").val();
+          let lastOrder = 0;
+
+          $(".jFiler-items-list li.jFiler-item").each(function () {
+            lastOrder++;
+            $(this).find("input[name='numb-filer[]']").val(lastOrder);
+            $(this).addClass(colClass);
+          });
+          HoldOn.close();
+        }, 50);
+
       },
       templates: {
         box: '<ul class="jFiler-items-list jFiler-items-grid row scroll-bar"></ul>',

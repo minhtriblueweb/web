@@ -1,11 +1,3 @@
-<?php
-$show_danhgia = $fn->show_data([
-  'table'  => 'tbl_danhgia',
-  'status' => 'hienthi',
-  'select' => "id, file, desc{$lang}, name{$lang}, address{$lang}"
-]);
-?>
-
 <?php if (!empty($show_danhgia)): ?>
   <div class="wrap-feedback" data-aos="fade-up" data-aos-duration="500">
     <div class="wrap-content">

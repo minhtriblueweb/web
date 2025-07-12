@@ -45,26 +45,26 @@ if (isset($routes[$slug])) {
   $page = 'search.php';
 } elseif (!empty($slug)) {
   // Danh mục cấp 1
-  if ($productList = $db->rawQueryOne("SELECT id, name$lang, slugvi, slugen FROM tbl_product_list WHERE slug{$lang} = ? AND FIND_IN_SET('hienthi', status) LIMIT 1", [$slug])) {
+  if ($productList = $db->rawQueryOne("SELECT slug{$lang} FROM tbl_product_list WHERE slug{$lang} = ? AND FIND_IN_SET('hienthi', status) LIMIT 1", [$slug])) {
     $_GET['slug'] = $productList['slug' . $lang];
     $page = 'product_list.php';
   }
 
   // Danh mục cấp 2
-  elseif ($productCat = $db->rawQueryOne("SELECT id, name$lang, slugvi, slugen FROM tbl_product_cat WHERE slug{$lang} = ? AND FIND_IN_SET('hienthi', status) LIMIT 1", [$slug])) {
+  elseif ($productCat = $db->rawQueryOne("SELECT slug{$lang} FROM tbl_product_cat WHERE slug{$lang} = ? AND FIND_IN_SET('hienthi', status) LIMIT 1", [$slug])) {
     $_GET['slug'] = $productCat['slug' . $lang];
     $page = 'product_cat.php';
   }
 
   // Bài viết chi tiết
-  elseif ($newsData = $db->rawQueryOne("SELECT * FROM tbl_news WHERE slug{$lang} = ? AND FIND_IN_SET('hienthi', status)", [$slug])) {
+  elseif ($newsData = $db->rawQueryOne("SELECT type,slug{$lang} FROM tbl_news WHERE slug{$lang} = ? AND FIND_IN_SET('hienthi', status)", [$slug])) {
     $_GET['slug'] = $slug;
     $_GET['type'] = $newsData['type'];
     $page = 'news_details.php';
   }
 
   // Sản phẩm chi tiết
-  elseif ($productData = $db->rawQueryOne("SELECT * FROM tbl_product WHERE slug{$lang} = ? AND FIND_IN_SET('hienthi', status)", [$slug])) {
+  elseif ($productData = $db->rawQueryOne("SELECT slug{$lang} FROM tbl_product WHERE slug{$lang} = ? AND FIND_IN_SET('hienthi', status)", [$slug])) {
     $_GET['slug'] = $slug;
     $page = 'product_details.php';
   }

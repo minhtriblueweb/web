@@ -14,13 +14,13 @@
             <div class="slick-pro-detail">
               <div>
                 <a class="thumb-pro-detail" data-zoom-id="Zoom-1" href="<?= $fn->getImageCustom(['file' => $row_sp['file'],  'src_only' => true]) ?>">
-                  <?= $fn->getImage(['file' => $row_sp['file'], 'class' => '', 'lazy' => true]) ?>
+                  <?= $fn->getImageCustom(['file' => $row_sp['file'], 'class' => '', 'width' => 500, 'height' => 500, 'zc' => 1, 'lazy' => true]) ?>
                 </a>
               </div>
               <?php foreach ($get_gallery as $gallery): ?>
                 <div>
                   <a href=" <?= $fn->getImageCustom(['file' => $gallery['file'], 'src_only' => true]) ?>" class="thumb-pro-detail" data-zoom-id="Zoom-1">
-                    <?= $fn->getImageCustom(['file' => $gallery['file'], 'class' => '', 'thumb' => $gallery['thumb'], 'zc' => 1, 'lazy' => true]) ?>
+                    <?= $fn->getImageCustom(['file' => $gallery['file'], 'class' => '', 'width' => 500, 'height' => 500, 'zc' => 1, 'lazy' => true]) ?>
                   </a>
                 </div>
               <?php endforeach; ?>
@@ -74,13 +74,7 @@
           <?php foreach ($show_tieuchi as $row_tc): ?>
             <div class="list-policy">
               <div class="i-policy">
-                <?= $fn->getImage([
-                  'file' => $row_tc['file'],
-                  'class' => 'me-3',
-                  'alt' => $row_tc['name' . $lang],
-                  'title' => $row_tc['name' . $lang],
-                  'lazy' => true
-                ]) ?>
+                <?= $fn->getImageCustom(['file' => $row_tc['file'], 'class' => 'me-3', 'alt' => $row_tc['name' . $lang], 'title' => $row_tc['name' . $lang], 'width' => 40, 'height' => 40, 'zc' => 1, 'lazy' => true]) ?>
                 <div class="content">
                   <h3 class="text-split" title="<?= $row_tc['name' . $lang] ?>"><?= $row_tc['name' . $lang] ?></h3>
                 </div>
@@ -120,13 +114,7 @@
           <div class="item-product">
             <a class="text-decoration-none" href="<?= $slug ?>" title="<?= htmlspecialchars($name) ?>">
               <div class="images">
-                <?= $fn->getImage([
-                  'file' => $row_lq['file'],
-                  'class' => 'w-100',
-                  'alt' => $name,
-                  'title' => $name,
-                  'lazy' => true
-                ]) ?>
+                <?= $fn->getImageCustom(['file' => $row_lq['file'], 'class' => 'w-100', 'alt' => $name, 'title' => $name, 'width' => 500, 'height' => 500, 'zc' => 1, 'lazy' => true]) ?>
               </div>
               <div class="content">
                 <div class="title">

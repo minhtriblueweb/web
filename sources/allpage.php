@@ -20,19 +20,25 @@ $show_social = $cache->get(
   'all',
   7200
 );
+// Lấy đánh giá
+$show_danhgia = $fn->show_data([
+  'table'  => 'tbl_danhgia',
+  'status' => 'hienthi',
+  'select' => "id, file, desc{$lang}, name{$lang}, address{$lang}"
+]);
 
 // Lấy danh mục cấp 1
 $dm_c1_all = $fn->show_data([
   'table'  => 'tbl_product_list',
   'status' => 'hienthi,noibat',
-  'select' => "id, file, slug{$lang}, name{$lang},thumb"
+  'select' => "id, file, slug{$lang}, name{$lang}"
 ]);
 
 // Lấy danh mục cấp 2
 $dm_c2_all = $fn->show_data([
   'table'  => 'tbl_product_cat',
   'status' => 'hienthi,noibat',
-  'select' => "id, file,id_list, slug{$lang}, name{$lang},thumb"
+  'select' => "id, file,id_list, slug{$lang}, name{$lang}"
 ]);
 
 // Gom nhóm cấp 2 theo id_list

@@ -68,11 +68,9 @@ function onchangeCategory(obj) {
       }
     });
   url = filterCategory(url);
-
   if (keyword) {
     url += "&keyword=" + encodeURI(keyword);
   }
-
   return (window.location = url);
 }
 
@@ -305,66 +303,147 @@ function notifyDialog(
 /* Confirm */
 function confirmDialog(
   action,
-  text,
-  value,
+  text = LANG["banmuonloaibohinhanhnay"],
+  value = null,
   title = LANG["thongbao"],
   icon = "fas fa-exclamation-triangle",
   type = "blue"
 ) {
   $.confirm({
     title: title,
-    icon: icon, // font awesome
-    type: type, // red, green, orange, blue, purple, dark
-    content: text, // html, text
+    icon: icon,
+    type: type,
+    content: text,
     backgroundDismiss: true,
     animationSpeed: 600,
-    animation: "zoom",
-    closeAnimation: "scale",
+    animation: 'zoom',
+    closeAnimation: 'scale',
     typeAnimated: true,
     animateFromElement: false,
-    autoClose: "cancel|3000",
-    escapeKey: "cancel",
+    autoClose: 'cancel|3000',
+    escapeKey: 'cancel',
     buttons: {
-      success: {
-        text: '<i class="fas fa-check align-middle mr-2"></i>' + LANG["dongy"],
+      confirm: {
+        text: '<i class="fas fa-check mr-2"></i>' + LANG["dongy"],
         btnClass: "btn-blue btn-sm bg-gradient-primary",
         action: function () {
-          if (action == "create-seo") seoCreate();
-          if (action == "push-onesignal") pushOneSignal(value);
-          if (action == "send-email") sendEmail();
-          if (action == "delete-filer") deleteFiler(value);
-          if (action == "delete-all-filer") deleteAllFiler(value);
-          if (action == "delete-item") deleteItem(value);
-          if (action == "delete-all") deleteAll(value);
-          if (action == "delete-photo") deletePhoto(value);
+          switch (action) {
+            case "create-seo": seoCreate(); break;
+            case "push-onesignal": pushOneSignal(value); break;
+            case "send-email": sendEmail(); break;
+            case "delete-temp-filer":
+              deleteTempFiler(value);
+              break;
+            case "delete-filer": deleteFiler(value); break;
+            case "delete-all-filer": deleteAllFiler(value); break;
+            case "delete-item": deleteItem(value); break;
+            case "delete-all": deleteAll(value); break;
+            case "delete-photo": deletePhoto(value); break;
+          }
         },
       },
       cancel: {
-        text: '<i class="fas fa-times align-middle mr-2"></i>' + LANG["huybo"],
+        text: '<i class="fas fa-times mr-2"></i>' + LANG["huybo"],
         btnClass: "btn-red btn-sm bg-gradient-danger",
       },
     },
   });
 }
-function deletePhoto(_root) {
-  let id = _root.data("id");
-  let upload = _root.data("upload");
-  let action = _root.data("action");
-  let table = _root.data("table");
-  $.ajax({
-    url: "api/deletephoto.php",
-    type: "POST",
-    data: { id: id, upload: upload, action: action, table: table },
-    success: function (data) {
-      _root.parents(".photoUpload-detail").html(data);
-    },
+function deleteFiler(id) {
+  $('.jFiler-item').each(function () {
+    const $item = $(this);
+    if ($item.find('.jFiler-item-trash-action').data('id') == id && $item.attr("data-will-remove") == "1") {
+      $item.remove();
+    }
   });
+}
+function deleteTempFiler(index) {
+  const $fileInput = $('#filer-gallery');
+  const oldFiles = $fileInput[0].files;
+
+  // Tạo object mới chứa FileList trừ file bị xoá
+  const dt = new DataTransfer();
+
+  Array.from(oldFiles).forEach((file, i) => {
+    if (i !== index) {
+      dt.items.add(file);
+    }
+  });
+
+  // Gán lại FileList mới
+  $fileInput[0].files = dt.files;
+
+  // Xoá DOM phần tử ảnh
+  $(".jFiler-item").eq(index).remove();
+}
+
+function deleteAllFiler() {
+  let deletedAll = $(".deleted-images").val();
+
+  $(".my-jFiler-item-trash").each(function () {
+    const id = $(this).data("id");
+    const folder = $(this).data("folder");
+
+    if (!id || !folder) return;
+
+    const value = id + "," + folder;
+    deletedAll += deletedAll ? "|" + value : value;
+
+    const $target = $(this).closest(".jFiler-item");
+    if ($target.length) {
+      $target.remove();
+    }
+  });
+
+  $(".deleted-images").val(deletedAll);
+}
+
+
+$(document).on('change', 'input[type="file"][name="file"]', function () {
+  const input = $(this);
+  const file = this.files[0];
+  const zone = input.closest(".photoUpload-zone");
+  if (!file || !zone.length) return;
+  const reader = new FileReader();
+  reader.onload = function (e) {
+    zone.find(".photoUpload-detail").remove();
+    const previewHtml = `
+      <div class="photoUpload-detail" id="photoUpload-preview">
+        <img src="${e.target.result}" class="img-preview rounded" />
+        <div class="delete-photo">
+          <a href="javascript:void(0)" title="Xoá hình ảnh"><i class="far fa-trash-alt"></i></a>
+        </div>
+      </div>
+    `;
+    $(previewHtml).insertBefore(zone.find(".photoUpload-file"));
+    zone.find("#photo-deleted-flag").remove();
+  };
+  reader.readAsDataURL(file);
+});
+
+// xoá hình ảnh đại diện
+$(document).on("click", ".delete-photo a", function (e) {
+  e.preventDefault();
+  const _this = $(this);
+});
+function deletePhoto(_root) {
+  const form = _root.closest("form");
+  const zone = _root.closest(".photoUpload-zone");
+  _root.closest(".photoUpload-detail").remove();
+  zone.find('input[type="file"]').val("");
+  if ($("#photo-deleted-flag").length === 0) {
+    $("<input>", {
+      type: "hidden",
+      id: "photo-deleted-flag",
+      name: "photo_deleted",
+      value: "1",
+    }).appendTo(form);
+  }
 }
 /* Rounde number */
 function roundNumber(rnum, rlength) {
   return Math.round(rnum * Math.pow(10, rlength)) / Math.pow(10, rlength);
 }
-
 /* Max Datetime Picker */
 function maxDate(element) {
   if (MAX_DATE) {
@@ -502,56 +581,77 @@ function seoCreate() {
 function seoPreview(lang) {
   var titlePreview = '#title-seo-preview' + lang;
   var descriptionPreview = '#description-seo-preview' + lang;
-  var title = $('#title' + lang).val();
-  var description = $('#description' + lang).val();
+  var seourlPreviewText = '#seourlpreview' + lang;
 
-  // Giới hạn ký tự
+  var titleInput = $('#title' + lang).val() || '';
+  var nameInput = $('#name' + lang).val() || '';
+  var description = $('#description' + lang).val() || '';
+  var slug = $('#slug' + lang).val() || '';
+
   var maxTitleLength = 70;
   var maxDescriptionLength = 160;
+  var maxSlugLength = 53;
 
   function truncate(text, maxLength) {
-    if (!text) return '';
     return text.length > maxLength ? text.substring(0, maxLength) + '...' : text;
   }
 
-  if ($(titlePreview).length) {
-    if (title) $(titlePreview).html(truncate(title, maxTitleLength));
-    else $(titlePreview).html('Tiêu đề mô phỏng trang website của bạn');
-  }
+  var finalTitle = (titleInput.trim() !== '' ? titleInput : nameInput) || '';
+
+  $(titlePreview).html(finalTitle.trim() ? truncate(finalTitle, maxTitleLength) : 'Tiêu đề mô phỏng trang website của bạn');
+
 
   if ($(descriptionPreview).length) {
-    if (description) $(descriptionPreview).html(truncate(description, maxDescriptionLength));
-    else $(descriptionPreview).html('Mô tả ngắn gọn sẽ hiển thị ở đây, giúp người dùng hiểu nội dung trang. Giữ khoảng 150-160 ký tự là đẹp.');
+    $(descriptionPreview).html(
+      description ? truncate(description, maxDescriptionLength) : 'Mô tả ngắn gọn sẽ hiển thị ở đây, giúp người dùng hiểu nội dung trang. Giữ khoảng 150-160 ký tự là đẹp.'
+    );
+  }
+
+  if ($(seourlPreviewText).length) {
+    $(seourlPreviewText).html(
+      CONFIG_BASE_RTRIM + ' › ' + (slug ? truncate(slug, maxSlugLength) : '')
+    );
   }
 }
+
 function seoCount(obj) {
   if (obj.length) {
     var countseo = parseInt(obj.val().toString().length);
     countseo = countseo ? countseo : 0;
-
     obj.parents('div.form-group').children('div.label-seo').find('.count-seo span').html(countseo);
   }
 }
 function seoChange() {
   var seolang = $('#seo-create').val() || 'vi,en';
   var seolangArray = seolang.split(',');
-  var elementSeo = $('.card-seo .check-seo');
-  elementSeo.each(function () {
-    var element = $(this).attr('id');
-    var lang = element.substr(element.length - 2);
-    if (seolangArray.includes(lang)) {
-      var $input = $('#' + element);
-      seoPreview(lang);
+
+  seolangArray.forEach(function (lang) {
+    seoPreview(lang);
+
+    $('.card-seo .check-seo[id$="' + lang + '"]').each(function () {
+      var $input = $(this);
       seoCount($input);
-      $('body').on('keyup', '#' + element, function () {
+      $('body').on('input', '#' + $input.attr('id'), function () {
         seoPreview(lang);
         seoCount($(this));
+      });
+    });
+
+    var $slugInput = $('#slug' + lang);
+    if ($slugInput.length) {
+      $('body').on('input', '#slug' + lang, function () {
+        seoPreview(lang);
+      });
+    }
+
+    var $nameInput = $('#name' + lang);
+    if ($nameInput.length) {
+      $('body').on('input', '#name' + lang, function () {
+        seoPreview(lang);
       });
     }
   });
 }
-
-
 
 /* Slug */
 var sluglang = LANGS;
@@ -576,31 +676,24 @@ $(document).ready(function () {
     lastSlugStatus[lang] = false;
     slugVersion[lang] = 0;
   });
-
   slugPress();
-
   if ($("#slugchange").length) {
     $("body").on("click", "#slugchange", function () {
       slugChange($(this));
     });
   }
-
   sluglang.split(',').forEach(function (lang) {
     const $nameInput = $(`#name${lang}`);
     const $slugInput = $(`#slug${lang}`);
-
     if ($nameInput.length) {
       $nameInput.on('input', function () {
         const title = $(this).val();
         const slug = slugConvert(title);
         const oldSlug = $slugInput.val();
-
         if (slug !== oldSlug) {
           $slugInput.val(slug);
         }
-
         slugPreviewTitleSeo(title, lang);
-
         clearTimeout(debounceTimers[lang]);
         debounceTimers[lang] = setTimeout(() => {
           if (lastSlug[lang] !== slug) {
@@ -610,11 +703,9 @@ $(document).ready(function () {
         }, 400);
       });
     }
-
     if ($slugInput.length) {
       $slugInput.on('input', function () {
         const slug = $(this).val();
-
         clearTimeout(debounceTimers[lang]);
         debounceTimers[lang] = setTimeout(() => {
           if (lastSlug[lang] !== slug) {
@@ -633,12 +724,10 @@ function slugConvert(slug, focus = false) {
   slug = slug.replace(/đ/g, "d");
   slug = slug.replace(/[^a-z0-9\- ]/g, "");
   slug = slug.replace(/\s+/g, "-").replace(/\-+/g, "-");
-
   if (!focus) {
     slug = "@" + slug + "@";
     slug = slug.replace(/\@\-|\-\@|\@/gi, "");
   }
-
   return slug;
 }
 
@@ -661,7 +750,6 @@ function handleSlugStatus(status, lang, message = '') {
   const msgInvalid = message || "Đường dẫn đã tồn tại.";
   const $success = $(`#alert-slug-success${lang}`);
   const $danger = $(`#alert-slug-danger${lang}`);
-
   if (status === 1) {
     $danger.addClass("d-none");
     $success.removeClass("d-none").find("span").text(msgValid);
@@ -675,10 +763,8 @@ function handleSlugStatus(status, lang, message = '') {
     }
     lastSlugStatus[lang] = false;
   }
-
   const isViValid = lastSlugStatus['vi'] === true;
   let otherValid = true;
-
   sluglang.split(',').forEach(l => {
     if (l === 'vi') return;
     const $slugInput = $(`#slug${l}`);
@@ -689,7 +775,6 @@ function handleSlugStatus(status, lang, message = '') {
       }
     }
   });
-
   const canSubmit = isViValid && otherValid;
   $(".submit-check").prop("disabled", !canSubmit);
 }
@@ -698,15 +783,12 @@ function slugCheck(lang) {
   const slug = $(`#slug${lang}`).val();
   const id = $(".slug-id").val();
   const table = $(".slug-table").val();
-
   if (!slug) {
     handleSlugStatus(-1, lang);
     return;
   }
-
   slugVersion[lang]++;
   const currentVersion = slugVersion[lang];
-
   $.ajax({
     url: "api/slug.php",
     type: "POST",
@@ -1676,32 +1758,32 @@ $(document).ready(function () {
   }
 
   /* Copy */
-  if ($(".copy-now").length) {
-    $("body").on("click", ".copy-now", function () {
-      var id = $(this).attr("data-id");
-      var table = $(this).attr("data-table");
-      var copyimg = $(this).attr("data-copyimg");
+  // if ($(".copy-now").length) {
+  //   $("body").on("click", ".copy-now", function () {
+  //     var id = $(this).attr("data-id");
+  //     var table = $(this).attr("data-table");
+  //     var copyimg = $(this).attr("data-copyimg");
 
-      holdonOpen();
+  //     holdonOpen();
 
-      $.ajax({
-        url: "api/copy.php",
-        type: "POST",
-        dataType: "html",
-        async: false,
-        data: {
-          id: id,
-          table: table,
-          copyimg: copyimg,
-        },
-        success: function () {
-          holdonClose();
-        },
-      });
+  //     $.ajax({
+  //       url: "api/copy.php",
+  //       type: "POST",
+  //       dataType: "html",
+  //       async: false,
+  //       data: {
+  //         id: id,
+  //         table: table,
+  //         copyimg: copyimg,
+  //       },
+  //       success: function () {
+  //         holdonClose();
+  //       },
+  //     });
 
-      window.location.reload(true);
-    });
-  }
+  //     window.location.reload(true);
+  //   });
+  // }
 
   /* Sort filer */
   if (ACTIVE_GALLERY) {
@@ -1709,83 +1791,119 @@ $(document).ready(function () {
   }
 
   /* Check all filer */
+  $("body").on("change", ".filer-checkbox", function () {
+    const label = $('label[for="' + this.id + '"]');
+    if (label.length) {
+      label.text(label.attr("data-label") || "Chọn");
+    }
+    const hasChecked = $(".filer-checkbox:checked").length > 0;
+    $(".sort-filer").attr("disabled", !hasChecked);
+  });
   $("body").on("click", ".check-all-filer", function () {
-    var parentFiler = $(".my-jFiler-items .jFiler-items-list");
-    var input = parentFiler.find("input.filer-checkbox");
-    var jFilerItems = $("#jFilerSortable").find(".my-jFiler-item");
-
-    $(this).find("i").toggleClass("far fa-square fas fa-check-square");
-    if ($(this).hasClass("active")) {
-      $(this).removeClass("active");
-      $(".sort-filer").removeClass("active");
-      $(".sort-filer").attr("disabled", false);
-      input.each(function () {
+    const $this = $(this);
+    const isActive = $this.hasClass("active");
+    const filerItems = $(".my-jFiler-items .jFiler-items-list");
+    const inputs = filerItems.find("input.filer-checkbox");
+    const jFilerItems = $("#jFilerSortable").find(".my-jFiler-item");
+    $this.find("i").toggleClass("far fa-square fas fa-check-square");
+    if (isActive) {
+      $this.removeClass("active");
+      $(".sort-filer").removeClass("active").attr("disabled", false);
+      inputs.each(function () {
         $(this).prop("checked", false);
+        const label = $('label[for="' + this.id + '"]');
+        if (label.length) label.text(label.attr("data-label") || "Chọn");
       });
+
     } else {
-      sortable.option("disabled", true);
-      $(this).addClass("active");
+      $this.addClass("active");
       $(".sort-filer").attr("disabled", true);
       $(".alert-sort-filer").hide();
       $(".my-jFiler-item-trash").show();
-      input.each(function () {
+      inputs.each(function () {
         $(this).prop("checked", true);
+        const label = $('label[for="' + this.id + '"]');
+        if (label.length) label.text(label.attr("data-label") || "Chọn");
       });
       jFilerItems.each(function () {
         $(this).find("input").attr("disabled", false);
-      });
-      jFilerItems.each(function () {
         $(this).removeClass("moved");
       });
+
+      if (typeof sortable !== "undefined") {
+        sortable.option("disabled", true);
+      }
     }
   });
 
-  /* Check filer */
-  $("body").on("click", ".filer-checkbox", function () {
-    var input = $(".my-jFiler-items .jFiler-items-list").find(
-      "input.filer-checkbox:checked"
-    );
+  // $("body").on("click", ".filer-checkbox", function () {
+  //   var input = $(".my-jFiler-items .jFiler-items-list").find(
+  //     "input.filer-checkbox:checked"
+  //   );
 
-    if (input.length) $(".sort-filer").attr("disabled", true);
-    else $(".sort-filer").attr("disabled", false);
-  });
+  //   if (input.length) $(".sort-filer").attr("disabled", true);
+  //   else $(".sort-filer").attr("disabled", false);
+  // });
 
-  /* Sort filer */
-  $("body").on("click", ".sort-filer", function () {
-    var jFilerItems = $("#jFilerSortable").find(".my-jFiler-item");
+  // $("body").on("click", ".sort-filer", function () {
+  //   var jFilerItems = $("#jFilerSortable").find(".my-jFiler-item");
 
-    if ($(this).hasClass("active")) {
-      sortable.option("disabled", true);
-      $(this).removeClass("active");
-      $(".alert-sort-filer").hide();
-      $(".my-jFiler-item-trash").show();
-      jFilerItems.each(function () {
-        $(this).find("input").attr("disabled", false);
-        $(this).removeClass("moved");
-      });
+  //   if ($(this).hasClass("active")) {
+  //     sortable.option("disabled", true);
+  //     $(this).removeClass("active");
+  //     $(".alert-sort-filer").hide();
+  //     $(".my-jFiler-item-trash").show();
+  //     jFilerItems.each(function () {
+  //       $(this).find("input").attr("disabled", false);
+  //       $(this).removeClass("moved");
+  //     });
+  //   } else {
+  //     sortable.option("disabled", false);
+  //     $(this).addClass("active");
+  //     $(".alert-sort-filer").show();
+  //     $(".my-jFiler-item-trash").hide();
+  //     jFilerItems.each(function () {
+  //       $(this).find("input").attr("disabled", true);
+  //       $(this).addClass("moved");
+  //     });
+  //   }
+  // });
+
+
+  // $(document).on("click", ".my-jFiler-item-trash", function () {
+  //   const id = $(this).data("id");
+  //   const folder = $(this).data("folder");
+  //   const value = id + "," + folder;
+  //   let deleted = $(".deleted-images").val();
+  //   deleted += deleted ? "|" + value : value;
+  //   $(".deleted-images").val(deleted);
+  //   confirmDialog("delete-filer", LANG["bancochacmuonxoahinhanhnay"], value);
+  // });
+
+  $(document).on("click", ".jFiler-item-trash-action", function () {
+    const $btn = $(this);
+    const $item = $btn.closest(".jFiler-item");
+    const id = $btn.data("id");
+
+    if (id) {
+      // Xử lý ảnh đã có id
+      let deleted = $(".deleted-images").val();
+      deleted += deleted ? "|" + id : id;
+      $(".deleted-images").val(deleted);
+
+      $item.attr("data-will-remove", "1");
+      confirmDialog("delete-filer", LANG["banmuonloaibohinhanhnay"], id);
     } else {
-      sortable.option("disabled", false);
-      $(this).addClass("active");
-      $(".alert-sort-filer").show();
-      $(".my-jFiler-item-trash").hide();
-      jFilerItems.each(function () {
-        $(this).find("input").attr("disabled", true);
-        $(this).addClass("moved");
-      });
+      // Xác nhận xoá ảnh mới
+      confirmDialog("delete-temp-filer", LANG["banmuonxoaanhmoi"], $item.index());
     }
   });
 
-  /* Delete filer */
-  $("body").on("click", ".my-jFiler-item-trash", function () {
-    var id = $(this).data("id");
-    var folder = $(this).data("folder");
-    var str = id + "," + folder;
-    confirmDialog("delete-filer", LANG["bancochacmuonxoahinhanhnay"], str);
-  });
+
 
   /* Delete all filer */
   $("body").on("click", ".delete-all-filer", function () {
-    var folder = $(".folder-filer").val();
+    const folder = $(".folder-filer").val();
     confirmDialog(
       "delete-all-filer",
       LANG["bancochacmuonxoacachinhanhdachon"],
@@ -1803,44 +1921,44 @@ $(document).ready(function () {
   });
 
   /* Change info filer */
-  $("body").on("change", ".my-jFiler-item-info", function () {
-    var id = $(this).data("id");
-    var info = $(this).data("info");
-    var value = $(this).val();
-    var id_parent = ID;
-    var com = COM;
-    var kind = ACT;
-    var type = TYPE;
-    var colfiler = $(".col-filer").val();
-    var actfiler = $(".act-filer").val();
-    var cmd = "info";
+  // $("body").on("change", ".my-jFiler-item-info", function () {
+  //   var id = $(this).data("id");
+  //   var info = $(this).data("info");
+  //   var value = $(this).val();
+  //   var id_parent = ID;
+  //   var com = COM;
+  //   var kind = ACT;
+  //   var type = TYPE;
+  //   var colfiler = $(".col-filer").val();
+  //   var actfiler = $(".act-filer").val();
+  //   var cmd = "info";
 
-    $.ajax({
-      type: "POST",
-      dataType: "html",
-      url: "api/filer.php",
-      async: false,
-      data: {
-        id: id,
-        id_parent: id_parent,
-        info: info,
-        value: value,
-        com: com,
-        kind: actfiler,
-        type: type,
-        colfiler: colfiler,
-        cmd: cmd,
-        hash: HASH,
-      },
-      success: function (result) {
-        destroySortFiler();
-        $("#jFilerSortable").html(result);
-        createSortFiler();
-      },
-    });
+  //   $.ajax({
+  //     type: "POST",
+  //     dataType: "html",
+  //     url: "api/filer.php",
+  //     async: false,
+  //     data: {
+  //       id: id,
+  //       id_parent: id_parent,
+  //       info: info,
+  //       value: value,
+  //       com: com,
+  //       kind: actfiler,
+  //       type: type,
+  //       colfiler: colfiler,
+  //       cmd: cmd,
+  //       hash: HASH,
+  //     },
+  //     success: function (result) {
+  //       destroySortFiler();
+  //       $("#jFilerSortable").html(result);
+  //       createSortFiler();
+  //     },
+  //   });
 
-    return false;
-  });
+  //   return false;
+  // });
   /* Filer */
   $(".btn-submit-HoldOn").on("click", function () {
     HoldOn.open({
@@ -1851,7 +1969,7 @@ $(document).ready(function () {
   if ($("#filer-gallery").length) {
     $("#filer-gallery").filer({
       limit: null,
-      maxSize: null,
+      maxSize: null, removeConfirmation: false,
       extensions: ["jpg", "png", "jpeg", "webp"],
       changeInput:
         '<div class="jFiler-input-dragDrop">' +
@@ -1906,38 +2024,10 @@ $(document).ready(function () {
         }, 50);
 
       },
+      removeConfirmation: false,
       templates: {
         box: '<ul class="jFiler-items-list jFiler-items-grid row scroll-bar"></ul>',
-        item:
-          '<li class="jFiler-item">' +
-          '  <div class="jFiler-item-container">' +
-          '    <div class="jFiler-item-inner">' +
-          '      <div class="jFiler-item-thumb">' +
-          '        <div class="jFiler-item-status"></div>' +
-          '        <div class="jFiler-item-thumb-overlay">' +
-          '          <div class="jFiler-item-info">' +
-          '            <div style="display:table-cell;vertical-align: middle;">' +
-          '              <span class="jFiler-item-title"><b title="{{fi-name}}">{{fi-name}}</b></span>' +
-          '              <span class="jFiler-item-others">{{fi-size2}}</span>' +
-          '            </div>' +
-          '          </div>' +
-          '        </div>' +
-          '        {{fi-image}}' +
-          '      </div>' +
-          '      <div class="jFiler-item-assets jFiler-row">' +
-          '        <ul class="list-inline pull-left">' +
-          '          <li>{{fi-progressBar}}</li>' +
-          '        </ul>' +
-          '        <ul class="list-inline pull-right">' +
-          '          <li><a class="icon-jfi-trash jFiler-item-trash-action"></a></li>' +
-          '        </ul>' +
-          '      </div>' +
-          '      <input type="number" class="form-control form-control-sm mb-1" name="numb-filer[]" placeholder="' + LANG["sothutu"] + '"/>' +
-          '      <input type="text" class="form-control form-control-sm" name="name-filer[]" placeholder="Tiêu đề"/>' +
-          '    </div>' +
-          '  </div>' +
-          '</li>',
-        itemAppend: null,
+        item: `<li class="jFiler-item"><div class="jFiler-item-container"><div class="jFiler-item-inner"><div class="jFiler-item-thumb"><div class="jFiler-item-status"></div><div class="jFiler-item-thumb-overlay"><div class="jFiler-item-info"><div style="display: table-cell; vertical-align: middle;"><span class="jFiler-item-title"><b title="{{fi-name}}">{{fi-name}}</b></span></div></div></div>{{fi-image}}</div><div class="jFiler-item-assets jFiler-row"><ul class="list-inline pull-right d-flex align-items-center justify-content-between w-100"><li class="ml-1"><a class="icon-jfi-trash jFiler-item-trash-action my-jFiler-item-trash" data-id="" data-folder="" data-photo=""></a></li><li class="mr-1"><div class="custom-control custom-checkbox d-inline-block align-middle text-md"><input type="checkbox" class="custom-control-input filer-checkbox" id="filer-checkbox-{{fi-id}}" value="{{fi-id}}"><label for="filer-checkbox-{{fi-id}}" class="custom-control-label font-weight-normal" data-label="Chọn">Chọn</label></div></li></ul></div><input type="number" class="form-control form-control-sm mb-1" name="numb-filer[]" placeholder="${LANG['sothutu']}" value=""><input type="text" class="form-control form-control-sm" name="name-filer[]" placeholder="Tiêu đề" value=""><input type="hidden" name="id-filer[]" value="{{fi-id}}"><input type="hidden" name="photo-filer[]" value=""><input type="hidden" name="folder-filer[]" value=""></div></div></li>`,
         progressBar: '<div class="bar"></div>',
         itemAppendToEnd: true,
         canvasImage: false,
@@ -1946,12 +2036,11 @@ $(document).ready(function () {
           list: ".jFiler-items-list",
           item: ".jFiler-item",
           progressBar: ".bar",
-          remove: ".jFiler-item-trash-action",
-        },
+          remove: ".jFiler-item-remove-disabled"
+        }
       }
     });
   }
-
   /* Filer import */
   if ($("#filer-import").length) {
     $("#filer-import").filer({
@@ -2024,66 +2113,8 @@ $(document).ready(function () {
       },
       templates: {
         box: '<ul class="jFiler-items-list jFiler-items-grid row scroll-bar"></ul>',
-        item:
-          '<li class="jFiler-item">\
-	                        <div class="jFiler-item-container">\
-	                            <div class="jFiler-item-inner">\
-	                                <div class="jFiler-item-thumb">\
-	                                    <div class="jFiler-item-status"></div>\
-	                                    <div class="jFiler-item-thumb-overlay">\
-	                                        <div class="jFiler-item-info">\
-	                                            <div style="display:table-cell;vertical-align: middle;">\
-	                                                <span class="jFiler-item-title"><b title="{{fi-name}}">{{fi-name}}</b></span>\
-	                                                <span class="jFiler-item-others">{{fi-size2}}</span>\
-	                                            </div>\
-	                                        </div>\
-	                                    </div>\
-	                                    {{fi-image}}\
-	                                </div>\
-	                                <div class="jFiler-item-assets jFiler-row">\
-	                                    <ul class="list-inline pull-left">\
-	                                        <li>{{fi-progressBar}}</li>\
-	                                    </ul>\
-	                                    <ul class="list-inline pull-right">\
-	                                        <li><a class="icon-jfi-trash jFiler-item-trash-action"></a></li>\
-	                                    </ul>\
-	                                </div>\
-	                                <input type="number" class="form-control form-control-sm mb-1" name="numb-filer[]" placeholder="' +
-          LANG["sothutu"] +
-          '"/>\
-	                            </div>\
-	                        </div>\
-	                    </li>',
-        itemAppend:
-          '<li class="jFiler-item">\
-	                            <div class="jFiler-item-container">\
-	                                <div class="jFiler-item-inner">\
-	                                    <div class="jFiler-item-thumb">\
-	                                        <div class="jFiler-item-status"></div>\
-	                                        <div class="jFiler-item-thumb-overlay">\
-	                                            <div class="jFiler-item-info">\
-	                                                <div style="display:table-cell;vertical-align: middle;">\
-	                                                    <span class="jFiler-item-title"><b title="{{fi-name}}">{{fi-name}}</b></span>\
-	                                                    <span class="jFiler-item-others">{{fi-size2}}</span>\
-	                                                </div>\
-	                                            </div>\
-	                                        </div>\
-	                                        {{fi-image}}\
-	                                    </div>\
-	                                    <div class="jFiler-item-assets jFiler-row">\
-	                                        <ul class="list-inline pull-left">\
-	                                            <li><span class="jFiler-item-others">{{fi-icon}}</span></li>\
-	                                        </ul>\
-	                                        <ul class="list-inline pull-right">\
-	                                            <li><a class="icon-jfi-trash jFiler-item-trash-action"></a></li>\
-	                                        </ul>\
-	                                    </div>\
-	                                    <input type="number" class="form-control form-control-sm mb-1" name="numb-filer[]" placeholder="' +
-          LANG["sothutu"] +
-          '"/>\
-	                                </div>\
-	                            </div>\
-	                        </li>',
+        item: `<li class="jFiler-item"><div class="jFiler-item-container"><div class="jFiler-item-inner"><div class="jFiler-item-thumb"><div class="jFiler-item-status"></div><div class="jFiler-item-thumb-overlay"><div class="jFiler-item-info"><div style="display: table-cell; vertical-align: middle;"><span class="jFiler-item-title"><b title="{{fi-name}}">{{fi-name}}</b></span></div></div></div>{{fi-image}}</div><div class="jFiler-item-assets jFiler-row"><ul class="list-inline pull-right d-flex align-items-center justify-content-between w-100"><li class="ml-1"><a class="icon-jfi-trash jFiler-item-trash-action my-jFiler-item-trash" data-id="" data-folder="" data-photo=""></a></li><li class="mr-1"><div class="custom-control custom-checkbox d-inline-block align-middle text-md"><input type="checkbox" class="custom-control-input filer-checkbox" id="filer-checkbox-{{fi-id}}" value="{{fi-id}}"><label for="filer-checkbox-{{fi-id}}" class="custom-control-label font-weight-normal" data-label="Chọn">Chọn</label></div></li></ul></div><input type="number" class="form-control form-control-sm mb-1" name="numb-filer[]" placeholder="${LANG['sothutu']}" value=""><input type="text" class="form-control form-control-sm" name="name-filer[]" placeholder="Tiêu đề" value=""><input type="hidden" name="id-filer[]" value="{{fi-id}}"><input type="hidden" name="photo-filer[]" value=""><input type="hidden" name="folder-filer[]" value=""></div></div></li>`,
+        itemAppend: null,
         progressBar: '<div class="bar"></div>',
         itemAppendToEnd: true,
         canvasImage: false,
@@ -2092,9 +2123,9 @@ $(document).ready(function () {
           list: ".jFiler-items-list",
           item: ".jFiler-item",
           progressBar: ".bar",
-          remove: ".jFiler-item-trash-action",
-        },
-      },
+          remove: ".jFiler-item-trash-action"
+        }
+      }
     });
   }
 
@@ -2102,6 +2133,7 @@ $(document).ready(function () {
   if ($(".form-control-ckeditor").length) {
     CKEDITOR.editorConfig = function (config) {
       config.language = "vi";
+      config.removePlugins = 'image';
       config.skin = 'moono-lisa';
       config.width = "auto";
       config.height = 450;

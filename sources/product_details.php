@@ -60,7 +60,7 @@ $sanpham_lienquan = $fn->show_data([
   'table' => 'tbl_product',
   'status' => 'hienthi',
   'exclude_id' => $id,
-  'select' => "id, thumb,file, name{$lang}, slug{$lang}, regular_price, sale_price, views",
+  'select' => "id,file, name{$lang}, slug{$lang}, regular_price, sale_price, views",
   'records_per_page' => $records_per_page,
   'current_page' => $current_page
 ]);
@@ -70,7 +70,7 @@ $get_gallery = $fn->show_data([
   'table' => 'tbl_gallery',
   'status' => 'hienthi',
   'id_parent' => $id,
-  'select' => "file,thumb"
+  'select' => "file"
 ]);
 
 // Lấy tiêu chí

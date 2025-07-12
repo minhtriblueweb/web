@@ -35,6 +35,8 @@ $seo = new Seo();
 define('TEMPLATE', 'templates/');
 define('UPLOADS', 'uploads/');
 define('SOURCES', 'sources/');
+define('LAYOUT', 'layout/');
+define('THUMB', 'thumb');
 define('VERSION', $fn->generateHash());
 define('BASE', $config['base'] ?? '/');
 define('BASE_ADMIN', $config['baseAdmin'] ?? '/admin/');

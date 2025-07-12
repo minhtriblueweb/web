@@ -18,17 +18,51 @@
   },
   "rename-table": {
     "prefix": "rename",
-    "body": ["RENAME TABLE `${1:old_table}` TO `${2:new_table}`;"],
+    "body": [
+      "RENAME TABLE `${1:old_table}` TO `${2:new_table}`;"
+    ],
     "description": "SQL: RENAME TABLE `old_table` TO `new_table`"
   },
   "Dump Fn": {
     "prefix": "Dump",
-    "body": ["\\$fn->dump(${1:\\$data});"],
+    "body": [
+      "\\$fn->dump(${1:\\$data});"
+    ],
     "description": "Gọi hàm dump() từ $fn để debug dữ liệu"
   },
   "PHP Block Comment": {
     "prefix": "cmt",
-    "body": ["<?php", "/*  ", "$1", "*/", "?>"],
+    "body": [
+      "<?php",
+      "/*  ",
+      "$1",
+      "*/",
+      "?>"
+    ],
     "description": "PHP mở/đóng comment dạng <?php  /*  */ ?>"
+  },
+  "Save Model (fn->save)": {
+    "prefix": "save",
+    "body": [
+      "\\$fn->save(\\$_POST, \\$_FILES, \\$id, [",
+      "  'table'               => \\$table,",
+      "  'fields_multi'        => ['slug', 'name', 'desc', 'content'],",
+      "  'fields_common'       => ['numb', 'type'],",
+      "  'status_flags'        => ['hienthi', 'noibat'],",
+      "",
+      "  'redirect_page'       => \\$linkMan,",
+      "  'redirect_type_param' => true,",
+      "",
+      "  'convert_webp'        => false,",
+      "  'watermark'           => false,",
+      "  'thumb_width'         => 300,",
+      "  'thumb_height'        => 300,",
+      "",
+      "  'enable_slug'         => true,",
+      "  'enable_seo'          => true,",
+      "  'enable_gallery'      => true",
+      "]);"
+    ],
+    "description": "Gọi hàm $fn->save chuẩn hoá dữ liệu với tuỳ chọn đầy đủ"
   }
 }

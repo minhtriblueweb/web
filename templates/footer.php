@@ -8,6 +8,9 @@
               'file' => $logo,
               'alt' => $web_name,
               'title' => $web_name,
+              'width' => 300,
+              'height' => 120,
+              'zc' => 1,
               'lazy' => true
             ]) ?>
           </a>
@@ -20,19 +23,15 @@
           <p>KẾT NỐI VỚI CHÚNG TÔI</p>
           <?php if (!empty($show_social)): ?>
             <?php foreach ($show_social as $row): ?>
-              <?php
-              $name = $row['name' . $lang];
-              $link = $row['link'];
-              ?>
-              <a class="hvr-icon-rotate me-2" href="<?= $link ?>" target="_blank" rel="noopener noreferrer">
+              <a class="hvr-icon-rotate me-2" href="<?= $row['link'] ?>" target="_blank" rel="noopener noreferrer">
                 <?= $fn->getImageCustom([
-                  'width' => 50,
-                  'height' => 50,
+                  'width' => 40,
+                  'height' => 40,
                   'zc' => 1,
                   'file'   => $row['file'],
                   'class'  => 'hvr-icon',
-                  'alt' => $name,
-                  'title' => $name,
+                  'alt' => $row['name' . $lang],
+                  'title' => $row['name' . $lang],
                   'lazy' => true
                 ]) ?>
               </a>
@@ -52,7 +51,6 @@
               'select' => "id, slug{$lang}, name{$lang}"
             ]);
             ?>
-
             <?php if (!empty($show_chinhsach)): ?>
               <ul class="footer-ul">
                 <?php foreach ($show_chinhsach as $row): ?>
@@ -81,7 +79,7 @@
                       'file' =>  $row_pt['file'],
                       'width' => 72,
                       'height' => 40,
-                      'zc' => 1,
+                      'zc' => 2,
                       'alt' => $row_pt['name' . $lang],
                       'title' => $row_pt['name' . $lang],
                       'lazy' => true
@@ -96,14 +94,14 @@
         <div class="box-policy">
           <div class="footer-policy">
             <p class="footer-title">HỖ TRỢ KHÁCH HÀNG</p>
-            <?= ($trangtinh->get_static('hotrokhachhang')['contentvi'] ?? '') ?>
+            <?= ($trangtinh->get_static('hotrokhachhang')['content' . $lang] ?? '') ?>
           </div>
         </div>
         <div class="box-policy">
           <div class="footer-policy">
             <p class="footer-title">HỖ TRỢ 24/7</p>
             <div class="footer-info content-ck">
-              <?= ($trangtinh->get_static('hotro247')['contentvi'] ?? '') ?>
+              <?= ($trangtinh->get_static('hotro247')['content' . $lang] ?? '') ?>
             </div>
           </div>
           <div class="footer-newsletter">
@@ -155,25 +153,23 @@
     <?php
     $sameAs = [];
     foreach ($show_social as $row_social): ?>
-      <?php
-      $name = $row_social['name' . $lang];
-      $desc = $row_social['desc' . $lang];
-      $link = $row_social['link'];
-      $sameAs[] = $link;
-      ?>
-      <a href="<?= $link ?>" class="floating-support__item" target="_blank">
+      <?php $sameAs[] = $row_social['link'] ?>
+      <a href="<?= $row_social['link'] ?>" class="floating-support__item" target="_blank">
         <div class="floating-support__item__icon">
           <?= $fn->getImageCustom([
             'file' =>  $row_social['file'],
             'class'  => 'tada',
-            'alt'   => $name,
-            'title' => $name,
+            'width'  => 50,
+            'height'  => 50,
+            'zc'  => 1,
+            'alt'   => $row_social['name' . $lang],
+            'title' => $row_social['name' . $lang],
             'lazy' => true
           ]) ?>
         </div>
         <div class="floating-support__item__content">
-          <p><b><?= $name ?></b></p>
-          <span><?= $desc ?></span>
+          <p><b><?= $row_social['name' . $lang] ?></b></p>
+          <span><?= $row_social['desc' . $lang] ?></span>
         </div>
       </a>
     <?php endforeach; ?>

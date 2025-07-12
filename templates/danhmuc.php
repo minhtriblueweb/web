@@ -6,24 +6,20 @@
       </div>
       <div class="slick_product_list">
         <?php foreach ($dm_c2_all as $dm): ?>
-          <?php
-          $name = $dm['name' . $lang];
-          $slug = $dm['slug' . $lang];
-          ?>
-          <a href="<?= $slug ?>" title="<?= $name ?>">
+          <a href="<?= $dm['slug' . $lang] ?>" title="<?= $dm['name' . $lang] ?>">
             <div class="item-list">
               <div class="item-list-img">
                 <?= $fn->getImageCustom([
                   'file'  => $dm['file'],
-                  'alt'   => $name,
-                  'title' => $name,
+                  'alt'   => $dm['name' . $lang],
+                  'title' => $dm['name' . $lang],
                   'width' => 100,
                   'height' => 100,
                   'zc' => 1
                 ]) ?>
               </div>
               <div class="item-list-name">
-                <h3 class="m-0"><?= $name ?></h3>
+                <h3 class="m-0"><?= $dm['name' . $lang] ?></h3>
               </div>
             </div>
           </a>

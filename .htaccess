@@ -1,6 +1,7 @@
 RewriteEngine On
 
 RewriteRule ^thumb/([0-9]+)x([0-9]+)x([1-4])/(.+)$ admin/thumb.php?w=$1&h=$2&zc=$3&src=$4 [L,QSA]
+RewriteRule ^watermark/(pos[1-9])/([^/]+)$ watermark.php?position=$1&src=$2 [L,QSA]
 
 RewriteCond %{REQUEST_FILENAME} -f [OR]
 RewriteCond %{REQUEST_FILENAME} -d

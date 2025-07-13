@@ -13,10 +13,8 @@ if ($w <= 0 || $h <= 0 || empty($src) || strpos($src, '..') !== false) {
   echo 'Invalid parameters';
   exit;
 }
-
-$source_path = __DIR__ . '/uploads/' . $src;
-$thumb_path = __DIR__ . "/uploads/thumb/{$w}x{$h}x{$zc}/" . basename($src);
-
+$source_path = __DIR__ . '/' . UPLOADS . ltrim($src, '/');
+$thumb_path  = __DIR__ . '/' . UPLOADS . "thumb/{$w}x{$h}x{$zc}/" . basename($src);
 // Tạo ảnh nếu chưa có
 if (!file_exists($thumb_path)) {
   $result = $fn->createFixedThumbnail($source_path, "{$w}x{$h}x{$zc}");

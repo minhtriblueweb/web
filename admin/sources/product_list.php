@@ -20,9 +20,8 @@ $validActs = ['man', 'form', 'delete', 'delete_multiple'];
 if (!in_array($act, $validActs)) {
   $fn->transfer("Trang không tồn tại", "index.php", false);
 }
-// Xử lý xóa 1
 if ($act === 'delete' && isset($_GET['id']) && is_numeric($_GET['id'])) {
-  $fn->delete([
+  $fn->delete_data([
     'id' => (int)$_GET['id'],
     'table' => $table,
     'type' => $type,
@@ -30,10 +29,8 @@ if ($act === 'delete' && isset($_GET['id']) && is_numeric($_GET['id'])) {
     'redirect_page' => $linkMan
   ]);
 }
-
-// Xử lý xóa nhiều
 if ($act === 'delete_multiple' && isset($_GET['listid'])) {
-  $fn->deleteMultiple([
+  $fn->deleteMultiple_data([
     'listid' => $_GET['listid'],
     'table' => $table,
     'type' => $type,
@@ -50,7 +47,6 @@ switch ($act) {
     $total_records = $fn->count_data(['table' => $table, 'keyword' => $keyword]);
     $total_pages = ceil($total_records / $records_per_page);
     $paging = $fn->renderPagination($current_page, $total_pages);
-
     $show_danhmuc = $fn->show_data([
       'table' => $table,
       'records_per_page' => $records_per_page,
@@ -71,11 +67,11 @@ switch ($act) {
     }
 
     if ($_SERVER['REQUEST_METHOD'] === 'POST' && (isset($_POST['add']) || isset($_POST['edit']))) {
-      $fn->save($_POST, $_FILES, $id, [
+      $fn->save_data($_POST, $_FILES, $id, [
         'table'              => $table,
         'fields_multi'       => ['slug', 'name', 'desc', 'content'],
         'fields_common'      => ['numb', 'type'],
-        'status_flags'       => ['hienthi', 'noibat'],
+        'status_flags'       => array_keys($status),
         'redirect_page'      => $linkMan,
         'enable_seo'         => true,
         'enable_slug'        => true,

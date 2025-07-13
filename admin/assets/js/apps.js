@@ -25,6 +25,18 @@ function validateForm(ele) {
     false
   );
 }
+$(document).ready(function () {
+  $('label.switch').each(function () {
+    if ($(this).find('.switch-toggle-slider').length === 0) {
+      const html = `
+        <span class="switch-toggle-slider">
+          <span class="switch-on"><i class="fa-solid fa-check"></i></span>
+          <span class="switch-off"><i class="fa-solid fa-xmark"></i></span>
+        </span>`;
+      $(this).append(html);
+    }
+  });
+});
 
 /* Validation form chung */
 validateForm("validation-form");
@@ -360,44 +372,31 @@ function deleteFiler(id) {
 function deleteTempFiler(index) {
   const $fileInput = $('#filer-gallery');
   const oldFiles = $fileInput[0].files;
-
-  // Tạo object mới chứa FileList trừ file bị xoá
   const dt = new DataTransfer();
-
   Array.from(oldFiles).forEach((file, i) => {
     if (i !== index) {
       dt.items.add(file);
     }
   });
-
-  // Gán lại FileList mới
   $fileInput[0].files = dt.files;
-
-  // Xoá DOM phần tử ảnh
   $(".jFiler-item").eq(index).remove();
 }
-
 function deleteAllFiler() {
   let deletedAll = $(".deleted-images").val();
 
-  $(".my-jFiler-item-trash").each(function () {
-    const id = $(this).data("id");
-    const folder = $(this).data("folder");
+  $(".filer-checkbox:checked").each(function () {
+    const $checkbox = $(this);
+    const $item = $checkbox.closest(".jFiler-item");
+    const id = $item.find('input[name="id-filer[]"]').val();
 
-    if (!id || !folder) return;
+    if (!id) return;
 
-    const value = id + "," + folder;
-    deletedAll += deletedAll ? "|" + value : value;
-
-    const $target = $(this).closest(".jFiler-item");
-    if ($target.length) {
-      $target.remove();
-    }
+    deletedAll += deletedAll ? "|" + id : id;
+    $item.remove();
   });
 
   $(".deleted-images").val(deletedAll);
 }
-
 
 $(document).on('change', 'input[type="file"][name="file"]', function () {
   const input = $(this);
@@ -407,14 +406,7 @@ $(document).on('change', 'input[type="file"][name="file"]', function () {
   const reader = new FileReader();
   reader.onload = function (e) {
     zone.find(".photoUpload-detail").remove();
-    const previewHtml = `
-      <div class="photoUpload-detail" id="photoUpload-preview">
-        <img src="${e.target.result}" class="img-preview rounded" />
-        <div class="delete-photo">
-          <a href="javascript:void(0)" title="Xoá hình ảnh"><i class="far fa-trash-alt"></i></a>
-        </div>
-      </div>
-    `;
+    const previewHtml = `<div class="photoUpload-detail" id="photoUpload-preview"><img src="${e.target.result}" class="img-preview rounded" /><div class="delete-photo"><a href="javascript:void(0)" title="Xoá hình ảnh"><i class="far fa-trash-alt"></i></a></div></div>`;
     $(previewHtml).insertBefore(zone.find(".photoUpload-file"));
     zone.find("#photo-deleted-flag").remove();
   };

@@ -21,7 +21,7 @@ extract($pageConfig);
 
 // Xoá ảnh đơn
 if (isset($_GET['delete']) && is_numeric($_GET['delete'])) {
-  $fn->delete([
+  $fn->delete_data([
     'id'            => $_GET['delete'],
     'table'         => $table,
     'type'          => $type,
@@ -31,7 +31,7 @@ if (isset($_GET['delete']) && is_numeric($_GET['delete'])) {
 
 // Xoá nhiều ảnh
 if (isset($_GET['delete_multiple'], $_GET['listid'])) {
-  $fn->deleteMultiple([
+  $fn->deleteMultiple_data([
     'listid'        => $_GET['listid'],
     'table'         => $table,
     'type'          => $type,
@@ -69,7 +69,7 @@ switch ($act) {
   case 'form':
     // Thêm mới
     if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add']) && $id) {
-      $fn->add_gallery($_POST, $_FILES, $id, $type, $linkMan);
+      $fn->save_gallery($_POST, $_FILES, $id, $type, $linkMan);
     }
 
     // Cập nhật

@@ -17,10 +17,8 @@ $pageConfig = [
   'status' => ['hienthi' => 'Hiển thị', 'noibat' => 'Nổi bật', 'banchay' => 'Bán chạy']
 ];
 extract($pageConfig);
-
-// Xử lý xóa 1
 if ($act === 'delete' && isset($_GET['id']) && is_numeric($_GET['id'])) {
-  $fn->delete([
+  $fn->delete_data([
     'id' => (int)$_GET['id'],
     'table' => $table,
     'type' => $type,
@@ -29,10 +27,8 @@ if ($act === 'delete' && isset($_GET['id']) && is_numeric($_GET['id'])) {
     'redirect_page' => $linkMan
   ]);
 }
-
-// Xử lý xóa nhiều
 if ($act === 'delete_multiple' && isset($_GET['listid'])) {
-  $fn->deleteMultiple([
+  $fn->deleteMultiple_data([
     'listid' => $_GET['listid'],
     'table' => $table,
     'type' => $type,
@@ -41,8 +37,6 @@ if ($act === 'delete_multiple' && isset($_GET['listid'])) {
     'redirect_page' => $linkMan
   ]);
 }
-
-// Switch các hành động chính
 switch ($act) {
   case 'man':
     $id_list = $_GET['id_list'] ?? '';
@@ -102,7 +96,7 @@ switch ($act) {
     }
 
     if ($_SERVER['REQUEST_METHOD'] === 'POST' && (isset($_POST['add']) || isset($_POST['edit']))) {
-      $fn->save($_POST, $_FILES, $id, [
+      $fn->save_data($_POST, $_FILES, $id, [
         'table' => $table,
         'fields_multi' => ['slug', 'name', 'desc', 'content'],
         'fields_common' => ['id_list', 'id_cat', 'regular_price', 'sale_price', 'discount', 'code', 'numb', 'type'],

@@ -64,7 +64,7 @@
                   <!-- Ảnh -->
                   <td class="align-middle">
                     <a href="<?= $linkEdit . $id ?>" title="<?= $name ?>">
-                      <?= $fn->getImage(['file' => $file, 'class' => 'rounded img-preview', 'alt' => $name, 'thumb' => false]) ?>
+                      <?= $fn->getImage(['file' => $file, 'class' => 'rounded img-preview', 'alt' => $name]) ?>
                     </a>
                   </td>
 
@@ -83,10 +83,6 @@
                           id="show-checkbox-<?= $attr ?>-<?= $id ?>"
                           data-table="<?= $table ?>" data-id="<?= $id ?>" data-attr="<?= $attr ?>"
                           <?= (strpos($row['status'], $attr) !== false) ? 'checked' : '' ?>>
-                        <span class="switch-toggle-slider">
-                          <span class="switch-on"><i class="fa-solid fa-check"></i></span>
-                          <span class="switch-off"><i class="fa-solid fa-xmark"></i></span>
-                        </span>
                       </label>
                     </td>
                   <?php endforeach; ?>

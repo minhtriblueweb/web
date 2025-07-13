@@ -123,10 +123,6 @@
                           data-id="<?= $row['id'] ?>"
                           data-attr="<?= $attr ?>"
                           <?= (strpos($row['status'], $attr) !== false) ? 'checked' : '' ?>>
-                        <span class="switch-toggle-slider">
-                          <span class="switch-on"><i class="fa-solid fa-check"></i></span>
-                          <span class="switch-off"><i class="fa-solid fa-xmark"></i></span>
-                        </span>
                       </label>
                     </td>
                   <?php endforeach; ?>

@@ -1,40 +1,3 @@
-<?php
-// $redirect_url = $_GET['page'];
-// $table = 'tbl_gallery';
-// $type = 'product';
-// $name_page = 'hình ảnh sản phẩm';
-// $rp = 10;
-// $p  = max(1, isset($_GET['p']) ? (int)$_GET['p'] : 1);
-// $t  = $fn->count_data(['table' => $table]);
-// $tp = ceil($t / $rp);
-// $paging = $fn->renderPagination($p, $tp);
-
-// if (isset($_GET['id']) && $_GET['id'] != NULL) {
-//   $id = $_GET['id'];
-// }
-// $parent = ($id !== null) ? $db->rawQueryOne("SELECT id,name{$lang} FROM tbl_product WHERE id = ? LIMIT 1", [$id]) : [];
-// $get_gallery = $fn->show_data([
-//   'table' => $table,
-//   'type' => $type,
-//   'id_parent' => $id,
-//   'records_per_page' => $rp,
-//   'current_page' => $p,
-//   'keyword' => $_GET['keyword'] ?? ''
-// ]);
-// $linkMulti = "index.php?page=gallery_man&type=$type&id=$id&delete_multiple=1";
-// $linkDelete = "index.php?page=gallery_man&type=$type&id=$id&delete=";
-// $linkGallery = "index.php?page=gallery_form&type=$type&id=";
-// $linkMan = "index.php?page=gallery_man&type=$type&id=$id";
-// $linkEdit = "index.php?page=gallery_form&type=$type&id_child=";
-// if (isset($_GET['delete_multiple'], $_GET['listid'])) {
-//   $product->deleteMultiple_gallery($_GET['listid']);
-// }
-// if (isset($_GET['delete']) && is_numeric($_GET['delete'])) {
-//   $product->delete_gallery((int)$_GET['delete']);
-// }
-// $breadcrumb = [['label' => $name_page]];
-// include TEMPLATE . 'breadcrumb.php';
-?>
 <section class="content">
   <div class="card-footer text-sm sticky-top">
     <a class="btn btn-sm bg-gradient-primary text-white" href="<?= $linkForm . $parent['id'] ?>"
@@ -79,7 +42,6 @@
           <?php if (!empty($get_gallery)): ?>
             <?php foreach ($get_gallery as $row): ?>
               <tr>
-                <!-- Checkbox chọn dòng -->
                 <td class="align-middle">
                   <div class="custom-control custom-checkbox my-checkbox">
                     <input type="checkbox" class="custom-control-input select-checkbox" id="select-checkbox-<?= $row['id'] ?>" value="<?= $row['id'] ?>">
@@ -110,10 +72,6 @@
                         data-id="<?= $row['id'] ?>"
                         data-attr="<?= $attr ?>"
                         <?= (strpos($row['status'], $attr) !== false) ? 'checked' : '' ?>>
-                      <span class="switch-toggle-slider">
-                        <span class="switch-on"><i class="fa-solid fa-check"></i></span>
-                        <span class="switch-off"><i class="fa-solid fa-xmark"></i></span>
-                      </span>
                     </label>
                   </td>
                 <?php endforeach; ?>

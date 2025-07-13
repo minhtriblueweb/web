@@ -84,17 +84,13 @@
                   </td>
 
                   <!-- Checkbox Hiển thị, Nổi bật -->
-                  <?php foreach (['hienthi', 'noibat'] as $attr): ?>
+                  <?php foreach ($status as $attr => $label): ?>
                     <td class="align-middle text-center">
                       <label class="switch switch-success">
                         <input type="checkbox" class="switch-input custom-control-input show-checkbox"
                           id="show-checkbox-<?= $attr ?>-<?= $id ?>" data-table="<?= $table ?>"
                           data-id="<?= $id ?>" data-attr="<?= $attr ?>"
                           <?= (strpos($row['status'], $attr) !== false) ? 'checked' : '' ?>>
-                        <span class="switch-toggle-slider">
-                          <span class="switch-on"><i class="fa-solid fa-check"></i></span>
-                          <span class="switch-off"><i class="fa-solid fa-xmark"></i></span>
-                        </span>
                       </label>
                     </td>
                   <?php endforeach; ?>

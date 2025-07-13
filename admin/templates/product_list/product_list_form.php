@@ -114,16 +114,7 @@
                 <div class="form-group d-inline-block mb-2 mr-5">
                   <label for="<?= $check ?>-checkbox" class="d-inline-block align-middle mb-0 mr-3 form-label"><?= $label ?>:</label>
                   <label class="switch switch-success">
-                    <input
-                      type="checkbox"
-                      name="<?= $check ?>"
-                      class="switch-input custom-control-input .show-checkbox"
-                      id="<?= $check ?>-checkbox"
-                      <?= $fn->is_checked($check, $result['status'] ?? '', $id ?? '') ?>>
-                    <span class="switch-toggle-slider">
-                      <span class="switch-on"><i class="fa-solid fa-check"></i></span>
-                      <span class="switch-off"><i class="fa-solid fa-xmark"></i></span>
-                    </span>
+                    <input type="checkbox" name="<?= $check ?>" class="switch-input custom-control-input .show-checkbox" id="<?= $check ?>-checkbox" <?= $fn->is_checked($check, $result['status'] ?? '', $id ?? '') ?>>
                   </label>
                 </div>
               <?php endforeach; ?>

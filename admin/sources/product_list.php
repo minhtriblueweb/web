@@ -76,7 +76,6 @@ switch ($act) {
         'enable_seo'         => true,
         'enable_slug'        => true,
         'convert_webp'       => false,
-        'watermark'          => false,
       ]);
     }
     $breadcrumb = [['label' => ($id !== null ? 'Cập nhật ' : 'Thêm mới ') . $name_page]];

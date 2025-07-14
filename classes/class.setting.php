@@ -16,46 +16,40 @@ class setting
     $this->fm = new Format();
     $this->fn = new Functions();
   }
-
   public function update_watermark($data, $files)
   {
     $fields = ['position', 'opacity', 'per', 'small_per', 'max', 'min', 'offset_x', 'offset_y'];
     $data_escaped = [];
     foreach ($fields as $field) {
-      $data_escaped[$field] = !empty($data[$field]) ? mysqli_real_escape_string($this->db->link, $data[$field]) : "";
+      $data_escaped[$field] = isset($data[$field]) ? mysqli_real_escape_string($this->db->link, $data[$field]) : '';
     }
-    $width = isset($data['thumb_width']) ? (int)$data['thumb_width'] : 300;
-    $height = isset($data['thumb_height']) ? (int)$data['thumb_height'] : 120;
-    $thumb_size = "{$width}x{$height}x1";
+
     $thumb_filename = '';
     $old_file_path = '';
+
+    // Lấy watermark cũ từ DB
+    $row = $this->db->rawQueryOne("SELECT `watermark` FROM tbl_watermark WHERE id = 1");
+    if (!empty($row['watermark'])) {
+      $old_file_path = UPLOADS . $row['watermark'];
+    }
+
+    // Nếu có upload watermark mới
     if (!empty($files['watermark']['name'])) {
       $ext = strtolower(pathinfo($files['watermark']['name'], PATHINFO_EXTENSION));
       if ($ext !== 'png') {
         $this->fn->transfer("Vui lòng chọn file PNG để giữ nền trong suốt", "index.php?page=watermark", false);
       }
-      $query = "SELECT `watermark` FROM tbl_watermark WHERE id = 1";
-      $old_file = $this->db->select($query);
-      if ($old_file && $old_file->num_rows > 0) {
-        $row = $old_file->fetch_assoc();
-        if (!empty($row['watermark'])) {
-          $old_file_path = "uploads/" . $row['watermark'];
-        }
-      }
-      $thumb_filename = $this->fn->Upload([
+
+      $thumb_filename = $this->fn->uploadImage([
         'file' => $files['watermark'],
         'custom_name' => 'watermark',
-        'thumb' => $thumb_size,
-        'old_file_path' => '',
+        'old_file_path' => $old_file_path,
         'background' => [0, 0, 0, 127],
-        'watermark' => false,
         'convert_webp' => false
       ]);
-      if (!empty($thumb_filename) && !empty($old_file_path) && file_exists($old_file_path)) {
-        unlink($old_file_path);
-      }
     }
 
+    // Build query cập nhật
     $update_fields = [];
     foreach ($data_escaped as $field => $value) {
       $update_fields[] = "`$field` = '$value'";
@@ -66,10 +60,27 @@ class setting
 
     $update_query = "UPDATE tbl_watermark SET " . implode(", ", $update_fields) . " WHERE id = 1";
     $result = $this->db->update($update_query);
-    $msg = $result ? "Cập nhật watermark thành công" : "Cập nhật watermark thất bại";
 
+    // 🔥 Dọn dẹp toàn bộ ảnh watermark cũ trong thư mục thumbs
+    $thumb_base = UPLOADS . THUMB;
+    if (is_dir($thumb_base)) {
+      $subdirs = glob($thumb_base . '*', GLOB_ONLYDIR);
+      foreach ($subdirs as $dir) {
+        $wm_dir = rtrim($dir, '/') . '/' . WATERMARK;
+        if (is_dir($wm_dir)) {
+          $files = glob($wm_dir . '/*');
+          foreach ($files as $file) {
+            @unlink($file);
+          }
+        }
+      }
+    }
+
+    $msg = $result ? "Cập nhật watermark thành công" : "Cập nhật watermark thất bại";
     $this->fn->transfer($msg, "index.php?page=watermark", $result);
   }
+
+
   public function update_setting_item($item, $data, $files)
   {
     $width = isset($data['thumb_width']) ? (int)$data['thumb_width'] : 300;
@@ -120,13 +131,6 @@ class setting
   public function get_setting_item($item)
   {
     $query = "SELECT `$item` FROM tbl_setting WHERE id = '1' LIMIT 1";
-    $result = $this->db->select($query);
-    return $result;
-  }
-
-  public function get_watermark()
-  {
-    $query = "SELECT * FROM tbl_watermark WHERE id = '1' LIMIT 1";
     $result = $this->db->select($query);
     return $result;
   }

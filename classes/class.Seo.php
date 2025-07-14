@@ -111,13 +111,11 @@ class Seo
       }
     }
     if (!empty($files['file']['tmp_name'])) {
-      $thumb_filename = $this->fn->Upload([
+      $thumb_filename = $this->fn->uploadImage([
         'file' => $files['file'],
         'custom_name' => 'ogimage_' . $data_prepared['type'],
         'background' => [255, 255, 255, 0],
-        'thumb' => '',
         'old_file_path' => $old_file_path,
-        'watermark' => false,
         'convert_webp' => true
       ]);
       if ($thumb_filename) {

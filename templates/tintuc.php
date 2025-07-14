@@ -1,21 +1,11 @@
-<?php
-$show_tintuc = $fn->show_data([
-  'table' => 'tbl_news',
-  'status' => 'hienthi,noibat',
-  'type'   => 'tintuc',
-  'select' => "file, name{$lang}, desc{$lang}, slug{$lang}",
-  'limit'  => 8
-]);
-?>
-
-<?php if (!empty($show_tintuc)): ?>
+<?php if (!empty($tintuc)): ?>
   <div class="wrap-service" data-aos="fade-up" data-aos-duration="500">
     <div class="wrap-content">
       <div class="title-main">
         <h2>TIN TỨC MỚI NHẤT</h2>
       </div>
       <div class="slick-service slick-d-none">
-        <?php foreach ($show_tintuc as $row_tintuc): ?>
+        <?php foreach ($tintuc as $row_tintuc): ?>
           <?php
           $name = $row_tintuc['name' . $lang];
           $desc = $row_tintuc['desc' . $lang];

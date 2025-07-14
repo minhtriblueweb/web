@@ -1,10 +1,3 @@
-<?php
-$slides = $fn->show_data([
-  'table'  => 'tbl_slideshow',
-  'status' => 'hienthi',
-  'select' => "file, name{$lang}, link"
-]);
-?>
 <?php if (!empty($slides)): ?>
   <div class="wrap-slideshow">
     <div class="wrap-content d-flex flex-wrap justify-content-end align-items-start">

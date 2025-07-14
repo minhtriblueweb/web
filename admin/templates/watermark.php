@@ -1,12 +1,7 @@
 <?php
-$get_watermark = $setting->get_watermark();
-$thumb_width = '300';
-$thumb_height = '120';
-if ($get_watermark) {
-  $result = $get_watermark->fetch_assoc();
-}
+$result = $db->rawQueryOne("SELECT * FROM tbl_watermark LIMIT 1");
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['upload'])) {
-  $update = $setting->update_watermark($_POST, $_FILES);
+  $setting->update_watermark($_POST, $_FILES);
 }
 ?>
 <section class="content-header text-sm">
@@ -24,7 +19,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['upload'])) {
   <!-- FORM -->
   <form class="validation-form" novalidate="" method="post" id="form-watermark" action="" enctype="multipart/form-data">
     <div class="card-footer text-sm sticky-top">
-      <button name="upload" type="submit" class="btn btn-sm bg-gradient-primary submit-check">
+      <button name="upload" type="submit" class="btn btn-sm bg-gradient-primary">
         <i class="far fa-save mr-2"></i>Lưu
       </button>
       <button type="reset" class="btn btn-sm bg-gradient-secondary">

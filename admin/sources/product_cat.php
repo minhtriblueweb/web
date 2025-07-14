@@ -78,8 +78,7 @@ switch ($act) {
         'redirect_page'       => $linkMan,
         'enable_seo'          => true,
         'enable_slug'         => true,
-        'convert_webp'        => true,
-        'watermark'           => false,
+        'convert_webp'        => true
       ]);
     }
     $breadcrumb = [['label' => ($id !== null ? 'Cập nhật ' : 'Thêm mới ') . $name_page]];

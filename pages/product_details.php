@@ -5,22 +5,22 @@
         <div class="d-flex justify-content-center align-items-center">
           <a id="Zoom-1" class="MagicZoom"
             data-options="zoomMode: magnifier; zoomPosition: inner; hint: off; rightClick: true; expandCaption: false; history: false;"
-            href="<?= $fn->getImageCustom(['file' => $row_sp['file'],  'src_only' => true]) ?>" title="<?= $row_sp['name' . $lang] ?>">
-            <?= $fn->getImageCustom(['file' => $row_sp['file'], 'alt' => $row_sp['name' . $lang], 'title' => $row_sp['name' . $lang], 'width' => 500, 'height' => 500, 'zc' => 1, 'lazy' => true]) ?>
+            href="<?= $fn->getImageCustom(['file' => $row_sp['file'],  'src_only' => true, 'watermark' => true]) ?>" title="<?= $row_sp['name' . $lang] ?>">
+            <?= $fn->getImageCustom(['file' => $row_sp['file'], 'alt' => $row_sp['name' . $lang], 'title' => $row_sp['name' . $lang], 'width' => 500, 'height' => 500, 'zc' => 1, 'lazy' => true, 'watermark' => true]) ?>
           </a>
         </div>
         <?php if (!empty($get_gallery)): ?>
           <div class="gallery-thumb-pro">
             <div class="slick-pro-detail">
               <div>
-                <a class="thumb-pro-detail" data-zoom-id="Zoom-1" href="<?= $fn->getImageCustom(['file' => $row_sp['file'],  'src_only' => true]) ?>">
-                  <?= $fn->getImageCustom(['file' => $row_sp['file'], 'class' => '', 'width' => 500, 'height' => 500, 'zc' => 1, 'lazy' => true]) ?>
+                <a class="thumb-pro-detail" data-zoom-id="Zoom-1" href="<?= $fn->getImageCustom(['file' => $row_sp['file'], 'watermark' => true, 'src_only' => true]) ?>">
+                  <?= $fn->getImageCustom(['file' => $row_sp['file'], 'class' => '', 'width' => 500, 'height' => 500, 'zc' => 1, 'lazy' => true, 'watermark' => true]) ?>
                 </a>
               </div>
               <?php foreach ($get_gallery as $gallery): ?>
                 <div>
-                  <a href=" <?= $fn->getImageCustom(['file' => $gallery['file'], 'src_only' => true]) ?>" class="thumb-pro-detail" data-zoom-id="Zoom-1">
-                    <?= $fn->getImageCustom(['file' => $gallery['file'], 'class' => '', 'width' => 500, 'height' => 500, 'zc' => 1, 'lazy' => true]) ?>
+                  <a href=" <?= $fn->getImageCustom(['file' => $gallery['file'], 'watermark' => true, 'src_only' => true]) ?>" class="thumb-pro-detail" data-zoom-id="Zoom-1">
+                    <?= $fn->getImageCustom(['file' => $gallery['file'], 'class' => '', 'width' => 500, 'height' => 500, 'zc' => 1, 'lazy' => true, 'watermark' => true]) ?>
                   </a>
                 </div>
               <?php endforeach; ?>
@@ -70,8 +70,8 @@
       </div>
 
       <div class="policy-detail">
-        <?php if (!empty($show_tieuchi)): ?>
-          <?php foreach ($show_tieuchi as $row_tc): ?>
+        <?php if (!empty($tieuchi)): ?>
+          <?php foreach ($tieuchi as $row_tc): ?>
             <div class="list-policy">
               <div class="i-policy">
                 <?= $fn->getImageCustom(['file' => $row_tc['file'], 'class' => 'me-3', 'alt' => $row_tc['name' . $lang], 'title' => $row_tc['name' . $lang], 'width' => 40, 'height' => 40, 'zc' => 1, 'lazy' => true]) ?>

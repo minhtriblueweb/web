@@ -29,23 +29,23 @@ $sidebarMenu = [
     'children' => [
       [
         'title' => 'Tin tức',
-        'active' => ['?page=news_man&type=tintuc', '?page=news_form&type=tintuc']
+        'active' => ['?page=news&act=man&type=tintuc', '?page=news&act=form&type=tintuc']
       ],
       [
         'title' => 'Chính sách',
-        'active' => ['?page=news_man&type=chinhsach', '?page=news_form&type=chinhsach']
+        'active' => ['?page=news&act=man&type=chinhsach', '?page=news&act=form&type=chinhsach']
       ],
       [
         'title' => 'Tiêu chí',
-        'active' => ['?page=tieuchi_list', '?page=tieuchi_form']
+        'active' => ['?page=news&act=man&type=tieuchi', '?page=news&act=form&type=tieuchi']
       ],
       [
         'title' => 'Đánh giá khách hàng',
-        'active' => ['?page=danhgia_list', '?page=danhgia_form']
+        'active' => ['?page=news&act=man&type=danhgia', 'page=news&act=form&type=danhgia']
       ],
       [
         'title' => 'Hướng dẫn chơi',
-        'active' => ['?page=news_man&type=huongdanchoi', '?page=news_form&type=huongdanchoi']
+        'active' => ['?page=news&act=man&type=huongdanchoi', '?page=news&act=form&type=huongdanchoi']
       ],
     ]
   ],

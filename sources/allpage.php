@@ -1,18 +1,18 @@
 <?php
-// Các biến toàn cục khác (đồng bộ từ $setting)
-$hotline         = $setting['hotline'];
-$web_name        = $setting['web_name'];
-$introduction    = $setting['introduction'];
-$worktime        = $setting['worktime'];
-$descvi          = $setting['desc' . $lang] ?? '';
-$address         = $setting['address'];
-$coords_iframe   = $setting['coords_iframe'];
-$copyright       = $setting['copyright'];
-$bodyjs          = $setting['bodyjs'];
-$headjs          = $setting['headjs'];
-$analytics       = $setting['analytics'];
-$logo            = $setting['logo'];
-$color           = $setting['color'];
+// Các biến toàn cục khác (đồng bộ từ $optsetting)
+$hotline         = $optsetting['hotline'];
+$web_name        = $optsetting['web_name'];
+$introduction    = $optsetting['introduction'];
+$worktime        = $optsetting['worktime'];
+$descvi          = $optsetting['desc' . $lang] ?? '';
+$address         = $optsetting['address'];
+$coords_iframe   = $optsetting['coords_iframe'];
+$copyright       = $optsetting['copyright'];
+$bodyjs          = $optsetting['bodyjs'];
+$headjs          = $optsetting['headjs'];
+$analytics       = $optsetting['analytics'];
+$logo            = $optsetting['logo'];
+$color           = $optsetting['color'];
 
 $show_social = $cache->get(
   "SELECT file, link, name{$lang}, desc{$lang} FROM tbl_social WHERE FIND_IN_SET('hienthi', status)",
@@ -20,11 +20,11 @@ $show_social = $cache->get(
   'all',
   7200
 );
-// Lấy đánh giá
-$show_danhgia = $fn->show_data([
-  'table'  => 'tbl_danhgia',
+$tieuchi = $fn->show_data([
+  'table' => 'tbl_news',
   'status' => 'hienthi',
-  'select' => "id, file, desc{$lang}, name{$lang}, address{$lang}"
+  'type'   => 'tieuchi',
+  'select' => "file, name{$lang}, desc{$lang}"
 ]);
 
 // Lấy danh mục cấp 1

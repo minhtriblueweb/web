@@ -1,22 +1,3 @@
-<?php
-// Lấy sản phẩm
-$sp_all = $fn->show_data([
-  'table'  => 'tbl_product',
-  'status' => 'hienthi',
-  'select' => "id, file, slug{$lang}, name{$lang}, sale_price, regular_price, views, id_list, id_cat"
-]);
-
-// Gom sản phẩm theo id_list và id_cat
-$sp_group = [];
-foreach ($sp_all ?? [] as $row) {
-  $id_list = $row['id_list'];
-  $id_cat = $row['id_cat'];
-  $sp_group[$id_list]['all'][] = $row;
-  if ($id_cat) {
-    $sp_group[$id_list]['cat'][$id_cat][] = $row;
-  }
-}
-?>
 <div class="wrap-content">
   <?php foreach ($dm_c1_rows as $lv1): ?>
     <?php
@@ -56,7 +37,8 @@ foreach ($sp_all ?? [] as $row) {
                       'zc' => 1,
                       'class' => 'w-100',
                       'alt' => $name,
-                      'title' => $name
+                      'title' => $name,
+                      'watermark' => true
                     ]) ?>
                   </div>
                   <div class="content">
@@ -98,11 +80,15 @@ foreach ($sp_all ?? [] as $row) {
                   <div class="item-product">
                     <a href="<?= $sp['slug' . $lang] ?>">
                       <div class="images">
-                        <?= $fn->getImage([
+                        <?= $fn->getImageCustom([
                           'file' => $sp['file'],
+                          'width' => 500,
+                          'height' => 500,
+                          'zc' => 1,
                           'class' => 'w-100',
                           'alt' => $name,
-                          'title' => $name
+                          'title' => $name,
+                          'watermark' => true
                         ]) ?>
                       </div>
                       <div class="content">

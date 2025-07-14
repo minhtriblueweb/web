@@ -1,10 +1,4 @@
 <?php
-$tieuchi = $fn->show_data([
-  'table' => 'tbl_tieuchi',
-  'status' => 'hienthi',
-  'select' => "file, name{$lang}, desc{$lang}"
-]);
-
 if (!empty($tieuchi)):
 ?>
   <div class="wrap-criterion">

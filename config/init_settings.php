@@ -1,15 +1,15 @@
 <?php
 $lang = $_SESSION['lang'] ?? array_key_first($config['website']['lang']);
-$setting = $db->rawQueryOne("SELECT * FROM tbl_setting WHERE id = ?", [1]);
+$optsetting = $db->rawQueryOne("SELECT * FROM tbl_setting WHERE id = ?", [1]);
 // SEO mặc định
 $default_seo = [
-  'favicon'     => !empty($setting['favicon']) ? $fn->getImageCustom(['file' => $setting['favicon'], 'width' => 48, 'height' => 48, 'zc' => 1, 'src_only' => true]) : '',
-  'title'       => $setting['web_name'],
-  'keywords'    => $setting['web_name'],
-  'description' => $setting['desc' . $lang] ?? '',
-  'geo'         => $setting['coords'],
-  'web_name'    => $setting['web_name'],
-  'email'       => $setting['email'],
+  'favicon'     => !empty($optsetting['favicon']) ? $fn->getImageCustom(['file' => $optsetting['favicon'], 'width' => 48, 'height' => 48, 'zc' => 1, 'src_only' => true]) : '',
+  'title'       => $optsetting['web_name'],
+  'keywords'    => $optsetting['web_name'],
+  'description' => $optsetting['desc' . $lang] ?? '',
+  'geo'         => $optsetting['coords'],
+  'web_name'    => $optsetting['web_name'],
+  'email'       => $optsetting['email'],
   'url'         => BASE,
-  'image'       => !empty($setting['logo']) ? BASE_ADMIN . UPLOADS . $setting['logo'] : ''
+  'image'       => !empty($optsetting['logo']) ? BASE_ADMIN . UPLOADS . $optsetting['logo'] : ''
 ];

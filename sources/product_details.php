@@ -73,9 +73,6 @@ $get_gallery = $fn->show_data([
   'select' => "file"
 ]);
 
-// Lấy tiêu chí
-$show_tieuchi = $fn->show_data(['table' => 'tbl_tieuchi', 'status' => 'hienthi', 'select' => "file, name{$lang}"]);
-
 // SEO
 $data_seo = $seo->get_seo($id, 'product');
 

@@ -1,11 +1,3 @@
-<?php
-$sanpham_banchay = $fn->show_data([
-  'table'  => 'tbl_product',
-  'status' => 'hienthi,banchay',
-  'select' => "id, file, slug{$lang}, name{$lang}, sale_price, regular_price, views"
-]);
-?>
-
 <?php if (!empty($sanpham_banchay)): ?>
   <div class="wrap-product-hot">
     <div class="wrap-content" data-aos="fade-up" data-aos-duration="500">
@@ -25,7 +17,7 @@ $sanpham_banchay = $fn->show_data([
             <div class="item-product">
               <a href="<?= $slug ?>">
                 <div class="images">
-                  <?= $fn->getImageCustom(['file'  => $sp['file'], 'class' => 'w-100', 'alt'   => $name, 'title' => $name, 'width' => 500, 'height' => 500, 'zc' => 1, 'lazy'  => true]) ?>
+                  <?= $fn->getImageCustom(['file'  => $sp['file'], 'class' => 'w-100', 'alt'   => $name, 'title' => $name, 'width' => 500, 'height' => 500, 'zc' => 1, 'lazy'  => true, 'watermark' => true]) ?>
                 </div>
                 <div class="content">
                   <div class="title">

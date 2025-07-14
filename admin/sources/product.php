@@ -103,7 +103,6 @@ switch ($act) {
         'status_flags' => array_keys($status),
         'redirect_page' => $linkMan,
         'convert_webp' => true,
-        'watermark' => true,
         'enable_slug' => true,
         'enable_seo' => true,
         'enable_gallery' => true

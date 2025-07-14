@@ -1,15 +1,15 @@
-<?php if (!empty($show_danhgia)): ?>
+<?php if (!empty($danhgia)): ?>
   <div class="wrap-feedback" data-aos="fade-up" data-aos-duration="500">
     <div class="wrap-content">
       <div class="title-main">
         <h2>ĐÁNH GIÁ KHÁCH HÀNG</h2>
       </div>
       <div class="slick-feedback slick-d-none">
-        <?php foreach ($show_danhgia as $row): ?>
+        <?php foreach ($danhgia as $row): ?>
           <?php
           $desc    = $row['desc' . $lang];
           $name    = $row['name' . $lang];
-          $address = $row['address' . $lang];
+          $address = $row['content' . $lang];
           ?>
           <div class="item-feedback">
             <p class="text-split"><?= $desc ?></p>

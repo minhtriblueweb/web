@@ -23,8 +23,8 @@ class news
     $result = $this->db->select($query);
     if ($result && $result->num_rows > 0) {
       $product = $result->fetch_assoc();
-      $new_ews = $product['ews'] + 1;
-      $update_query = "UPDATE tbl_news SET ews = '$new_ews' WHERE slug = '$slug'";
+      $new_views = $product['views'] + 1;
+      $update_query = "UPDATE tbl_nviews SET views = '$new_views' WHERE slug = '$slug'";
       $this->db->update($update_query);
       return $product;
     }

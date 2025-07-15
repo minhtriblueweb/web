@@ -14,15 +14,13 @@
       </div>
       <div class="card-body">
         <div class="form-group">
-          <?php foreach ($status as $attr => $label): ?>
-            <label for="<?= $check ?>-checkbox" class="d-inline-block align-middle mb-0 mr-3 form-label"><?= $label ?>:</label>
-            <label class="switch switch-success">
-              <input type="checkbox" name="<?= $attr ?>" class="switch-input custom-control-input"
-                id="show-checkbox-<?= $attr ?>-<?= $id ?>"
-                data-table="<?= $table ?>" data-id="<?= $id ?>" data-attr="<?= $attr ?>"
-                <?= (strpos($result['status'] ?? '', $attr) !== false) ? 'checked' : '' ?>>
-
-            </label>
+          <?php foreach ($status as $check => $label): ?>
+            <div class="form-group d-inline-block mb-2 mr-5">
+              <label for="<?= $check ?>-checkbox" class="d-inline-block align-middle mb-0 mr-3 form-label"><?= $label ?>:</label>
+              <label class="switch switch-success">
+                <input type="checkbox" name="<?= $check ?>" class="switch-input custom-control-input .show-checkbox" id="<?= $check ?>-checkbox" <?= $fn->is_checked($check, $result['status'] ?? '', $result['id'] ?? '') ?>>
+              </label>
+            </div>
           <?php endforeach; ?>
         </div>
         <div class="card card-primary card-outline card-outline-tabs">
@@ -58,7 +56,7 @@
                       class="form-control for-seo text-sm"
                       name="name<?= $k ?>" id="name<?= $k ?>"
                       placeholder="Tiêu đề (<?= $k ?>)"
-                      value="<?= $_POST['name' . $k] ?? ($result['name' . $k] ?? '') ?>"
+                      value="<?= $_POST['name' . $k] ?? $result['name' . $k] ?? '' ?>"
                       <?= ($k == 'vi') ? 'required' : '' ?> />
                   </div>
                   <!-- Nội dung -->

@@ -68,6 +68,14 @@ $sidebarMenu = [
       [
         'title' => 'Footer',
         'active' => ['?page=static&type=footer']
+      ],
+      [
+        'title' => 'Hỗ trợ khách hàng',
+        'active' => ['?page=static&type=hotrokhachhang']
+      ],
+      [
+        'title' => 'Hỗ trợ 24/7',
+        'active' => ['?page=static&type=hotro247']
       ]
     ]
   ],
@@ -77,27 +85,27 @@ $sidebarMenu = [
     'children' => [
       [
         'title' => 'Logo',
-        'active' => ['?page=setting_list&type=logo']
+        'active' => ['?page=photo&act=photo_static&type=logo']
       ],
       [
         'title' => 'Watermark',
-        'active' => ['?page=watermark']
+        'active' => ['?page=photo&act=photo_static&type=watermark']
       ],
       [
         'title' => 'Favicon',
-        'active' => ['?page=setting_list&type=favicon']
+        'active' => ['?page=photo&act=photo_static&type=favicon']
       ],
       [
         'title' => 'Slideshow',
-        'active' => ['?page=slideshow_list', '?page=slideshow_form']
+        'active' => ['?page=photo&act=photo_man&type=slideshow', '?page=photo&act=photo_form&type=slideshow']
       ],
       [
         'title' => 'Social',
-        'active' => ['?page=social_list', '?page=social_form']
+        'active' => ['?page=photo&act=photo_man&type=social', '?page=photo&act=photo_form&type=social']
       ],
       [
         'title' => 'Phương thức thanh toán',
-        'active' => ['?page=payment_list', '?page=payment_porm']
+        'active' => ['?page=photo&act=photo_man&type=payment', '?page=photo&act=photo_form&type=payment']
       ]
     ]
   ],

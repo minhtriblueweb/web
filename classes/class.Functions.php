@@ -240,6 +240,7 @@ class Functions
     $table = $options['table'] ?? '';
     $fields_multi = $options['fields_multi'] ?? [];
     $fields_common = $options['fields_common'] ?? [];
+    $fields_options = $options['fields_options'] ?? [];
     $status_flags = $options['status_flags'] ?? [];
     $redirect_page = $options['redirect_page'] ?? 'index.php';
     $enable_gallery = $options['enable_gallery'] ?? false;
@@ -258,14 +259,20 @@ class Functions
     foreach ($fields_common as $field) {
       $data_prepared[$field] = $data[$field] ?? '';
     }
-
+    if (!empty($fields_options)) {
+      $options_data = [];
+      foreach ($fields_options as $field) {
+        $options_data[$field] = $data[$field] ?? '';
+      }
+      $data_prepared['options'] = json_encode($options_data, JSON_UNESCAPED_UNICODE);
+    }
     $data_prepared['status'] = implode(',', array_filter($status_flags, fn($f) => !empty($data[$f])));
     $type = $data_prepared['type'] ?? '';
 
-    $errors = $this->checkTitle($data);
-    if (!empty($errors)) {
-      $this->transfer($errors[0], $_SERVER['HTTP_REFERER'], false);
-    }
+    // $errors = $this->checkTitle($data);
+    // if (!empty($errors)) {
+    //   $this->transfer($errors[0], $_SERVER['HTTP_REFERER'], false);
+    // }
 
     if ($enable_slug) {
       foreach ($langs as $lang) {
@@ -408,7 +415,7 @@ class Functions
     $id = (int)($options['id'] ?? 0);
     $table = $options['table'] ?? '';
     $type = $options['type'] ?? '';
-    $redirect_page = $options['redirect_page'] ?? $this->getRedirectPath(['table' => $table, 'type' => $type]);
+    $redirect_page = $options['redirect_page'] ?? '';
     $delete_seo = $options['delete_seo'] ?? false;
     $delete_gallery = $options['delete_gallery'] ?? false;
     $delete_file = $options['delete_file'] ?? true;
@@ -476,7 +483,7 @@ class Functions
     $listid = $options['listid'] ?? '';
     $table = $options['table'] ?? '';
     $type = $options['type'] ?? '';
-    $redirect_page = $options['redirect_page'] ?? $this->getRedirectPath(['table' => $table, 'type' => $type]);
+    $redirect_page = $options['redirect_page'] ?? '';
     $delete_seo = $options['delete_seo'] ?? false;
     $delete_gallery = $options['delete_gallery'] ?? false;
     $delete_file = $options['delete_file'] ?? true;
@@ -631,25 +638,6 @@ class Functions
     }
     $str .= '</select>';
     return $str;
-  }
-
-  public function getRedirectPath($params = [])
-  {
-    $map = [];
-    $tables = ['news', 'product', 'gallery', 'product_list', 'product_cat', 'tieuchi', 'danhgia', 'slideshow', 'setting', 'payment', 'static', 'social', 'seopage'];
-    foreach ($tables as $tbl) {
-      $map["tbl_{$tbl}"] = "{$tbl}_man";
-    }
-    $tableKey = $params['table'] ?? '';
-    $page = $map[$tableKey] ?? 'dashboard';
-    $query = "index.php?page={$page}";
-    if (!empty($params['type'])) {
-      $query .= "&type=" . urlencode($params['type']);
-    }
-    if (!empty($params['id_parent'])) {
-      $query .= "&id=" . (int)$params['id_parent'];
-    }
-    return $query;
   }
 
   function transfer($msg, $page = 'index.php?page=', $numb = true)
@@ -862,8 +850,9 @@ class Functions
   }
   public function addWatermark($source_path, $destination_path)
   {
-    $row = $this->db->rawQueryOne("SELECT * FROM tbl_watermark LIMIT 1");
-    if (empty($row['watermark'])) return false;
+    $row = $this->db->rawQueryOne("SELECT file, options FROM tbl_photo WHERE type = 'watermark' LIMIT 1");
+    if (empty($row['file'])) return false;
+
     $img_type = exif_imagetype($source_path);
     $image = match ($img_type) {
       IMAGETYPE_JPEG => imagecreatefromjpeg($source_path),
@@ -872,34 +861,44 @@ class Functions
       default        => false,
     };
     if (!$image) return false;
+
     $img_width = imagesx($image);
     $img_height = imagesy($image);
-    $watermark_path = UPLOADS . $row['watermark'];
+
+    $watermark_path = UPLOADS . $row['file'];
     if (!file_exists($watermark_path)) return false;
+
     $wm_src = imagecreatefrompng($watermark_path);
     if (!$wm_src) return false;
+
     imagesavealpha($wm_src, true);
     $wm_width = imagesx($wm_src);
     $wm_height = imagesy($wm_src);
-    $per       = floatval($row['per'] ?? 2);
-    $small_per = floatval($row['small_per'] ?? 3);
-    $max       = intval($row['max'] ?? 120);
-    $min       = intval($row['min'] ?? 120);
-    $opacity   = floatval($row['opacity'] ?? 100);
-    $position  = intval($row['position'] ?? 9);
-    $offset_x  = intval($row['offset_x'] ?? 0);
-    $offset_y  = intval($row['offset_y'] ?? 0);
+
+    $options = json_decode($row['options'] ?? '', true);
+    $position   = (int)($options['position'] ?? 9);
+    $per        = floatval($options['per'] ?? 2);
+    $small_per  = floatval($options['small_per'] ?? 3);
+    $max        = intval($options['max'] ?? 120);
+    $min        = intval($options['min'] ?? 120);
+    $opacity    = floatval($options['opacity'] ?? 100);
+    $offset_x   = intval($options['offset_x'] ?? 0);
+    $offset_y   = intval($options['offset_y'] ?? 0);
+
     $scale_percent = ($img_width < 300) ? $small_per : $per;
     $target_wm_width = $img_width * $scale_percent / 100;
     $target_wm_width = max($min, min($max > 0 ? $max : $img_width, $target_wm_width));
     $target_wm_height = intval($wm_height * ($target_wm_width / $wm_width));
+
     $scaled_wm = imagecreatetruecolor($target_wm_width, $target_wm_height);
     imagealphablending($scaled_wm, false);
     imagesavealpha($scaled_wm, true);
     imagecopyresampled($scaled_wm, $wm_src, 0, 0, 0, 0, $target_wm_width, $target_wm_height, $wm_width, $wm_height);
     imagedestroy($wm_src);
+
     $watermark = $this->applyOpacity($scaled_wm, $opacity);
     imagedestroy($scaled_wm);
+
     $padding = 10;
     $positions = [
       1 => [$padding, $padding],
@@ -915,15 +914,19 @@ class Functions
     [$x, $y] = $positions[$position] ?? $positions[9];
     $x += $offset_x;
     $y += $offset_y;
+
     imagecopy($image, $watermark, $x, $y, 0, 0, $target_wm_width, $target_wm_height);
+
     match ($img_type) {
       IMAGETYPE_JPEG => imagejpeg($image, $destination_path, 85),
       IMAGETYPE_PNG  => imagepng($image, $destination_path, 8),
       IMAGETYPE_WEBP => imagewebp($image, $destination_path, 80),
       default        => null,
     };
+
     imagedestroy($image);
     imagedestroy($watermark);
+
     return true;
   }
   public function createFixedThumbnail($source_path, $thumb_name, $background = false, $add_watermark = false, $convert_webp = false): string|false
@@ -1024,8 +1027,9 @@ class Functions
     };
     $return_path = $thumb_path;
     if ($success && $add_watermark && method_exists($this, 'addWatermark')) {
-      $row = $this->db->rawQueryOne("SELECT * FROM tbl_watermark LIMIT 1");
-      $position = isset($_GET['position']) ? (int)$_GET['position'] : (int)($row['position'] ?? 9);
+      $row = $this->db->rawQueryOne("SELECT file, options, date_updated FROM tbl_photo WHERE type = 'watermark' LIMIT 1");
+      $wm_dir = $upload_dir . WATERMARK;
+      $options = json_decode($row['options'] ?? '', true);
       $wm_dir = $upload_dir . WATERMARK;
       if (!is_dir($wm_dir)) mkdir($wm_dir, 0755, true);
       $wm_path = $wm_dir . $filename . '.' . $thumb_ext;
@@ -1036,20 +1040,18 @@ class Functions
       }
       if ($need_regenerate) {
         @unlink($wm_path);
-        if (!$this->addWatermark($thumb_path, $wm_path, $position)) {
+        if (!$this->addWatermark($thumb_path, $wm_path, $options)) {
           return false;
         }
       }
       $return_path = $wm_path;
     }
 
-
     imagedestroy($image);
     imagedestroy($canvas);
 
     return $success ? $return_path : false;
   }
-
   public function uploadImage(array $options): string
   {
     $file = $options['file'] ?? null;
@@ -1094,12 +1096,10 @@ class Functions
         $webp_path = $upload_dir . pathinfo($filename, PATHINFO_FILENAME) . '.webp';
         imagewebp($canvas, $webp_path, 100);
         imagedestroy($canvas);
-        @unlink($target_path); // Xoá ảnh gốc (jpg/png) sau khi chuyển webp
+        @unlink($target_path);
         return basename($webp_path);
       }
     }
-
-    // Không nên chèn watermark vào ảnh gốc nữa — watermark sẽ dùng khi render thumb
     return basename($target_path);
   }
   public function getImage(array $data = []): string
@@ -1156,7 +1156,6 @@ class Functions
   public function getImageCustom(array $data = []): string
   {
     global $config;
-
     $defaults = [
       'file'      => '',
       'alt'       => '',
@@ -1177,9 +1176,7 @@ class Functions
       'position'  => 9,
       'point-srcset' => $config['website']['point-srcset'] ?? []
     ];
-
     $opt = array_merge($defaults, $data);
-
     $file = ltrim(str_replace(UPLOADS, '', $opt['file']), '/');
     if (empty($file)) {
       $src = NO_IMG;
@@ -1187,12 +1184,9 @@ class Functions
       $timestamp = time();
       $baseFile  = basename($file);
       $folder    = dirname($file) !== '.' ? dirname($file) . '/' : '';
-
-      // Xác định đường dẫn ảnh
       if (!isset($data['thumb'])) {
         $opt['thumb'] = $opt['width'] && $opt['height'] && $opt['zc'];
       }
-
       if ($opt['watermark']) {
         $src = BASE . THUMB . "{$opt['width']}x{$opt['height']}x{$opt['zc']}/{$folder}{$baseFile}?wm=1&v={$timestamp}";
       } elseif ($opt['thumb']) {
@@ -1229,17 +1223,12 @@ class Functions
       $srcset = ' srcset="' . implode(', ', $srcsets) . '"';
       $sizes = ' sizes="' . implode(', ', $opt['sizes']) . '"';
     }
-
-    // Gán alt/title/style
     $alt = htmlspecialchars($opt['alt'] ?: pathinfo($file, PATHINFO_FILENAME));
     $title = htmlspecialchars($opt['title'] ?: $alt);
     $style = trim($opt['style']);
-
-    // Tự động thêm height nếu thiếu
     if (empty($opt['height']) && !str_contains($style, 'height')) {
       $style .= ($style ? '; ' : '') . 'height:auto';
     }
-
     return '<img src="' . htmlspecialchars($src) . '"'
       . ($opt['width'] ? ' width="' . (int)$opt['width'] . '"' : '')
       . (!empty($opt['height']) && $opt['height'] !== 'auto' ? ' height="' . (int)$opt['height'] . '"' : '')
@@ -1253,6 +1242,7 @@ class Functions
       . ' onerror="this.src=\'' . NO_IMG . '\'"'
       . '>';
   }
+
   function renderPagination($current_page, $total_pages, $base_url = 'index.php')
   {
     if ($total_pages <= 1) return '';

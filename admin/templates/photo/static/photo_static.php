@@ -10,11 +10,11 @@
     </div>
     <div class="card card-primary card-outline text-sm">
       <div class="card-header">
-        <h3 class="card-title">Cấu hình <?= $name_page ?></h3>
+        <h3 class="card-title">Cấu hình <?= $photoConfig['title_main'] ?></h3>
       </div>
       <div class="card-body">
         <div class="form-group">
-          <?php foreach ($status as $check => $label): ?>
+          <?php foreach ($photoConfig['status'] as $check => $label): ?>
             <div class="form-group d-inline-block mb-2 mr-5">
               <label for="<?= $check ?>-checkbox" class="d-inline-block align-middle mb-0 mr-3 form-label"><?= $label ?>:</label>
               <label class="switch switch-success">
@@ -24,15 +24,15 @@
           <?php endforeach; ?>
         </div>
         <div class="row">
-          <div class="col-xl-4">
+          <div class="<?= ($type === 'watermark') ? 'col-xl-4' : 'col-xl-12' ?>">
             <div class="form-group">
               <div class="upload-file">
                 <p>Upload hình ảnh:</p>
-                <label class="upload-file-label mb-2" for="watermark-file">
+                <label class="upload-file-label mb-2" for="<?= $type ?>-file">
                   <div class="upload-file-image rounded mb-3">
                     <div class="d-flex justify-content-center">
-                      <div class="border rounded bg-white d-flex align-items-center justify-content-center" style="width:<?= $thumb_width ?>px; height:<?= $thumb_height ?>px;">
-                        <?= $fn->getImage(['file' => $result['file'], 'class' => 'img-fluid', 'alt' => $name_page, 'title' => $name_page, 'id' => 'preview-image', 'style' => 'max-height:100%; max-width:100%;']) ?>
+                      <div class="border rounded bg-white d-flex align-items-center justify-content-center">
+                        <?= $fn->getImage(['file' => $result['file'], 'class' => 'img-fluid', 'alt' => $photoConfig['title_main'], 'title' => $photoConfig['title_main'], 'id' => 'preview-image', 'style' => 'max-height:100%; max-width:100%;']) ?>
                       </div>
                     </div>
                   </div>
@@ -41,7 +41,7 @@
                     <label class="custom-file-label mb-0" data-browse="Chọn" for="file">Chọn file</label>
                   </div>
                   <strong class="d-block text-sm">
-                    Width: <?= $width ?> px - Height: <?= $height ?> px (<?= $img_type_list ?>)
+                    Width: <?= $photoConfig['width'] ?> px - Height: <?= $photoConfig['height'] ?> px (<?= $photoConfig['img_type'] ?>)
                   </strong>
                 </label>
               </div>

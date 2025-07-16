@@ -51,7 +51,6 @@ $classes = [
   'setting',
   'social',
   'news',
-  'trangtinh',
   'payment'
 ];
 

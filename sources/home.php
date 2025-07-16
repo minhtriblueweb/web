@@ -4,9 +4,10 @@ $data_seo = $seo->get_seopage(
   $lang
 );
 $slides = $fn->show_data([
-  'table'  => 'tbl_slideshow',
+  'table'  => 'tbl_photo',
+  'type'  => 'slideshow',
   'status' => 'hienthi',
-  'select' => "file, name{$lang}, link"
+  'select' => "file, name{$lang}, link, options"
 ]);
 $tintuc = $fn->show_data([
   'table' => 'tbl_news',
@@ -21,7 +22,7 @@ $tieuchi = $fn->show_data([
   'type'   => 'tieuchi',
   'select' => "file, name{$lang}, desc{$lang}"
 ]);
-$danhgia = $fn->show_data([
+$feedback = $fn->show_data([
   'table' => 'tbl_news',
   'status' => 'hienthi',
   'type'   => 'danhgia',

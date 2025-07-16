@@ -1,5 +1,5 @@
 <?php
-$row_lh = $trangtinh->get_static('lienhe');
+$row_lh = $db->rawQueryOne("SELECT * FROM tbl_static WHERE type = ?", ['lienhe']);
 $data_seo = $seo->get_seopage(
   $db->rawQueryOne("SELECT * FROM tbl_seopage WHERE type = ?", ['lienhe']) ?: [],
   $lang

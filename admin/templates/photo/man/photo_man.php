@@ -1,7 +1,7 @@
 <section class="content">
   <div class="card-footer text-sm sticky-top">
     <a class="btn btn-sm bg-gradient-primary text-white" href="<?= $linkForm ?>" title="Thêm mới"><i class="fas fa-plus mr-2"></i>Thêm mới</a>
-    <a class="btn btn-sm bg-gradient-danger text-white" id="delete-all" data-url="<?= $linkDelete ?>" title="Xóa tất cả"><i class="far fa-trash-alt mr-2"></i>Xóa tất cả</a>
+    <a class="btn btn-sm bg-gradient-danger text-white" id="delete-all" data-url="<?= $linkMulti ?>" title="Xóa tất cả"><i class="far fa-trash-alt mr-2"></i>Xóa tất cả</a>
     <div class="form-inline form-search d-inline-block align-middle ml-3">
       <div class="input-group input-group-sm">
         <input class="form-control form-control-navbar text-sm" type="search" id="keyword" placeholder="Tìm kiếm" aria-label="Tìm kiếm" value="<?= (isset($_GET['keyword'])) ? $_GET['keyword'] : '' ?>" onkeypress="doEnter(event,'keyword','<?= $linkMan ?>')">
@@ -15,7 +15,7 @@
   </div>
   <div class="card card-primary card-outline text-sm mb-0">
     <div class="card-header">
-      <h3 class="card-title">Danh sách <?= $name_page ?></h3>
+      <h3 class="card-title">Danh sách <?= $photoConfig['title_main_photo'] ?></h3>
     </div>
     <div class="card-body table-responsive p-0">
       <table class="table table-hover">
@@ -31,7 +31,9 @@
             <th class="align-middle text-center" width="8%">Hình</th>
             <th class="align-middle" width="20%">Tiêu đề</th>
             <th class="align-middle">Link</th>
-            <th class="align-middle text-center">Hiển thị</th>
+            <?php foreach ($photoConfig['status_photo'] as $attr => $label): ?>
+              <th class="align-middle text-center"><?= $label ?></th>
+            <?php endforeach; ?>
             <th class="align-middle text-center">Thao tác</th>
           </tr>
         </thead>
@@ -85,18 +87,16 @@
                   <?= $link ?>
                 </td>
 
-                <!-- Hiển thị -->
-                <?php foreach (['hienthi'] as $attr): ?>
+
+                <?php foreach ($photoConfig['status_photo'] as $attr => $label): ?>
                   <td class="align-middle text-center">
                     <label class="switch switch-success">
                       <input type="checkbox" class="switch-input custom-control-input show-checkbox"
-                        id="show-checkbox-<?= $attr ?>-<?= $id ?>"
-                        data-table="<?= $table ?>" data-id="<?= $id ?>" data-attr="<?= $attr ?>"
-                        <?= (strpos($status, $attr) !== false) ? 'checked' : '' ?>>
-                      <span class="switch-toggle-slider">
-                        <span class="switch-on"><i class="fa-solid fa-check"></i></span>
-                        <span class="switch-off"><i class="fa-solid fa-xmark"></i></span>
-                      </span>
+                        id="show-checkbox-<?= $attr ?>-<?= $row['id'] ?>"
+                        data-table="<?= $table ?>"
+                        data-id="<?= $row['id'] ?>"
+                        data-attr="<?= $attr ?>"
+                        <?= (strpos($row['status'], $attr) !== false) ? 'checked' : '' ?>>
                     </label>
                   </td>
                 <?php endforeach; ?>

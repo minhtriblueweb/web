@@ -11,15 +11,10 @@ $copyright       = $optsetting['copyright'];
 $bodyjs          = $optsetting['bodyjs'];
 $headjs          = $optsetting['headjs'];
 $analytics       = $optsetting['analytics'];
-$logo            = $optsetting['logo'];
 $color           = $optsetting['color'];
 
-$show_social = $cache->get(
-  "SELECT file, link, name{$lang}, desc{$lang} FROM tbl_social WHERE FIND_IN_SET('hienthi', status)",
-  [],
-  'all',
-  7200
-);
+$show_social = $db->rawQuery("SELECT file, link, name{$lang}, desc{$lang} FROM tbl_photo WHERE type= ? AND FIND_IN_SET('hienthi', status)", ['social']);
+
 $tieuchi = $fn->show_data([
   'table' => 'tbl_news',
   'status' => 'hienthi',

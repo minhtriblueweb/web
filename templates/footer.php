@@ -1,6 +1,6 @@
 <?php
 $show_chinhsach = $fn->show_data(['table' => 'tbl_news', 'status' => 'hienthi', 'type'   => 'chinhsach', 'select' => "id, slug{$lang}, name{$lang}"]);
-$show_phuongthuctt = $fn->show_data(['table' => 'tbl_payment', 'status' => 'hienthi', 'select' => "id, file,name{$lang}"]);
+$payment = $fn->show_data(['table' => 'tbl_photo', 'type'  => 'payment', 'status' => 'hienthi', 'select' => "id, file,name{$lang}"]);
 $footer_static = $db->rawQueryOne("SELECT content$lang FROM tbl_static WHERE type = ? AND FIND_IN_SET(?, status) LIMIT 1", ['footer', 'hienthi']);
 $hotrokhachhang = $db->rawQueryOne("SELECT content$lang FROM tbl_static WHERE type = ? AND FIND_IN_SET(?, status) LIMIT 1", ['hotrokhachhang', 'hienthi']);
 $hotro247 = $db->rawQueryOne("SELECT content$lang FROM tbl_static WHERE type = ? AND FIND_IN_SET(?, status) LIMIT 1", ['hotro247', 'hienthi']);
@@ -11,7 +11,7 @@ $hotro247 = $db->rawQueryOne("SELECT content$lang FROM tbl_static WHERE type = ?
       <div class="footer-banner">
         <div class="logo-footer">
           <a href="./">
-            <?= $fn->getImageCustom(['file' => $logo, 'alt' => $web_name, 'title' => $web_name, 'width' => 300, 'height' => 120, 'zc' => 1, 'lazy' => true]) ?>
+            <?= $fn->getImageCustom(['file' => $logo['file'], 'alt' => $web_name, 'title' => $web_name, 'width' => 300, 'height' => 120, 'zc' => 1, 'lazy' => true]) ?>
           </a>
         </div>
         <p class="footer-company"><?= $web_name ?></p>
@@ -48,10 +48,10 @@ $hotro247 = $db->rawQueryOne("SELECT content$lang FROM tbl_static WHERE type = ?
           <div class="footer-policy">
             <p class="footer-title">PHƯƠNG THỨC THANH TOÁN</p>
             <div class="ibank-wrapper">
-              <?php if (!empty($show_phuongthuctt)): ?>
-                <?php foreach ($show_phuongthuctt as $row_pt): ?>
+              <?php if (!empty($payment)): ?>
+                <?php foreach ($payment as $row): ?>
                   <span class="ibank scale-img">
-                    <?= $fn->getImageCustom(['file' =>  $row_pt['file'], 'width' => 72, 'height' => 40, 'zc' => 2, 'alt' => $row_pt['name' . $lang], 'title' => $row_pt['name' . $lang], 'lazy' => true]) ?>
+                    <?= $fn->getImageCustom(['file' =>  $row['file'], 'width' => 72, 'height' => 40, 'zc' => 2, 'alt' => $row['name' . $lang], 'title' => $row['name' . $lang], 'lazy' => true]) ?>
                   </span>
                 <?php endforeach; ?>
               <?php endif; ?>

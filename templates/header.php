@@ -32,7 +32,7 @@
         <div class="logo">
           <a href="./">
             <?= $fn->getImageCustom([
-              'file' => $logo,
+              'file' => $logo['file'],
               'width'  => 300,
               'thumb'  => false,
               'alt' => $web_name,

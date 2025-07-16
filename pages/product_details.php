@@ -5,7 +5,7 @@
         <div class="d-flex justify-content-center align-items-center">
           <a id="Zoom-1" class="MagicZoom"
             data-options="zoomMode: magnifier; zoomPosition: inner; hint: off; rightClick: true; expandCaption: false; history: false;"
-            href="<?= $fn->getImageCustom(['file' => $row_sp['file'],  'src_only' => true, 'watermark' => true]) ?>" title="<?= $row_sp['name' . $lang] ?>">
+            href="<?= $fn->getImageCustom(['file' => $row_sp['file'], 'width' => 500, 'height' => 500, 'zc' => 1, 'src_only' => true, 'watermark' => true]) ?>" title="<?= $row_sp['name' . $lang] ?>">
             <?= $fn->getImageCustom(['file' => $row_sp['file'], 'alt' => $row_sp['name' . $lang], 'title' => $row_sp['name' . $lang], 'width' => 500, 'height' => 500, 'zc' => 1, 'lazy' => true, 'watermark' => true]) ?>
           </a>
         </div>
@@ -19,7 +19,7 @@
               </div>
               <?php foreach ($get_gallery as $gallery): ?>
                 <div>
-                  <a href=" <?= $fn->getImageCustom(['file' => $gallery['file'], 'watermark' => true, 'src_only' => true]) ?>" class="thumb-pro-detail" data-zoom-id="Zoom-1">
+                  <a href=" <?= $fn->getImageCustom(['file' => $gallery['file'], 'watermark' => true, 'width' => 500, 'height' => 500, 'zc' => 1, 'src_only' => true]) ?>" class="thumb-pro-detail" data-zoom-id="Zoom-1">
                     <?= $fn->getImageCustom(['file' => $gallery['file'], 'class' => '', 'width' => 500, 'height' => 500, 'zc' => 1, 'lazy' => true, 'watermark' => true]) ?>
                   </a>
                 </div>
@@ -114,7 +114,7 @@
           <div class="item-product">
             <a class="text-decoration-none" href="<?= $slug ?>" title="<?= htmlspecialchars($name) ?>">
               <div class="images">
-                <?= $fn->getImageCustom(['file' => $row_lq['file'], 'class' => 'w-100', 'alt' => $name, 'title' => $name, 'width' => 500, 'height' => 500, 'zc' => 1, 'lazy' => true]) ?>
+                <?= $fn->getImageCustom(['file' => $row_lq['file'], 'class' => 'w-100', 'alt' => $name, 'title' => $name, 'width' => 500, 'height' => 500, 'zc' => 1, 'lazy' => true, 'watermark' => true]) ?>
               </div>
               <div class="content">
                 <div class="title">

@@ -1,8 +1,9 @@
 <?php
-$row_mh = $trangtinh->get_static('muahang');
+$row_mh = $db->rawQueryOne("SELECT * FROM tbl_static WHERE type = ?", ['muahang']);
 $data_seo = $seo->get_seopage(
   $db->rawQueryOne("SELECT * FROM tbl_seopage WHERE type = ?", ['muahang']) ?: [],
   $lang
-); // breadcrumbs
+);
+
 $breadcrumbs->set('mua-hang', 'Mua hàng');
 $breadcrumbs = $breadcrumbs->get();

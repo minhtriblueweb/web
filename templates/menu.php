@@ -67,7 +67,7 @@
       <div class="logo-mobile">
         <a href="./">
           <?= $fn->getImageCustom([
-            'file' => $logo,
+            'file' => $logo['file'],
             'alt' => $web_name,
             'title' => $web_name,
             'lazy' => false

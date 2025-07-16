@@ -1,50 +1,53 @@
-<?php $type  = $_GET['type'] ?? '';
+<?php
+$type  = $_GET['type'] ?? '';
 $act   = $_GET['act'] ?? '';
 $table = 'tbl_photo';
 $name_page = '';
-$status = ['hienthi' => 'Hiển thị'];
-$fields_options = [];
-$width = $height = $zc = '';
-$img_type_list = '.jpg|.gif|.png|.jpeg|.webp';
 $result = $db->rawQueryOne("SELECT * FROM $table WHERE type = ? LIMIT 1", [$type]) ?? '';
-
+$linkMan    = "index.php?page=photo&act=photo_man&type=$type";
 switch ($act) {
-  /* --- 1. Ảnh Tĩnh: Watermark, Logo, Favicon --- */
-  case 'photo_static':
-    switch ($type) {
-      case 'watermark':
-        $name_page = 'Watermark';
-        $width = 300;
-        $height = 120;
-        $fields_options = ['position', 'per', 'small_per', 'max', 'min', 'opacity', 'offset_x', 'offset_y'];
-        break;
-
-      case 'logo':
-        $name_page = 'Logo';
-        $width = 300;
-        $height = 120;
-        $zc = 1;
-        $fields_options = ['width', 'height', 'zc'];
-        break;
-
-      case 'favicon':
-        $name_page = 'Favicon';
-        $width = 48;
-        $height = 48;
-        $zc = 1;
-        $fields_options = ['width', 'height', 'zc'];
-        break;
-
-      default:
-        $fn->transfer("Loại ảnh tĩnh không tồn tại!", "index.php", false);
-        break;
+  case 'delete':
+    if (isset($_GET['id']) && is_numeric($_GET['id'])) {
+      $fn->delete_data([
+        'id' => (int)$_GET['id'],
+        'table' => $table,
+        'type' => $type,
+        'redirect_page' => $linkMan
+      ]);
+    } else {
+      $fn->transfer("ID không hợp lệ!", $linkMan, false);
     }
+    break;
+  case 'delete_multiple':
+    if (!empty($_GET['listid'])) {
+      $fn->deleteMultiple_data([
+        'listid' => $_GET['listid'],
+        'table' => $table,
+        'type' => $type,
+        'redirect_page' => $linkMan
+      ]);
+    } else {
+      $fn->transfer("Không có danh sách ID cần xoá!", $linkMan, false);
+    }
+    break;
+
+  case 'photo_static':
+    $photoConfig = $config['photo']['photo_static'][$type] ?? null;
+    if (!$photoConfig) $fn->transfer("Loại ảnh tĩnh không tồn tại!", "index.php", false);
+    $zc = 1;
+    if (!empty($photoConfig['thumb'])) {
+      $thumbParts = explode('x', $photoConfig['thumb']);
+      $zc = isset($thumbParts[2]) ? (int)$thumbParts[2] : 1;
+    }
+    $fields_options = !empty($photoConfig['watermark-advanced'])
+      ? ['position', 'per', 'small_per', 'max', 'min', 'opacity', 'offset_x', 'offset_y']
+      : ['width', 'height', 'zc'];
+
     $options = json_decode($result['options'] ?? '', true);
     foreach ($fields_options as $opt) {
       $$opt = $options[$opt] ?? ($$opt ?? '');
     }
 
-    // Hiển thị & xử lý
     $breadcrumb = [['label' => $name_page]];
     include TEMPLATE . LAYOUT . 'breadcrumb.php';
     include TEMPLATE . "photo/static/photo_static.php";
@@ -53,83 +56,55 @@ switch ($act) {
       $fn->save_data($_POST, $_FILES, $result['id'] ?? null, [
         'table' => $table,
         'fields_options' => $fields_options,
-        'status_flags' => array_keys($status),
-        'redirect_page' => "index.php?page=photo&act=photo_static&type=" . $type
+        'status_flags' => array_keys($photoConfig['status']),
+        'redirect_page' => "index.php?page=photo&act=photo_static&type=$type"
       ]);
     }
     break;
 
-  /* --- 2. Danh sách ảnh động: slideshow, gallery... --- */
   case 'photo_man':
+    $photoConfig = $config['photo']['man_photo'][$type] ?? null;
+    if (!$photoConfig) $fn->transfer("Loại ảnh danh sách không tồn tại!", "index.php", false);
+
+    $name_page = $photoConfig['title_main_photo'] ?? ucfirst($type);
     $records_per_page = 10;
     $current_page = max(1, (int)($_GET['p'] ?? 1));
     $keyword = $_GET['keyword'] ?? '';
-    $name_page = '';
-    $photo_list = [];
-
-    switch ($type) {
-      case 'slideshow':
-        $name_page = 'Slideshow';
-        break;
-
-      case 'social':
-        $name_page = 'Social';
-        break;
-
-      case 'ads':
-        $name_page = 'Quảng cáo';
-        break;
-
-      default:
-        $fn->transfer("Loại ảnh danh sách không tồn tại!", "index.php", false);
-        break;
-    }
-    $total_rows = $fn->count_data([
-      'table' => $table,
-      'type'  => $type,
-      'keyword' => $keyword
-    ]);
+    $total_rows = $fn->count_data(['table' => $table, 'type'  => $type, 'keyword' => $keyword]);
     $total_pages = ceil($total_rows / $records_per_page);
     $paging = $fn->renderPagination($current_page, $total_pages);
-    $photo_list = $fn->show_data([
-      'table' => $table,
-      'type'  => $type,
-      'records_per_page' => $records_per_page,
-      'current_page' => $current_page,
-      'keyword' => $keyword
-    ]);
-    $linkMan    = "index.php?page=photo&act=photo_man&type=$type";
+    $photo_list = $fn->show_data(['table' => $table, 'type' => $type, 'records_per_page' => $records_per_page, 'current_page' => $current_page, 'keyword' => $keyword]);
+
     $linkForm   = "index.php?page=photo&act=photo_form&type=$type";
     $linkEdit   = "$linkForm&id=";
-    $linkDelete = "$linkMan&act=delete&id=";
-    $linkMulti  = "$linkMan&act=delete_multiple";
+    $linkDelete = "index.php?page=photo&act=delete&type=$type&id=";
+    $linkMulti  = "index.php?page=photo&act=delete_multiple&type=$type";
 
-    // Hiển thị giao diện
     $breadcrumb = [['label' => $name_page]];
     include TEMPLATE . LAYOUT . 'breadcrumb.php';
     include TEMPLATE . "photo/man/photo_man.php";
     break;
-  /* --- 3. Form thêm/sửa ảnh dạng danh sách --- */
+
   case 'photo_form':
-    $width = 1366;
-    $height = 600;
+    $photoConfig = $config['photo']['man_photo'][$type] ?? null;
+    if (!$photoConfig) $fn->transfer("Loại ảnh danh sách không tồn tại!", "index.php", false);
+
     $id = isset($_GET['id']) && is_numeric($_GET['id']) ? (int)$_GET['id'] : null;
-    $result = $seo_data = [];
-    if ($id !== null) {
-      $result = $db->rawQueryOne("SELECT * FROM $table WHERE type = ? AND id = ?", [$type, $id]);
-    }
-    $linkMan = "index.php?page=photo&act=photo_man&type=$type";
+    $result = ($id !== null) ? $db->rawQueryOne("SELECT * FROM $table WHERE type = ? AND id = ?", [$type, $id]) : null;
+
     if ($_SERVER['REQUEST_METHOD'] === 'POST' && (isset($_POST['add']) || isset($_POST['edit']))) {
       $fn->save_data($_POST, $_FILES, $id, [
         'table'           => $table,
         'fields_multi'    => ['name', 'desc', 'content'],
         'fields_common'   => ['numb', 'type', 'link'],
-        'status_flags'    => array_keys($status),
+        'fields_options'  => ['width', 'height', 'zc'],
+        'status_flags'    => array_keys($photoConfig['status_photo']),
         'redirect_page'   => $linkMan,
         'convert_webp'    => true
       ]);
     }
-    $breadcrumb = [['label' => ($id ? "Cập nhật " : "Thêm mới ") . $name_page]];
+
+    $breadcrumb = [['label' => ($id ? "Cập nhật " : "Thêm mới ") . $photoConfig['title_main_photo']]];
     include TEMPLATE . LAYOUT . 'breadcrumb.php';
     include TEMPLATE . "photo/man/photo_form.php";
     break;

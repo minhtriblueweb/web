@@ -1,6 +1,4 @@
-<?php
-if (!empty($tieuchi)):
-?>
+<?php if (!empty($tieuchi)): ?>
   <div class="wrap-criterion">
     <div class="wrap-content">
       <div class="slick-criterion slick-d-none">

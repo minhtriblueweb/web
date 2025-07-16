@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Máy chủ: 127.0.0.1
--- Thời gian đã tạo: Th7 15, 2025 lúc 12:00 PM
+-- Thời gian đã tạo: Th7 16, 2025 lúc 11:59 AM
 -- Phiên bản máy phục vụ: 10.4.32-MariaDB
 -- Phiên bản PHP: 8.2.12
 
@@ -932,41 +932,6 @@ INSERT INTO `tbl_news` (`id`, `slugvi`, `slugen`, `namevi`, `nameen`, `descvi`, 
 -- --------------------------------------------------------
 
 --
--- Cấu trúc bảng cho bảng `tbl_payment`
---
-
-CREATE TABLE `tbl_payment` (
-  `id` int(11) NOT NULL,
-  `namevi` text NOT NULL,
-  `contenten` text NOT NULL,
-  `nameen` text NOT NULL,
-  `contentvi` text NOT NULL,
-  `file` varchar(100) DEFAULT NULL,
-  `status` text NOT NULL,
-  `numb` int(20) NOT NULL,
-  `options` text NOT NULL,
-  `created_at` datetime DEFAULT current_timestamp(),
-  `updated_at` datetime DEFAULT current_timestamp() ON UPDATE current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Đang đổ dữ liệu cho bảng `tbl_payment`
---
-
-INSERT INTO `tbl_payment` (`id`, `namevi`, `contenten`, `nameen`, `contentvi`, `file`, `status`, `numb`, `options`, `created_at`, `updated_at`) VALUES
-(1, 'ACB', '', '', '<p>4070977</p>\r\n', 'd120c69dc1.png', 'hienthi', 1, '', '2025-06-24 00:52:01', '2025-06-24 00:52:01'),
-(2, 'techcombank', '', '', '<p>techcombank</p>\r\n', 'e2fe03d6af.png', 'hienthi', 1, '', '2025-06-24 00:52:01', '2025-06-24 00:52:01'),
-(4, 'timo', '', '', '', 'f9f68bfc02.png', 'hienthi', 1, '', '2025-06-24 00:52:01', '2025-06-24 00:52:01'),
-(5, 'agribank', '', '', '', 'agribank-badc_72x40x2.jpg', 'hienthi', 1, '{\"w\":72,\"h\":40}', '2025-06-24 00:52:01', '2025-06-24 13:45:10'),
-(6, 'Vietcombank.', '', '', '', 'ad883f221e.jpg', 'hienthi', 1, '', '2025-06-24 00:52:01', '2025-06-24 00:52:01'),
-(7, 'OCB', '', '', '', '517cce1842.png', 'hienthi', 1, '', '2025-06-24 00:52:01', '2025-06-24 00:52:01'),
-(8, 'Ngân hàng Xây dựng – CB', '', '', '', '4f495854b6.webp', 'hienthi', 1, '', '2025-06-24 00:52:01', '2025-06-24 00:52:01'),
-(9, 'Ngân hàng Dầu Khí Toàn Cầu – GPBank', '', '', '', 'ngan-hang-dau-khi-toan-cau-gpbank-ccb0_72x40x2.png', 'hienthi', 1, '{\"w\":72,\"h\":40}', '2025-06-24 00:52:01', '2025-06-24 13:39:28'),
-(10, 'Ngân hàng Đại Dương – Oceanbank', '', '', '', 'f4975c0836.webp', 'hienthi', 1, '', '2025-06-24 00:52:01', '2025-06-24 01:19:01');
-
--- --------------------------------------------------------
-
---
 -- Cấu trúc bảng cho bảng `tbl_photo`
 --
 
@@ -995,11 +960,24 @@ CREATE TABLE `tbl_photo` (
 --
 
 INSERT INTO `tbl_photo` (`id`, `file`, `contenten`, `contentvi`, `descen`, `descvi`, `nameen`, `namevi`, `link`, `link_video`, `options`, `type`, `act`, `numb`, `status`, `date_created`, `date_updated`) VALUES
-(1, 'w.png', '', '', '', '', '', '', '', '', '{\"position\":\"9\",\"per\":\"50\",\"small_per\":\"40\",\"max\":\"0\",\"min\":\"100\",\"opacity\":\"100\",\"offset_x\":\"0\",\"offset_y\":\"0\"}', 'watermark', '', 1, 'hienthi', '2025-07-15 14:50:26', '2025-07-15 16:14:15'),
-(2, '2ee1dada39.png', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '{\"width\":\"300\",\"height\":\"120\",\"zc\":\"1\"}', 'logo', NULL, 2, 'hienthi', '2025-07-15 15:23:07', '2025-07-15 15:56:57'),
-(3, 'favicon-beb5_48x48x1.png', NULL, NULL, NULL, NULL, NULL, 'favicon', NULL, NULL, '{\"width\":\"48\",\"height\":\"48\",\"zc\":\"\"}', 'favicon', NULL, 3, 'hienthi', '2025-07-15 15:44:45', '2025-07-15 16:14:19'),
-(28, '6592935cfd_1366x600x1.webp', NULL, NULL, '', '', '', 'Cuối Đường Kỉ Niệm', 'https://www.tiktok.com/@minhtriweb', NULL, NULL, 'slideshow', 'photo_man', 2, 'hienthi', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
-(29, 'a9e146e37c_1366x600x1.webp', NULL, NULL, '', '', '', 'Tròn Thương (Thanh Phương) - Chế Linh', 'https://www.youtube.com/watch?v=i0O5o9ajx5kkkkk', NULL, NULL, 'slideshow', 'photo_man', 1, 'hienthi', '0000-00-00 00:00:00', '2025-07-15 17:00:30');
+(1, '87909fff98.png', '', '', '', '', '', '', '', '', '{\"position\":\"4\",\"per\":\"50\",\"small_per\":\"40\",\"max\":\"0\",\"min\":\"100\",\"opacity\":\"100\",\"offset_x\":\"0\",\"offset_y\":\"0\"}', 'watermark', '', 1, 'hienthi', '2025-07-15 14:50:26', '2025-07-16 16:50:12'),
+(2, 'c6f40a930a.png', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '{\"width\":\"300\",\"height\":\"120\",\"zc\":\"1\"}', 'logo', NULL, 2, 'hienthi', '2025-07-15 15:23:07', '2025-07-16 16:58:30'),
+(3, '8ba45c4242.png', NULL, NULL, NULL, NULL, NULL, 'favicon', NULL, NULL, '{\"width\":\"48\",\"height\":\"48\",\"zc\":\"\"}', 'favicon', NULL, 3, 'hienthi', '2025-07-15 15:44:45', '2025-07-16 15:59:43'),
+(28, '6592935cfd_1366x600x1.webp', '', '', '', '', '', 'Trăng sáng miền địa đầu', 'https://www.youtube.com/watch?v=zA338v52yLk', NULL, '{\"width\":\"1366\",\"height\":\"600\",\"zc\":\"1\"}', 'slideshow', 'photo_man', 1, 'hienthi', '0000-00-00 00:00:00', '2025-07-16 11:40:41'),
+(29, 'a9e146e37c_1366x600x1.webp', '', '', '', '', '', 'Tròn Thương (Thanh Phương) - Chế Linh', 'https://www.youtube.com/watch?v=i0O5o9ajx5kkkkk', NULL, '{\"width\":\"1366\",\"height\":\"600\",\"zc\":\"1\"}', 'slideshow', 'photo_man', 2, 'hienthi', '0000-00-00 00:00:00', '2025-07-16 10:36:32'),
+(30, 'd120c69dc1.png', '', '<p>4070977</p>\r\n', NULL, NULL, '', 'ACB', NULL, NULL, '', 'payment', NULL, 0, 'hienthi', '2025-06-24 00:52:01', '2025-07-16 10:29:46'),
+(31, 'e2fe03d6af.png', '', '<p>techcombank</p>\r\n', NULL, NULL, '', 'techcombank', NULL, NULL, '', 'payment', NULL, 1, 'hienthi', '2025-06-24 00:52:01', '2025-06-24 00:52:01'),
+(32, 'f9f68bfc02.png', '', '', NULL, NULL, '', 'timo', NULL, NULL, '', 'payment', NULL, 1, 'hienthi', '2025-06-24 00:52:01', '2025-06-24 00:52:01'),
+(33, 'agribank-badc_72x40x2.jpg', '', '', NULL, NULL, '', 'agribank', NULL, NULL, '{\"w\":72,\"h\":40}', 'payment', NULL, 1, 'hienthi', '2025-06-24 00:52:01', '2025-06-24 13:45:10'),
+(34, 'ad883f221e.jpg', '', '', NULL, NULL, '', 'Vietcombank.', NULL, NULL, '', 'payment', NULL, 1, 'hienthi', '2025-06-24 00:52:01', '2025-06-24 00:52:01'),
+(35, '517cce1842.png', '', '', NULL, NULL, '', 'OCB', NULL, NULL, '', 'payment', NULL, 1, 'hienthi', '2025-06-24 00:52:01', '2025-06-24 00:52:01'),
+(36, '4f495854b6.webp', '', '', NULL, NULL, '', 'Ngân hàng Xây dựng – CB', NULL, NULL, '', 'payment', NULL, 1, 'hienthi', '2025-06-24 00:52:01', '2025-06-24 00:52:01'),
+(37, 'ngan-hang-dau-khi-toan-cau-gpbank-ccb0_72x40x2.png', '', '', NULL, NULL, '', 'Ngân hàng Dầu Khí Toàn Cầu – GPBank', NULL, NULL, '{\"w\":72,\"h\":40}', 'payment', NULL, 1, 'hienthi', '2025-06-24 00:52:01', '2025-06-24 13:39:28'),
+(38, 'f4975c0836.webp', '', '', NULL, NULL, '', 'Ngân hàng Đại Dương – Oceanbank', NULL, NULL, '', 'payment', NULL, 1, 'hienthi', '2025-06-24 00:52:01', '2025-07-16 10:29:42'),
+(39, 'fanpage-1989.png', NULL, NULL, '', 'Minh Trí', '', 'Fanpage', 'https://www.facebook.com/minhtri150920/', NULL, '{\"w\":30,\"h\":30}', 'social', NULL, 1, 'hienthi', '2025-06-24 00:44:11', '2025-06-24 13:34:54'),
+(40, 'tiktok-741d.png', NULL, NULL, '', 'Minhtriweb', '', 'Tiktok', 'https://www.tiktok.com/@minhtriweb', NULL, '{\"w\":30,\"h\":30}', 'social', NULL, 1, 'hienthi', '2025-06-24 00:44:11', '2025-06-24 13:35:05'),
+(41, 'hotline-64ee.png', NULL, NULL, '', '( 8h - 20h )', '', 'Hotline', 'tel:0328732834', NULL, '{\"w\":30,\"h\":30}', 'social', NULL, 1, 'hienthi', '2025-06-24 00:44:11', '2025-06-24 13:35:23'),
+(42, 'chat-zalo-1e03.png', '', '', '', '( 8h - 20h )', '', 'Chat Zalo', 'https://zalo.me/0328732834', NULL, '{\"width\":\"50\",\"height\":\"50\",\"zc\":\"1\"}', 'social', NULL, 1, 'hienthi', '2025-06-24 00:44:11', '2025-07-16 13:24:06');
 
 -- --------------------------------------------------------
 
@@ -1037,9 +1015,10 @@ CREATE TABLE `tbl_product` (
 --
 
 INSERT INTO `tbl_product` (`id`, `slugvi`, `slugen`, `namevi`, `nameen`, `descvi`, `descen`, `contentvi`, `contenten`, `file`, `id_list`, `id_cat`, `regular_price`, `sale_price`, `discount`, `code`, `type`, `status`, `numb`, `views`, `date_created`, `date_updated`) VALUES
-(10, 'rubik-sieu-dep-trai', '', 'Rubik siêu đẹp trai', '', '', '', '', '', 'rubik-sieu-dep-trai-66f4_500x500x1.webp', 2, 3, '', '', 0, '', 'sanpham', 'hienthi,noibat,banchay', 1, 25, '2025-06-24 15:16:15', '2025-07-11 13:25:39'),
-(16, 'rubik-3x3x3-khoi-lap-phuong-do-choi-tri-tue-danh-cho-be-tren-3-tuoi', '', 'Rubik 3x3x3 khối lập phương đồ chơi trí tuệ dành cho bé trên 3 tuổi', '', '<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">Vừa chơi vừa học: Đồ chơi Rubik 3x3x3 khối lập phương là đồ chơi giúp bé tăng sự tập trung trí tuệ, tư duy logic để rèn luyện trí nhớ</span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">Phát triển kỹ năng cho trẻ: Khối rubik lập phương với những màu sắc các mặt khác nhau giúp bé tăng khả năng nhận biết màu sắc. Xoay các khối rubick giúp bé rèn luyện thêm sự kiên trì và kỹ năng vận động khéo léo của tay.</span></span></p>\r\n', '', '<h1><span style=\"line-height:2;\"><span style=\"font-size:16px;\">Chi tiết sản phẩm đồ chơi rubik 3x3x3 khối lập phương đồ chơi trí tuệ dành cho bé trên 3 tuổi</span></span></h1>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">Mã sản phẩm:</span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">Thương hiệu: <a href=\"https://v-toys.vn/\">V-toys</a></span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">Xuất xứ: Việt Nam</span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">Màu sắc: Theo ảnh sản phẩm hoặc có thể thay đổi</span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">Size:</span></span></p>\r\n\r\n<h3><span style=\"line-height:2;\"><span style=\"font-size:16px;\">Hướng dẫn cách chơi rubik 3x3x3 khối lập phương</span></span></h3>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\"><strong>Bước 1:</strong></span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">Bạn phải quay đúng một mặt, nhưng phải quay đúng luật, nghĩa là khi quay xong 1 mặt thì sẽ hình thành tầng một xung quanh mặt vừa lắp đúng. Đầu tiên phải xoay được một hình chữ thập, sau đó nhét các ô đúng vào 4 góc. Tất cả đều có công thức: Quay tầng 3 của mặt đó về bên trái, cạnh bên phải lên trên. Sau đó quay trở lại: tầng 3 về bên phải, cạnh phải xuống dưới. Cứ làm liên tục như vậy cho tới khi được góc cùng màu trở về vị trí thích hợp</span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\"><strong>Bước 2:</strong></span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">Sau khi hoàn thành bước 1, bạn lật mặt kề mặt đúng, tầng 2 bạn hãy để ý cái tâm, bạn phải quay sang phải hoặc trái để cho màu của tâm trùng với màu của tầng một. Sau khi tâm trùng với tầng 1, bạn lấy 1 mặt bất kì làm mặt chính (ngoại trừ mặt đối diện mặt làm đúng ở bước 1). Bạn lấy tầng 3 của mặt chính, quay về một phía sao cho đủ 2 điều kiện: điều kiện 1 là màu giữa tầng 3 mặt chính phải trùng với màu tâm mặt chính, điều kiện 2 là màu kề màu giữa tầng 3 (ở phía mặt dưới) trùng màu với tâm kế bên (phải trùng màu với màu tâm của mặt trái hoặc mặt phải mặt chính).</span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">Nếu trùng màu tâm mặt phải, công thức: giữ mặt chính, tầng 3 qua trái, cạnh bên phải mặt chính quay xuống, tầng 3 qua phải, cạnh bên phải mặt chính quay lên, tầng 3 qua phải, mặt chính qua phải, tầng 3 qua trái, mặt chính qua trái.</span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">Nếu trùng màu tâm mặt trái, công thức: giữ mặt chính, tầng 3 qua phải, cạnh bên trái mặt chính quay xuống, tầng 3 qua trái, cạnh bên trái mặt chính quay lên, tầng 3 qua trái, mặt chính qua trái, tầng 3 qua phải, mặt chính qua phải.</span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\"><strong>Bước 3:</strong></span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">Đây là bước khó nhất trong các bước. Sau khi hoàn thành bước 2, bạn quay rubik xuống mặt đối diện mặt đúng ở bước 1 làm mặt chính, bạn nhìn vào 4 góc ở mặt chính, kiếm 2 góc hội tụ các điều kiện: 3 màu của góc phải trùng với 3 màu của 3 tâm gồm: tâm mặt chính, tâm 2 mặt có chứa góc, không nhất thiết 3 màu của góc phải nằm chính xác. Sau khi xác định hai góc hội tụ đủ các điều kiện trên, bạn hãy xác định mặt nào chứa 2 góc đó (nằm phía trên mặt chính) và lấy mặt đó làm mặt chính. Công thức: Mặt bên phải mặt chính quay xuống, tầng 3 quay qua trái, mặt bên phải mặt chính quay lên, mặt chính quay qua phải, tầng 3 quay qua trái (nếu trường hợp 2 góc hội tụ điều kiện thì đáy trái 2 lần), mặt chính quay qua trái, mặt bên phải mặt chính quay xuống, tầng 3 quay qua phải, mặt bên phải mặt chính quay lên, tầng 3 qua trái 2 lần. Sau khi quay xong, bạn lật mặt đáy, nhìn 4 góc, lúc này cả bốn góc sẽ đúng vị trí nhưng chưa hẳn chính xác. Bạn lật trở lại mặt chính vừa quay và thực hiện công thức: mặt bên phải mặt chính quay xuống, tầng 3 quay qua trái, mặt bên phải mặt chính quay lên, tầng 3 quay qua trái, mặt bên phải mặt chính quay xuống, tầng 3 quay qua trái 2 lần, mặt bên phải mặt chính quay lên, tầng 3 quay qua trái 2 lần. Lúc này góc phía dưới bên phải mặt chính (tức là màu nằm bên phải tầng 3 của mặt chính) sẽ trùng màu với tâm mặt chính (nếu không trùng thì cứ thực hiện công thức trên thêm 1 lần nữa) và màu bên phải màu trên sẽ trùng màu với tâm của mặt phải mặt chính. Lúc này ta lấy mặt phải mặt chính làm mặt chính và ta thực hiện công thức trên cho tới khi nào màu tầng 3 bên phải mặt chính phù hợp với điều kiện vừa rồi (có thể mặt chính sẽ đúng màu). Ta lật mặt đối mặt chính làm mặt chính thực hiện công thức trên và điều kiện cũng như trên.</span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\"><strong>Bước 4:</strong></span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">Đây là bước cuối cùng, bạn hãy chú ý mặt đáy của mặt chính ở bước 3, lúc này nó có thể xuất hiện các hình sau: chữ X, mũi tên, chữ H hoặc mặt đáy sẽ đúng màu.</span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">Nếu là chữ X: Lấy mặt chính(mc) ở bước 3, thực hiện công thức: trái mc lên, phải mc lên, mc quay qua phải một cái, trái mc xuống, phải mc xuống, tầng 3 qua trái hai cái, thực hiện 2 lần như thế. Lúc này mặt đáy mc sẽ ra hình mũi tên hoặc màu đúng</span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">Nếu là mũi tên: Bạn hãy quan sát mặt đáy, quay mặt đáy về chiều 11h (tức chiều phía trên bên trái),lật lên và lấy mặt bên phải đầu mũi tên làm mặt chính, thực hiện công thức chữ X</span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">Nếu mặt đáy đúng màu: Bạn hãy lấy màu bất kì trên mặt đáy làm mặt chính (nếu mặt nào màu đã đúng thì không lấy làm mc) và thực hiện công thức 10 bước: trái mc lên, phải mc lên, mc quay qua phải một cái, trái mc xuống, phải mc xuống, tầng 3 qua phải một cái, trái mc lên, phải mc lên, mc quay qua phải một cái, trái mc xuống, phải mc xuống, tầng 3 qua phải một cái, trái mc lên, phải mc lên, mc qua phải hai cái, trái mc xuống, phải mc xuống, tầng 3 qua phải 1cái, thực hiện thêm 5 lần nữa(nhớ mc chỉ qua phải một cái),đếm bước 10 thì tầng 3 qua phải hai cái.</span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">Chữ H: bạn hãy lấy mặt trên hoặc dưới chữ H làm mc, thực hiện công thức chữ X, cho đến khi một trong 2 mặt hai bên chữ H đúng màu, lấy mặt đó làm mc, thực hiện công thức chữ X, thực hiện cho đến khi 2 mặt hai bên chữ H đúng màu hết. Khi đó ta lấy mặt trên hoặc dưới chữ H làm mc, thực hiện công thức 10 bước, lúc này khối rubik sẽ được hoàn thiện.</span></span></p>\r\n', '', 'rubik-3x3x3-khoi-lap-phuong-do-choi-tri-tue-danh-cho-be-tren-3-tuoi-4322_500x500x1.webp', 2, 7, '', '', 0, '', 'product', 'hienthi,noibat,banchay', 1, 54, '2025-06-30 16:45:55', '2025-07-11 13:25:38'),
-(51, 'noi-that-phong-khach-cao-cap-do-go-vinh-tai-binh-duong', '', 'NỘI THẤT PHÒNG KHÁCH CAO CẤP – ĐỒ GỖ VINH TẠI BÌNH DƯƠNG', '', '<h2><strong>NỘI THẤT PHÒNG KHÁCH CAO CẤP – ĐỒ GỖ VINH TẠI BÌNH DƯƠNG</strong></h2>\r\n', '', '', '', 'noi-that-phong-khach-cao-cap-do-go-vinh-tai-binh-duong_0fe6.webp', 2, 2, '395,000', '92,000', 77, '', 'product', 'hienthi,noibat,banchay', 1, 68, '2025-07-10 14:38:49', '2025-07-15 15:02:57');
+(10, 'rubik-sieu-dep-trai', '', 'Rubik siêu đẹp trai', '', '', '', '', '', 'rubik-sieu-dep-trai-66f4_500x500x1.webp', 2, 3, '', '', 0, '', 'sanpham', 'hienthi,noibat,banchay', 1, 27, '2025-06-24 15:16:15', '2025-07-16 15:34:21'),
+(16, 'rubik-3x3x3-khoi-lap-phuong-do-choi-tri-tue-danh-cho-be-tren-3-tuoi', '', 'Rubik 3x3x3 khối lập phương đồ chơi trí tuệ dành cho bé trên 3 tuổi', '', '<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">Vừa chơi vừa học: Đồ chơi Rubik 3x3x3 khối lập phương là đồ chơi giúp bé tăng sự tập trung trí tuệ, tư duy logic để rèn luyện trí nhớ</span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">Phát triển kỹ năng cho trẻ: Khối rubik lập phương với những màu sắc các mặt khác nhau giúp bé tăng khả năng nhận biết màu sắc. Xoay các khối rubick giúp bé rèn luyện thêm sự kiên trì và kỹ năng vận động khéo léo của tay.</span></span></p>\r\n', '', '<h1><span style=\"line-height:2;\"><span style=\"font-size:16px;\">Chi tiết sản phẩm đồ chơi rubik 3x3x3 khối lập phương đồ chơi trí tuệ dành cho bé trên 3 tuổi</span></span></h1>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">Mã sản phẩm:</span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">Thương hiệu: <a href=\"https://v-toys.vn/\">V-toys</a></span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">Xuất xứ: Việt Nam</span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">Màu sắc: Theo ảnh sản phẩm hoặc có thể thay đổi</span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">Size:</span></span></p>\r\n\r\n<h3><span style=\"line-height:2;\"><span style=\"font-size:16px;\">Hướng dẫn cách chơi rubik 3x3x3 khối lập phương</span></span></h3>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\"><strong>Bước 1:</strong></span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">Bạn phải quay đúng một mặt, nhưng phải quay đúng luật, nghĩa là khi quay xong 1 mặt thì sẽ hình thành tầng một xung quanh mặt vừa lắp đúng. Đầu tiên phải xoay được một hình chữ thập, sau đó nhét các ô đúng vào 4 góc. Tất cả đều có công thức: Quay tầng 3 của mặt đó về bên trái, cạnh bên phải lên trên. Sau đó quay trở lại: tầng 3 về bên phải, cạnh phải xuống dưới. Cứ làm liên tục như vậy cho tới khi được góc cùng màu trở về vị trí thích hợp</span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\"><strong>Bước 2:</strong></span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">Sau khi hoàn thành bước 1, bạn lật mặt kề mặt đúng, tầng 2 bạn hãy để ý cái tâm, bạn phải quay sang phải hoặc trái để cho màu của tâm trùng với màu của tầng một. Sau khi tâm trùng với tầng 1, bạn lấy 1 mặt bất kì làm mặt chính (ngoại trừ mặt đối diện mặt làm đúng ở bước 1). Bạn lấy tầng 3 của mặt chính, quay về một phía sao cho đủ 2 điều kiện: điều kiện 1 là màu giữa tầng 3 mặt chính phải trùng với màu tâm mặt chính, điều kiện 2 là màu kề màu giữa tầng 3 (ở phía mặt dưới) trùng màu với tâm kế bên (phải trùng màu với màu tâm của mặt trái hoặc mặt phải mặt chính).</span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">Nếu trùng màu tâm mặt phải, công thức: giữ mặt chính, tầng 3 qua trái, cạnh bên phải mặt chính quay xuống, tầng 3 qua phải, cạnh bên phải mặt chính quay lên, tầng 3 qua phải, mặt chính qua phải, tầng 3 qua trái, mặt chính qua trái.</span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">Nếu trùng màu tâm mặt trái, công thức: giữ mặt chính, tầng 3 qua phải, cạnh bên trái mặt chính quay xuống, tầng 3 qua trái, cạnh bên trái mặt chính quay lên, tầng 3 qua trái, mặt chính qua trái, tầng 3 qua phải, mặt chính qua phải.</span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\"><strong>Bước 3:</strong></span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">Đây là bước khó nhất trong các bước. Sau khi hoàn thành bước 2, bạn quay rubik xuống mặt đối diện mặt đúng ở bước 1 làm mặt chính, bạn nhìn vào 4 góc ở mặt chính, kiếm 2 góc hội tụ các điều kiện: 3 màu của góc phải trùng với 3 màu của 3 tâm gồm: tâm mặt chính, tâm 2 mặt có chứa góc, không nhất thiết 3 màu của góc phải nằm chính xác. Sau khi xác định hai góc hội tụ đủ các điều kiện trên, bạn hãy xác định mặt nào chứa 2 góc đó (nằm phía trên mặt chính) và lấy mặt đó làm mặt chính. Công thức: Mặt bên phải mặt chính quay xuống, tầng 3 quay qua trái, mặt bên phải mặt chính quay lên, mặt chính quay qua phải, tầng 3 quay qua trái (nếu trường hợp 2 góc hội tụ điều kiện thì đáy trái 2 lần), mặt chính quay qua trái, mặt bên phải mặt chính quay xuống, tầng 3 quay qua phải, mặt bên phải mặt chính quay lên, tầng 3 qua trái 2 lần. Sau khi quay xong, bạn lật mặt đáy, nhìn 4 góc, lúc này cả bốn góc sẽ đúng vị trí nhưng chưa hẳn chính xác. Bạn lật trở lại mặt chính vừa quay và thực hiện công thức: mặt bên phải mặt chính quay xuống, tầng 3 quay qua trái, mặt bên phải mặt chính quay lên, tầng 3 quay qua trái, mặt bên phải mặt chính quay xuống, tầng 3 quay qua trái 2 lần, mặt bên phải mặt chính quay lên, tầng 3 quay qua trái 2 lần. Lúc này góc phía dưới bên phải mặt chính (tức là màu nằm bên phải tầng 3 của mặt chính) sẽ trùng màu với tâm mặt chính (nếu không trùng thì cứ thực hiện công thức trên thêm 1 lần nữa) và màu bên phải màu trên sẽ trùng màu với tâm của mặt phải mặt chính. Lúc này ta lấy mặt phải mặt chính làm mặt chính và ta thực hiện công thức trên cho tới khi nào màu tầng 3 bên phải mặt chính phù hợp với điều kiện vừa rồi (có thể mặt chính sẽ đúng màu). Ta lật mặt đối mặt chính làm mặt chính thực hiện công thức trên và điều kiện cũng như trên.</span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\"><strong>Bước 4:</strong></span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">Đây là bước cuối cùng, bạn hãy chú ý mặt đáy của mặt chính ở bước 3, lúc này nó có thể xuất hiện các hình sau: chữ X, mũi tên, chữ H hoặc mặt đáy sẽ đúng màu.</span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">Nếu là chữ X: Lấy mặt chính(mc) ở bước 3, thực hiện công thức: trái mc lên, phải mc lên, mc quay qua phải một cái, trái mc xuống, phải mc xuống, tầng 3 qua trái hai cái, thực hiện 2 lần như thế. Lúc này mặt đáy mc sẽ ra hình mũi tên hoặc màu đúng</span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">Nếu là mũi tên: Bạn hãy quan sát mặt đáy, quay mặt đáy về chiều 11h (tức chiều phía trên bên trái),lật lên và lấy mặt bên phải đầu mũi tên làm mặt chính, thực hiện công thức chữ X</span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">Nếu mặt đáy đúng màu: Bạn hãy lấy màu bất kì trên mặt đáy làm mặt chính (nếu mặt nào màu đã đúng thì không lấy làm mc) và thực hiện công thức 10 bước: trái mc lên, phải mc lên, mc quay qua phải một cái, trái mc xuống, phải mc xuống, tầng 3 qua phải một cái, trái mc lên, phải mc lên, mc quay qua phải một cái, trái mc xuống, phải mc xuống, tầng 3 qua phải một cái, trái mc lên, phải mc lên, mc qua phải hai cái, trái mc xuống, phải mc xuống, tầng 3 qua phải 1cái, thực hiện thêm 5 lần nữa(nhớ mc chỉ qua phải một cái),đếm bước 10 thì tầng 3 qua phải hai cái.</span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">Chữ H: bạn hãy lấy mặt trên hoặc dưới chữ H làm mc, thực hiện công thức chữ X, cho đến khi một trong 2 mặt hai bên chữ H đúng màu, lấy mặt đó làm mc, thực hiện công thức chữ X, thực hiện cho đến khi 2 mặt hai bên chữ H đúng màu hết. Khi đó ta lấy mặt trên hoặc dưới chữ H làm mc, thực hiện công thức 10 bước, lúc này khối rubik sẽ được hoàn thiện.</span></span></p>\r\n', '', 'rubik-3x3x3-khoi-lap-phuong-do-choi-tri-tue-danh-cho-be-tren-3-tuoi-4322_500x500x1.webp', 2, 7, '', '', 0, '', 'product', 'hienthi,noibat,banchay', 1, 76, '2025-06-30 16:45:55', '2025-07-16 15:15:17'),
+(51, 'noi-that-phong-khach-cao-cap-do-go-vinh-tai-binh-duong', '', 'NỘI THẤT PHÒNG KHÁCH CAO CẤP – ĐỒ GỖ VINH TẠI BÌNH DƯƠNG', '', '<h2><strong>NỘI THẤT PHÒNG KHÁCH CAO CẤP – ĐỒ GỖ VINH TẠI BÌNH DƯƠNG</strong></h2>\r\n', '', '', '', 'noi-that-phong-khach-cao-cap-do-go-vinh-tai-binh-duong_fc52.webp', 2, 2, '395,000', '92,000', 77, '', 'product', 'hienthi,noibat,banchay', 1, 107, '2025-07-10 14:38:49', '2025-07-16 16:00:47'),
+(66, 'r', '', 'r', '', '', '', '', '', 'r_0e9a.webp', 0, 0, '', '', 0, '', 'product', 'hienthi,noibat,banchay', 1, 63, '2025-07-16 16:01:17', '2025-07-16 16:59:06');
 
 -- --------------------------------------------------------
 
@@ -1246,64 +1225,6 @@ CREATE TABLE `tbl_setting` (
 
 INSERT INTO `tbl_setting` (`id`, `email`, `hotline`, `web_name`, `link_googlemaps`, `fanpage`, `copyright`, `introduction`, `worktime`, `desc`, `coords_iframe`, `coords`, `analytics`, `headjs`, `bodyjs`, `color`, `address`) VALUES
 (1, 'minhtri.blueweb@gmail.com', '0328 732 834', 'Thế Giới Rubik TMT', 'https://maps.app.goo.gl/QBCDJLNAcySUtTiGA', 'https://www.facebook.com/profile.php?id=100090056894070', 'Bản quyền thuộc Minh Trí Rubik. Design by Minh Trí BlueWeb', 'Chào mừng các bạn đến với website của Minh Trí Rubik', '8h - 17h', 'Sản phẩm của Rubik TMT đa dạng về mẫu mã, từ những viên Rubik cổ điển đến các phiên bản hiện đại với nhiều hình dạng và kích thước khác nhau. Chúng tôi cam kết cung cấp những sản phẩm được sản xuất với công nghệ tiên tiến, đảm bảo an toàn và thân thiện với người dùng.', '<iframe src=\"https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d489.7908536223631!2d106.63337394536576!3d10.86272739886291!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x317529f4163891e3%3A0xeaf1734b54adb3f!2zxJDGsOG7nW5nIFRo4buLIE3GsOG7nWkvMThhIEjhurttIDI2MCwgS2h1IFBo4buRIDNBLCBRdeG6rW4gMTIsIEjhu5MgQ2jDrSBNaW5oLCBWaeG7h3QgTmFt!5e0!3m2!1svi!2s!4v1749044597447!5m2!1svi!2s\" width=\"600\" height=\"450\" style=\"border:0;\" allowfullscreen=\"\" loading=\"lazy\" referrerpolicy=\"no-referrer-when-downgrade\"></iframe>', '10.86276948472411, 106.63364911149097', '<!-- Google tag (gtag.js) -->\r\n<script async src=\"https://www.googletagmanager.com/gtag/js?id=G-XKMLLRQBJ9\"></script>\r\n<script>\r\n  window.dataLayer = window.dataLayer || [];\r\n  function gtag(){dataLayer.push(arguments);}\r\n  gtag(\'js\', new Date());\r\n\r\n  gtag(\'config\', \'G-XKMLLRQBJ9\');\r\n</script>', '', '', 'FF2323', '152/18, Dương Thị Mười, P.Tân Thới Hiệp, Quận 12, TpHCM');
-
--- --------------------------------------------------------
-
---
--- Cấu trúc bảng cho bảng `tbl_slideshow`
---
-
-CREATE TABLE `tbl_slideshow` (
-  `id` int(11) NOT NULL,
-  `file` text NOT NULL,
-  `link` text NOT NULL,
-  `status` text NOT NULL,
-  `numb` text NOT NULL,
-  `namevi` text NOT NULL,
-  `nameen` text NOT NULL,
-  `options` text NOT NULL,
-  `created_at` datetime DEFAULT current_timestamp(),
-  `updated_at` datetime DEFAULT current_timestamp() ON UPDATE current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Đang đổ dữ liệu cho bảng `tbl_slideshow`
---
-
-INSERT INTO `tbl_slideshow` (`id`, `file`, `link`, `status`, `numb`, `namevi`, `nameen`, `options`, `created_at`, `updated_at`) VALUES
-(4, '6592935cfd_1366x600x1.webp', 'https://www.tiktok.com/@minhtriweb', 'hienthi', '2', 'Cuối Đường Kỉ Niệm', '', '', '2025-06-23 14:15:45', '2025-06-25 16:01:48'),
-(5, 'a9e146e37c_1366x600x1.webp', 'https://www.youtube.com/watch?v=i0O5o9ajx5kkkkk', 'hienthi', '1', 'Tròn Thương (Thanh Phương) - Chế Linh', '', '', '2025-06-23 14:15:45', '2025-06-25 16:00:56');
-
--- --------------------------------------------------------
-
---
--- Cấu trúc bảng cho bảng `tbl_social`
---
-
-CREATE TABLE `tbl_social` (
-  `id` int(11) NOT NULL,
-  `namevi` text NOT NULL,
-  `nameen` text NOT NULL,
-  `descen` text NOT NULL,
-  `descvi` text NOT NULL,
-  `link` text NOT NULL,
-  `file` text NOT NULL,
-  `status` varchar(255) NOT NULL,
-  `numb` int(20) NOT NULL,
-  `options` text NOT NULL,
-  `created_at` datetime DEFAULT current_timestamp(),
-  `updated_at` datetime DEFAULT current_timestamp() ON UPDATE current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Đang đổ dữ liệu cho bảng `tbl_social`
---
-
-INSERT INTO `tbl_social` (`id`, `namevi`, `nameen`, `descen`, `descvi`, `link`, `file`, `status`, `numb`, `options`, `created_at`, `updated_at`) VALUES
-(2, 'Fanpage', '', '', 'Minh Trí', 'https://www.facebook.com/minhtri150920/', 'fanpage-1989.png', 'hienthi', 1, '{\"w\":30,\"h\":30}', '2025-06-24 00:44:11', '2025-06-24 13:34:54'),
-(3, 'Tiktok', '', '', 'Minhtriweb', 'https://www.tiktok.com/@minhtriweb', 'tiktok-741d.png', 'hienthi', 1, '{\"w\":30,\"h\":30}', '2025-06-24 00:44:11', '2025-06-24 13:35:05'),
-(4, 'Hotline', '', '', '( 8h - 20h )', 'tel:0328732834', 'hotline-64ee.png', 'hienthi', 1, '{\"w\":30,\"h\":30}', '2025-06-24 00:44:11', '2025-06-24 13:35:23'),
-(5, 'Chat Zalo', '', '', '0789720722', 'https://zalo.me/0328732834', 'chat-zalo-1e03.png', 'hienthi', 1, '{\"w\":30,\"h\":30}', '2025-06-24 00:44:11', '2025-06-24 13:35:32');
 
 -- --------------------------------------------------------
 
@@ -12236,12 +12157,6 @@ ALTER TABLE `tbl_news`
   ADD PRIMARY KEY (`id`);
 
 --
--- Chỉ mục cho bảng `tbl_payment`
---
-ALTER TABLE `tbl_payment`
-  ADD PRIMARY KEY (`id`);
-
---
 -- Chỉ mục cho bảng `tbl_photo`
 --
 ALTER TABLE `tbl_photo`
@@ -12281,18 +12196,6 @@ ALTER TABLE `tbl_seopage`
 -- Chỉ mục cho bảng `tbl_setting`
 --
 ALTER TABLE `tbl_setting`
-  ADD PRIMARY KEY (`id`);
-
---
--- Chỉ mục cho bảng `tbl_slideshow`
---
-ALTER TABLE `tbl_slideshow`
-  ADD PRIMARY KEY (`id`);
-
---
--- Chỉ mục cho bảng `tbl_social`
---
-ALTER TABLE `tbl_social`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -12348,22 +12251,16 @@ ALTER TABLE `tbl_news`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=38;
 
 --
--- AUTO_INCREMENT cho bảng `tbl_payment`
---
-ALTER TABLE `tbl_payment`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
-
---
 -- AUTO_INCREMENT cho bảng `tbl_photo`
 --
 ALTER TABLE `tbl_photo`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=46;
 
 --
 -- AUTO_INCREMENT cho bảng `tbl_product`
 --
 ALTER TABLE `tbl_product`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=66;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=67;
 
 --
 -- AUTO_INCREMENT cho bảng `tbl_product_cat`
@@ -12375,7 +12272,7 @@ ALTER TABLE `tbl_product_cat`
 -- AUTO_INCREMENT cho bảng `tbl_product_list`
 --
 ALTER TABLE `tbl_product_list`
-  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=68;
+  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=70;
 
 --
 -- AUTO_INCREMENT cho bảng `tbl_seo`
@@ -12394,18 +12291,6 @@ ALTER TABLE `tbl_seopage`
 --
 ALTER TABLE `tbl_setting`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
-
---
--- AUTO_INCREMENT cho bảng `tbl_slideshow`
---
-ALTER TABLE `tbl_slideshow`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
-
---
--- AUTO_INCREMENT cho bảng `tbl_social`
---
-ALTER TABLE `tbl_social`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT cho bảng `tbl_static`

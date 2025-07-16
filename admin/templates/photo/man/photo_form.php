@@ -56,6 +56,14 @@
                             placeholder="Mô tả" value="<?= $_POST['desc' . $k] ?? ($result['desc' . $k] ?? '') ?>" />
                         </div>
                       <?php endif; ?>
+                      <?php if (!empty($photoConfig['content_photo'])): ?>
+                        <div class="form-group">
+                          <label for="desc<?= $k ?>">Mô tả (<?= $k ?>):</label>
+                          <textarea class="form-control for-seo text-sm"
+                            name="desc<?= $k ?>" id="desc<?= $k ?>"
+                            rows="4" placeholder="Mô tả (<?= $k ?>)"><?= $_POST['desc' . $k] ?? ($result['desc' . $k] ?? '') ?></textarea>
+                        </div>
+                      <?php endif; ?>
                     </div>
                   <?php } ?>
                 </div>

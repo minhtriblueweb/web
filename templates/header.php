@@ -33,8 +33,9 @@
           <a href="./">
             <?= $fn->getImageCustom([
               'file' => $logo['file'],
-              'width'  => 300,
-              'thumb'  => false,
+              'width'  => 200,
+              'height'  => 200,
+              'zc' => 4,
               'alt' => $web_name,
               'title' => $web_name,
               'lazy' => false

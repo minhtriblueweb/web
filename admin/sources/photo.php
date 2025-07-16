@@ -33,7 +33,7 @@ switch ($act) {
 
   case 'photo_static':
     $photoConfig = $config['photo']['photo_static'][$type] ?? null;
-    if (!$photoConfig) $fn->transfer("Loại ảnh tĩnh không tồn tại!", "index.php", false);
+    if (!$photoConfig) $fn->transfer("Trang không tồn tại!", "index.php", false);
     $zc = 1;
     if (!empty($photoConfig['thumb'])) {
       $thumbParts = explode('x', $photoConfig['thumb']);
@@ -63,8 +63,8 @@ switch ($act) {
     break;
 
   case 'photo_man':
-    $photoConfig = $config['photo']['man_photo'][$type] ?? null;
-    if (!$photoConfig) $fn->transfer("Loại ảnh danh sách không tồn tại!", "index.php", false);
+    $photoConfig = $config['photo']['photo_man'][$type] ?? null;
+    if (!$photoConfig) $fn->transfer("Trang không tồn tại!", "index.php", false);
 
     $name_page = $photoConfig['title_main_photo'] ?? ucfirst($type);
     $records_per_page = 10;
@@ -86,12 +86,10 @@ switch ($act) {
     break;
 
   case 'photo_form':
-    $photoConfig = $config['photo']['man_photo'][$type] ?? null;
-    if (!$photoConfig) $fn->transfer("Loại ảnh danh sách không tồn tại!", "index.php", false);
-
+    $photoConfig = $config['photo']['photo_man'][$type] ?? null;
+    if (!$photoConfig) $fn->transfer("Trang không tồn tại!", "index.php", false);
     $id = isset($_GET['id']) && is_numeric($_GET['id']) ? (int)$_GET['id'] : null;
     $result = ($id !== null) ? $db->rawQueryOne("SELECT * FROM $table WHERE type = ? AND id = ?", [$type, $id]) : null;
-
     if ($_SERVER['REQUEST_METHOD'] === 'POST' && (isset($_POST['add']) || isset($_POST['edit']))) {
       $fn->save_data($_POST, $_FILES, $id, [
         'table'           => $table,
@@ -103,7 +101,6 @@ switch ($act) {
         'convert_webp'    => true
       ]);
     }
-
     $breadcrumb = [['label' => ($id ? "Cập nhật " : "Thêm mới ") . $photoConfig['title_main_photo']]];
     include TEMPLATE . LAYOUT . 'breadcrumb.php';
     include TEMPLATE . "photo/man/photo_form.php";

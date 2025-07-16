@@ -122,8 +122,8 @@
         </div>
       </div>
     </div>
-    <input type="hidden" name="width" value="<?= $width ?>">
-    <input type="hidden" name="height" value="<?= $height ?>">
-    <input type="hidden" name="zc" value="<?= $zc ?>">
+    <input type="hidden" name="width" value="<?= $photoConfig['width'] ?>">
+    <input type="hidden" name="height" value="<?= $photoConfig['height'] ?>">
+    <input type="hidden" name="zc" value="<?= (!empty($photoConfig['thumb']) && isset(explode('x', $photoConfig['thumb'])[2])) ? intval(explode('x', $photoConfig['thumb'])[2]) : 1 ?>">
   </form>
 </section>

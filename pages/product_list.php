@@ -35,7 +35,7 @@
             <div class="item-product" data-aos="fade-up" data-aos-duration="500">
               <a href="<?= $slug ?>">
                 <div class="images">
-                  <?= $fn->getImageCustom(['file' => $sp['file'], 'class' => 'w-100', 'alt' => $name, 'title' => $name, 'width' => 500, 'height' => 500, 'zc' => 1, 'lazy' => true]) ?>
+                  <?= $fn->getImageCustom(['file' => $sp['file'], 'class' => 'w-100', 'alt' => $name, 'title' => $name, 'width' => 500, 'height' => 500, 'zc' => 1, 'watermark' => true, 'lazy' => true]) ?>
                 </div>
                 <div class="content">
                   <div class="title">

@@ -30,7 +30,9 @@
             <th class="align-middle text-center" width="10%">STT</th>
             <th class="align-middle text-center" width="8%">Hình</th>
             <th class="align-middle" width="20%">Tiêu đề</th>
-            <th class="align-middle">Link</th>
+            <?php if (!empty($photoConfig['link_photo'])): ?>
+              <th class="align-middle">Link</th>
+            <?php endif; ?>
             <?php foreach ($photoConfig['status_photo'] as $attr => $label): ?>
               <th class="align-middle text-center"><?= $label ?></th>
             <?php endforeach; ?>
@@ -83,10 +85,11 @@
                 </td>
 
                 <!-- Link -->
-                <td class="align-middle">
-                  <?= $link ?>
-                </td>
-
+                <?php if (!empty($photoConfig['link_photo'])): ?>
+                  <td class="align-middle">
+                    <?= $link ?>
+                  </td>
+                <?php endif; ?>
 
                 <?php foreach ($photoConfig['status_photo'] as $attr => $label): ?>
                   <td class="align-middle text-center">

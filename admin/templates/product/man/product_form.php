@@ -1,8 +1,9 @@
 <section class="content">
   <form class="validation-form" novalidate method="post" action="" enctype="multipart/form-data">
     <div class="card-footer text-sm sticky-top">
-      <button type="submit" name="<?= !empty($id) ? "edit" : "add"; ?>"
-        class="btn btn-sm bg-gradient-primary submit-check btn-submit-HoldOn" disabled>
+      <button type="submit" name="<?= !empty($id) ? 'edit' : 'add'; ?>"
+        class="btn btn-sm bg-gradient-primary <?= !empty($config['news'][$type]['slug']) ? 'submit-check' : '' ?>"
+        <?= !empty($config['news'][$type]['slug']) ? 'disabled' : '' ?>>
         <i class="far fa-save mr-2"></i>Lưu
       </button>
       <button type="reset" class="btn btn-sm bg-gradient-secondary">
@@ -15,7 +16,7 @@
         <?php include TEMPLATE . LAYOUT . 'slug.php'; ?>
         <div class="card card-primary card-outline text-sm">
           <div class="card-header">
-            <h3 class="card-title">Nội dung <?= $name_page ?></h3>
+            <h3 class="card-title">Nội dung <?= $config['product'][$type]['title_main'] ?></h3>
             <div class="card-tools">
               <button type="button" class="btn btn-tool" data-card-widget="collapse"><i
                   class="fas fa-minus"></i></button>
@@ -85,7 +86,7 @@
       <div class="col-xl-4">
         <div class="card card-primary card-outline text-sm">
           <div class="card-header">
-            <h3 class="card-title">Chon danh mục <?= $name_page ?></h3>
+            <h3 class="card-title">Chon danh mục <?= $config['product'][$type]['title_main'] ?></h3>
             <div class="card-tools">
               <button type="button" class="btn btn-tool" data-card-widget="collapse"><i
                   class="fas fa-minus"></i></button>
@@ -110,7 +111,7 @@
         </div>
         <div class="card card-primary card-outline text-sm">
           <div class="card-header">
-            <h3 class="card-title">Thông tin <?= $name_page ?></h3>
+            <h3 class="card-title">Thông tin <?= $config['product'][$type]['title_main'] ?></h3>
             <div class="card-tools">
               <button type="button" class="btn btn-tool" data-card-widget="collapse"><i
                   class="fas fa-minus"></i></button>
@@ -155,7 +156,7 @@
               </div>
             </div>
             <div class="form-group">
-              <?php foreach ($status as $check => $label): ?>
+              <?php foreach ($config['product'][$type]['check'] as $check => $label): ?>
                 <div class="form-group d-inline-block mb-2 mr-4">
                   <label for="<?= $check ?>-checkbox" class="d-inline-block align-middle mb-0 mr-3 form-label"><?= $label ?>:</label>
                   <label class="switch switch-success">
@@ -179,7 +180,7 @@
         </div>
         <div class="card card-primary card-outline text-sm">
           <div class="card-header">
-            <h3 class="card-title">Hình ảnh <?= $name_page ?></h3>
+            <h3 class="card-title">Hình ảnh <?= $config['product'][$type]['title_main'] ?></h3>
             <div class="card-tools">
               <button type="button" class="btn btn-tool" data-card-widget="collapse"><i
                   class="fas fa-minus"></i></button>
@@ -189,7 +190,7 @@
             <?php
             $photoDetail = array();
             $photoDetail['image'] = $result['file'] ?? '';
-            $photoDetail['dimension'] = "Width: " . $width . " px - Height: " . $height . " px (" . $img_type_list . ")";
+            $photoDetail['dimension'] = "Width: " . $config['product'][$type]['width'] . " px - Height: " . $config['product'][$type]['height'] . " px (" . $config['product'][$type]['img_type'] . ")";
             include TEMPLATE . LAYOUT . "image.php"; ?>
           </div>
         </div>
@@ -208,7 +209,7 @@
       <div class="card-body">
         <div class="form-group">
           <label for="filer-gallery" class="label-filer-gallery mb-3">
-            Album: (<?= $img_type_list ?>)
+            Album: (<?= $config['product'][$type]['img_type'] ?>)
           </label>
           <input type="file" name="files[]" id="filer-gallery" multiple="multiple">
           <input type="hidden" name="id_parent" value="<?= $id ?>">

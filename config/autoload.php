@@ -44,15 +44,7 @@ define('BASE_ADMIN', $config['baseAdmin'] ?? '/admin/');
 define('NO_IMG', BASE_ADMIN . 'assets/img/noimage.png');
 
 // 7. Khởi tạo các class tiện ích mở rộng
-$classes = [
-  'breadcrumbs',
-  'product',
-  'slideshow',
-  'setting',
-  'social',
-  'news',
-  'payment'
-];
+$classes = ['breadcrumbs', 'product', 'setting', 'news',];
 
 foreach ($classes as $class) {
   if (class_exists($class)) {

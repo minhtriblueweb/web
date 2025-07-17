@@ -233,7 +233,7 @@ class Functions
       $this->db->execute("INSERT INTO `$seo_table` (" . implode(',', $columns) . ") VALUES (" . implode(',', $placeholders) . ")", $params);
     }
   }
-  public function save_data($data, $files, $id = null, $options = [])
+  public function save_data($data, $files = null, $id = null, $options = [])
   {
     global $config;
     $langs = array_keys($config['website']['lang']);
@@ -270,7 +270,9 @@ class Functions
       $data_prepared['options'] = json_encode($options_data, JSON_UNESCAPED_UNICODE);
     }
 
-    $data_prepared['status'] = implode(',', array_filter($status_flags, fn($f) => !empty($data[$f])));
+    if (!empty($status_flags)) {
+      $data_prepared['status'] = implode(',', array_filter($status_flags, fn($f) => !empty($data[$f])));
+    }
 
     if ($enable_slug) {
       foreach ($langs as $lang) {
@@ -281,16 +283,19 @@ class Functions
       }
     }
 
+    // ========== XỬ LÝ ẢNH (nếu có truyền file) ==========
     $thumb_filename = $old_filename = '';
-    if (!empty($id)) {
+    $has_file_column = is_array($files) && isset($files['file']) && is_uploaded_file($files['file']['tmp_name']);
+
+    if ($has_file_column && !empty($id)) {
       $old = $this->db->rawQueryOne("SELECT file FROM $table WHERE id = ?", [(int)$id]);
       $old_filename = $old['file'] ?? '';
     }
 
-    if (!empty($files['file']['tmp_name'])) {
+    if ($has_file_column) {
       $thumb_filename = $this->uploadImage([
         'file' => $files['file'],
-        'custom_name' => !empty($data_prepared['namevi']) ? $data_prepared['namevi'] : $type,
+        'custom_name' => $data_prepared['namevi'] ?? $type,
         'old_file_path' => UPLOADS . $old_filename,
         'convert_webp' => $convert_webp,
         'background' => $options['background'] ?? [255, 255, 255, 0]
@@ -300,6 +305,7 @@ class Functions
       $thumb_filename = '';
     }
 
+    // ========== UPDATE ==========
     if (!empty($id)) {
       $fields = $params = [];
       foreach ($data_prepared as $key => $val) {
@@ -307,7 +313,7 @@ class Functions
         $params[] = $val;
       }
 
-      if ($thumb_filename !== '' || (!empty($data['photo_deleted']) && $data['photo_deleted'] == '1')) {
+      if ($has_file_column || (!empty($data['photo_deleted']) && $data['photo_deleted'] == '1')) {
         $fields[] = "`file` = ?";
         $params[] = $thumb_filename;
       }
@@ -319,10 +325,10 @@ class Functions
         $this->save_seo($type, (int)$id, $data, $langs);
       }
 
-      if (!empty($enable_gallery) && !empty($data['deleted_images']) && !empty($id)) {
-        $deletedImages = explode('|', $data['deleted_images']);
-        foreach ($deletedImages as $gid) {
-          $gid = (int)trim($gid);
+      // Xử lý gallery nếu có
+      if ($enable_gallery && !empty($data['deleted_images'])) {
+        foreach (explode('|', $data['deleted_images']) as $gid) {
+          $gid = (int)$gid;
           if ($gid > 0) {
             $gallery = $this->db->rawQueryOne("SELECT `file` FROM tbl_gallery WHERE id = ?", [$gid]);
             if ($gallery && !empty($gallery['file'])) {
@@ -333,7 +339,7 @@ class Functions
         }
       }
 
-      if ($enable_gallery && !empty($data['id-filer']) && is_array($data['id-filer'])) {
+      if ($enable_gallery && !empty($data['id-filer'])) {
         foreach ($data['id-filer'] as $k => $gid) {
           $gid = (int)$gid;
           $numb = (int)($data['numb-filer'][$k] ?? 0);
@@ -350,11 +356,12 @@ class Functions
 
       $msg = $result ? "Cập nhật dữ liệu thành công" : "Cập nhật dữ liệu thất bại";
     } else {
+      // ========== INSERT ==========
       $columns = array_keys($data_prepared);
       $placeholders = array_fill(0, count($columns), '?');
       $params = array_values($data_prepared);
 
-      if (!empty($thumb_filename)) {
+      if ($has_file_column) {
         $columns[] = 'file';
         $placeholders[] = '?';
         $params[] = $thumb_filename;
@@ -380,7 +387,6 @@ class Functions
 
     $this->transfer($msg, $redirect_page, !empty($id) ? $result : $inserted);
   }
-
   public function deleteFile($file = '')
   {
     if (!$file) return true;
@@ -529,14 +535,23 @@ class Functions
   }
   function isItemActive(array $activeList, string $currentPage, string $currentType): bool
   {
+    $currentAct = $_GET['act'] ?? '';
+
     foreach ($activeList as $activeItem) {
       parse_str(ltrim($activeItem, '?'), $activeParams);
-      if (($activeParams['page'] ?? '') === $currentPage && ($activeParams['type'] ?? '') === $currentType) {
+
+      if (
+        ($activeParams['page'] ?? '') === $currentPage &&
+        ($activeParams['type'] ?? '') === $currentType &&
+        ($activeParams['act'] ?? '') === $currentAct
+      ) {
         return true;
       }
     }
+
     return false;
   }
+
 
   /* Alert */
   public function alert($notify = '')

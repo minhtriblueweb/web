@@ -1,4 +1,5 @@
 <?php
+
 $sidebarMenu = [
   [
     'title' => 'Bảng điều khiển',
@@ -10,109 +11,107 @@ $sidebarMenu = [
     'icon' => 'fas fa-boxes',
     'children' => [
       [
-        'title' => 'Danh mục cấp 1',
-        'active' => ['?page=product_list&act=man', '?page=product_list&act=form']
+        'title' => 'Sản phẩm cấp 1',
+        'active' => ['?page=product&act=man_list&type=sanpham', '?page=product&act=form_list&type=sanpham']
       ],
       [
-        'title' => 'Danh mục cấp 2',
-        'active' => ['?page=product_cat&act=man', '?page=product_cat&act=form']
+        'title' => 'Sản phẩm cấp 2',
+        'active' => ['?page=product&act=man_cat&type=sanpham', '?page=product&act=form_cat&type=sanpham']
       ],
       [
         'title' => 'Sản phẩm',
-        'active' => ['?page=product&act=man', '?page=product&act=form', '?page=gallery&act=man', '?page=gallery&act=form']
+        'active' => ['?page=product&act=man&type=sanpham', '?page=product&act=form&type=sanpham', '?page=gallery&act=man', '?page=gallery&act=form']
       ],
     ]
   ],
   [
     'title' => 'Danh sách bài viết',
     'icon' => 'far fa-newspaper',
-    'children' => [
-      [
-        'title' => 'Tin tức',
-        'active' => ['?page=news&act=man&type=tintuc', '?page=news&act=form&type=tintuc']
-      ],
-      [
-        'title' => 'Chính sách',
-        'active' => ['?page=news&act=man&type=chinhsach', '?page=news&act=form&type=chinhsach']
-      ],
-      [
-        'title' => 'Tiêu chí',
-        'active' => ['?page=news&act=man&type=tieuchi', '?page=news&act=form&type=tieuchi']
-      ],
-      [
-        'title' => 'Đánh giá khách hàng',
-        'active' => ['?page=news&act=man&type=danhgia', 'page=news&act=form&type=danhgia']
-      ],
-      [
-        'title' => 'Hướng dẫn chơi',
-        'active' => ['?page=news&act=man&type=huongdanchoi', '?page=news&act=form&type=huongdanchoi']
-      ],
-    ]
+    'children' => (function () use ($config) {
+      $children = [];
+      if (!empty($config['news']) && is_array($config['news'])) {
+        foreach ($config['news'] as $type => $item) {
+          if (!empty($item['title_main'])) {
+            $children[] = [
+              'title'  => $item['title_main'],
+              'active' => ["?page=news&act=man&type=$type", "?page=news&act=forrm&type=$type"]
+            ];
+          }
+        }
+      }
+      return $children;
+    })()
   ],
   [
     'title' => 'Quản lý trang tĩnh',
     'icon' => 'fas fa-bookmark',
-    'children' => [
-      [
-        'title' => 'Giới thiệu',
-        'active' => ['?page=static&type=gioithieu']
-      ],
-      [
-        'title' => 'Liên hệ',
-        'active' => ['?page=static&type=lienhe']
-      ],
-      [
-        'title' => 'Mua hàng',
-        'active' => ['?page=static&type=muahang']
-      ],
-      [
-        'title' => 'Footer',
-        'active' => ['?page=static&type=footer']
-      ],
-      [
-        'title' => 'Hỗ trợ khách hàng',
-        'active' => ['?page=static&type=hotrokhachhang']
-      ],
-      [
-        'title' => 'Hỗ trợ 24/7',
-        'active' => ['?page=static&type=hotro247']
-      ]
-    ]
+    'children' => (function () use ($config) {
+      $children = [];
+      if (!empty($config['static']) && is_array($config['static'])) {
+        foreach ($config['static'] as $type => $item) {
+          if (!empty($item['title_main'])) {
+            $children[] = [
+              'title'  => $item['title_main'],
+              'active' => ["?page=static&type=$type"]
+            ];
+          }
+        }
+      }
+      return $children;
+    })()
   ],
   [
     'title' => 'Quản lý hình ảnh - video',
-    'icon' => 'fas fa-photo-video',
-    'children' => [
-      [
-        'title' => 'Logo',
-        'active' => ['?page=photo&act=photo_static&type=logo']
-      ],
-      [
-        'title' => 'Watermark',
-        'active' => ['?page=photo&act=photo_static&type=watermark']
-      ],
-      [
-        'title' => 'Favicon',
-        'active' => ['?page=photo&act=photo_static&type=favicon']
-      ],
-      [
-        'title' => 'Slideshow',
-        'active' => ['?page=photo&act=photo_man&type=slideshow', '?page=photo&act=photo_form&type=slideshow']
-      ],
-      [
-        'title' => 'Social',
-        'active' => ['?page=photo&act=photo_man&type=social', '?page=photo&act=photo_form&type=social']
-      ],
-      [
-        'title' => 'Phương thức thanh toán',
-        'active' => ['?page=photo&act=photo_man&type=payment', '?page=photo&act=photo_form&type=payment']
-      ]
-    ]
+    'icon'  => 'fas fa-photo-video',
+    'children' => array_merge(
+      (function () use ($config) {
+        $children = [];
+        foreach ($config['photo']['photo_static'] as $type => $cfg) {
+          $children[] = [
+            'title' => $cfg['title_main_photo'] ?? ucfirst($type),
+            'active' => [
+              "?page=photo&act=photo_static&type={$type}",
+              "?page=photo&act=photo_form&type={$type}"
+            ]
+          ];
+        }
+        return $children;
+      })(),
+      (function () use ($config) {
+        $children = [];
+        foreach ($config['photo']['photo_man'] as $type => $cfg) {
+          $children[] = [
+            'title' => $cfg['title_main_photo'] ?? ucfirst($type),
+            'active' => [
+              "?page=photo&act=photo_man&type={$type}",
+              "?page=photo&act=photo_form&type={$type}"
+            ]
+          ];
+        }
+        return $children;
+      })()
+    )
+  ],
+  [
+    'title' => 'Quản lý SEO page',
+    'icon'  => 'fas fa-share-alt',
+    'children' => (function () use ($config) {
+      $children = [];
+      if (!empty($config['seopage']['page'])) {
+        foreach ($config['seopage']['page'] as $type => $title) {
+          $children[] = [
+            'title'  => $title,
+            'active' => ["?page=seopage&act=update&type=$type"]
+          ];
+        }
+      }
+      return $children;
+    })()
   ],
   [
     'title' => 'Thiết lập thông tin',
     'icon' => 'fas fa-cogs',
-    'active' => ['?page=setting']
+    'active' => ['?page=setting&act=update']
   ]
 ];
 $currentPage = $_GET['page'] ?? '';

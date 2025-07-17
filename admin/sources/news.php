@@ -1,69 +1,45 @@
 <?php
-$act = $_GET['act'] ?? 'man';
-$type = $_GET['type'] ?? null;
+$act = $_GET['act'] ?? '';
+$type = $_GET['type'] ?? '';
 $table = 'tbl_news';
-switch ($type) {
-  case 'tintuc':
-  case 'chinhsach':
-  case 'huongdanchoi':
-    $pageConfig = [
-      'name_page' => $fn->convert_type($type)['vi'],
-      'width' => 540,
-      'height' => 360,
-      'img_type_list' => '.jpg|.gif|.png|.jpeg|.gif|.webp',
-      'status' => ['hienthi' => 'Hiển thị', 'noibat' => 'Nổi bật']
-    ];
-    break;
-  case 'tieuchi':
-    $pageConfig = [
-      'name_page' => $fn->convert_type($type)['vi'],
-      'width' => 40,
-      'height' => 40,
-      'img_type_list' => '.jpg|.gif|.png|.jpeg|.gif|.webp',
-      'status' => ['hienthi' => 'Hiển thị']
-    ];
-    break;
-  case 'danhgia':
-    $pageConfig = [
-      'name_page' => $fn->convert_type($type)['vi'],
-      'width' => 100,
-      'height' => 100,
-      'img_type_list' => '.jpg|.gif|.png|.jpeg|.gif|.webp',
-      'status' => ['hienthi' => 'Hiển thị']
-    ];
-    break;
-  default:
-    $fn->transfer("Không xác định loại dữ liệu!", "index.php", false);
-    break;
+if (!isset($config['news'][$type])) {
+  $fn->transfer("Trang không tồn tại!", "index.php", false);
 }
-$pageConfig['type'] = $type;
-$pageConfig += [
-  'linkMan'    => "index.php?page=news&act=man&type=$type",
-  'linkForm'   => "index.php?page=news&act=form&type=$type",
-  'linkEdit'   => "index.php?page=news&act=form&type=$type&id=",
-  'linkDelete' => "index.php?page=news&type=$type&act=delete&id=",
-  'linkMulti'  => "index.php?page=news&type=$type&act=delete_multiple",
-];
-extract($pageConfig);
-if ($act === 'delete' && is_numeric($_GET['id'] ?? null)) {
-  $fn->delete_data([
-    'id' => (int)$_GET['id'],
-    'table' => $table,
-    'type' => $type,
-    'delete_seo' => true,
-    'redirect_page' => $linkMan
-  ]);
-} elseif ($act === 'delete_multiple' && !empty($_GET['listid'])) {
-  $fn->deleteMultiple_data([
-    'listid' => $_GET['listid'],
-    'table' => $table,
-    'type' => $type,
-    'delete_seo' => true,
-    'redirect_page' => $linkMan
-  ]);
-}
+$linkMan = "index.php?page=news&act=man&type=$type";
+$linkForm = str_replace('man', 'form', $linkMan);
+$linkEdit = "$linkForm&id=";
+$linkDelete = "index.php?page=news&type=$type&act=delete&id=";
+$linkMulti  = "index.php?page=news&type=$type&act=delete_multiple";
 
 switch ($act) {
+  case 'delete':
+    if (is_numeric($_GET['id'] ?? null)) {
+      $fn->delete_data([
+        'id' => (int)$_GET['id'],
+        'table' => $table,
+        'type' => $type,
+        'delete_seo' => true,
+        'redirect_page' => $linkMan
+      ]);
+    } else {
+      $fn->transfer("ID không hợp lệ!", $linkMan, false);
+    }
+    break;
+
+  case 'delete_multiple':
+    if (!empty($_GET['listid'])) {
+      $fn->deleteMultiple_data([
+        'listid' => $_GET['listid'],
+        'table' => $table,
+        'type' => $type,
+        'delete_seo' => true,
+        'redirect_page' => $linkMan
+      ]);
+    } else {
+      $fn->transfer("Danh sách ID không hợp lệ!", $linkMan, false);
+    }
+    break;
+
   case 'man':
     $keyword = $_GET['keyword'] ?? '';
     $current_page = max(1, (int)($_GET['p'] ?? 1));
@@ -78,7 +54,7 @@ switch ($act) {
       'current_page' => $current_page,
       'keyword' => $keyword
     ]);
-    $breadcrumb = [['label' => $name_page]];
+    $breadcrumb = [['label' => $config['news'][$type]['title_main']]];
     include TEMPLATE . LAYOUT . "breadcrumb.php";
     include TEMPLATE . "news/news_man.php";
     break;
@@ -93,44 +69,25 @@ switch ($act) {
     }
 
     if ($_SERVER['REQUEST_METHOD'] === 'POST' && (isset($_POST['add']) || isset($_POST['edit']))) {
-      $save_options = [];
-      $save_options['table'] = $table;
-      $save_options['fields_multi'] = ['slug', 'name', 'desc', 'content'];
-      $save_options['fields_common'] = ['numb', 'type'];
-      $save_options['status_flags'] = array_keys($status);
-      $save_options['redirect_page'] = $linkMan;
-      $save_options['convert_webp'] = true;
-
-      switch ($type) {
-        case 'tintuc':
-        case 'chinhsach':
-        case 'huongdanchoi':
-          $save_options['enable_slug'] = true;
-          $save_options['enable_seo'] = true;
-        case 'tieuchi':
-        case 'danhgia':
-          $save_options['enable_slug'] = false;
-          $save_options['enable_seo'] = false;
-          break;
-      }
-
+      $save_options = [
+        'table'         => $table,
+        'fields_multi'  => ['slug', 'name', 'desc', 'content'],
+        'fields_common' => ['numb', 'type'],
+        'status_flags'  => array_keys($config['news'][$type]['check']),
+        'redirect_page' => $linkMan,
+        'convert_webp'  => true
+      ];
+      if (!empty($config['news'][$type]['slug'])) $save_options['enable_slug'] = true;
+      if (!empty($config['news'][$type]['seo']))  $save_options['enable_seo']  = true;
       $fn->save_data($_POST, $_FILES, $id, $save_options);
     }
 
-    $breadcrumb = [['label' => ($id !== null ? 'Cập nhật ' : 'Thêm mới ') . $name_page]];
+
+    $breadcrumb = [['label' => ($id !== null ? 'Cập nhật ' : 'Thêm mới ') . $config['news'][$type]['title_main']]];
     include TEMPLATE . LAYOUT . "breadcrumb.php";
-    switch ($type) {
-      case 'tieuchi':
-        include TEMPLATE . "news/tieuchi_form.php";
-        break;
-      case 'danhgia':
-        include TEMPLATE . "news/danhgia_form.php";
-        break;
-      default:
-        include TEMPLATE . "news/news_form.php";
-        break;
-    }
+    include TEMPLATE . "news/news_form.php";
     break;
+
   default:
     $fn->transfer("Trang không tồn tại", "index.php", false);
     break;

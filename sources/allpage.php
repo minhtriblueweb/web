@@ -1,17 +1,17 @@
 <?php
-// Các biến toàn cục khác (đồng bộ từ $optsetting)
-$hotline         = $optsetting['hotline'];
-$web_name        = $optsetting['web_name'];
-$introduction    = $optsetting['introduction'];
-$worktime        = $optsetting['worktime'];
-$descvi          = $optsetting['desc' . $lang] ?? '';
-$address         = $optsetting['address'];
-$coords_iframe   = $optsetting['coords_iframe'];
-$copyright       = $optsetting['copyright'];
+
+$hotline         = $optsetting_json['hotline'];
+$introduction    = $optsetting["slogan{$lang}"];
+$worktime        = $optsetting_json['opendoor'];
+$descvi          = $optsetting_json["desc'{$lang}"] ?? '';
+$web_name        = $optsetting_json["name'{$lang}"] ?? '';
+$address         = $optsetting_json['address'];
+$coords_iframe   = $optsetting_json['coords_iframe'];
+$copyright       = $optsetting_json['copyright'];
 $bodyjs          = $optsetting['bodyjs'];
 $headjs          = $optsetting['headjs'];
 $analytics       = $optsetting['analytics'];
-$color           = $optsetting['color'];
+$color           = $optsetting_json['color'];
 
 $show_social = $db->rawQuery("SELECT file, link, name{$lang}, desc{$lang} FROM tbl_photo WHERE type= ? AND FIND_IN_SET('hienthi', status)", ['social']);
 

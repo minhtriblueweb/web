@@ -1,6 +1,4 @@
 <?php
-
-
 /* Config type - Newsletter */
 require_once 'config-type-newsletter.php';
 
@@ -13,16 +11,21 @@ require_once 'config-type-static.php';
 /* Config type - Photo */
 require_once 'config-type-photo.php';
 
+require_once 'config-type-product.php';
+
 /* Seo page */
 $config['seopage']['page'] = array(
-  "dich-vu" => "Dịch vụ",
-  "du-an" => "Dự án",
-  "tin-tuc" => "Tin tức",
-  "lien-he" => "Liên hệ"
+  "trangchu" => "Trang chủ",
+  "gioithieu" => "Giới thiệu",
+  "sanpham" => "Sản phẩm",
+  "muahang" => "Mua hàng",
+  "huongdanchoi" => "Hướng dẫn chơi ",
+  "tintuc" => "Tin tức",
+  "lienhe" => "Liên hệ"
 );
-$config['seopage']['width'] = 300;
-$config['seopage']['height'] = 200;
-$config['seopage']['thumb'] = '300x200x1';
+$config['seopage']['width'] = 600;
+$config['seopage']['height'] = 315;
+$config['seopage']['thumb'] = '600x315x1';
 $config['seopage']['img_type'] = '.jpg|.gif|.png|.jpeg|.gif';
 
 /* Setting */
@@ -38,8 +41,9 @@ $config['setting']['coords'] = true;
 $config['setting']['coords_iframe'] = true;
 $config['setting']['coords_link'] = true;
 $config['setting']['slogan'] = true;
-$config['setting']['opendoor'] = false;
+$config['setting']['opendoor'] = true;
 $config['setting']['copyright'] = true;
+$config['setting']['color'] = true;
 $config['setting']['video'] = false;
 /* Quản lý import */
 $config['import']['images'] = true;

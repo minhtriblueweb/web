@@ -15,7 +15,7 @@
         <?php include TEMPLATE . LAYOUT . 'slug.php'; ?>
         <div class="card card-primary card-outline text-sm">
           <div class="card-header">
-            <h3 class="card-title">Nội dung <?= $name_page ?></h3>
+            <h3 class="card-title">Nội dung <?= $config['product'][$type]['title_main_list'] ?></h3>
             <div class="card-tools">
               <button type="button" class="btn btn-tool" data-card-widget="collapse">
                 <i class="fas fa-minus"></i>
@@ -86,7 +86,7 @@
       <div class="col-xl-4">
         <div class="card card-primary card-outline text-sm">
           <div class="card-header">
-            <h3 class="card-title">Icon <?= $name_page ?></h3>
+            <h3 class="card-title">Icon <?= $config['product'][$type]['title_main_list'] ?></h3>
             <div class="card-tools">
               <button type="button" class="btn btn-tool" data-card-widget="collapse">
                 <i class="fas fa-minus"></i>
@@ -110,7 +110,7 @@
           </div>
           <div class="card-body">
             <div class="form-group">
-              <?php foreach ($status as $check => $label): ?>
+              <?php foreach ($config['product'][$type]['check_list'] as $check => $label): ?>
                 <div class="form-group d-inline-block mb-2 mr-5">
                   <label for="<?= $check ?>-checkbox" class="d-inline-block align-middle mb-0 mr-3 form-label"><?= $label ?>:</label>
                   <label class="switch switch-success">

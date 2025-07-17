@@ -15,7 +15,7 @@
   </div>
   <div class="card card-primary card-outline text-sm mb-0">
     <div class="card-header">
-      <h3 class="card-title">Danh sách <?= $name_page ?></h3>
+      <h3 class="card-title">Danh sách <?= $config['news'][$type]['title_main'] ?></h3>
     </div>
     <div class="card-body table-responsive p-0">
       <table class="table table-hover">
@@ -30,7 +30,7 @@
             <th class="align-middle text-center" style="width: 10%">STT</th>
             <th class="align-middle">Hình</th>
             <th class="align-middle" style="width: 40%">Tiêu đề</th>
-            <?php foreach ($status as $attr => $label): ?>
+            <?php foreach ($config['news'][$type]['check'] as $attr => $label): ?>
               <th class="align-middle text-center"><?= $label ?></th>
             <?php endforeach; ?>
             <th class="align-middle text-center">Thao tác</th>
@@ -76,14 +76,16 @@
                   <td class="align-middle">
                     <a class="text-dark text-break" href="<?= $linkEdit . $id ?>" title="<?= $name ?>"><?= $name ?></a>
                     <div class="tool-action mt-2 w-clear">
-                      <a class="text-primary mr-3" href="<?= BASE . $slug ?>" target="_blank" title="Xem"><i class="far fa-eye mr-1"></i>View</a>
+                      <?php if (!empty($config['news'][$type]['view'])): ?>
+                        <a class="text-primary mr-3" href="<?= BASE . $slug ?>" target="_blank" title="Xem"><i class="far fa-eye mr-1"></i>View</a>
+                      <?php endif; ?>
                       <a class="text-info mr-3" href="<?= $linkEdit . $id ?>" title="Chỉnh sửa"><i class="far fa-edit mr-1"></i>Edit</a>
                       <a class="text-danger" id="delete-item" data-url="<?= $linkDelete . $id ?>" title="Xoá"><i class="far fa-trash-alt mr-1"></i>Delete</a>
                     </div>
                   </td>
 
                   <!-- Checkbox Hiển thị, Nổi bật -->
-                  <?php foreach ($status as $attr => $label): ?>
+                  <?php foreach ($config['news'][$type]['check'] as $attr => $label): ?>
                     <td class="align-middle text-center">
                       <label class="switch switch-success">
                         <input type="checkbox" class="switch-input custom-control-input show-checkbox"

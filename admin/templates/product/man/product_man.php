@@ -23,7 +23,7 @@
   </div>
   <div class="card card-primary card-outline text-sm mb-0">
     <div class="card-header">
-      <h3 class="card-title">Danh sách <?= $name_page ?></h3>
+      <h3 class="card-title">Danh sách <?= $config['product'][$type]['title_main'] ?></h3>
     </div>
     <div class="card-body table-responsive p-0">
       <table class="table table-hover">
@@ -38,10 +38,12 @@
             <th class="align-middle text-center" style="width: 10%">STT</th>
             <th class="align-middle">Hình</th>
             <th class="align-middle" style="width: 20%">Tiêu đề</th>
-            <th class="align-middle">Gallery</th>
+            <?php if (!empty($config['product'][$type]['gallery'])): ?>
+              <th class="align-middle">Gallery</th>
+            <?php endif; ?>
             <th class="align-middle">Danh mục</th>
             <th class="align-middle">Danh mục cấp 2</th>
-            <?php foreach ($status as $attr => $label): ?>
+            <?php foreach ($config['product'][$type]['check'] as $attr => $label): ?>
               <th class="align-middle text-center"><?= $label ?></th>
             <?php endforeach; ?>
             <th class="align-middle text-center">Thao tác</th>
@@ -49,8 +51,8 @@
         </thead>
         <form action="" method="POST">
           <tbody>
-            <?php if (!empty($show_sanpham)): ?>
-              <?php foreach ($show_sanpham as $row): ?>
+            <?php if (!empty($show_data)): ?>
+              <?php foreach ($show_data as $row): ?>
                 <tr>
                   <!-- Checkbox chọn -->
                   <td class="align-middle">
@@ -77,8 +79,8 @@
 
                   <!-- Tên sản phẩm -->
                   <td class="align-middle">
-                    <a class="text-dark text-break" href="<?= $linkEdit . $row['id'] ?>" title="<?= $row['namevi'] ?>">
-                      <?= $row['namevi'] ?>
+                    <a class="text-dark text-break" href="<?= $linkEdit . $row['id'] ?>" title="<?= $row["name{$lang}"] ?>">
+                      <?= $row["name{$lang}"] ?>
                     </a>
                     <div class="tool-action mt-2 w-clear">
                       <a class="text-primary mr-3" href="<?= BASE . $row['slug' . $lang] ?>" target="_blank" title="Xem">
@@ -114,7 +116,7 @@
                   <!-- Danh mục cấp 2 -->
                   <td class="align-middle"><?= $row['name_cat'] ?? '' ?></td>
 
-                  <?php foreach ($status as $attr => $label): ?>
+                  <?php foreach ($config['product'][$type]['check'] as $attr => $label): ?>
                     <td class="align-middle text-center">
                       <label class="switch switch-success">
                         <input type="checkbox" class="switch-input custom-control-input show-checkbox"

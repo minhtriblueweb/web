@@ -50,22 +50,35 @@
                   aria-labelledby="tabs-lang-article-<?= $k ?>">
 
                   <!-- Tiêu đề -->
-                  <div class="form-group">
-                    <label for="name<?= $k ?>">Tiêu đề (<?= $k ?>):</label>
-                    <input type="text"
-                      class="form-control for-seo text-sm"
-                      name="name<?= $k ?>" id="name<?= $k ?>"
-                      placeholder="Tiêu đề (<?= $k ?>)"
-                      value="<?= $_POST['name' . $k] ?? $result['name' . $k] ?? '' ?>"
-                      <?= ($k == 'vi') ? 'required' : '' ?> />
-                  </div>
+                  <?php if (!empty($config['static'][$type]['name'])): ?>
+                    <div class="form-group">
+                      <label for="name<?= $k ?>">Tiêu đề (<?= $k ?>):</label>
+                      <input type="text"
+                        class="form-control for-seo text-sm"
+                        name="name<?= $k ?>" id="name<?= $k ?>"
+                        placeholder="Tiêu đề (<?= $k ?>)"
+                        value="<?= $_POST['name' . $k] ?? $result['name' . $k] ?? '' ?>"
+                        <?= ($k == 'vi') ? 'required' : '' ?> />
+                    </div>
+                  <?php endif; ?>
+                  <!-- Mô tả -->
+                  <?php if (!empty($config['static'][$type]['desc']) || !empty($config['static'][$type]['desc_cke'])): ?>
+                    <div class="form-group">
+                      <label for="desc<?= $k ?>">Mô tả (<?= $k ?>):</label>
+                      <textarea class="form-control for-seo text-sm <?= !empty($config['static'][$type]['desc_cke']) ? 'form-control-ckeditor' : '' ?>"
+                        name="desc<?= $k ?>" id="desc<?= $k ?>"
+                        placeholder="Mô tả (<?= $k ?>)"><?= $_POST['desc' . $k] ?? ($result['desc' . $k] ?? '') ?></textarea>
+                    </div>
+                  <?php endif; ?>
                   <!-- Nội dung -->
-                  <div class="form-group">
-                    <label for="content<?= $k ?>">Nội dung (<?= $k ?>):</label>
-                    <textarea class="form-control for-seo text-sm form-control-ckeditor"
-                      name="content<?= $k ?>" id="content<?= $k ?>"
-                      placeholder="Nội dung (<?= $k ?>)"><?= $_POST['content' . $k] ?? ($result['content' . $k] ?? '') ?></textarea>
-                  </div>
+                  <?php if (!empty($config['static'][$type]['content']) || !empty($config['static'][$type]['content_cke'])): ?>
+                    <div class="form-group">
+                      <label for="content<?= $k ?>">Nội dung (<?= $k ?>):</label>
+                      <textarea class="form-control for-seo text-sm <?= !empty($config['static'][$type]['content_cke']) ? 'form-control-ckeditor' : '' ?>"
+                        name="content<?= $k ?>" id="content<?= $k ?>"
+                        placeholder="Nội dung (<?= $k ?>)"><?= $_POST['content' . $k] ?? ($result['content' . $k] ?? '') ?></textarea>
+                    </div>
+                  <?php endif; ?>
                 </div>
               <?php } ?>
             </div>

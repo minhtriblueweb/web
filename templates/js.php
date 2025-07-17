@@ -2,7 +2,7 @@
   var NN_FRAMEWORK = NN_FRAMEWORK || {};
   var CONFIG_BASE = "<?= BASE ?>";
   var ASSET = "<?= BASE ?>";
-  var WEBSITE_NAME = "<?= $data_seo['web_name'] ?>";
+  var WEBSITE_NAME = "<?= $web_name ?>";
   var TIMENOW = "<?= date('d/m/Y') ?>";
   var SHIP_CART = false;
   var RECAPTCHA_ACTIVE = true;

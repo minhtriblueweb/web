@@ -69,9 +69,9 @@ switch ($act) {
     if ($_SERVER['REQUEST_METHOD'] === 'POST' && (isset($_POST['add']) || isset($_POST['edit']))) {
       $fn->save_data($_POST, $_FILES, $id, [
         'table'              => $table,
-        'fields_multi'       => ['slug', 'name', 'desc', 'content'],
-        'fields_common'      => ['numb', 'type'],
-        'status_flags'       => array_keys($status),
+        'fields_multi'        => ['slug', 'name', 'desc', 'content'],
+        'fields_common'       => ['id_list', 'numb', 'type'],
+        'status_flags'       => array_keys($config['product'][$nametype]['check_list']),
         'redirect_page'      => $linkMan,
         'enable_seo'         => true,
         'enable_slug'        => true,

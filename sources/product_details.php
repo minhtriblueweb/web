@@ -22,7 +22,7 @@ $id_list = $row_sp['id_list'];
 $id_cat = $row_sp['id_cat'];
 
 // Lấy thông tin danh mục C1, C2 theo JOIN và ngôn ngữ
-$dm_data = $fn->show_data_join([
+$dm_data = $fn->show_data([
   'table'  => 'tbl_product',
   'alias'  => 'sp',
   'join'   => "

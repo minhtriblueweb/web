@@ -15,24 +15,22 @@
         <?php include TEMPLATE . LAYOUT . 'slug.php'; ?>
         <div class="card card-primary card-outline text-sm">
           <div class="card-header">
-            <h3 class="card-title">Nội dung <?= $config['product'][$type]['title_main_list'] ?></h3>
+            <h3 class="card-title">Nội dung <?= $config['product'][$type]['title_main_cat'] ?></h3>
             <div class="card-tools">
-              <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                <i class="fas fa-minus"></i>
-              </button>
+              <button type="button" class="btn btn-tool" data-card-widget="collapse"><i
+                  class="fas fa-minus"></i></button>
             </div>
           </div>
           <div class="card-body">
             <div class="card card-primary card-outline card-outline-tabs">
               <div class="card-header p-0 border-bottom-0">
-                <ul class="nav nav-tabs" id="custom-tabs-article-tab-lang" role="tablist">
+                <ul class="nav nav-tabs" id="custom-tabs-three-tab-lang" role="tablist">
                   <?php foreach ($config['website']['lang'] as $k => $v) { ?>
                     <li class="nav-item">
                       <a class="nav-link <?= ($k == 'vi') ? 'active' : '' ?>"
                         id="tabs-lang-article-<?= $k ?>"
-                        data-toggle="pill"
+                        data-toggle="pill" role="tab"
                         href="#tabs-content-article-<?= $k ?>"
-                        role="tab"
                         aria-controls="tabs-content-article-<?= $k ?>"
                         aria-selected="<?= ($k == 'vi') ? 'true' : 'false' ?>">
                         <?= $v ?>
@@ -42,7 +40,7 @@
                 </ul>
               </div>
               <div class="card-body card-article">
-                <div class="tab-content" id="custom-tabs-article-tabContent-lang">
+                <div class="tab-content" id="custom-tabs-three-tabContent-lang">
                   <?php foreach ($config['website']['lang'] as $k => $v) { ?>
                     <div class="tab-pane fade show <?= ($k == 'vi') ? 'active' : '' ?>"
                       id="tabs-content-article-<?= $k ?>"
@@ -56,8 +54,7 @@
                           class="form-control for-seo text-sm"
                           name="name<?= $k ?>" id="name<?= $k ?>"
                           placeholder="Tiêu đề (<?= $k ?>)"
-                          value="<?= $_POST['name' . $k] ?? ($result['name' . $k] ?? '') ?>"
-                          <?= ($k == 'vi') ? 'required' : '' ?> />
+                          value="<?= $_POST['name' . $k] ?? ($result['name' . $k] ?? '') ?>" <?= ($k == 'vi') ? 'required' : '' ?> />
                       </div>
 
                       <!-- Mô tả -->
@@ -86,18 +83,27 @@
       <div class="col-xl-4">
         <div class="card card-primary card-outline text-sm">
           <div class="card-header">
-            <h3 class="card-title">Icon <?= $config['product'][$type]['title_main_list'] ?></h3>
+            <h3 class="card-title">Chọn danh mục cấp 1</h3>
+          </div>
+          <div class="card-body">
+            <div class="form-group-category">
+              <?= $fn->getAjaxCategory('tbl_product_list', $_POST['id_list'] ?? $result['id_list'] ?? '') ?>
+            </div>
+          </div>
+        </div>
+        <div class="card card-primary card-outline text-sm">
+          <div class="card-header">
+            <h3 class="card-title">Hình ảnh <?= $config['product'][$type]['title_main_cat'] ?></h3>
             <div class="card-tools">
-              <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                <i class="fas fa-minus"></i>
-              </button>
+              <button type="button" class="btn btn-tool" data-card-widget="collapse"><i
+                  class="fas fa-minus"></i></button>
             </div>
           </div>
           <div class="card-body">
             <?php
             $photoDetail = array();
             $photoDetail['image'] = $result['file'] ?? '';
-            $photoDetail['dimension'] = "Width: " . $width . " px - Height: " . $height . " px (" . $img_type_list . ")";
+            $photoDetail['dimension'] = "Width: " . $config['product'][$type]['width_cat'] . " px - Height: " . $config['product'][$type]['height_cat'] . " px (" . $config['product'][$type]['img_type_cat'] . ")";
             include TEMPLATE . LAYOUT . "image.php"; ?>
           </div>
         </div>
@@ -110,11 +116,16 @@
           </div>
           <div class="card-body">
             <div class="form-group">
-              <?php foreach ($config['product'][$type]['check_list'] as $check => $label): ?>
+              <?php foreach ($config['product'][$type]['check_cat'] as $check => $label): ?>
                 <div class="form-group d-inline-block mb-2 mr-5">
                   <label for="<?= $check ?>-checkbox" class="d-inline-block align-middle mb-0 mr-3 form-label"><?= $label ?>:</label>
                   <label class="switch switch-success">
-                    <input type="checkbox" name="<?= $check ?>" class="switch-input custom-control-input .show-checkbox" id="<?= $check ?>-checkbox" <?= $fn->is_checked($check, $result['status'] ?? '', $id ?? '') ?>>
+                    <input
+                      type="checkbox"
+                      name="<?= $check ?>"
+                      class="switch-input custom-control-input .show-checkbox"
+                      id="<?= $check ?>-checkbox"
+                      <?= $fn->is_checked($check, $result['status'] ?? '', $id ?? '') ?>>
                   </label>
                 </div>
               <?php endforeach; ?>
@@ -128,7 +139,6 @@
         </div>
       </div>
     </div>
-
     <?php include TEMPLATE . LAYOUT . 'seo.php'; ?>
     <input type="hidden" name="type" value="<?= $type ?>">
   </form>

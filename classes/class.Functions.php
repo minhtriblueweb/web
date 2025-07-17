@@ -18,6 +18,8 @@ class Functions
   {
     $where = [];
     $params = [];
+
+    // Trạng thái
     if (!empty($options['status'])) {
       $statuses = is_array($options['status']) ? $options['status'] : explode(',', $options['status']);
       foreach ($statuses as $status) {
@@ -25,6 +27,8 @@ class Functions
         $params[] = trim($status);
       }
     }
+
+    // Các trường điều kiện cơ bản
     $fields = ['id_list', 'id_cat', 'id_parent', 'exclude_id', 'type'];
     foreach ($fields as $field) {
       if (isset($options[$field]) && $options[$field] !== '') {
@@ -34,21 +38,34 @@ class Functions
         $params[] = $field === 'type' ? $options[$field] : (int)$options[$field];
       }
     }
+
+    // Từ khóa tìm kiếm
     if (!empty($options['keyword'])) {
-      $where[] = "`namevi` LIKE ?";
+      $alias = $options['alias'] ?? '';
+      $prefix = $alias ?: 'p';
+      $where[] = "($prefix.namevi LIKE ? OR $prefix.nameen LIKE ?)";
+      $params[] = '%' . $options['keyword'] . '%';
       $params[] = '%' . $options['keyword'] . '%';
     }
+
     $sql = $where ? ' WHERE ' . implode(' AND ', $where) : '';
     return ['sql' => $sql, 'params' => $params];
   }
-  public function show_data(array $options = [])
+
+  public function show_data(array $options = []): array
   {
     if (empty($options['table'])) return [];
-    $table = $options['table'];
-    $select = $options['select'] ?? '*';
-    $order = $options['order'] ?? ' ORDER BY numb, id DESC';
+
+    $table   = $options['table'];
+    $alias   = $options['alias'] ?? '';
+    $select  = $options['select'] ?? '*';
+    $join    = $options['join'] ?? '';
+    $order   = $options['order_by'] ?? $options['order'] ?? (($alias ? "$alias." : "") . "numb ASC, " . ($alias ? "$alias." : "") . "id DESC");
+
     $whereData = $this->buildWhere($options);
-    $sql = "SELECT $select FROM `$table`" . $whereData['sql'] . $order;
+    $sql = "SELECT $select FROM `$table`" . ($alias ? " $alias" : '') . ($join ? " $join" : '') . $whereData['sql'] . " ORDER BY $order";
+
+    // Phân trang
     if (!empty($options['records_per_page']) && !empty($options['current_page'])) {
       $limit = (int)$options['records_per_page'];
       $offset = ((int)$options['current_page'] - 1) * $limit;
@@ -58,102 +75,35 @@ class Functions
       $offset = isset($options['offset']) ? (int)$options['offset'] : 0;
       $sql .= " LIMIT $limit OFFSET $offset";
     }
+
     $result = $this->db->rawQuery($sql, $whereData['params']);
     $data = [];
+
     if ($result instanceof mysqli_result) {
       while ($row = $result->fetch_assoc()) {
         $data[] = $row;
       }
     }
+
     return $data;
   }
-  public function show_data_join(array $options = []): array
-  {
-    $select = $options['select'] ?? '*';
-    $table = $options['table'] ?? '';
-    $join = $options['join'] ?? '';
-    $alias = $options['alias'] ?? '';
-    $order_by = $options['order_by'] ?? ($alias ? "$alias.id DESC" : "id DESC");
-    $where = [];
-    $bindings = [];
-    if (empty($table)) return [];
-    if (!empty($options['where'])) {
-      foreach ($options['where'] as $key => $val) {
-        $where[] = "$key = ?";
-        $bindings[] = $val;
-      }
-    }
-    if (!empty($options['keyword'])) {
-      $keyword = trim($options['keyword']);
-      if ($keyword !== '') {
-        $where[] = "(p.namevi LIKE ? OR p.nameen LIKE ?)";
-        $bindings[] = "%$keyword%";
-        $bindings[] = "%$keyword%";
-      }
-    }
-    $sql = "SELECT $select FROM `$table`";
-    if (!empty($alias)) $sql .= " $alias";
-    if (!empty($join)) $sql .= " $join";
-    if (!empty($where)) $sql .= " WHERE " . implode(" AND ", $where);
-    $sql .= " ORDER BY $order_by";
-    if (!empty($options['records_per_page']) && !empty($options['current_page'])) {
-      $limit = (int)$options['records_per_page'];
-      $offset = ((int)$options['current_page'] - 1) * $limit;
-      $sql .= " LIMIT $limit OFFSET $offset";
-    } elseif (!empty($options['limit'])) {
-      $limit = (int)$options['limit'];
-      $offset = isset($options['offset']) ? (int)$options['offset'] : 0;
-      $sql .= " LIMIT $limit OFFSET $offset";
-    }
-    $result = $this->db->rawQuery($sql, $bindings);
-    $data = [];
-    if ($result instanceof mysqli_result) {
-      while ($row = $result->fetch_assoc()) {
-        $data[] = $row;
-      }
-    }
-    return $data;
-  }
+
   public function count_data(array $options = []): int
   {
     if (empty($options['table'])) return 0;
-    $table = $options['table'];
-    $whereData = $this->buildWhere($options);
-    $sql = "SELECT COUNT(*) FROM `$table`" . $whereData['sql'];
-    $count = $this->db->rawQueryValue($sql, $whereData['params']);
-    return is_numeric($count) ? (int)$count : 0;
-  }
-  public function count_data_join(array $options = []): int
-  {
-    $table = $options['table'] ?? '';
-    if (empty($table)) return 0;
-    $alias = $options['alias'] ?? '';
-    $join = $options['join'] ?? '';
-    $where = [];
-    $bindings = [];
-    if (!empty($options['where'])) {
-      foreach ($options['where'] as $key => $val) {
-        $where[] = "$key = ?";
-        $bindings[] = $val;
-      }
-    }
-    if (!empty($options['keyword'])) {
-      $keyword = trim($options['keyword']);
-      if ($keyword !== '') {
-        $where[] = "(p.namevi LIKE ? OR p.nameen LIKE ?)";
-        $bindings[] = "%$keyword%";
-        $bindings[] = "%$keyword%";
-      }
-    }
-    $idColumn = !empty($alias) ? "$alias.id" : "id";
-    $sql = "SELECT COUNT(DISTINCT $idColumn) AS total FROM `$table`";
-    if (!empty($alias)) $sql .= " $alias";
-    if (!empty($join)) $sql .= " $join";
-    if (!empty($where)) $sql .= " WHERE " . implode(" AND ", $where);
 
-    $row = $this->db->rawQueryOne($sql, $bindings);
+    $table  = $options['table'];
+    $alias  = $options['alias'] ?? '';
+    $join   = $options['join'] ?? '';
+    $idCol  = ($alias ? "$alias." : "") . "id";
+
+    $whereData = $this->buildWhere($options);
+    $sql = "SELECT COUNT(DISTINCT $idCol) AS total FROM `$table`" . ($alias ? " $alias" : '') . ($join ? " $join" : '') . $whereData['sql'];
+
+    $row = $this->db->rawQueryOne($sql, $whereData['params']);
     return (int)($row['total'] ?? 0);
   }
+
   public function save_gallery($data, $files, $id_parent, $type = '', $redirect_url = null)
   {
     $id_parent = (int)$id_parent;
@@ -200,11 +150,11 @@ class Functions
     }
     return $result;
   }
-  public function save_seo(string $type, int $id_parent, array $data, array $langs): void
+  public function save_seo(string $type, int $id_parent, array $data, array $langs, string $act): void
   {
     $seo_table = 'tbl_seo';
     $fields_multi = ['title', 'keywords', 'description', 'schema'];
-    $data_sql = ['id_parent' => $id_parent, 'type' => $type];
+    $data_sql = ['id_parent' => $id_parent, 'type' => $type, 'act' => $act];
     $has_data = false;
     foreach ($langs as $lang) {
       foreach ($fields_multi as $field) {
@@ -217,7 +167,7 @@ class Functions
       }
     }
     if (!$has_data) return;
-    $existing = $this->db->rawQueryOne("SELECT id FROM `$seo_table` WHERE id_parent = ? AND `type` = ?", [$id_parent, $type]);
+    $existing = $this->db->rawQueryOne("SELECT id FROM `$seo_table` WHERE id_parent = ? AND `type` = ? AND `act` = ?", [$id_parent, $type, $act]);
     if ($existing) {
       $fields =  $params = [];
       foreach ($data_sql as $key => $val) {
@@ -322,7 +272,7 @@ class Functions
       $result = $this->db->execute("UPDATE $table SET " . implode(', ', $fields) . " WHERE id = ?", $params);
 
       if ($enable_seo && $result) {
-        $this->save_seo($type, (int)$id, $data, $langs);
+        $this->save_seo($type, (int)$id, $data, $langs, $options['act'] ?? '');
       }
 
       // Xử lý gallery nếu có
@@ -375,7 +325,7 @@ class Functions
       $insert_id = $inserted ? $this->db->getInsertId() : 0;
 
       if ($enable_seo && $insert_id) {
-        $this->save_seo($type, $insert_id, $data, $langs);
+        $this->save_seo($type, $insert_id, $data, $langs, $options['act'] ?? '');
       }
 
       if ($enable_gallery && !empty($files['files']['name'][0])) {

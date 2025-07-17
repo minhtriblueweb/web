@@ -1,26 +1,16 @@
 <?php
 $slug = $_GET['slug'] ?? '';
 if (!$slug) $fn->abort_404();
-
-// Lấy danh mục cấp 1 theo slug
-$dm = $cache->get(
+$dm = $db->rawQueryOne(
   "SELECT id, slug{$lang}, name{$lang}, content{$lang} FROM tbl_product_list WHERE slug{$lang} = ? AND FIND_IN_SET('hienthi', status) ORDER BY numb, id DESC LIMIT 1",
-  [$slug],
-  'one',
-  7200
+  [$slug]
 );
-
-
 if (!$dm) $fn->abort_404();
-
 $id_list = (int)$dm['id'];
-
 // Lấy danh mục cấp 2 thuộc danh mục cấp 1 này
-$dm_c2_all = $cache->get(
+$dm_c2_all =  $db->rawQuery(
   "SELECT id, name{$lang}, slug{$lang} FROM tbl_product_cat WHERE id_list = ? AND FIND_IN_SET('hienthi', status) ORDER BY numb, id DESC",
-  [$id_list],
-  'all',
-  7200
+  [$id_list]
 );
 
 // Phân trang sản phẩm

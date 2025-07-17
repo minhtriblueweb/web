@@ -73,11 +73,11 @@ $config['product'][$nametype]['title_main_list'] = $config['size-img'][$nametype
 $config['product'][$nametype]['images_list'] = true;
 $config['product'][$nametype]['show_images_list'] = true;
 $config['product'][$nametype]['slug_list'] = true;
-$config['product'][$nametype]['check_list'] = array("hienthi" => "Hiển thị");
+$config['product'][$nametype]['check_list'] = array("hienthi" => "Hiển thị", "noibat" => "Nổi bật");
 $config['product'][$nametype]['desc_list'] = false;
 $config['product'][$nametype]['seo_list'] = true;
-$config['product'][$nametype]['width_list'] = $config['size-img'][$nametype]['list']['width'] = 150;
-$config['product'][$nametype]['height_list'] = $config['size-img'][$nametype]['list']['height'] = 150;
+$config['product'][$nametype]['width_list'] = $config['size-img'][$nametype]['list']['width'] = 50;
+$config['product'][$nametype]['height_list'] = $config['size-img'][$nametype]['list']['height'] = 50;
 $config['product'][$nametype]['thumb_list'] = '100x' . round(100 / ($config['product'][$nametype]['width_list'] / $config['product'][$nametype]['height_list'])) . 'x1';
 $config['product'][$nametype]['img_type_list'] = '.jpg|.gif|.png|.jpeg|.gif';
 $config['size-img'][$nametype]['list']['active'] = false;
@@ -86,11 +86,11 @@ $config['product'][$nametype]['title_main_cat'] = $config['size-img'][$nametype]
 $config['product'][$nametype]['images_cat'] = true;
 $config['product'][$nametype]['show_images_cat'] = true;
 $config['product'][$nametype]['slug_cat'] = true;
-$config['product'][$nametype]['check_cat'] = array("hienthi" => "Hiển thị");
+$config['product'][$nametype]['check_cat'] = array("hienthi" => "Hiển thị", "noibat" => "Nổi bật");
 $config['product'][$nametype]['desc_cat'] = false;
 $config['product'][$nametype]['seo_cat'] = true;
-$config['product'][$nametype]['width_cat'] = $config['size-img'][$nametype]['cat']['width'] = 300;
-$config['product'][$nametype]['height_cat'] = $config['size-img'][$nametype]['cat']['height'] = 200;
+$config['product'][$nametype]['width_cat'] = $config['size-img'][$nametype]['cat']['width'] = 100;
+$config['product'][$nametype]['height_cat'] = $config['size-img'][$nametype]['cat']['height'] = 100;
 $config['product'][$nametype]['thumb_cat'] = '100x' . round(100 / ($config['product'][$nametype]['width_cat'] / $config['product'][$nametype]['height_cat'])) . 'x1';
 $config['product'][$nametype]['img_type_cat'] = '.jpg|.gif|.png|.jpeg|.gif';
 $config['size-img'][$nametype]['cat']['active'] = false;
@@ -112,7 +112,7 @@ $config['product'][$nametype]['title_main_sub'] = $config['size-img'][$nametype]
 $config['product'][$nametype]['images_sub'] = true;
 $config['product'][$nametype]['show_images_sub'] = true;
 $config['product'][$nametype]['slug_sub'] = true;
-$config['product'][$nametype]['check_sub'] = array("noibat" => "Nổi bật", "hienthi" => "Hiển thị");
+$config['product'][$nametype]['check_sub'] = array("hienthi" => "Hiển thị", "noibat" => "Nổi bật");
 $config['product'][$nametype]['desc_sub'] = false;
 $config['product'][$nametype]['seo_sub'] = true;
 $config['product'][$nametype]['width_sub'] = $config['size-img'][$nametype]['sub']['width'] = 300;

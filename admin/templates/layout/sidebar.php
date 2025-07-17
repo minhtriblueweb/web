@@ -34,7 +34,7 @@ $sidebarMenu = [
           if (!empty($item['title_main'])) {
             $children[] = [
               'title'  => $item['title_main'],
-              'active' => ["?page=news&act=man&type=$type", "?page=news&act=forrm&type=$type"]
+              'active' => ["?page=news&act=man&type=$type", "?page=news&act=form&type=$type"]
             ];
           }
         }

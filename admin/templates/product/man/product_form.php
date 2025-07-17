@@ -172,9 +172,8 @@
             </div>
             <div class="form-group">
               <label for="numb" class="d-inline-block align-middle mb-0 mr-2">Số thứ tự:</label>
-              <input type="number"
-                class="form-control form-control-mini w-25 text-left d-inline-block align-middle text-sm" min="0"
-                name="numb" id="numb" placeholder="Số thứ tự" value="<?= $_POST['numb'] ?? !empty($id) ? $result['numb'] : '1' ?>">
+              <input type="number" class="form-control form-control-mini d-inline-block align-middle text-sm" min="0"
+                name="numb" id="numb" placeholder="Số thứ tự" value="<?= $_POST['numb'] ?? (!empty($id) ? $result['numb'] : '1') ?>" />
             </div>
           </div>
         </div>

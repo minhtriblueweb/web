@@ -3,7 +3,7 @@ $slug = $_GET['slug'] ?? '';
 if (!$slug) $fn->abort_404();
 
 // Lấy danh mục cấp 2 kèm cấp 1 (JOIN)
-$dm_c2_list = $fn->show_data_join([
+$dm_c2_list = $fn->show_data([
   'table' => 'tbl_product_cat',
   'alias' => 'c2',
   'join' => 'JOIN tbl_product_list c1 ON c2.id_list = c1.id',

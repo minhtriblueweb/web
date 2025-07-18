@@ -1,26 +1,3 @@
-<?php
-// $id        = $_GET['id'] ?? null;
-// $id_child  = $_GET['id_child'] ?? null;
-// $name_page = 'hình ảnh sản phẩm';
-// $type = 'product';
-// $linkMan   = "index.php?page=gallery_man&type=$type&id=" . $id;
-// $thumb_width = 500;
-// $thumb_height = 500;
-// if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add']) && $id) {
-//   $fn->add_gallery($_POST, $_FILES, $id, $type, $linkMan);
-// }
-// if (
-//   $id_child &&
-//   ($result = $db->rawQueryOne("SELECT * FROM tbl_gallery WHERE id = ? LIMIT 1", [$id_child])) &&
-//   ($id_parent = $result['id_parent'] ?? null) &&
-//   $_SERVER['REQUEST_METHOD'] === 'POST' &&
-//   isset($_POST['edit'])
-// ) {
-//   $product->upload_gallery($_POST, $_FILES, $id_child, $type, $id_parent);
-// }
-// $breadcrumb = [['label' => (!empty($id) ? 'Thêm mới ' : 'Cập nhật ') . $name_page]];
-// include TEMPLATE . 'breadcrumb.php';
-?>
 <section class="content">
   <form class="validation-form" novalidate method="post" action="" enctype="multipart/form-data">
     <div class="card-footer text-sm sticky-top">
@@ -28,7 +5,7 @@
         class="btn btn-sm bg-gradient-primary btn-submit-HoldOn">
         <i class="far fa-save mr-2"></i>Lưu
       </button>
-      <a class="btn btn-sm bg-gradient-danger" href="<?= $linkMan ?>" title="Thoát"><i class="fas fa-sign-out-alt mr-2"></i>Thoát</a>
+      <a class="btn btn-sm bg-gradient-danger" href="<?= $linkMan . $result['id_parent'] ?>" title="Thoát"><i class="fas fa-sign-out-alt mr-2"></i>Thoát</a>
     </div>
     <div class="row">
       <?php if (!empty($id)) : ?>
@@ -45,7 +22,7 @@
             <div class="card-body">
               <div class="form-group">
                 <label for="filer-gallery" class="alabel-filer-gallery mb-3">
-                  Album: (.jpg|.gif|.png|.jpeg|.webp)
+                  Album: (<?= $config['product'][$type]['gallery'][$type]['img_type_photo'] ?>)
                 </label>
                 <input type="file" name="files[]" id="filer-gallery" multiple="multiple">
                 <input type="hidden" name="id_parent" value="<?= $id ?>">
@@ -69,7 +46,7 @@
               </div>
               <?php
               /*
-              <?php if (isset($gallery) && count($gallery) > 0) { ?>
+      <?php if (isset($get_gallery) && count($get_gallery) > 0) { ?>
                 <div class="form-group form-group-gallery">
                   <label class="label-filer">Album hiện tại:</label>
                   <div class="action-filer mb-3">
@@ -89,9 +66,8 @@
                   </div>
                 </div>
               <?php } ?>
-              */
+*/
               ?>
-
             </div>
           </div>
         </div>
@@ -100,57 +76,27 @@
         <div class="col-12">
           <div class="card card-primary card-outline text-sm">
             <div class="card-header">
-              <h3 class="card-title"><?= $name_page ?>:</h3>
+              <h3 class="card-title"><?= $config['product'][$type]['gallery'][$type]['title_main_photo'] ?>:</h3>
               <div class="card-tools">
                 <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
               </div>
             </div>
             <div class="card-body">
+              <?php
+              $photoDetail = array();
+              $photoDetail['image'] = $result['file'] ?? '';
+              $photoDetail['dimension'] = "Width: " . $config['product'][$type]['width'] . " px - Height: " . $config['product'][$type]['height'] . " px (" . $config['product'][$type]['img_type'] . ")";
+              include TEMPLATE . LAYOUT . "image.php"; ?>
+            </div>
+            <div class="card-body">
               <div class="form-group">
-                <div class="upload-file">
-                  <p>Upload hình ảnh:</p>
-                  <div class="photoUpload-zone w-25">
-                    <div class="photoUpload-detail" id="photoUpload-preview">
-                      <a data-fancybox href="">
-                        <?= $fn->getImage([
-                          'file' => $result['file'],
-                          'class' => 'rounded',
-                          'alt' => 'Alt Photo',
-                        ]) ?>
-                      </a>
-                    </div>
-                    <label class="photoUpload-file" id="photo-zone" for="file-zone">
-                      <input type="file" name="file" id="file-zone" />
-                      <i class="fas fa-cloud-upload-alt"></i>
-                      <p class="photoUpload-drop">Kéo và thả hình vào đây</p>
-                      <p class="photoUpload-or">hoặc</p>
-                      <p class="photoUpload-choose btn btn-sm bg-gradient-success">
-                        Chọn hình
-                      </p>
-                    </label>
-                  </div>
-                </div>
-              </div>
-              <div class="form-group">
-                <?php
-                $checkboxes = [
-                  'hienthi' => 'Hiển thị',
-                ];
-                ?>
-                <?php foreach ($checkboxes as $check => $label): ?>
+                <?php foreach ($config['product'][$type]['gallery'][$type]['check_photo'] as $check => $label): ?>
                   <div class="form-group d-inline-block mb-2 mr-5">
                     <label for="<?= $check ?>-checkbox" class="d-inline-block align-middle mb-0 mr-3 form-label"><?= $label ?>:</label>
                     <label class="switch switch-success">
-                      <input
-                        type="checkbox"
-                        name="<?= $check ?>"
+                      <input type="checkbox" name="<?= $check ?>"
                         class="switch-input custom-control-input .show-checkbox"
-                        id="<?= $check ?>-checkbox"
-                        <?= $fn->is_checked($check, $result['status'] ?? '', $id ?? '') ?>>
-                      <span class="switch-toggle-slider">
-                        <span class="switch-on"><i class="fa-solid fa-check"></i></span>
-                        <span class="switch-off"><i class="fa-solid fa-xmark"></i></span>
-                      </span>
+                        id="<?= $check ?>-checkbox" <?= $fn->is_checked($check, $result['status'] ?? '', $id ?? '') ?>>
                     </label>
                   </div>
                 <?php endforeach; ?>

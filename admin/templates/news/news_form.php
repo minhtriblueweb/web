@@ -102,7 +102,6 @@
               $photoDetail['dimension'] = "Width: " . $config['news'][$type]['width'] . " px - Height: " . $config['news'][$type]['height'] . " px (" . $config['news'][$type]['img_type'] . ")";
               include TEMPLATE . LAYOUT . "image.php"; ?>
             </div>
-
           </div>
         <?php endif; ?>
       </div>

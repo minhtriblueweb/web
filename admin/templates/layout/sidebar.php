@@ -1,5 +1,4 @@
 <?php
-
 $sidebarMenu = [
   [
     'title' => 'Bảng điều khiển',
@@ -9,20 +8,48 @@ $sidebarMenu = [
   [
     'title' => 'Sản phẩm',
     'icon' => 'fas fa-boxes',
-    'children' => [
-      [
-        'title' => 'Sản phẩm cấp 1',
-        'active' => ['?page=product&act=man_list&type=sanpham', '?page=product&act=form_list&type=sanpham']
-      ],
-      [
-        'title' => 'Sản phẩm cấp 2',
-        'active' => ['?page=product&act=man_cat&type=sanpham', '?page=product&act=form_cat&type=sanpham']
-      ],
-      [
-        'title' => 'Sản phẩm',
-        'active' => ['?page=product&act=man&type=sanpham', '?page=product&act=form&type=sanpham', '?page=gallery&act=man', '?page=gallery&act=form']
-      ],
-    ]
+    'children' => (function () use ($config) {
+      $children = [];
+
+      if (!empty($config['product']) && is_array($config['product'])) {
+        foreach ($config['product'] as $type => $item) {
+
+          if (!empty($item['title_main_list'])) {
+            $linkListMan  = "?page=product&type=$type&act=man_list";
+            $linkListForm = "?page=product&type=$type&act=form_list";
+
+            $children[] = [
+              'title'  => $item['title_main_list'],
+              'active' => [$linkListMan, $linkListForm]
+            ];
+          }
+
+          if (!empty($item['title_main_cat'])) {
+            $linkCatMan  = "?page=product&type=$type&act=man_cat";
+            $linkCatForm = "?page=product&type=$type&act=form_cat";
+
+            $children[] = [
+              'title'  => $item['title_main_cat'],
+              'active' => [$linkCatMan, $linkCatForm]
+            ];
+          }
+
+          if (!empty($item['title_main'])) {
+            $linkMan = "?page=product&type=$type&act=man";
+            $linkForm = "?page=product&type=$type&act=form";
+            $linkGalleryMan = "?page=gallery&act=man";
+            $linkGalleryForm = "?page=gallery&act=form";
+            $children[] = [
+              'title'  => $item['title_main'],
+              'active' => [$linkMan, $linkForm, $linkGalleryMan, $linkGalleryForm]
+            ];
+          }
+        }
+      }
+
+      return $children;
+    })()
+
   ],
   [
     'title' => 'Danh sách bài viết',
@@ -114,8 +141,9 @@ $sidebarMenu = [
     'active' => ['?page=setting&act=update']
   ]
 ];
-$currentPage = $_GET['page'] ?? '';
-$currentType = $_GET['type'] ?? '';
+$page = $_GET['page'] ?? '';
+$type = $_GET['type'] ?? '';
+$act  = $_GET['act'] ?? '';
 ?>
 
 <aside class="main-sidebar sidebar-dark-primary elevation-4 text-sm">
@@ -132,13 +160,13 @@ $currentType = $_GET['type'] ?? '';
 
           if (!empty($menu['children'])) {
             foreach ($menu['children'] as $child) {
-              if ($fn->isItemActive($child['active'], $currentPage, $currentType)) {
+              if ($fn->isItemActive($child['active'], $page, $type)) {
                 $isActiveGroup = true;
                 break;
               }
             }
           } else {
-            $isActiveGroup = $fn->isItemActive($menu['active'], $currentPage, $currentType);
+            $isActiveGroup = $fn->isItemActive($menu['active'], $page, $type);
           }
           ?>
           <li class="nav-item <?= !empty($menu['children']) ? 'has-treeview' : '' ?> <?= $isActiveGroup ? 'menu-open' : '' ?>">
@@ -156,7 +184,7 @@ $currentType = $_GET['type'] ?? '';
                 <?php foreach ($menu['children'] as $child): ?>
                   <?php
                   $childLink = $child['active'][0] ?? '#';
-                  $isChildActive = $fn->isItemActive($child['active'], $currentPage, $currentType);
+                  $isChildActive = $fn->isItemActive($child['active'], $page, $type);
                   ?>
                   <li class="nav-item">
                     <a class="nav-link <?= $isChildActive ? 'active' : '' ?>" href="<?= $childLink ?>" title="<?= $child['title'] ?>">

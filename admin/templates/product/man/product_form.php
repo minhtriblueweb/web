@@ -2,8 +2,8 @@
   <form class="validation-form" novalidate method="post" action="" enctype="multipart/form-data">
     <div class="card-footer text-sm sticky-top">
       <button type="submit" name="<?= !empty($id) ? 'edit' : 'add'; ?>"
-        class="btn btn-sm bg-gradient-primary <?= !empty($config['news'][$type]['slug']) ? 'submit-check' : '' ?>"
-        <?= !empty($config['news'][$type]['slug']) ? 'disabled' : '' ?>>
+        class="btn btn-sm bg-gradient-primary <?= !empty($config['product'][$type]['slug']) ? 'submit-check' : '' ?>"
+        <?= !empty($config['product'][$type]['slug']) ? 'disabled' : '' ?>>
         <i class="far fa-save mr-2"></i>Lưu
       </button>
       <button type="reset" class="btn btn-sm bg-gradient-secondary">
@@ -13,7 +13,9 @@
     </div>
     <div class="row">
       <div class="col-xl-8">
-        <?php include TEMPLATE . LAYOUT . 'slug.php'; ?>
+        <?php if (!empty($config['product'][$type]['slug'])): ?>
+          <?php include TEMPLATE . LAYOUT . 'slug.php'; ?>
+        <?php endif; ?>
         <div class="card card-primary card-outline text-sm">
           <div class="card-header">
             <h3 class="card-title">Nội dung <?= $config['product'][$type]['title_main'] ?></h3>
@@ -61,20 +63,24 @@
                       </div>
 
                       <!-- Mô tả -->
-                      <div class="form-group">
-                        <label for="desc<?= $k ?>">Mô tả (<?= $k ?>):</label>
-                        <textarea class="form-control for-seo text-sm form-control-ckeditor"
-                          name="desc<?= $k ?>" id="desc<?= $k ?>"
-                          rows="4" placeholder="Mô tả (<?= $k ?>)"><?= $_POST['desc' . $k] ?? $result['desc' . $k] ?? '' ?></textarea>
-                      </div>
+                      <?php if (!empty($config['product'][$type]['desc_cke']) || !empty($config['product'][$type]['desc'])): ?>
+                        <div class="form-group">
+                          <label for="desc<?= $k ?>">Mô tả (<?= $k ?>):</label>
+                          <textarea rows="4" class="form-control for-seo text-sm <?= !empty($config['product'][$type]['desc_cke']) ? 'form-control-ckeditor' : '' ?>"
+                            name="desc<?= $k ?>" id="desc<?= $k ?>"
+                            placeholder="Mô tả (<?= $k ?>)"><?= $_POST['desc' . $k] ?? ($result['desc' . $k] ?? '') ?></textarea>
+                        </div>
+                      <?php endif; ?>
 
                       <!-- Nội dung -->
-                      <div class="form-group">
-                        <label for="content<?= $k ?>">Nội dung (<?= $k ?>):</label>
-                        <textarea class="form-control for-seo text-sm form-control-ckeditor"
-                          name="content<?= $k ?>" id="content<?= $k ?>"
-                          placeholder="Nội dung (<?= $k ?>)"><?= $_POST['content' . $k] ?? $result['content' . $k] ?? '' ?></textarea>
-                      </div>
+                      <?php if (!empty($config['product'][$type]['content_cke']) || !empty($config['product'][$type]['content'])): ?>
+                        <div class="form-group">
+                          <label for="content<?= $k ?>">Mô tả (<?= $k ?>):</label>
+                          <textarea rows="4" class="form-control for-seo text-sm <?= !empty($config['product'][$type]['content_cke']) ? 'form-control-ckeditor' : '' ?>"
+                            name="content<?= $k ?>" id="content<?= $k ?>"
+                            placeholder="Mô tả (<?= $k ?>)"><?= $_POST['content' . $k] ?? ($result['content' . $k] ?? '') ?></textarea>
+                        </div>
+                      <?php endif; ?>
                     </div>
                   <?php } ?>
                 </div>
@@ -119,41 +125,49 @@
           </div>
           <div class="card-body">
             <div class="row">
-              <div class="form-group col-md-6">
-                <label class="d-block" for="regular_price">Giá:</label>
-                <div class="input-group">
-                  <input type="text" class="form-control format-price regular_price text-sm" name="regular_price"
-                    id="regular_price" placeholder="Giá" value="<?= $_POST['regular_price'] ?? $result['regular_price'] ?? '' ?>">
-                  <div class="input-group-append">
-                    <div class="input-group-text"><strong>VNĐ</strong></div>
+              <?php if (!empty($config['product'][$type]['regular_price'])): ?>
+                <div class="form-group col-md-6">
+                  <label class="d-block" for="regular_price">Giá:</label>
+                  <div class="input-group">
+                    <input type="text" class="form-control format-price regular_price text-sm" name="regular_price"
+                      id="regular_price" placeholder="Giá" value="<?= $_POST['regular_price'] ?? $result['regular_price'] ?? '' ?>">
+                    <div class="input-group-append">
+                      <div class="input-group-text"><strong>VNĐ</strong></div>
+                    </div>
                   </div>
                 </div>
-              </div>
-              <div class="form-group col-md-6">
-                <label class="d-block" for="sale_price">Giá mới:</label>
-                <div class="input-group">
-                  <input type="text" class="form-control format-price sale_price text-sm" name="sale_price"
-                    id="sale_price" placeholder="Giá mới" value="<?= $_POST['sale_price'] ?? $result['sale_price'] ?? '' ?>">
-                  <div class="input-group-append">
-                    <div class="input-group-text"><strong>VNĐ</strong></div>
+              <?php endif; ?>
+              <?php if (!empty($config['product'][$type]['sale_price'])): ?>
+                <div class="form-group col-md-6">
+                  <label class="d-block" for="sale_price">Giá mới:</label>
+                  <div class="input-group">
+                    <input type="text" class="form-control format-price sale_price text-sm" name="sale_price"
+                      id="sale_price" placeholder="Giá mới" value="<?= $_POST['sale_price'] ?? $result['sale_price'] ?? '' ?>">
+                    <div class="input-group-append">
+                      <div class="input-group-text"><strong>VNĐ</strong></div>
+                    </div>
                   </div>
                 </div>
-              </div>
-              <div class="form-group col-md-4">
-                <label class="d-block" for="discount">Chiếc khấu:</label>
-                <div class="input-group">
-                  <input type="text" class="form-control discount text-sm" name="discount" id="discount"
-                    placeholder="Chiếc khấu" value="<?= $_POST['discount'] ?? $result['discount'] ?? '' ?>" maxlength="3" readonly>
-                  <div class="input-group-append">
-                    <div class="input-group-text"><strong>%</strong></div>
+              <?php endif; ?>
+              <?php if (!empty($config['product'][$type]['discount'])): ?>
+                <div class="form-group col-md-4">
+                  <label class="d-block" for="discount">Chiếc khấu:</label>
+                  <div class="input-group">
+                    <input type="text" class="form-control discount text-sm" name="discount" id="discount"
+                      placeholder="Chiếc khấu" value="<?= $_POST['discount'] ?? $result['discount'] ?? '' ?>" maxlength="3" readonly>
+                    <div class="input-group-append">
+                      <div class="input-group-text"><strong>%</strong></div>
+                    </div>
                   </div>
                 </div>
-              </div>
-              <div class="form-group col-md-8">
-                <label class="d-block" for="code">Mã sản phẩm:</label>
-                <input type="text" class="form-control text-sm" name="code" id="code" placeholder="Mã sản phẩm"
-                  value="<?= $_POST['code'] ?? $result['code'] ?? '' ?>">
-              </div>
+              <?php endif; ?>
+              <?php if (!empty($config['product'][$type]['code'])): ?>
+                <div class="form-group col-md-12">
+                  <label class="d-block" for="code">Mã sản phẩm:</label>
+                  <input type="text" class="form-control text-sm" name="code" id="code" placeholder="Mã sản phẩm"
+                    value="<?= $_POST['code'] ?? $result['code'] ?? '' ?>">
+                </div>
+              <?php endif; ?>
             </div>
             <div class="form-group">
               <?php foreach ($config['product'][$type]['check'] as $check => $label): ?>
@@ -177,79 +191,83 @@
             </div>
           </div>
         </div>
-        <div class="card card-primary card-outline text-sm">
-          <div class="card-header">
-            <h3 class="card-title">Hình ảnh <?= $config['product'][$type]['title_main'] ?></h3>
-            <div class="card-tools">
-              <button type="button" class="btn btn-tool" data-card-widget="collapse"><i
-                  class="fas fa-minus"></i></button>
+        <?php if (!empty($config['product'][$type]['images'])): ?>
+          <div class="card card-primary card-outline text-sm">
+            <div class="card-header">
+              <h3 class="card-title">Hình ảnh <?= $config['product'][$type]['title_main'] ?></h3>
+              <div class="card-tools">
+                <button type="button" class="btn btn-tool" data-card-widget="collapse"><i
+                    class="fas fa-minus"></i></button>
+              </div>
+            </div>
+            <div class="card-body">
+              <?php
+              $photoDetail = array();
+              $photoDetail['image'] = $result['file'] ?? '';
+              $photoDetail['dimension'] = "Width: " . $config['product'][$type]['width'] . " px - Height: " . $config['product'][$type]['height'] . " px (" . $config['product'][$type]['img_type'] . ")";
+              include TEMPLATE . LAYOUT . "image.php"; ?>
             </div>
           </div>
-          <div class="card-body">
-            <?php
-            $photoDetail = array();
-            $photoDetail['image'] = $result['file'] ?? '';
-            $photoDetail['dimension'] = "Width: " . $config['product'][$type]['width'] . " px - Height: " . $config['product'][$type]['height'] . " px (" . $config['product'][$type]['img_type'] . ")";
-            include TEMPLATE . LAYOUT . "image.php"; ?>
-          </div>
-        </div>
+        <?php endif; ?>
       </div>
     </div>
-
-    <div class="card card-primary card-outline text-sm">
-      <div class="card-header">
-        <h3 class="card-title">Bộ sưu tập Sản phẩm</h3>
-        <div class="card-tools">
-          <button type="button" class="btn btn-tool" data-card-widget="collapse">
-            <i class="fas fa-minus"></i>
-          </button>
-        </div>
-      </div>
-      <div class="card-body">
-        <div class="form-group">
-          <label for="filer-gallery" class="label-filer-gallery mb-3">
-            Album: (<?= $config['product'][$type]['img_type'] ?>)
-          </label>
-          <input type="file" name="files[]" id="filer-gallery" multiple="multiple">
-          <input type="hidden" name="id_parent" value="<?= $id ?>">
-          <input type="hidden" class="col-filer" value="col-xl-2 col-lg-3 col-md-3 col-sm-4 col-6">
-          <input type="hidden" name="deleted_images" class="deleted-images" value="">
-        </div>
-        <?php if (!empty($gallery)) { ?>
-          <div class="form-group form-group-gallery">
-            <label class="label-filer">Album hiện tại:</label>
-            <div class="action-filer mb-3">
-              <a class="btn btn-sm bg-gradient-primary text-white check-all-filer mr-1"><i class="far fa-square mr-2"></i>Chọn tất cả</a>
-              <a class="btn btn-sm bg-gradient-danger text-white delete-all-filer"><i class="far fa-trash-alt mr-2"></i>Xóa tất cả</a>
-            </div>
-            <div class="alert my-alert alert-sort-filer alert-info text-sm text-white bg-gradient-info"><i class="fas fa-info-circle mr-2"></i>Có thể chọn nhiều hình để di chuyển</div>
-            <div class="jFiler-items my-jFiler-items jFiler-row">
-              <ul class="jFiler-items-list jFiler-items-grid row scroll-bar" id="jFilerSortable">
-                <?php foreach ($gallery as $g): ?>
-                  <?= $fn->galleryFiler($g['numb'] ?? 1, $g['id'] ?? 0, $g['file'] ?? '', $g['name'] ?? '', 'uploads', 'col-xl-2 col-lg-3 col-md-3 col-sm-4 col-6') ?>
-                <?php endforeach; ?>
-              </ul>
-            </div>
+    <?php if (!empty($config['product'][$type]['gallery'])): ?>
+      <div class="card card-primary card-outline text-sm">
+        <div class="card-header">
+          <h3 class="card-title">Bộ sưu tập Sản phẩm</h3>
+          <div class="card-tools">
+            <button type="button" class="btn btn-tool" data-card-widget="collapse">
+              <i class="fas fa-minus"></i>
+            </button>
           </div>
-        <?php } ?>
-        <div class="form-group d-inline-block mb-2 mr-5">
-          <label for="hienthi_all-checkbox" class="d-inline-block align-middle mb-0 mr-3 form-label">Hiển thị tất cả:</label>
-          <label class="switch switch-success">
-            <input
-              type="checkbox"
-              name="hienthi_all"
-              class="switch-input custom-control-input"
-              id="hienthi_all-checkbox"
-              value="hienthi" checked>
-            <span class="switch-toggle-slider">
-              <span class="switch-on"><i class="fa-solid fa-check"></i></span>
-              <span class="switch-off"><i class="fa-solid fa-xmark"></i></span>
-            </span>
-          </label>
+        </div>
+        <div class="card-body">
+          <div class="form-group">
+            <label for="filer-gallery" class="label-filer-gallery mb-3">
+              Album: (<?= $config['product'][$type]['img_type'] ?>)
+            </label>
+            <input type="file" name="files[]" id="filer-gallery" multiple="multiple">
+            <input type="hidden" name="id_parent" value="<?= $id ?>">
+            <input type="hidden" class="col-filer" value="col-xl-2 col-lg-3 col-md-3 col-sm-4 col-6">
+            <input type="hidden" name="deleted_images" class="deleted-images" value="">
+          </div>
+          <?php if (!empty($gallery)) { ?>
+            <div class="form-group form-group-gallery">
+              <label class="label-filer">Album hiện tại:</label>
+              <div class="action-filer mb-3">
+                <a class="btn btn-sm bg-gradient-primary text-white check-all-filer mr-1"><i class="far fa-square mr-2"></i>Chọn tất cả</a>
+                <a class="btn btn-sm bg-gradient-danger text-white delete-all-filer"><i class="far fa-trash-alt mr-2"></i>Xóa tất cả</a>
+              </div>
+              <div class="jFiler-items my-jFiler-items jFiler-row">
+                <ul class="jFiler-items-list jFiler-items-grid row scroll-bar" id="jFilerSortable">
+                  <?php foreach ($gallery as $g): ?>
+                    <?= $fn->galleryFiler($g['numb'] ?? 1, $g['id'] ?? 0, $g['file'] ?? '', $g['name'] ?? '', 'uploads', 'col-xl-2 col-lg-3 col-md-3 col-sm-4 col-6') ?>
+                  <?php endforeach; ?>
+                </ul>
+              </div>
+            </div>
+          <?php } ?>
+          <div class="form-group d-inline-block mb-2 mr-5">
+            <label for="hienthi_all-checkbox" class="d-inline-block align-middle mb-0 mr-3 form-label">Hiển thị tất cả:</label>
+            <label class="switch switch-success">
+              <input
+                type="checkbox"
+                name="hienthi_all"
+                class="switch-input custom-control-input"
+                id="hienthi_all-checkbox"
+                value="hienthi" checked>
+              <span class="switch-toggle-slider">
+                <span class="switch-on"><i class="fa-solid fa-check"></i></span>
+                <span class="switch-off"><i class="fa-solid fa-xmark"></i></span>
+              </span>
+            </label>
+          </div>
         </div>
       </div>
-    </div>
-    <?php include TEMPLATE . LAYOUT . 'seo.php'; ?>
+    <?php endif; ?>
+    <?php if (!empty($config['product'][$type]['seo'])): ?>
+      <?php include TEMPLATE . LAYOUT . 'seo.php'; ?>
+    <?php endif; ?>
     <input type="hidden" name="type" value="<?= $type ?>">
   </form>
 </section>

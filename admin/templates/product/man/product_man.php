@@ -41,8 +41,8 @@
             <?php if (!empty($config['product'][$type]['gallery'])): ?>
               <th class="align-middle">Gallery</th>
             <?php endif; ?>
-            <th class="align-middle">Danh mục</th>
-            <th class="align-middle">Danh mục cấp 2</th>
+            <th class="align-middle">Cấp 1</th>
+            <th class="align-middle">Cấp 2</th>
             <?php foreach ($config['product'][$type]['check'] as $attr => $label): ?>
               <th class="align-middle text-center"><?= $label ?></th>
             <?php endforeach; ?>
@@ -95,20 +95,21 @@
                     </div>
                   </td>
 
-                  <!-- Thêm -->
-                  <td class="align-middle">
-                    <div class="dropdown">
-                      <button type="button" class="btn btn-sm bg-gradient-info dropdown-toggle" data-toggle="dropdown">Thêm</button>
-                      <div class="dropdown-menu">
-                        <a class="dropdown-item text-dark" href="<?= $linkGalleryForm . $row['id'] ?>" title="Gallery">
-                          <i class="far fa-caret-square-right text-secondary mr-2"></i>Thêm Gallery
-                        </a>
-                        <a class="dropdown-item text-dark" href="<?= $linkGalleryMan . $row['id'] ?>" title="Gallery">
-                          <i class="far fa-caret-square-right text-secondary mr-2"></i>Danh sách Gallery
-                        </a>
+                  <?php if (!empty($config['product'][$type]['gallery'])): ?>
+                    <td class="align-middle">
+                      <div class="dropdown">
+                        <button type="button" class="btn btn-sm bg-gradient-info dropdown-toggle" data-toggle="dropdown">Thêm</button>
+                        <div class="dropdown-menu">
+                          <a class="dropdown-item text-dark" href="<?= $linkGalleryForm . $row['id'] ?>" title="Gallery">
+                            <i class="far fa-caret-square-right text-secondary mr-2"></i>Thêm Gallery
+                          </a>
+                          <a class="dropdown-item text-dark" href="<?= $linkGalleryMan . $row['id'] ?>" title="Gallery">
+                            <i class="far fa-caret-square-right text-secondary mr-2"></i>Danh sách Gallery
+                          </a>
+                        </div>
                       </div>
-                    </div>
-                  </td>
+                    </td>
+                  <?php endif; ?>
 
                   <!-- Danh mục cấp 1 -->
                   <td class="align-middle"><?= $row['name_list'] ?? '' ?></td>
@@ -121,14 +122,11 @@
                       <label class="switch switch-success">
                         <input type="checkbox" class="switch-input custom-control-input show-checkbox"
                           id="show-checkbox-<?= $attr ?>-<?= $row['id'] ?>"
-                          data-table="<?= $table ?>"
-                          data-id="<?= $row['id'] ?>"
-                          data-attr="<?= $attr ?>"
+                          data-table="<?= $table ?>" data-id="<?= $row['id'] ?>" data-attr="<?= $attr ?>"
                           <?= (strpos($row['status'], $attr) !== false) ? 'checked' : '' ?>>
                       </label>
                     </td>
                   <?php endforeach; ?>
-
                   <!-- Hành động -->
                   <td class="align-middle text-center text-md text-nowrap">
                     <a class="text-primary mr-2" href="<?= $linkEdit . $row['id'] ?>" title="Chỉnh sửa"><i class="fas fa-edit"></i></a>

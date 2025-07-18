@@ -19,31 +19,37 @@ class Functions
     $where = [];
     $params = [];
 
-    // Trạng thái
+    $prefix = !empty($options['alias']) ? $options['alias'] . '.' : '';
+
+    // Trạng thái (FIND_IN_SET)
     if (!empty($options['status'])) {
       $statuses = is_array($options['status']) ? $options['status'] : explode(',', $options['status']);
       foreach ($statuses as $status) {
-        $where[] = "FIND_IN_SET(?, status)";
+        $where[] = "FIND_IN_SET(?, {$prefix}status)";
         $params[] = trim($status);
       }
     }
 
-    // Các trường điều kiện cơ bản
-    $fields = ['id_list', 'id_cat', 'id_parent', 'exclude_id', 'type'];
-    foreach ($fields as $field) {
+    // Các field lọc theo giá trị
+    $filters = [
+      'id_list'    => '=',
+      'id_cat'     => '=',
+      'id_parent'  => '=',
+      'type'       => '=',
+      'exclude_id' => '!='
+    ];
+
+    foreach ($filters as $field => $operator) {
       if (isset($options[$field]) && $options[$field] !== '') {
-        $operator = ($field == 'exclude_id') ? '!=' : '=';
-        $column = ($field == 'exclude_id') ? 'id' : $field;
-        $where[] = "`$column` $operator ?";
-        $params[] = $field === 'type' ? $options[$field] : (int)$options[$field];
+        $column = ($field === 'exclude_id') ? 'id' : $field;
+        $where[] = "{$prefix}`$column` $operator ?";
+        $params[] = $options[$field]; // giữ nguyên giá trị gốc, không ép kiểu
       }
     }
 
     // Từ khóa tìm kiếm
     if (!empty($options['keyword'])) {
-      $alias = $options['alias'] ?? '';
-      $prefix = $alias ?: 'p';
-      $where[] = "($prefix.namevi LIKE ? OR $prefix.nameen LIKE ?)";
+      $where[] = "({$prefix}`namevi` LIKE ? OR {$prefix}`nameen` LIKE ?)";
       $params[] = '%' . $options['keyword'] . '%';
       $params[] = '%' . $options['keyword'] . '%';
     }
@@ -55,17 +61,13 @@ class Functions
   public function show_data(array $options = []): array
   {
     if (empty($options['table'])) return [];
-
     $table   = $options['table'];
     $alias   = $options['alias'] ?? '';
     $select  = $options['select'] ?? '*';
     $join    = $options['join'] ?? '';
     $order   = $options['order_by'] ?? $options['order'] ?? (($alias ? "$alias." : "") . "numb ASC, " . ($alias ? "$alias." : "") . "id DESC");
-
     $whereData = $this->buildWhere($options);
     $sql = "SELECT $select FROM `$table`" . ($alias ? " $alias" : '') . ($join ? " $join" : '') . $whereData['sql'] . " ORDER BY $order";
-
-    // Phân trang
     if (!empty($options['records_per_page']) && !empty($options['current_page'])) {
       $limit = (int)$options['records_per_page'];
       $offset = ((int)$options['current_page'] - 1) * $limit;
@@ -75,35 +77,27 @@ class Functions
       $offset = isset($options['offset']) ? (int)$options['offset'] : 0;
       $sql .= " LIMIT $limit OFFSET $offset";
     }
-
     $result = $this->db->rawQuery($sql, $whereData['params']);
     $data = [];
-
     if ($result instanceof mysqli_result) {
       while ($row = $result->fetch_assoc()) {
         $data[] = $row;
       }
     }
-
     return $data;
   }
-
   public function count_data(array $options = []): int
   {
     if (empty($options['table'])) return 0;
-
     $table  = $options['table'];
     $alias  = $options['alias'] ?? '';
     $join   = $options['join'] ?? '';
     $idCol  = ($alias ? "$alias." : "") . "id";
-
     $whereData = $this->buildWhere($options);
     $sql = "SELECT COUNT(DISTINCT $idCol) AS total FROM `$table`" . ($alias ? " $alias" : '') . ($join ? " $join" : '') . $whereData['sql'];
-
     $row = $this->db->rawQueryOne($sql, $whereData['params']);
     return (int)($row['total'] ?? 0);
   }
-
   public function save_gallery($data, $files, $id_parent, $type = '', $redirect_url = null)
   {
     $id_parent = (int)$id_parent;
@@ -383,14 +377,12 @@ class Functions
     if (!$row) {
       $this->transfer("Dữ liệu không tồn tại!", $redirect_page, false);
     }
-
-    // Trường hợp xoá bản ghi gallery (ảnh con)
     if ($table === 'tbl_gallery') {
       if (!empty($row['file'])) {
         $this->deleteFile(UPLOADS . $row['file']);
       }
 
-      $deleted = $this->db->execute("DELETE FROM `$table` WHERE id = ?", [$id]);
+      $deleted = $this->db->execute("DELETE FROM tbl_gallery WHERE id = ?", [$id]);
 
       $this->transfer(
         $deleted ? "Xóa ảnh thành công!" : "Xóa ảnh thất bại!",
@@ -399,13 +391,9 @@ class Functions
       );
       return;
     }
-
-    // Xử lý xoá file chính nếu có
     if ($delete_file && !empty($row['file'])) {
       $this->deleteFile(UPLOADS . $row['file']);
     }
-
-    // Xoá gallery con nếu được yêu cầu
     if ($delete_gallery) {
       $gallery = $this->db->rawQuery("SELECT file FROM tbl_gallery WHERE id_parent = ?", [$id]);
       foreach ($gallery as $g) {
@@ -501,8 +489,6 @@ class Functions
 
     return false;
   }
-
-
   /* Alert */
   public function alert($notify = '')
   {
@@ -751,12 +737,10 @@ class Functions
   {
     $w = imagesx($image);
     $h = imagesy($image);
-
     $min_x = $w;
     $min_y = $h;
     $max_x = 0;
     $max_y = 0;
-
     for ($y = 0; $y < $h; $y++) {
       for ($x = 0; $x < $w; $x++) {
         $rgba = imagecolorat($image, $x, $y);
@@ -764,8 +748,6 @@ class Functions
         $r = ($rgba >> 16) & 0xFF;
         $g = ($rgba >> 8) & 0xFF;
         $b = $rgba & 0xFF;
-
-        // Nếu không phải trắng hoặc không trong suốt
         if (!($r > 240 && $g > 240 && $b > 240) && $a < 120) {
           if ($x < $min_x) $min_x = $x;
           if ($y < $min_y) $min_y = $y;
@@ -774,24 +756,17 @@ class Functions
         }
       }
     }
-
-    // Nếu không tìm được vùng nội dung
     if ($max_x <= $min_x || $max_y <= $min_y) {
       return false;
     }
-
     $crop_width = $max_x - $min_x + 1;
     $crop_height = $max_y - $min_y + 1;
-
     $new_img = imagecreatetruecolor($crop_width, $crop_height);
     imagealphablending($new_img, false);
     imagesavealpha($new_img, true);
-
     $transparent = imagecolorallocatealpha($new_img, 0, 0, 0, 127);
     imagefill($new_img, 0, 0, $transparent);
-
     imagecopy($new_img, $image, 0, 0, $min_x, $min_y, $crop_width, $crop_height);
-
     return $new_img;
   }
   private function applyOpacity($image, $opacity)
@@ -962,7 +937,7 @@ class Functions
       $updated = strtotime($wm_data['date_updated'] ?? '') ?: time();
       $wm_hash = substr(md5(json_encode($options ?? []) . '_' . $updated), 0, 8);
       $wm_dir = rtrim($base_dir, '/') . '/' . trim(WATERMARK, '/');
-      $wm_path = $wm_dir . '/' . $filename . "-$wm_hash." . $thumb_ext;
+      $wm_path = $wm_dir . '/' . $filename . "." . $thumb_ext;
       if (file_exists($wm_path)) return $wm_path;
       if (!is_dir($wm_dir)) mkdir($wm_dir, 0755, true);
       $thumb_temp = tempnam(sys_get_temp_dir(), 'thumb_');

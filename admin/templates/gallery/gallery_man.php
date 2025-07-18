@@ -4,6 +4,8 @@
       title="Thêm mới"><i class="fas fa-plus mr-2"></i>Thêm mới</a>
     <a class="btn btn-sm bg-gradient-danger text-white" id="delete-all" data-url="<?= $linkMulti ?>" title="Xóa tất cả"><i
         class="far fa-trash-alt mr-2"></i>Xóa tất cả</a>
+    <a target="_blank" class="btn btn-sm bg-gradient-info text-white" id="" href="<?= BASE . $parent['slug' . $lang] ?>" title="Xem sản phẩm"><i
+        class="far fa-eye mr-2"></i>Xem sản phẩm</a>
     <div class="form-inline form-search d-inline-block align-middle ml-3">
       <div class="input-group input-group-sm">
         <input class="form-control form-control-navbar text-sm" type="search" id="keyword" placeholder="Tìm kiếm" aria-label="Tìm kiếm" value="<?= (isset($_GET['keyword'])) ? $_GET['keyword'] : '' ?>" onkeypress="doEnter(event,'keyword','<?= $linkMan ?>')">
@@ -17,7 +19,7 @@
   </div>
   <div class="card card-primary card-outline text-sm mb-0">
     <div class="card-header">
-      <h3 class="card-title">Danh sách <?= $name_page ?> : <span class="text-info"><?= $parent['name' . $lang] ?></span>
+      <h3 class="card-title"><?= $config['product'][$type]['gallery'][$type]['title_main_photo'] ?> : <span class="text-info"><?= $parent['name' . $lang] ?></span>
       </h3>
     </div>
     <div class="card-body table-responsive p-0">
@@ -32,7 +34,7 @@
             </th>
             <th class="align-middle text-center" width="10%">STT</th>
             <th class="align-middle text-center" width="8%">Hình</th>
-            <?php foreach ($status as $attr => $label): ?>
+            <?php foreach ($config['product'][$type]['gallery'][$type]['check_photo'] as $attr => $label): ?>
               <th class="align-middle text-center"><?= $label ?></th>
             <?php endforeach; ?>
             <th class="align-middle text-center">Thao tác</th>
@@ -63,7 +65,7 @@
                 </td>
 
                 <!-- Các checkbox trạng thái -->
-                <?php foreach ($status as $attr => $label): ?>
+                <?php foreach ($config['product'][$type]['gallery'][$type]['check_photo'] as $attr => $label): ?>
                   <td class="align-middle text-center">
                     <label class="switch switch-success mb-0">
                       <input type="checkbox" class="switch-input custom-control-input show-checkbox"

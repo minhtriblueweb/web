@@ -14,6 +14,15 @@ class Functions
     $this->db = new Database();
     $this->fm = new Format();
   }
+  /* Lấy getPageURL */
+  public function getPageURL()
+  {
+    $pageURL = 'http';
+    if (array_key_exists('HTTPS', $_SERVER) && $_SERVER["HTTPS"] == "on") $pageURL .= "s";
+    $pageURL .= "://";
+    $pageURL .= $_SERVER["SERVER_NAME"] . $_SERVER["REQUEST_URI"];
+    return $pageURL;
+  }
   private function buildWhere(array $options): array
   {
     $where = [];
@@ -43,7 +52,7 @@ class Functions
       if (isset($options[$field]) && $options[$field] !== '') {
         $column = ($field === 'exclude_id') ? 'id' : $field;
         $where[] = "{$prefix}`$column` $operator ?";
-        $params[] = $options[$field]; // giữ nguyên giá trị gốc, không ép kiểu
+        $params[] = $options[$field];
       }
     }
 
@@ -57,7 +66,6 @@ class Functions
     $sql = $where ? ' WHERE ' . implode(' AND ', $where) : '';
     return ['sql' => $sql, 'params' => $params];
   }
-
   public function show_data(array $options = []): array
   {
     if (empty($options['table'])) return [];
@@ -68,24 +76,21 @@ class Functions
     $order   = $options['order_by'] ?? $options['order'] ?? (($alias ? "$alias." : "") . "numb ASC, " . ($alias ? "$alias." : "") . "id DESC");
     $whereData = $this->buildWhere($options);
     $sql = "SELECT $select FROM `$table`" . ($alias ? " $alias" : '') . ($join ? " $join" : '') . $whereData['sql'] . " ORDER BY $order";
-    if (!empty($options['records_per_page']) && !empty($options['current_page'])) {
-      $limit = (int)$options['records_per_page'];
-      $offset = ((int)$options['current_page'] - 1) * $limit;
+    if (!empty($options['pagination']) && is_array($options['pagination'])) {
+      [$limit, $curPage] = $options['pagination'];
+      $limit = (int)$limit;
+      $curPage = max(1, (int)$curPage);
+      $offset = ($curPage - 1) * $limit;
       $sql .= " LIMIT $limit OFFSET $offset";
     } elseif (!empty($options['limit'])) {
       $limit = (int)$options['limit'];
       $offset = isset($options['offset']) ? (int)$options['offset'] : 0;
       $sql .= " LIMIT $limit OFFSET $offset";
     }
-    $result = $this->db->rawQuery($sql, $whereData['params']);
-    $data = [];
-    if ($result instanceof mysqli_result) {
-      while ($row = $result->fetch_assoc()) {
-        $data[] = $row;
-      }
-    }
-    return $data;
+    $result = $this->db->rawQueryArray($sql, $whereData['params']);
+    return $result;
   }
+
   public function count_data(array $options = []): int
   {
     if (empty($options['table'])) return 0;
@@ -1136,47 +1141,53 @@ class Functions
       . ' onerror="this.src=\'' . NO_IMG . '\'"'
       . '>';
   }
-  function renderPagination($current_page, $total_pages, $base_url = 'index.php')
+  function pagination(int $total = 0, int $perPage = 10, int $page = 1, string $baseUrl = 'index.php'): string
   {
+    $total_pages = (int)ceil($total / $perPage);
     if ($total_pages <= 1) return '';
+
     $queryParams = $_GET;
     unset($queryParams['p']);
     $queryString = http_build_query($queryParams);
     $queryString = $queryString ? $queryString . '&' : '';
 
-    $html = '<ul class="pagination flex-wrap justify-content-center mb-0">';
-    $html .= '<li class="page-item"><a class="page-link">Trang ' . $current_page . ' / ' . $total_pages . '</a></li>';
+    // Chuẩn hóa URL: nếu không có dấu "?", thêm vào
+    $baseUrl .= (strpos($baseUrl, '?') !== false ? '&' : '?') . $queryString;
 
-    if ($current_page > 1) {
-      $html .= '<li class="page-item"><a class="page-link" href="' . $base_url . '?' . $queryString . 'p=' . ($current_page - 1) . '">Trước</a></li>';
+    $html = '<ul class="pagination flex-wrap justify-content-center mb-0">';
+    $html .= '<li class="page-item"><a class="page-link">Trang ' . $page . ' / ' . $total_pages . '</a></li>';
+
+    if ($page > 1) {
+      $html .= '<li class="page-item"><a class="page-link" href="' . $baseUrl . 'p=' . ($page - 1) . '">Trước</a></li>';
     }
 
     $range = 2;
     for ($i = 1; $i <= $total_pages; $i++) {
       if (
         $i == 1 || $i == 2 || $i == $total_pages || $i == $total_pages - 1 ||
-        ($i >= $current_page - $range && $i <= $current_page + $range)
+        ($i >= $page - $range && $i <= $page + $range)
       ) {
-        $active_class = ($i == $current_page) ? 'active' : '';
+        $active_class = ($i == $page) ? 'active' : '';
         $html .= '<li class="page-item ' . $active_class . '">';
-        $html .= '<a class="page-link" href="' . $base_url . '?' . $queryString . 'p=' . $i . '">' . $i . '</a>';
+        $html .= '<a class="page-link" href="' . $baseUrl . 'p=' . $i . '">' . $i . '</a>';
         $html .= '</li>';
       } elseif (
-        ($i == 3 && $current_page - $range > 4) ||
-        ($i == $total_pages - 2 && $current_page + $range < $total_pages - 3)
+        ($i == 3 && $page - $range > 4) ||
+        ($i == $total_pages - 2 && $page + $range < $total_pages - 3)
       ) {
         $html .= '<li class="page-item disabled"><a class="page-link">...</a></li>';
       }
     }
 
-    if ($current_page < $total_pages) {
-      $html .= '<li class="page-item"><a class="page-link" href="' . $base_url . '?' . $queryString . 'p=' . ($current_page + 1) . '">Tiếp</a></li>';
-      $html .= '<li class="page-item"><a class="page-link" href="' . $base_url . '?' . $queryString . 'p=' . $total_pages . '">Cuối</a></li>';
+    if ($page < $total_pages) {
+      $html .= '<li class="page-item"><a class="page-link" href="' . $baseUrl . 'p=' . ($page + 1) . '">Tiếp</a></li>';
+      $html .= '<li class="page-item"><a class="page-link" href="' . $baseUrl . 'p=' . $total_pages . '">Cuối</a></li>';
     }
 
     $html .= '</ul>';
     return $html;
   }
+
   function renderPagination_tc($current_page, $total_pages, $base_url)
   {
     if ($total_pages <= 1) return '';

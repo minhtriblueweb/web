@@ -4,8 +4,8 @@ if (!defined('SOURCES')) die("Error");
 if (!isset($config['product'][$type])) $fn->transfer("Trang không tồn tại!", "index.php", false);
 
 $linkProduct = "index.php?page=product&type=$type";
-$current_page = max(1, (int)($_GET['p'] ?? 1));
-$rp = 10;
+$curPage = max(1, (int)($_GET['p'] ?? 1));
+$perPage = 3;
 $keyword = $_GET['keyword'] ?? '';
 $id_list = $_GET['id_list'] ?? '';
 $id_cat  = $_GET['id_cat'] ?? '';
@@ -19,15 +19,10 @@ switch ($act) {
       $linkMulti  = "$linkProduct&act=delete_multiple";
       $linkGalleryMan  = "index.php?page=gallery&act=man&id=";
       $linkGalleryForm  = "index.php?page=gallery&act=form&id=";
-      $join = "
-      LEFT JOIN tbl_product_cat c2 ON p.id_cat = c2.id
-      LEFT JOIN tbl_product_list c1 ON p.id_list = c1.id
-    ";
-      $select = "p.*, c1.namevi AS name_list, c2.namevi AS name_cat";
-      $where = array_filter([
-        'id_list' => $id_list,
-        'id_cat'  => $id_cat
-      ]);
+      $join = "LEFT JOIN tbl_product_cat c2 ON p.id_cat = c2.id
+      LEFT JOIN tbl_product_list c1 ON p.id_list = c1.id";
+      $select = "p.*, c1.name{$lang} AS name_list, c2.name{$lang} AS name_cat";
+      $where = array_filter(['id_list' => $id_list, 'id_cat' => $id_cat]);
 
       $options = [
         'table'   => $table,
@@ -38,13 +33,12 @@ switch ($act) {
         'id_cat'  => $id_cat,
         'select' => $select,
         'keyword' => $keyword,
-        'records_per_page' => $rp
+        'pagination'  => [$perPage, $curPage]
       ];
 
-      $total_records = $fn->count_data($options);
-      $show_data     = $fn->show_data($options);
-      $total_pages   = ceil($total_records / $rp);
-      $paging        = $fn->renderPagination($current_page, $total_pages);
+      $total = $fn->count_data($options);
+      $show_data = $fn->show_data($options);
+      $paging = $fn->pagination($total, $perPage, $curPage);
       $breadcrumb = [['label' => $config['product'][$type]['title_main']]];
       include TEMPLATE . LAYOUT . 'breadcrumb.php';
       include TEMPLATE . "product/man/product_man.php";
@@ -61,14 +55,12 @@ switch ($act) {
       $options = [
         'table' => $table,
         'keyword' => $keyword,
-        'records_per_page' => $rp,
-        'current_page' => $current_page
+        'pagination'  => [$perPage, $curPage]
       ];
 
-      $total_records = $fn->count_data($options);
-      $show_data     = $fn->show_data($options);
-      $total_pages   = ceil($total_records / $rp);
-      $paging        = $fn->renderPagination($current_page, $total_pages);
+      $total = $fn->count_data($options);
+      $show_data = $fn->show_data($options);
+      $paging = $fn->pagination($total, $perPage, $curPage);
       $breadcrumb = [['label' => $config['product'][$type]['title_main_list']]];
 
       include TEMPLATE . LAYOUT . 'breadcrumb.php';
@@ -77,7 +69,6 @@ switch ($act) {
     }
 
   case 'man_cat': {
-      $level = 'cat';
       $table = 'tbl_product_cat';
       $linkMan = "$linkProduct&act=man_cat";
       $linkForm  = "$linkProduct&act=form_cat";
@@ -88,30 +79,24 @@ switch ($act) {
         'table' => $table,
         'id_list' => $id_list,
         'keyword' => $keyword,
-        'records_per_page' => $rp
+        'pagination'  => [$perPage, $curPage]
       ];
 
-      $total_records = $fn->count_data($options);
-      $show_data     = $fn->show_data($options);
-      $total_pages   = ceil($total_records / $rp);
-      $paging        = $fn->renderPagination($current_page, $total_pages);
-
-      $title = $config['product'][$type]['title_main_cat'];
-      $breadcrumb = [['label' => $title]];
+      $total = $fn->count_data($options);
+      $show_data = $fn->show_data($options);
+      $paging = $fn->pagination($total, $perPage, $curPage);
+      $breadcrumb = [['label' => $config['product'][$type]['title_main_cat']]];
 
       include TEMPLATE . LAYOUT . 'breadcrumb.php';
       include TEMPLATE . "product/cat/product_man_cat.php";
       break;
     }
   case 'form': {
-      $level = 'product';
       $table = 'tbl_product';
       $actBack = 'man';
       $linkMan = "$linkProduct&act=$actBack";
       $id = isset($_GET['id']) && is_numeric($_GET['id']) ? (int)$_GET['id'] : null;
       $status_flags = array_keys($config['product'][$type]['check'] ?? []);
-      $convert_webp = true;
-
       $fields_multi  = ['slug', 'name', 'desc', 'content'];
       $fields_common = ['numb', 'type', 'id_list', 'id_cat', 'regular_price', 'sale_price', 'discount', 'code'];
 
@@ -124,19 +109,19 @@ switch ($act) {
           'fields_common'  => $fields_common,
           'status_flags'   => $status_flags,
           'redirect_page'  => $linkMan,
-          'convert_webp'   => $convert_webp,
-          'enable_slug'    => true,
-          'enable_seo'     => true,
-          'enable_gallery' => true
+          'convert_webp'   => true,
+          'enable_slug'    => $config['product'][$type]['slug'],
+          'enable_seo'     => $config['product'][$type]['seo'],
+          'enable_gallery' => $config['product'][$type]['gallery']
         ]);
         break;
       }
 
       $result = [];
       if (!empty($id)) {
-        $result = $db->rawQueryOne("SELECT * FROM `$table` WHERE id = ?", [$id]);
+        $result = $db->rawQueryOne("SELECT * FROM `$table` WHERE id = ?", [$id,]);
         if (!$result) $fn->transfer("Dữ liệu không tồn tại", $linkMan, false);
-        $seo_data = $seo->get_seo($id, $type);
+        $seo_data = $db->rawQueryOne("SELECT * FROM tbl_seo WHERE `id_parent` = ? AND `type` = ? AND `act` = ?", [$id, $type, $actBack]);
         $gallery = $db->rawQuery("SELECT * FROM tbl_gallery WHERE id_parent = ? AND type = ? ORDER BY numb, id DESC", [$id, $type]);
       }
       $breadcrumb = [['label' => ($id > 0 ? 'Cập nhật ' : 'Thêm mới ') . ($config['product'][$type]['title_main'] ?? '')]];

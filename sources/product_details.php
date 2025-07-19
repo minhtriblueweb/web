@@ -74,8 +74,7 @@ $get_gallery = $fn->show_data([
 ]);
 
 // SEO
-$data_seo = $seo->get_seo($id, 'product');
-
+$seo_data = $seo->get_seo($id, 'product');
 // Breadcrumbs
 $breadcrumbs->set('san-pham', 'Sản phẩm');
 if (!empty($dm_c1_slug) && !empty($dm_c1_name)) {

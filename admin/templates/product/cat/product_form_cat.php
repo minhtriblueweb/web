@@ -12,7 +12,9 @@
     </div>
     <div class="row">
       <div class="col-xl-8">
-        <?php include TEMPLATE . LAYOUT . 'slug.php'; ?>
+        <?php if (!empty($config['product'][$type]['slug_cat'])): ?>
+          <?php include TEMPLATE . LAYOUT . 'slug.php'; ?>
+        <?php endif; ?>
         <div class="card card-primary card-outline text-sm">
           <div class="card-header">
             <h3 class="card-title">Nội dung <?= $config['product'][$type]['title_main_cat'] ?></h3>
@@ -58,20 +60,24 @@
                       </div>
 
                       <!-- Mô tả -->
-                      <div class="form-group">
-                        <label for="desc<?= $k ?>">Mô tả (<?= $k ?>):</label>
-                        <textarea class="form-control for-seo text-sm"
-                          name="desc<?= $k ?>" id="desc<?= $k ?>"
-                          rows="4" placeholder="Mô tả (<?= $k ?>)"><?= $_POST['desc' . $k] ?? ($result['desc' . $k] ?? '') ?></textarea>
-                      </div>
+                      <?php if (!empty($config['product'][$type]['desc_cke_cat']) || !empty($config['product'][$type]['desc_cat'])): ?>
+                        <div class="form-group">
+                          <label for="desc<?= $k ?>">Mô tả (<?= $k ?>):</label>
+                          <textarea rows="4" class="form-control for-seo text-sm <?= !empty($config['product'][$type]['desc_cke_cat']) ? 'form-control-ckeditor' : '' ?>"
+                            name="desc<?= $k ?>" id="desc<?= $k ?>"
+                            placeholder="Mô tả (<?= $k ?>)"><?= $_POST['desc' . $k] ?? ($result['desc' . $k] ?? '') ?></textarea>
+                        </div>
+                      <?php endif; ?>
 
                       <!-- Nội dung -->
-                      <div class="form-group">
-                        <label for="content<?= $k ?>">Nội dung (<?= $k ?>):</label>
-                        <textarea class="form-control for-seo text-sm form-control-ckeditor"
-                          name="content<?= $k ?>" id="content<?= $k ?>"
-                          placeholder="Nội dung (<?= $k ?>)"><?= $_POST['content' . $k] ?? ($result['content' . $k] ?? '') ?></textarea>
-                      </div>
+                      <?php if (!empty($config['product'][$type]['content_cke_cat']) || !empty($config['product'][$type]['content_cat'])): ?>
+                        <div class="form-group">
+                          <label for="content<?= $k ?>">Mô tả (<?= $k ?>):</label>
+                          <textarea rows="4" class="form-control for-seo text-sm <?= !empty($config['product'][$type]['content_cke_cat']) ? 'form-control-ckeditor' : '' ?>"
+                            name="content<?= $k ?>" id="content<?= $k ?>"
+                            placeholder="Mô tả (<?= $k ?>)"><?= $_POST['content' . $k] ?? ($result['content' . $k] ?? '') ?></textarea>
+                        </div>
+                      <?php endif; ?>
                     </div>
                   <?php } ?>
                 </div>
@@ -91,22 +97,24 @@
             </div>
           </div>
         </div>
-        <div class="card card-primary card-outline text-sm">
-          <div class="card-header">
-            <h3 class="card-title">Hình ảnh <?= $config['product'][$type]['title_main_cat'] ?></h3>
-            <div class="card-tools">
-              <button type="button" class="btn btn-tool" data-card-widget="collapse"><i
-                  class="fas fa-minus"></i></button>
+        <?php if (!empty($config['product'][$type]['images_cat'])): ?>
+          <div class="card card-primary card-outline text-sm">
+            <div class="card-header">
+              <h3 class="card-title">Hình ảnh <?= $config['product'][$type]['title_main_cat'] ?></h3>
+              <div class="card-tools">
+                <button type="button" class="btn btn-tool" data-card-widget="collapse"><i
+                    class="fas fa-minus"></i></button>
+              </div>
+            </div>
+            <div class="card-body">
+              <?php
+              $photoDetail = array();
+              $photoDetail['image'] = $result['file'] ?? '';
+              $photoDetail['dimension'] = "Width: " . $config['product'][$type]['width_cat'] . " px - Height: " . $config['product'][$type]['height_cat'] . " px (" . $config['product'][$type]['img_type_cat'] . ")";
+              include TEMPLATE . LAYOUT . "image.php"; ?>
             </div>
           </div>
-          <div class="card-body">
-            <?php
-            $photoDetail = array();
-            $photoDetail['image'] = $result['file'] ?? '';
-            $photoDetail['dimension'] = "Width: " . $config['product'][$type]['width_cat'] . " px - Height: " . $config['product'][$type]['height_cat'] . " px (" . $config['product'][$type]['img_type_cat'] . ")";
-            include TEMPLATE . LAYOUT . "image.php"; ?>
-          </div>
-        </div>
+        <?php endif; ?>
         <div class="card card-primary card-outline text-sm">
           <div class="card-header">
             <h3 class="card-title">Thông tin</h3>
@@ -139,7 +147,9 @@
         </div>
       </div>
     </div>
-    <?php include TEMPLATE . LAYOUT . 'seo.php'; ?>
+    <?php if (!empty($config['product'][$type]['seo_list'])): ?>
+      <?php include TEMPLATE . LAYOUT . 'seo.php'; ?>
+    <?php endif; ?>
     <input type="hidden" name="type" value="<?= $type ?>">
   </form>
 </section>

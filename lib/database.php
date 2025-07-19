@@ -141,10 +141,10 @@ class Database
   {
     return $this->link->insert_id;
   }
-  public function rawQueryArray($query, $params = [])
+  public function rawQueryArray($query, $params = []): array
   {
     $result = $this->rawQuery($query, $params);
-    if (!$result) return [];
+    if (!$result || !($result instanceof mysqli_result)) return [];
 
     $rows = [];
     while ($row = $result->fetch_assoc()) {

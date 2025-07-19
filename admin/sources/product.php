@@ -5,7 +5,7 @@ if (!isset($config['product'][$type])) $fn->transfer("Trang không tồn tại!"
 
 $linkProduct = "index.php?page=product&type=$type";
 $curPage = max(1, (int)($_GET['p'] ?? 1));
-$perPage = 3;
+$perPage = 10;
 $keyword = $_GET['keyword'] ?? '';
 $id_list = $_GET['id_list'] ?? '';
 $id_cat  = $_GET['id_cat'] ?? '';
@@ -117,7 +117,7 @@ switch ($act) {
         break;
       }
 
-      $result = [];
+      $result = $seo_data = [];
       if (!empty($id)) {
         $result = $db->rawQueryOne("SELECT * FROM `$table` WHERE id = ?", [$id,]);
         if (!$result) $fn->transfer("Dữ liệu không tồn tại", $linkMan, false);
@@ -135,8 +135,6 @@ switch ($act) {
       $linkMan = "$linkProduct&act=man_list";
       $id = isset($_GET['id']) && is_numeric($_GET['id']) ? (int)$_GET['id'] : null;
       $status_flags = array_keys($config['product'][$type]['check_list'] ?? []);
-      $convert_webp = false;
-
       $fields_multi  = ['slug', 'name', 'desc', 'content'];
       $fields_common = ['numb', 'type'];
 
@@ -149,18 +147,19 @@ switch ($act) {
           'fields_common' => $fields_common,
           'status_flags'  => $status_flags,
           'redirect_page' => $linkMan,
-          'convert_webp'  => $convert_webp,
-          'enable_slug'   => true,
-          'enable_seo'    => true
+          'convert_webp'  => false,
+          'enable_slug'    => $config['product'][$type]['slug_list'],
+          'enable_seo'     => $config['product'][$type]['seo_list'],
+          'enable_gallery' => $config['product'][$type]['gallery_list']
         ]);
         break;
       }
 
-      $result = [];
+      $result = $seo_data = [];
       if (!empty($id)) {
         $result = $db->rawQueryOne("SELECT * FROM `$table` WHERE id = ?", [$id]);
         if (!$result) $fn->transfer("Dữ liệu không tồn tại", $linkMan, false);
-        $seo_data = $seo->get_seo($id, $type);
+        $seo_data = $db->rawQueryOne("SELECT * FROM tbl_seo WHERE `id_parent` = ? AND `type` = ? AND `act` = ?", [$id, $type, $actBack]);
       }
       $breadcrumb = [['label' => ($id > 0 ? 'Cập nhật ' : 'Thêm mới ') . ($config['product'][$type]['title_main_list'] ?? '')]];
       include TEMPLATE . LAYOUT . 'breadcrumb.php';
@@ -188,17 +187,18 @@ switch ($act) {
           'status_flags'  => $status_flags,
           'redirect_page' => $linkMan,
           'convert_webp'  => $convert_webp,
-          'enable_slug'   => true,
-          'enable_seo'    => true
+          'enable_slug'   => $config['product'][$type]['slug_cat'],
+          'enable_seo'    => $config['product'][$type]['seo_cat'],
+          'enable_gallery' => $config['product'][$type]['gallery_cat']
         ]);
         break;
       }
 
-      $result = [];
+      $result = $seo_data = [];
       if (!empty($id)) {
         $result = $db->rawQueryOne("SELECT * FROM `$table` WHERE id = ?", [$id]);
         if (!$result) $fn->transfer("Dữ liệu không tồn tại", $linkMan, false);
-        $seo_data = $seo->get_seo($id, $type);
+        $seo_data = $db->rawQueryOne("SELECT * FROM tbl_seo WHERE `id_parent` = ? AND `type` = ? AND `act` = ?", [$id, $type, $actBack]);
       }
       $breadcrumb = [['label' => ($id > 0 ? 'Cập nhật ' : 'Thêm mới ') . ($config['product'][$type]['title_main_cat'] ?? '')]];
       include TEMPLATE . LAYOUT . 'breadcrumb.php';
@@ -211,8 +211,8 @@ switch ($act) {
         'table'          => 'tbl_product',
         'type'           => $type,
         'redirect_page'  => "$linkProduct&act=man",
-        'delete_seo'     => true,
-        'delete_gallery' => true
+        'delete_seo'     => $config['product'][$type]['seo'],
+        'delete_gallery' => $config['product'][$type]['gallery']
       ]);
       break;
     }
@@ -222,7 +222,8 @@ switch ($act) {
         'table'          => 'tbl_product_list',
         'type'           => $type,
         'redirect_page'  => "$linkProduct&act=man_list",
-        'delete_seo'     => true
+        'delete_seo'     => $config['product'][$type]['seo_list'],
+        'delete_gallery' => $config['product'][$type]['gallery_list']
       ]);
       break;
     }
@@ -232,7 +233,8 @@ switch ($act) {
         'table'          => 'tbl_product_cat',
         'type'           => $type,
         'redirect_page'  => "$linkProduct&act=man_cat",
-        'delete_seo'     => true
+        'delete_seo'     => $config['product'][$type]['seo_cat'],
+        'delete_gallery' => $config['product'][$type]['gallery_cat']
       ]);
       break;
     }
@@ -242,8 +244,8 @@ switch ($act) {
         'table'          => 'tbl_product',
         'type'           => $type,
         'redirect_page'  => "$linkProduct&act=man",
-        'delete_seo'     => true,
-        'delete_gallery' => true
+        'delete_seo'     => $config['product'][$type]['seo'],
+        'delete_gallery' => $config['product'][$type]['gallery']
       ]);
       break;
     }
@@ -253,7 +255,8 @@ switch ($act) {
         'table'          => 'tbl_product_list',
         'type'           => $type,
         'redirect_page'  => "$linkProduct&act=man_list",
-        'delete_seo'     => true
+        'delete_seo'     => $config['product'][$type]['seo_list'],
+        'delete_gallery' => $config['product'][$type]['gallery_list']
       ]);
       break;
     }
@@ -263,12 +266,11 @@ switch ($act) {
         'table'          => 'tbl_product_cat',
         'type'           => $type,
         'redirect_page'  => "$linkProduct&act=man_cat",
-        'delete_seo'     => true
+        'delete_seo'     => $config['product'][$type]['seo_cat'],
+        'delete_gallery' => $config['product'][$type]['gallery_cat']
       ]);
       break;
     }
-
-
   default:
     $fn->transfer("Trang không hợp lệ", "index.php", false);
     break;

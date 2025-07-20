@@ -1,4 +1,5 @@
 <?php
+if (!defined('SOURCES')) die("Error");
 $act = $_GET['act'] ?? '';
 $type = $_GET['type'] ?? '';
 $table = 'tbl_news';
@@ -18,8 +19,9 @@ switch ($act) {
         'id' => (int)$_GET['id'],
         'table' => $table,
         'type' => $type,
-        'delete_seo' => true,
-        'redirect_page' => $linkMan
+        'redirect_page' => $linkMan,
+        'delete_seo'     => $config['news'][$type]['seo'],
+        'delete_gallery' => $config['news'][$type]['gallery']
       ]);
     } else {
       $fn->transfer("ID không hợp lệ!", $linkMan, false);
@@ -32,8 +34,9 @@ switch ($act) {
         'listid' => $_GET['listid'],
         'table' => $table,
         'type' => $type,
-        'delete_seo' => true,
-        'redirect_page' => $linkMan
+        'redirect_page' => $linkMan,
+        'delete_seo'     => $config['news'][$type]['seo'],
+        'delete_gallery' => $config['news'][$type]['gallery']
       ]);
     } else {
       $fn->transfer("Danh sách ID không hợp lệ!", $linkMan, false);
@@ -42,18 +45,17 @@ switch ($act) {
 
   case 'man':
     $keyword = $_GET['keyword'] ?? '';
-    $current_page = max(1, (int)($_GET['p'] ?? 1));
-    $rp = 10;
-    $total_records = $fn->count_data(['table' => $table, 'type' => $type, 'keyword' => $keyword]);
-    $total_pages = ceil($total_records / $rp);
-    $paging = $fn->renderPagination($current_page, $total_pages);
-    $show_news = $fn->show_data([
+    $curPage = max(1, (int)($_GET['p'] ?? 1));
+    $perPage = 10;
+    $options = [
       'table' => $table,
       'type' => $type,
-      'records_per_page' => $rp,
-      'current_page' => $current_page,
-      'keyword' => $keyword
-    ]);
+      'keyword' => $keyword,
+      'pagination'  => [$perPage, $curPage]
+    ];
+    $total = $fn->count_data($options);
+    $show_data = $fn->show_data($options);
+    $paging = $fn->pagination($total, $perPage, $curPage);
     $breadcrumb = [['label' => $config['news'][$type]['title_main']]];
     include TEMPLATE . LAYOUT . "breadcrumb.php";
     include TEMPLATE . "news/news_man.php";
@@ -70,15 +72,16 @@ switch ($act) {
 
     if ($_SERVER['REQUEST_METHOD'] === 'POST' && (isset($_POST['add']) || isset($_POST['edit']))) {
       $save_options = [
-        'table'         => $table,
-        'fields_multi'  => ['slug', 'name', 'desc', 'content'],
-        'fields_common' => ['numb', 'type'],
-        'status_flags'  => array_keys($config['news'][$type]['check']),
-        'redirect_page' => $linkMan,
-        'convert_webp'  => true
+        'table'          => $table,
+        'fields_multi'   => ['slug', 'name', 'desc', 'content'],
+        'fields_common'  => ['numb', 'type'],
+        'status_flags'   => array_keys($config['news'][$type]['check']),
+        'redirect_page'  => $linkMan,
+        'convert_webp'   => $config['news'][$type]['convert_webp'],
+        'enable_slug'    => $config['news'][$type]['slug'],
+        'enable_seo'     => $config['news'][$type]['seo'],
+        'enable_gallery' => $config['news'][$type]['gallery']
       ];
-      if (!empty($config['news'][$type]['slug'])) $save_options['enable_slug'] = true;
-      if (!empty($config['news'][$type]['seo']))  $save_options['enable_seo']  = true;
       $fn->save_data($_POST, $_FILES, $id, $save_options);
     }
 

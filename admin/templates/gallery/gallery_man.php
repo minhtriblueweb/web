@@ -41,8 +41,8 @@
           </tr>
         </thead>
         <tbody>
-          <?php if (!empty($get_gallery)): ?>
-            <?php foreach ($get_gallery as $row): ?>
+          <?php if (!empty($show_data)): ?>
+            <?php foreach ($show_data as $row): ?>
               <tr>
                 <td class="align-middle">
                   <div class="custom-control custom-checkbox my-checkbox">

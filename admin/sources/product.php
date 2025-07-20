@@ -22,17 +22,16 @@ switch ($act) {
       $join = "LEFT JOIN tbl_product_cat c2 ON p.id_cat = c2.id
       LEFT JOIN tbl_product_list c1 ON p.id_list = c1.id";
       $select = "p.*, c1.name{$lang} AS name_list, c2.name{$lang} AS name_cat";
-      $where = array_filter(['id_list' => $id_list, 'id_cat' => $id_cat]);
 
       $options = [
-        'table'   => $table,
-        'type'    => $type,
-        'alias'   => 'p',
-        'join'    => $join,
-        'id_list' => $id_list,
-        'id_cat'  => $id_cat,
-        'select' => $select,
-        'keyword' => $keyword,
+        'table'       => $table,
+        'type'        => $type,
+        'alias'       => 'p',
+        'join'        => $join,
+        'id_list'     => $id_list,
+        'id_cat'      => $id_cat,
+        'select'      => $select,
+        'keyword'     => $keyword,
         'pagination'  => [$perPage, $curPage]
       ];
 
@@ -109,7 +108,7 @@ switch ($act) {
           'fields_common'  => $fields_common,
           'status_flags'   => $status_flags,
           'redirect_page'  => $linkMan,
-          'convert_webp'   => true,
+          'convert_webp'   => $config['product'][$type]['convert_webp'],
           'enable_slug'    => $config['product'][$type]['slug'],
           'enable_seo'     => $config['product'][$type]['seo'],
           'enable_gallery' => $config['product'][$type]['gallery']
@@ -147,7 +146,7 @@ switch ($act) {
           'fields_common' => $fields_common,
           'status_flags'  => $status_flags,
           'redirect_page' => $linkMan,
-          'convert_webp'  => false,
+          'convert_webp'   => $config['product'][$type]['convert_webp_list'],
           'enable_slug'    => $config['product'][$type]['slug_list'],
           'enable_seo'     => $config['product'][$type]['seo_list'],
           'enable_gallery' => $config['product'][$type]['gallery_list']
@@ -172,8 +171,6 @@ switch ($act) {
       $linkMan = "$linkProduct&act=$actBack";
       $id = isset($_GET['id']) && is_numeric($_GET['id']) ? (int)$_GET['id'] : null;
       $status_flags = array_keys($config['product'][$type]['check_cat'] ?? []);
-      $convert_webp = true;
-
       $fields_multi  = ['slug', 'name', 'desc', 'content'];
       $fields_common = ['numb', 'type', 'id_list'];
 
@@ -186,7 +183,7 @@ switch ($act) {
           'fields_common' => $fields_common,
           'status_flags'  => $status_flags,
           'redirect_page' => $linkMan,
-          'convert_webp'  => $convert_webp,
+          'convert_webp'   => $config['product'][$type]['convert_webp_cat'],
           'enable_slug'   => $config['product'][$type]['slug_cat'],
           'enable_seo'    => $config['product'][$type]['seo_cat'],
           'enable_gallery' => $config['product'][$type]['gallery_cat']

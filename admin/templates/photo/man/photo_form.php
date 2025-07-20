@@ -14,7 +14,7 @@
       <div class="col-xl-8">
         <div class="card card-primary card-outline text-sm">
           <div class="card-header">
-            <h3 class="card-title">Nội dung <?= $photoConfig['title_main_photo'] ?></h3>
+            <h3 class="card-title">Nội dung <?= $config['photo']['photo_man'][$type]['title_main_photo'] ?></h3>
             <div class="card-tools">
               <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
             </div>
@@ -25,9 +25,9 @@
                 <ul class="nav nav-tabs" id="custom-tabs-three-tab-lang" role="tablist">
                   <?php foreach ($config['website']['lang'] as $k => $v) { ?>
                     <li class="nav-item">
-                      <a class="nav-link <?= ($k == 'vi') ? 'active' : '' ?>" id="tabs-lang-article-<?= $k ?>" data-toggle="pill"
+                      <a class="nav-link <?= ($k == $lang) ? 'active' : '' ?>" id="tabs-lang-article-<?= $k ?>" data-toggle="pill"
                         href="#tabs-content-article-<?= $k ?>" role="tab" aria-controls="tabs-content-article-<?= $k ?>"
-                        aria-selected="<?= ($k == 'vi') ? 'true' : 'false' ?>">
+                        aria-selected="<?= ($k == $lang) ? 'true' : 'false' ?>">
                         <?= $v ?>
                       </a>
                     </li>
@@ -37,10 +37,10 @@
               <div class="card-body card-article">
                 <div class="tab-content" id="custom-tabs-three-tabContent-lang">
                   <?php foreach ($config['website']['lang'] as $k => $v) { ?>
-                    <div class="tab-pane fade show <?= ($k == 'vi') ? 'active' : '' ?>" id="tabs-content-article-<?= $k ?>"
+                    <div class="tab-pane fade show <?= ($k == $lang) ? 'active' : '' ?>" id="tabs-content-article-<?= $k ?>"
                       role="tabpanel" aria-labelledby="tabs-lang-article-<?= $k ?>">
 
-                      <?php if (!empty($photoConfig['name_photo'])): ?>
+                      <?php if (!empty($config['photo']['photo_man'][$type]['name_photo'])): ?>
                         <div class="form-group">
                           <label for="name<?= $k ?>">Tiêu đề (<?= $k ?>):</label>
                           <input type="text" class="form-control for-seo text-sm" name="name<?= $k ?>" id="name<?= $k ?>"
@@ -49,14 +49,14 @@
                         </div>
                       <?php endif; ?>
 
-                      <?php if (!empty($photoConfig['desc_photo'])): ?>
+                      <?php if (!empty($config['photo']['photo_man'][$type]['desc_photo'])): ?>
                         <div class="form-group">
                           <label for="desc<?= $k ?>">Mô tả (<?= $k ?>):</label>
                           <input type="text" class="form-control for-seo text-sm" name="desc<?= $k ?>" id="desc<?= $k ?>"
                             placeholder="Mô tả" value="<?= $_POST['desc' . $k] ?? ($result['desc' . $k] ?? '') ?>" />
                         </div>
                       <?php endif; ?>
-                      <?php if (!empty($photoConfig['content_photo'])): ?>
+                      <?php if (!empty($config['photo']['photo_man'][$type]['content_photo'])): ?>
                         <div class="form-group">
                           <label for="desc<?= $k ?>">Mô tả (<?= $k ?>):</label>
                           <textarea class="form-control for-seo text-sm"
@@ -74,13 +74,13 @@
 
         <div class="card card-primary card-outline text-sm">
           <div class="card-header">
-            <h3 class="card-title">Thông tin <?= $photoConfig['title_main_photo'] ?></h3>
+            <h3 class="card-title">Thông tin <?= $config['photo']['photo_man'][$type]['title_main_photo'] ?></h3>
             <div class="card-tools">
               <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
             </div>
           </div>
           <div class="card-body">
-            <?php if (!empty($photoConfig['link_photo'])): ?>
+            <?php if (!empty($config['photo']['photo_man'][$type]['link_photo'])): ?>
               <div class="form-group">
                 <label for="link0">Link:</label>
                 <input type="text" class="form-control text-sm" name="link" id="link0" placeholder="Link"
@@ -89,7 +89,7 @@
             <?php endif; ?>
 
             <div class="form-group">
-              <?php foreach ($photoConfig['status_photo'] as $check => $label): ?>
+              <?php foreach ($config['photo']['photo_man'][$type]['status_photo'] as $check => $label): ?>
                 <div class="form-group d-inline-block mb-2 mr-5">
                   <label for="<?= $check ?>-checkbox"
                     class="d-inline-block align-middle mb-0 mr-3 form-label"><?= $label ?>:</label>
@@ -124,7 +124,7 @@
             <?php
             $photoDetail = array();
             $photoDetail['image'] = $result['file'] ?? '';
-            $photoDetail['dimension'] = "Width: " . ($photoConfig['width_photo'] ?? 0) . " px - Height: " . ($photoConfig['height_photo'] ?? 0) . " px (" . ($photoConfig['img_type_photo'] ?? '.jpg|.png') . ")";
+            $photoDetail['dimension'] = "Width: " . ($config['photo']['photo_man'][$type]['width_photo'] ?? 0) . " px - Height: " . ($config['photo']['photo_man'][$type]['height_photo'] ?? 0) . " px (" . ($config['photo']['photo_man'][$type]['img_type_photo'] ?? '.jpg|.png') . ")";
             include TEMPLATE . LAYOUT . "image.php"; ?>
           </div>
         </div>
@@ -132,8 +132,8 @@
     </div>
 
     <input type="hidden" name="type" value="<?= $type ?>">
-    <input type="hidden" name="width" value="<?= $photoConfig['width_photo'] ?>">
-    <input type="hidden" name="height" value="<?= $photoConfig['height_photo'] ?>">
-    <input type="hidden" name="zc" value="<?= (!empty($photoConfig['thumb_photo']) && isset(explode('x', $photoConfig['thumb_photo'])[2])) ? intval(explode('x', $photoConfig['thumb_photo'])[2]) : 1 ?>">
+    <input type="hidden" name="width" value="<?= $config['photo']['photo_man'][$type]['width_photo'] ?>">
+    <input type="hidden" name="height" value="<?= $config['photo']['photo_man'][$type]['height_photo'] ?>">
+    <input type="hidden" name="zc" value="<?= (!empty($config['photo']['photo_man'][$type]['thumb_photo']) && isset(explode('x', $config['photo']['photo_man'][$type]['thumb_photo'])[2])) ? intval(explode('x', $config['photo']['photo_man'][$type]['thumb_photo'])[2]) : 1 ?>">
   </form>
 </section>

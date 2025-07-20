@@ -5,8 +5,7 @@
       <button type="reset" class="btn btn-sm bg-gradient-secondary"><i class="fas fa-redo mr-2"></i>Làm lại</button>
     </div>
     <?php
-    /*
-     <div class="card card-primary card-outline text-sm">
+    /* <div class="card card-primary card-outline text-sm">
       <div class="card-header">
         <h3 class="card-title">Cấu hình kích thước hình ảnh (width x height x zoom crop:1,2,3)</h3>
       </div>
@@ -30,10 +29,8 @@
           <?php } ?>
         </div>
       </div>
-    </div>
-    */
+    </div> */
     ?>
-
     <div class="card card-primary card-outline text-sm">
       <div class="card-header">
         <h3 class="card-title">Thông tin chung</h3>
@@ -46,7 +43,7 @@
               <?php foreach ($config['website']['lang'] as $k => $v) { ?>
                 <div class="custom-control custom-radio d-inline-block mr-3 text-md">
                   <input class="custom-control-input" type="radio" id="lang_default-<?= $k ?>" name="lang_default" value="<?= $k ?>"
-                    <?= ($options['lang_default'] ?? 'vi') == $k ? 'checked' : '' ?>>
+                    <?= ($options['lang_default'] ?? $lang) == $k ? 'checked' : '' ?>>
                   <label for="lang_default-<?= $k ?>" class="custom-control-label font-weight-normal"><?= $v ?></label>
                 </div>
               <?php } ?>
@@ -176,13 +173,13 @@
             <ul class="nav nav-tabs" id="custom-tabs-three-tab-lang" role="tablist">
               <?php foreach ($config['website']['lang'] as $k => $v) { ?>
                 <li class="nav-item">
-                  <a class="nav-link <?= ($k == 'vi') ? 'active' : '' ?>"
+                  <a class="nav-link <?= ($k == $lang) ? 'active' : '' ?>"
                     id="tabs-lang-article-<?= $k ?>"
                     data-toggle="pill"
                     href="#tabs-content-article-<?= $k ?>"
                     role="tab"
                     aria-controls="tabs-content-article-<?= $k ?>"
-                    aria-selected="<?= ($k == 'vi') ? 'true' : 'false' ?>">
+                    aria-selected="<?= ($k == $lang) ? 'true' : 'false' ?>">
                     <?= $v ?>
                   </a>
                 </li>
@@ -192,7 +189,7 @@
           <div class="card-body card-article">
             <div class="tab-content" id="custom-tabs-three-tabContent-lang">
               <?php foreach ($config['website']['lang'] as $k => $v) { ?>
-                <div class="tab-pane fade show <?= ($k == 'vi') ? 'active' : '' ?>"
+                <div class="tab-pane fade show <?= ($k == $lang) ? 'active' : '' ?>"
                   id="tabs-content-article-<?= $k ?>"
                   role="tabpanel"
                   aria-labelledby="tabs-lang-article-<?= $k ?>">

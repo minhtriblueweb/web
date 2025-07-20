@@ -31,13 +31,13 @@
                 <ul class="nav nav-tabs" id="custom-tabs-three-tab-lang" role="tablist">
                   <?php foreach ($config['website']['lang'] as $k => $v) { ?>
                     <li class="nav-item">
-                      <a class="nav-link <?= ($k == 'vi') ? 'active' : '' ?>"
+                      <a class="nav-link <?= ($k == $lang) ? 'active' : '' ?>"
                         id="tabs-lang-article-<?= $k ?>"
                         data-toggle="pill"
                         href="#tabs-content-article-<?= $k ?>"
                         role="tab"
                         aria-controls="tabs-content-article-<?= $k ?>"
-                        aria-selected="<?= ($k == 'vi') ? 'true' : 'false' ?>">
+                        aria-selected="<?= ($k == $lang) ? 'true' : 'false' ?>">
                         <?= $v ?>
                       </a>
                     </li>
@@ -47,7 +47,7 @@
               <div class="card-body card-article">
                 <div class="tab-content" id="custom-tabs-three-tabContent-lang">
                   <?php foreach ($config['website']['lang'] as $k => $v) { ?>
-                    <div class="tab-pane fade show <?= ($k == 'vi') ? 'active' : '' ?>"
+                    <div class="tab-pane fade show <?= ($k == $lang) ? 'active' : '' ?>"
                       id="tabs-content-article-<?= $k ?>"
                       role="tabpanel"
                       aria-labelledby="tabs-lang-article-<?= $k ?>">
@@ -55,7 +55,7 @@
                       <!-- Tiêu đề -->
                       <div class="form-group">
                         <label for="name<?= $k ?>">Tiêu đề (<?= $k ?>):</label>
-                        <input type="text" class="form-control for-seo text-sm" name="name<?= $k ?>" id="name<?= $k ?>" placeholder="Tiêu đề (<?= $k ?>)" value="<?= $_POST['name' . $k] ?? ($result['name' . $k] ?? '') ?>" <?= ($k == 'vi') ? 'required' : '' ?> />
+                        <input type="text" class="form-control for-seo text-sm" name="name<?= $k ?>" id="name<?= $k ?>" placeholder="Tiêu đề (<?= $k ?>)" value="<?= $_POST['name' . $k] ?? ($result['name' . $k] ?? '') ?>" <?= ($k == $lang) ? 'required' : '' ?> />
                       </div>
 
                       <!-- Mô tả -->

@@ -13,6 +13,7 @@ $config['news'][$type]['desc_cke'] = false;
 $config['news'][$type]['content'] = true;
 $config['news'][$type]['content_cke'] = true;
 $config['news'][$type]['seo'] = true;
+$config['news'][$type]['convert_webp'] = true;
 $config['news'][$type]['schema'] = true;
 $config['news'][$type]['width'] = $config['size-img'][$type]['man']['width'] = 540;
 $config['news'][$type]['height'] = $config['size-img'][$type]['man']['height'] = 360;

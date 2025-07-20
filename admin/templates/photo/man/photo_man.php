@@ -15,7 +15,7 @@
   </div>
   <div class="card card-primary card-outline text-sm mb-0">
     <div class="card-header">
-      <h3 class="card-title">Danh sách <?= $photoConfig['title_main_photo'] ?></h3>
+      <h3 class="card-title">Danh sách <?= $config['photo']['photo_man'][$type]['title_main_photo'] ?></h3>
     </div>
     <div class="card-body table-responsive p-0">
       <table class="table table-hover">
@@ -30,18 +30,18 @@
             <th class="align-middle text-center" width="10%">STT</th>
             <th class="align-middle text-center" width="8%">Hình</th>
             <th class="align-middle" width="20%">Tiêu đề</th>
-            <?php if (!empty($photoConfig['link_photo'])): ?>
+            <?php if (!empty($config['photo']['photo_man'][$type]['link_photo'])): ?>
               <th class="align-middle">Link</th>
             <?php endif; ?>
-            <?php foreach ($photoConfig['status_photo'] as $attr => $label): ?>
+            <?php foreach ($config['photo']['photo_man'][$type]['status_photo'] as $attr => $label): ?>
               <th class="align-middle text-center"><?= $label ?></th>
             <?php endforeach; ?>
             <th class="align-middle text-center">Thao tác</th>
           </tr>
         </thead>
         <tbody>
-          <?php if (!empty($photo_list)): ?>
-            <?php foreach ($photo_list as $row):
+          <?php if (!empty($show_data)): ?>
+            <?php foreach ($show_data as $row):
               $id = $row['id'];
               $name = $row['namevi'];
               $numb = $row['numb'];
@@ -85,13 +85,13 @@
                 </td>
 
                 <!-- Link -->
-                <?php if (!empty($photoConfig['link_photo'])): ?>
+                <?php if (!empty($config['photo']['photo_man'][$type]['link_photo'])): ?>
                   <td class="align-middle">
                     <?= $link ?>
                   </td>
                 <?php endif; ?>
 
-                <?php foreach ($photoConfig['status_photo'] as $attr => $label): ?>
+                <?php foreach ($config['photo']['photo_man'][$type]['status_photo'] as $attr => $label): ?>
                   <td class="align-middle text-center">
                     <label class="switch switch-success">
                       <input type="checkbox" class="switch-input custom-control-input show-checkbox"

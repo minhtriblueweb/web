@@ -61,6 +61,7 @@ $config['photo']['photo_man'][$type]['link_photo'] = true;
 $config['photo']['photo_man'][$type]['name_photo'] = true;
 $config['photo']['photo_man'][$type]['width_photo'] = 1366;
 $config['photo']['photo_man'][$type]['height_photo'] = 600;
+$config['photo']['photo_man'][$type]['convert_webp'] = true;
 $config['photo']['photo_man'][$type]['thumb_photo'] = '100x' . round(100 / ($config['photo']['photo_man'][$type]['width_photo'] / $config['photo']['photo_man'][$type]['height_photo'])) . 'x1';
 $config['photo']['photo_man'][$type]['img_type_photo'] = '.jpg|.gif|.png|.jpeg|.gif';
 
@@ -70,6 +71,7 @@ $config['photo']['photo_man'][$type]['title_main_photo'] = "Social";
 $config['photo']['photo_man'][$type]['status_photo'] = array("hienthi" => "Hiển thị");
 $config['photo']['photo_man'][$type]['number_photo'] = 1;
 $config['photo']['photo_man'][$type]['images_photo'] = true;
+$config['photo']['photo_man'][$type]['convert_webp'] = true;
 $config['photo']['photo_man'][$type]['avatar_photo'] = true;
 $config['photo']['photo_man'][$type]['link_photo'] = true;
 $config['photo']['photo_man'][$type]['name_photo'] = true;
@@ -86,6 +88,7 @@ $config['photo']['photo_man'][$type]['status_photo'] = array("hienthi" => "Hiể
 $config['photo']['photo_man'][$type]['number_photo'] = 1;
 $config['photo']['photo_man'][$type]['images_photo'] = true;
 $config['photo']['photo_man'][$type]['avatar_photo'] = true;
+$config['photo']['photo_man'][$type]['convert_webp'] = true;
 $config['photo']['photo_man'][$type]['link_photo'] = false;
 $config['photo']['photo_man'][$type]['content_photo'] = true;
 $config['photo']['photo_man'][$type]['name_photo'] = true;

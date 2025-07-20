@@ -38,8 +38,8 @@
         </thead>
         <form action="" method="POST">
           <tbody>
-            <?php if (!empty($show_news)): ?>
-              <?php foreach ($show_news as $row):
+            <?php if (!empty($show_data)): ?>
+              <?php foreach ($show_data as $row):
                 $id = $row['id'];
                 $name = $row['name' . $lang];
                 $slug = $row['slug' . $lang];

@@ -5,19 +5,19 @@
         <div class="d-flex justify-content-center align-items-center">
           <a id="Zoom-1" class="MagicZoom"
             data-options="zoomMode: magnifier; zoomPosition: inner; hint: off; rightClick: true; expandCaption: false; history: false;"
-            href="<?= $fn->getImageCustom(['file' => $row_sp['file'], 'width' => 500, 'height' => 500, 'zc' => 1, 'src_only' => true, 'watermark' => true]) ?>" title="<?= $row_sp['name' . $lang] ?>">
-            <?= $fn->getImageCustom(['file' => $row_sp['file'], 'alt' => $row_sp['name' . $lang], 'title' => $row_sp['name' . $lang], 'width' => 500, 'height' => 500, 'zc' => 1, 'lazy' => true, 'watermark' => true]) ?>
+            href="<?= $fn->getImageCustom(['file' => $rowDetail['file'], 'width' => 500, 'height' => 500, 'zc' => 1, 'src_only' => true, 'watermark' => true]) ?>" title="<?= $rowDetail["name$lang"] ?>">
+            <?= $fn->getImageCustom(['file' => $rowDetail['file'], 'alt' => $rowDetail["name$lang"], 'title' => $rowDetail["name$lang"], 'width' => 500, 'height' => 500, 'zc' => 1, 'lazy' => true, 'watermark' => true]) ?>
           </a>
         </div>
-        <?php if (!empty($get_gallery)): ?>
+        <?php if (!empty($rowDetailPhoto)): ?>
           <div class="gallery-thumb-pro">
             <div class="slick-pro-detail">
               <div>
-                <a class="thumb-pro-detail" data-zoom-id="Zoom-1" href="<?= $fn->getImageCustom(['file' => $row_sp['file'], 'watermark' => true, 'src_only' => true]) ?>">
-                  <?= $fn->getImageCustom(['file' => $row_sp['file'], 'class' => '', 'width' => 500, 'height' => 500, 'zc' => 1, 'lazy' => true, 'watermark' => true]) ?>
+                <a class="thumb-pro-detail" data-zoom-id="Zoom-1" href="<?= $fn->getImageCustom(['file' => $rowDetail['file'], 'watermark' => true, 'src_only' => true]) ?>">
+                  <?= $fn->getImageCustom(['file' => $rowDetail['file'], 'class' => '', 'width' => 500, 'height' => 500, 'zc' => 1, 'lazy' => true, 'watermark' => true]) ?>
                 </a>
               </div>
-              <?php foreach ($get_gallery as $gallery): ?>
+              <?php foreach ($rowDetailPhoto as $gallery): ?>
                 <div>
                   <a href=" <?= $fn->getImageCustom(['file' => $gallery['file'], 'watermark' => true, 'width' => 500, 'height' => 500, 'zc' => 1, 'src_only' => true]) ?>" class="thumb-pro-detail" data-zoom-id="Zoom-1">
                     <?= $fn->getImageCustom(['file' => $gallery['file'], 'class' => '', 'width' => 500, 'height' => 500, 'zc' => 1, 'lazy' => true, 'watermark' => true]) ?>
@@ -34,35 +34,35 @@
       </div>
 
       <div class="right-pro-detail">
-        <p class="title-pro-detail mb-3"><?= $row_sp['name' . $lang] ?></p>
+        <p class="title-pro-detail mb-3"><?= $rowDetail["name$lang"] ?></p>
         <ul class="attr-pro-detail">
-          <?php if (!empty($row_sp['code'])): ?>
+          <?php if (!empty($rowDetail['code'])): ?>
             <li>
               <label class="attr-label-pro-detail">Mã sản phẩm:</label>
-              <div class="attr-content-pro-detail"><?= $row_sp['code'] ?></div>
+              <div class="attr-content-pro-detail"><?= $rowDetail['code'] ?></div>
             </li>
           <?php endif; ?>
           <li>
             <label class="attr-label-pro-detail">Lượt xem:</label>
-            <div class="attr-content-pro-detail"><?= $row_sp['views'] ?></div>
+            <div class="attr-content-pro-detail"><?= $rowDetail['views'] ?></div>
           </li>
           <li>
             <label class="attr-label-pro-detail">Giá:</label>
             <div class="attr-content-pro-detail">
-              <?php if (!empty($row_sp['sale_price']) && !empty($row_sp['regular_price'])): ?>
-                <span class="price-new-pro-detail"><?= $row_sp['sale_price'] ?> ₫</span>
-                <span class="price-old-pro-detail"><?= $row_sp['regular_price'] ?> ₫</span>
-              <?php elseif (!empty($row_sp['sale_price'])): ?>
-                <span class="price-new-pro-detail"><?= $row_sp['sale_price'] ?> ₫</span>
-              <?php elseif (!empty($row_sp['regular_price'])): ?>
-                <span class="price-new-pro-detail"><?= $row_sp['regular_price'] ?> ₫</span>
+              <?php if (!empty($rowDetail['sale_price']) && !empty($rowDetail['regular_price'])): ?>
+                <span class="price-new-pro-detail"><?= $rowDetail['sale_price'] ?> ₫</span>
+                <span class="price-old-pro-detail"><?= $rowDetail['regular_price'] ?> ₫</span>
+              <?php elseif (!empty($rowDetail['sale_price'])): ?>
+                <span class="price-new-pro-detail"><?= $rowDetail['sale_price'] ?> ₫</span>
+              <?php elseif (!empty($rowDetail['regular_price'])): ?>
+                <span class="price-new-pro-detail"><?= $rowDetail['regular_price'] ?> ₫</span>
               <?php else: ?>
                 <span class="price-new-pro-detail">Liên hệ</span>
               <?php endif; ?>
             </div>
           </li>
         </ul>
-        <div class="desc-pro-detail content-ck"><?= $row_sp['descvi'] ?></div>
+        <div class="desc-pro-detail content-ck"><?= $rowDetail["desc$lang"] ?></div>
         <div class="btn-pro-contact">
           <a target="_blank" href="tel:<?= str_replace(' ', '', $hotline) ?>"><i><img src="assets/images/icon-t1.png" alt="Hotline"></i><?= $hotline ?></a>
           <a target="_blank" href="https://zalo.me/<?= str_replace(' ', '', $hotline) ?>"><i><img src="assets/images/icon-t2.png" alt="Zalo"></i> Chat zalo</a>
@@ -74,9 +74,9 @@
           <?php foreach ($tieuchi as $row_tc): ?>
             <div class="list-policy">
               <div class="i-policy">
-                <?= $fn->getImageCustom(['file' => $row_tc['file'], 'class' => 'me-3', 'alt' => $row_tc['name' . $lang], 'title' => $row_tc['name' . $lang], 'width' => 40, 'height' => 40, 'zc' => 1, 'lazy' => true]) ?>
+                <?= $fn->getImageCustom(['file' => $row_tc['file'], 'class' => 'me-3', 'alt' => $row_tc["name$lang"], 'title' => $row_tc["name$lang"], 'width' => 40, 'height' => 40, 'zc' => 1, 'lazy' => true]) ?>
                 <div class="content">
-                  <h3 class="text-split" title="<?= $row_tc['name' . $lang] ?>"><?= $row_tc['name' . $lang] ?></h3>
+                  <h3 class="text-split" title="<?= $row_tc["name$lang"] ?>"><?= $row_tc["name$lang"] ?></h3>
                 </div>
               </div>
             </div>
@@ -92,21 +92,21 @@
       </ul>
       <div class="tab-content" id="tabsProDetailContent">
         <div class="tab-pane fade show active" id="info-pro-detail" role="tabpanel">
-          <div class="content-main content-ck" id="toc-content"><?= $row_sp['content' . $lang] ?></div>
+          <div class="content-main content-ck" id="toc-content"><?= $rowDetail['content' . $lang] ?></div>
         </div>
         <div class="tab-pane fade" id="commentfb-pro-detail" role="tabpanel"></div>
       </div>
     </div>
 
-    <?php if (!empty($sanpham_lienquan)): ?>
+    <?php if (!empty($product)): ?>
       <div class="title-main mt-4" data-aos="fade-up" data-aos-duration="1000">
         <h2>Sản phẩm cùng loại</h2>
       </div>
       <div class="grid-product" data-aos="fade-up" data-aos-duration="1000">
-        <?php foreach ($sanpham_lienquan as $row_lq): ?>
+        <?php foreach ($product as $row_lq): ?>
           <?php
           $slug = $row_lq['slug' . $lang];
-          $name = $row_lq['name' . $lang];
+          $name = $row_lq["name$lang"];
           $views = $row_lq['views'] ?? 0;
           $sale_price = $row_lq['sale_price'];
           $regular_price = $row_lq['regular_price'];
@@ -141,7 +141,7 @@
       </div>
 
       <div class="pagination-home w-100">
-        <?php /* $fn->renderPagination_index($current_page, $total_pages, $slug); */ ?>
+        <?php if ($paging): ?><div class="mt-3 mb-3"><?= $paging ?></div><?php endif; ?>
       </div>
     <?php endif; ?>
   </div>

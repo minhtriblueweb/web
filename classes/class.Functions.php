@@ -223,7 +223,6 @@ class Functions
     $enable_seo = $options['enable_seo'] ?? false;
     $enable_slug = $options['enable_slug'] ?? false;
     $convert_webp = $options['convert_webp'] ?? false;
-
     $data_prepared = [];
     foreach ($langs as $lang) {
       foreach ($fields_multi as $field) {
@@ -231,13 +230,10 @@ class Functions
         $data_prepared[$key] = $data[$key] ?? '';
       }
     }
-
     foreach ($fields_common as $field) {
       $data_prepared[$field] = $data[$field] ?? '';
     }
-
     $type = $data_prepared['type'] ?? '';
-
     if (!empty($fields_options)) {
       $options_data = [];
       foreach ($fields_options as $field) {
@@ -245,11 +241,9 @@ class Functions
       }
       $data_prepared['options'] = json_encode($options_data, JSON_UNESCAPED_UNICODE);
     }
-
     if (!empty($status_flags)) {
       $data_prepared['status'] = implode(',', array_filter($status_flags, fn($f) => !empty($data[$f])));
     }
-
     if ($enable_slug) {
       foreach ($langs as $lang) {
         $slug = $data_prepared['slug' . $lang] ?? '';
@@ -258,16 +252,12 @@ class Functions
         }
       }
     }
-
-    // ========== XỬ LÝ ẢNH (nếu có truyền file) ==========
     $thumb_filename = $old_filename = '';
     $has_file_column = is_array($files) && isset($files['file']) && is_uploaded_file($files['file']['tmp_name']);
-
     if ($has_file_column && !empty($id)) {
       $old = $this->db->rawQueryOne("SELECT file FROM $table WHERE id = ?", [(int)$id]);
       $old_filename = $old['file'] ?? '';
     }
-
     if ($has_file_column) {
       $thumb_filename = $this->uploadImage([
         'file' => $files['file'],
@@ -280,28 +270,21 @@ class Functions
       $this->deleteFile($old_filename);
       $thumb_filename = '';
     }
-
-    // ========== UPDATE ==========
     if (!empty($id)) {
       $fields = $params = [];
       foreach ($data_prepared as $key => $val) {
         $fields[] = "`$key` = ?";
         $params[] = $val;
       }
-
       if ($has_file_column || (!empty($data['photo_deleted']) && $data['photo_deleted'] == '1')) {
         $fields[] = "`file` = ?";
         $params[] = $thumb_filename;
       }
-
       $params[] = (int)$id;
       $result = $this->db->execute("UPDATE $table SET " . implode(', ', $fields) . " WHERE id = ?", $params);
-
       if ($enable_seo && $result) {
         $this->save_seo($type, (int)$id, $data, $langs, $options['act'] ?? '');
       }
-
-      // Xử lý gallery nếu có
       if ($enable_gallery && !empty($data['deleted_images'])) {
         foreach (explode('|', $data['deleted_images']) as $gid) {
           $gid = (int)$gid;
@@ -314,7 +297,6 @@ class Functions
           }
         }
       }
-
       if ($enable_gallery && !empty($data['id-filer'])) {
         foreach ($data['id-filer'] as $k => $gid) {
           $gid = (int)$gid;
@@ -325,42 +307,29 @@ class Functions
           }
         }
       }
-
       if ($enable_gallery && !empty($files['files']['name'][0])) {
         $this->save_gallery($data, $files, $id, $type, false);
       }
-
       $msg = $result ? "Cập nhật dữ liệu thành công" : "Cập nhật dữ liệu thất bại";
     } else {
-      // ========== INSERT ==========
       $columns = array_keys($data_prepared);
       $placeholders = array_fill(0, count($columns), '?');
       $params = array_values($data_prepared);
-
       if ($has_file_column) {
         $columns[] = 'file';
         $placeholders[] = '?';
         $params[] = $thumb_filename;
       }
-
-      $inserted = $this->db->execute(
-        "INSERT INTO $table (" . implode(', ', $columns) . ") VALUES (" . implode(', ', $placeholders) . ")",
-        $params
-      );
-
+      $inserted = $this->db->execute("INSERT INTO $table (" . implode(', ', $columns) . ") VALUES (" . implode(', ', $placeholders) . ")", $params);
       $insert_id = $inserted ? $this->db->getInsertId() : 0;
-
       if ($enable_seo && $insert_id) {
         $this->save_seo($type, $insert_id, $data, $langs, $options['act'] ?? '');
       }
-
       if ($enable_gallery && !empty($files['files']['name'][0])) {
         $this->save_gallery($data, $files, $insert_id, $type, false);
       }
-
       $msg = $inserted ? "Thêm dữ liệu thành công" : "Thêm dữ liệu thất bại";
     }
-
     $this->transfer($msg, $redirect_page, !empty($id) ? $result : $inserted);
   }
   public function deleteFile($file = '')

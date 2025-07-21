@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Máy chủ: 127.0.0.1
--- Thời gian đã tạo: Th7 21, 2025 lúc 12:03 PM
+-- Thời gian đã tạo: Th7 21, 2025 lúc 08:36 PM
 -- Phiên bản máy phục vụ: 10.4.32-MariaDB
 -- Phiên bản PHP: 8.2.12
 
@@ -877,6 +877,16 @@ CREATE TABLE `tbl_gallery` (
   `date_updated` datetime DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Đang đổ dữ liệu cho bảng `tbl_gallery`
+--
+
+INSERT INTO `tbl_gallery` (`id`, `id_parent`, `file`, `name`, `numb`, `status`, `type`, `date_created`, `date_updated`) VALUES
+(682, 92, 'rubik-qiyi-m-pro-phien-ban-quoc-te-co-nam-cham-stickerless_c00d.webp', '', 1, 'hienthi', 'san-pham', '2025-07-22 00:22:54', '2025-07-22 00:22:54'),
+(683, 92, 'rubik-qiyi-m-pro-phien-ban-quoc-te-co-nam-cham-stickerless_4cdf.webp', '', 2, 'hienthi', 'san-pham', '2025-07-22 00:22:55', '2025-07-22 00:22:55'),
+(684, 92, 'rubik-qiyi-m-pro-phien-ban-quoc-te-co-nam-cham-stickerless_b8a3.webp', '', 3, 'hienthi', 'san-pham', '2025-07-22 00:22:56', '2025-07-22 00:22:56'),
+(685, 92, 'rubik-qiyi-m-pro-phien-ban-quoc-te-co-nam-cham-stickerless_1f97.webp', '', 4, 'hienthi', 'san-pham', '2025-07-22 00:22:56', '2025-07-22 00:22:56');
+
 -- --------------------------------------------------------
 
 --
@@ -995,7 +1005,7 @@ CREATE TABLE `tbl_product` (
   `descen` text NOT NULL,
   `contentvi` text NOT NULL,
   `contenten` text NOT NULL,
-  `file` varchar(100) DEFAULT NULL,
+  `file` text DEFAULT NULL,
   `id_list` int(11) NOT NULL,
   `id_cat` int(11) NOT NULL,
   `regular_price` text NOT NULL,
@@ -1009,6 +1019,15 @@ CREATE TABLE `tbl_product` (
   `date_created` datetime NOT NULL DEFAULT current_timestamp(),
   `date_updated` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Đang đổ dữ liệu cho bảng `tbl_product`
+--
+
+INSERT INTO `tbl_product` (`id`, `slugvi`, `slugen`, `namevi`, `nameen`, `descvi`, `descen`, `contentvi`, `contenten`, `file`, `id_list`, `id_cat`, `regular_price`, `sale_price`, `discount`, `code`, `type`, `status`, `numb`, `views`, `date_created`, `date_updated`) VALUES
+(92, 'rubik-qiyi-m-pro-phien-ban-quoc-te-co-nam-cham-stickerless', '', 'Rubik Qiyi M Pro Phiên Bản Quốc Tế Có Nam Châm Stickerless', '', '<p>Rubik 3x3 Qiyi M Pro 2023 Stickerless- Rubic 3x3 Qiyi M Pro Có Nam Châm 2 Phiên Bản Quốc Tế/ Nội Địa</p>\r\n\r\n<p>THÔNG TIN CHI TIẾT SẢN PHẨM</p>\r\n\r\n<p>✅ Thiết kế với cấu trúc mới giúp giải nhanh, giải tốc độ (thích hợp trong thi đấu).</p>\r\n\r\n<p>✅ Rubik xoay trơn, không kẹt, không rít</p>\r\n\r\n<p>✅ Độ bền cao, tính ổn định tốt mà giá cả lại rất yêu thương</p>\r\n\r\n<p>✅Tên sản phẩm: QiYi M Pro</p>\r\n\r\n<p>✅Hãng sản xuất: QiYi</p>\r\n\r\n<p>✅Năm sản xuất: 17/05/2023</p>\r\n\r\n<p>✅ Nơi sản xuất: Trung Quốc</p>\r\n\r\n<p>✅ Kích thước: 55 mm</p>\r\n\r\n<p>CÔNG DỤNG SẢN PHẨM</p>\r\n\r\n<p>Thư giãn, giải trí và đặc biệt giúp trẻ em nâng cao khả năng tư duy và phát triển trí não.</p>\r\n\r\n<p>Rubik phù hợp với trẻ ở mọi độ tuổi</p>\r\n\r\n<p>Rubik rèn luyện trí nhớ, sự thông minh, sáng tạo, khéo léo và tính kiên nhẫn.</p>\r\n\r\n<p>Đồ chơi Rubik có những lợi ích vượt trội hơn những loại đồ chơi trí tuệ khác để bố mẹ có thể sẵn sàng mua cho con mình để phát triển trí não một cách tối đa.</p>\r\n\r\n<p>HƯỚNG DẪN SỬ DỤNG VÀ CÁCH CHƠI</p>\r\n\r\n<p>⚡️ Cách chơi: Người chơi chỉ cần xoay cho đến khi tất các mặt của rubik đều cùng 1 màu.</p>\r\n', '', '<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">Rubik 3x3 Qiyi M Pro 2023 Stickerless- Rubic 3x3 Qiyi M Pro Có Nam Châm 2 Phiên Bản Quốc Tế/ Nội Địa</span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">THÔNG TIN CHI TIẾT SẢN PHẨM</span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">✅ Thiết kế với cấu trúc mới giúp giải nhanh, giải tốc độ (thích hợp trong thi đấu).</span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">✅ Rubik xoay trơn, không kẹt, không rít</span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">✅ Độ bền cao, tính ổn định tốt mà giá cả lại rất yêu thương</span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">✅Tên sản phẩm: QiYi M Pro</span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">✅Hãng sản xuất: QiYi</span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">✅Năm sản xuất: 17/05/2023</span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">✅ Nơi sản xuất: Trung Quốc</span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">✅ Kích thước: 55 mm</span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">CÔNG DỤNG SẢN PHẨM</span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">Thư giãn, giải trí và đặc biệt giúp trẻ em nâng cao khả năng tư duy và phát triển trí não.</span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">Rubik phù hợp với trẻ ở mọi độ tuổi</span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">Rubik rèn luyện trí nhớ, sự thông minh, sáng tạo, khéo léo và tính kiên nhẫn.</span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">Đồ chơi Rubik có những lợi ích vượt trội hơn những loại đồ chơi trí tuệ khác để bố mẹ có thể sẵn sàng mua cho con mình để phát triển trí não một cách tối đa.</span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">HƯỚNG DẪN SỬ DỤNG VÀ CÁCH CHƠI</span></span></p>\r\n\r\n<p><span style=\"line-height:2;\"><span style=\"font-size:16px;\">⚡️ Cách chơi: Người chơi chỉ cần xoay cho đến khi tất các mặt của rubik đều cùng 1 màu.</span></span></p>\r\n', '', 'rubik-qiyi-m-pro-phien-ban-quoc-te-co-nam-cham-stickerless_2deb.webp', 2, 3, '250,000', '200,000', 20, '', 'san-pham', 'hienthi,noibat,banchay', 1, 38, '2025-07-21 22:03:26', '2025-07-22 00:48:52'),
+(93, 'rubik-5x5-gan-562-uv-coated', '', 'Rubik 5x5 GAN 562 UV Coated', '', '<p>Mã SP: PVN1842\r\n</p>\r\n<p>Loại: Rubik 5x5\r\n</p>\r\n<p><strong>Tình trạng:</strong> Còn hàng\r\n</p>\r\n\r\n', '', '<h3>Thông tin sản phẩm\r\n</h3><table cellpadding=\"0\">\r\n  <tbody>\r\n    <tr>\r\n      <th>Hãng sản xuất\r\n      </th>\r\n      <td>GAN CUBE\r\n      </td>\r\n    </tr>\r\n    <tr>\r\n      <th>Loại Rubik\r\n      </th>\r\n      <td>5x5\r\n      </td>\r\n    </tr>\r\n    <tr>\r\n      <th>Ngày mở bán\r\n      </th>\r\n      <td>28/4/2024\r\n      </td>\r\n    </tr>\r\n    <tr>\r\n      <th>Trọng lượng\r\n      </th>\r\n      <td>132g\r\n      </td>\r\n    </tr>\r\n    <tr>\r\n      <th>Kích thước\r\n      </th>\r\n      <td>62mm\r\n      </td>\r\n    </tr>\r\n    <tr>\r\n      <th>Nam châm\r\n      </th>\r\n      <td>Nam châm sẵn 96 + 16\r\n      </td>\r\n    </tr>\r\n    <tr>\r\n      <th>Trọng lượng toàn hộp\r\n      </th>\r\n      <td>301g\r\n      </td>\r\n    </tr>\r\n  </tbody>\r\n</table>\r\n', '', 'rubik-5x5-gan-562-uv-coated_2267.webp', 2, 6, '0', '', 0, 'PVN1842', 'san-pham', 'hienthi,noibat,banchay', 1, 24, '2025-07-21 22:14:46', '2025-07-22 00:48:56'),
+(94, 'rubik-3x3-gan15-maglev-uv-gan-15', '', 'Rubik 3x3 GAN15 Maglev UV GAN 15', '', '<h3>Thông tin sản phẩm</h3>\r\n\r\n<table cellpadding=\"0\">\r\n	<tbody>\r\n		<tr>\r\n			<th>Hãng sản xuất</th>\r\n			<td>GAN CUBE</td>\r\n		</tr>\r\n		<tr>\r\n			<th>Loại Rubik</th>\r\n			<td>3x3</td>\r\n		</tr>\r\n		<tr>\r\n			<th>Ngày mở bán</th>\r\n			<td>30/9/2024</td>\r\n		</tr>\r\n		<tr>\r\n			<th>Trọng lượng</th>\r\n			<td>60g</td>\r\n		</tr>\r\n		<tr>\r\n			<th>Kích thước</th>\r\n			<td>56mm</td>\r\n		</tr>\r\n		<tr>\r\n			<th>Nam châm</th>\r\n			<td>Maglev + Góc cạnh</td>\r\n		</tr>\r\n		<tr>\r\n			<th>Trọng lượng toàn hộp</th>\r\n			<td>260g</td>\r\n		</tr>\r\n	</tbody>\r\n</table>\r\n', '', '', '', 'rubik-3x3-gan15-maglev-uv-gan-15_6144.webp', 2, 3, '', '', 0, 'PVN1841', 'san-pham', 'hienthi,noibat,banchay', 1, 0, '2025-07-22 00:20:58', '2025-07-22 00:21:06');
 
 -- --------------------------------------------------------
 
@@ -1048,7 +1067,7 @@ INSERT INTO `tbl_product_cat` (`id`, `slugvi`, `slugen`, `namevi`, `nameen`, `de
 (9, 'rubik-7x7x7', '', 'Rubik 7x7x7', '', '', '', '', '', 4, 'rubik-7x7x7-c70a_100x100x1.jpg', 'hienthi,noibat', 6, '2025-06-24 15:43:12', '2025-07-21 16:11:31', 'san-pham'),
 (11, 'rubik-bien-the-3-mat-pyraminx', '', 'Rubik biến thể 3 mặt (Pyraminx)', '', '', '', '', '', 3, 'rubik-bien-the-3-mat-pyraminx-_b199.jpg', 'hienthi,noibat', 2, '2025-06-26 11:23:27', '2025-07-21 16:11:35', 'san-pham'),
 (12, 'rubik-bien-the-12-mat-megaminx', '', 'Rubik biến thể 12 mặt (Megaminx)', '', '', '', '', '', 3, 'rubik-bien-the-12-mat-megaminx--f4db_100x100x1.webp', 'hienthi,noibat', 3, '2025-06-26 11:25:17', '2025-07-21 16:11:37', 'san-pham'),
-(13, 'rubik-8x8x8', '', 'Rubik 8x8x8', '', '', '', '', '', 4, 'ribik-8x8x8-4fc3_100x100x1.jpg', 'hienthi,noibat', 7, '2025-06-26 11:37:01', '2025-07-07 16:58:55', 'product_cat'),
+(13, 'rubik-8x8x8', '', 'Rubik 8x8x8', '', '', '', '', '', 4, 'ribik-8x8x8-4fc3_100x100x1.jpg', 'hienthi,noibat', 7, '2025-06-26 11:37:01', '2025-07-22 01:07:19', 'san-pham'),
 (14, 'rubik-9x9x9', '', 'Rubik 9x9x9', '', 'Qiyi 9x9 Cube Stickerless 9x9x9 Xếp hình Khối lập phương Thần tài cho trẻ em Quà tặng Đồ chơi Xếp hình Giáo dục Quà tặng Khối lập phương ban đầu', '', '<p>Qiyi 9x9 Cube Stickerless 9x9x9 Xếp hình Khối lập phương Thần tài cho trẻ em Quà tặng Đồ chơi Xếp hình Giáo dục Quà tặng Khối lập phương ban đầu</p>\r\n', '', 4, 'rubik-9x9x9-8f11_100x100x1.jpg', 'hienthi,noibat', 8, '2025-06-26 13:20:06', '2025-07-21 16:11:45', 'san-pham'),
 (15, 'rubik-bien-the-6-mat', '', 'Rubik Biến Thể 6 mặt', '', '', '', '', '', 3, 'rubik-bien-the-6-mat_874d.jpg', 'hienthi,noibat', 2, '2025-06-26 13:21:15', '2025-07-21 16:11:43', 'san-pham'),
 (16, 'rubik-bien-the-khac', '', 'Rubik Biến Thể Khác', '', '', '', '', '', 3, 'rubik-bien-the-khac-5064_100x100x1.jpg', 'hienthi,noibat', 4, '2025-06-26 13:21:53', '2025-07-21 16:11:42', 'san-pham'),
@@ -1130,41 +1149,8 @@ CREATE TABLE `tbl_seo` (
 --
 
 INSERT INTO `tbl_seo` (`id`, `id_parent`, `act`, `type`, `titlevi`, `keywordsvi`, `descriptionvi`, `titleen`, `keywordsen`, `descriptionen`, `schemavi`, `schemaen`) VALUES
-(321, 2, '', 'sanpham', 'Rubik 2x2x2 - Rubik TMT', 'Rubik 2x2x2 - Rubik TMT', 'Việc học Rubik theo thứ tự từ 2x2 → 3x3 → 4x4 → 5x5 giúp người chơi nâng cao kỹ năng logic, tư duy không gian và kiên nhẫn.', '', '', '', '', ''),
-(319, 10, '', 'product', 'Rubik siêu đẹp trai', 'Rubik siêu đẹp trai', '', '', '', '', '', ''),
-(320, 11, '', 'product_cat', 'Rubik biến thể 3 mặt (Pyraminx)', 'Rubik biến thể 3 mặt (Pyraminx)', '', '', '', '', '', ''),
-(318, 11, '', 'tintuc', 'Weilong WRM V10 FerroCore: Siêu phẩm Rubik đỉnh cao từ Moyu và CubeHea', 'Weilong WRM V10 FerroCore: Siêu phẩm Rubik đỉnh cao từ Moyu và CubeHea', 'Weilong WRM V10 FerroCore là sản phẩm hợp tác đặc biệt giữa Moyu, CubeHead, và The Cubicle, mang đến sự đột phá trong dòng Rubik flagship của Moyu.', '', '', '', '', ''),
-(313, 2, '', 'product_list', 'Rubik Cơ bản', 'Rubik Cơ bản', 'Việc học Rubik theo thứ tự từ 2x2 → 3x3 → 4x4 → 5x5 giúp người chơi nâng cao kỹ năng logic, tư duy không gian và kiên nhẫn.', 'Rubik Cơ bản tiếng anh', 'Rubik Cơ bản tiếng anh', '', '', ''),
-(312, 16, '', 'product', 'Rubik 3x3x3 khối lập phương đồ chơi trí tuệ dành cho bé trên 3 tuổi', 'Rubik 3x3x3 khối lập phương đồ chơi trí tuệ dành cho bé trên 3 tuổi', 'Vừa chơi vừa học: Đồ chơi Rubik 3x3x3 khối lập phương là đồ chơi giúp bé tăng sự tập trung trí tuệ, tư duy logic để rèn luyện trí nhớ Phát triển kỹ năng cho tr', '', '', '', '', ''),
-(322, 15, '', 'sanpham', 'Rubik Biến Thể 6 mặt - TMT', 'Rubik Biến Thể 6 mặt', '', '', '', '', '', ''),
-(323, 3, '', 'sanpham', 'Rubik 3x3x3', 'Rubik 3x3x3', '', '', '', '', '', ''),
-(324, 7, '', 'sanpham', 'Rubik 4x4x4', 'Rubik 4x4x4', '', '', '', '', '', ''),
-(327, 10, '', 'tintuc', 'MoYu WeiLong V11 - Khối rubik của nhà vô địch thế giới', 'MoYu WeiLong V11 - Khối rubik của nhà vô địch thế giới', 'MoYu cung cấp công cụ điều chỉnh đi kèm, cho phép người dùng tinh chỉnh lực đàn hồi và độ nén theo 8 mức độ khác nhau, phù hợp với mọi phong cách chơi. Một số n', '', '', '', '', ''),
-(328, 9, '', 'chinhsach', 'Chính Sách Bảo Hành', 'Chính Sách Bảo Hành', 'Đề nghị quý khách kiểm tra hàng trước khi thanh toán. Quý khách hàng không được trả lại hàng nếu không thuộc trường hợp hoàn tiền phía dưới. CHÍNH SÁCH BẢO H', '', '', '', '', ''),
-(329, 8, '', 'chinhsach', 'Chính Sách Bảo Mật', 'Chính Sách Bảo Mật', '1. Mục đích và phạm vi thu thập thông tin Chúng tôi chỉ thu thập thông tin cá nhân của khách hàng khi cần thiết để:   Cung cấp sản phẩm, dịch vụ một cách tốt', '', '', '', '', ''),
-(330, 7, '', 'chinhsach', 'Chính sách đổi trả', 'Chính sách đổi trả', 'QUY ĐỊNH CHUNG VỀ CHÍNH SÁCH ĐỔI TRẢ: Chính sách đổi trả chỉ áp dụng cho các dòng sản phẩm Ghế văn phòng. Riêng bàn, tủ , sofa, bàn ăn… không áp dụng chính sác', '', '', '', '', ''),
-(331, 6, '', 'chinhsach', 'Chính sách vận chuyển', 'Chính sách vận chuyển', '- Quy định về chính sách giao hàng: + Nội thành phố Hồ Chí Minh:   - Phí ship giao hàng giao động.100.000 - 200.000Đ. ( Đối với đơn hàng Dưới 1.500.000 Đ )', '', '', '', '', ''),
-(332, 3, '', 'chinhsach', 'Chính sách thanh toán', 'Chính sách thanh toán', 'Nhằm mang lại sự thuận tiện trong mua hàng và thanh toán, Thương hiệu nội thất Rubik TMT xin gửi tới quý khách hàng những hình thức thanh toán như sau: Thanh', '', '', '', '', ''),
-(333, 5, '', 'huongdanchoi', 'Các giai đoạn để trở thành 1 PRO rubik', 'Các giai đoạn để trở thành 1 PRO rubik', 'Nhằm giúp cho những người mới chơi hoặc đã biết chơi có cách rubik nâng cao và các giai đoạn rubik 1 cách nhanh hơn mình xin post bài này', '', '', '', '', ''),
-(334, 4, '', 'huongdanchoi', 'HƯỚNG DẪN XOAY RUBIK 3X3 THEO CÁCH ĐƠN GIẢN NHẤT', 'HƯỚNG DẪN XOAY RUBIK 3X3 THEO CÁCH ĐƠN GIẢN NHẤT', 'Rubik từ lâu được biết đến là một trong những trò chơi giải đố trí tuệ giúp người chơi phát triển tư duy. Trong đó, Rubik 3x3x3 là phiên bản Rubik cơ bản và đượ', '', '', '', '', ''),
-(335, 4, '', 'sanpham', 'Rubik nâng cao - 0328 732 834', 'Rubik nâng cao', 'Rubik nâng cao là những khối lập phương có kích thước từ 6x6x6 trở lên, dành cho người chơi đã có kinh nghiệm với các dòng cơ bản như 3x3 hoặc 5x5. Những khối R', 'Rubik nâng cao', 'Rubik nâng cao', '', '', ''),
-(337, 11, '', 'sanpham', 'Rubik Biến Thể Dị Hình', 'Rubik Biến Thể Dị Hình', 'Weilong WRM V10 FerroCore là sản phẩm hợp tác đặc biệt giữa Moyu, CubeHead, và The Cubicle, mang đến sự đột phá trong dòng Rubik flagship của Moyu.', '', '', '', '', ''),
-(340, 3, '', 'sanpham', 'Rubik biến thể', 'Rubik biến thể', '', '', '', '', '', ''),
-(348, 51, '', 'sanpham', 'NỘI THẤT PHÒNG KHÁCH CAO CẤP – ĐỒ GỖ VINH TẠI BÌNH DƯƠNG', 'NỘI THẤT PHÒNG KHÁCH CAO CẤP – ĐỒ GỖ VINH TẠI BÌNH DƯƠNG', 'NỘI THẤT PHÒNG KHÁCH CAO CẤP – ĐỒ GỖ VINH TẠI BÌNH DƯƠNG', '', '', '', '', ''),
-(351, 4, '', 'trangchu', 'THẾ GIỚI RUBIK TMT - 0328 732 834', 'THẾ GIỚI RUBIK TMT', 'Sản phẩm của Rubik TMT đa dạng về mẫu mã, từ những viên Rubik cổ điển đến các phiên bản hiện đại với nhiều hình dạng và kích thước khác nhau. Chúng tôi cam kết cung cấp những sản phẩm được sản xuất với công nghệ tiên tiến, đảm bảo an toàn và thân thiện với người dùng.', '', '', '', '', ''),
-(352, 10, '', 'lienhe', 'Liên hệ - THẾ GIỚI RUBIK TMT', '', '', '', '', '', '', ''),
-(353, 5, '', 'gioithieu', 'Giới thiệu về Rubik TMT', 'THẾ GIỚI RUBIK TMT', 'Thế Giới Rubik TMT là địa chỉ uy tín chuyên cung cấp các loại rubik chất lượng cao tại TP. Hồ Chí Minh, phục vụ đa dạng nhu cầu từ người mới bắt đầu đến các cuber chuyên nghiệp', '', '', '', '', ''),
-(354, 66, 'man', 'sanpham', 'r', 'r', '', '', '', '', '', ''),
-(355, 51, 'man', 'sanpham', 'NỘI THẤT PHÒNG KHÁCH CAO CẤP – ĐỒ GỖ VINH TẠI BÌNH DƯƠNG', 'NỘI THẤT PHÒNG KHÁCH CAO CẤP – ĐỒ GỖ VINH TẠI BÌNH DƯƠNG', 'NỘI THẤT PHÒNG KHÁCH CAO CẤP – ĐỒ GỖ VINH TẠI BÌNH DƯƠNG', '', '', '', '', ''),
-(364, 4, 'man_list', 'sanpham', 'Rubik nâng cao - 0328 732 834', 'Rubik nâng cao', 'Rubik nâng cao là những khối lập phương có kích thước từ 6x6x6 trở lên, dành cho người chơi đã có kinh nghiệm với các dòng cơ bản như 3x3 hoặc 5x5. Những khối R', 'Rubik nâng cao tiếng anh', 'Rubik nâng cao tiếng anh', '', '', ''),
-(357, 2, 'man_list', 'sanpham', 'Rubik 2x2x2 - Rubik TMT', 'Rubik 2x2x2 , rubik 3x3x3, rubik cơ bản', 'Việc học Rubik theo thứ tự từ 2x2 → 3x3 → 4x4 → 5x5 giúp người chơi nâng cao kỹ năng logic, tư duy không gian và kiên nhẫn.', '', '', '', '', ''),
-(365, 3, 'man_list', 'sanpham', 'Rubik biến thể - rubik TMT', 'Rubik biến thể', '', '', '', '', '', ''),
-(366, 91, 'man', 'sanpham', 'qqqq', 'qqqq', '', '', '', '', '', ''),
-(359, 66, 'man', 'sanpham', 'r', 'r', '', '', '', '', '', ''),
-(362, 10, 'man', 'sanpham', 'Rubik siêu đẹp trai cute', 'Rubik siêu đẹp trai', 'Rubik siêu đẹp trai Rubik siêu đẹp trai Rubik siêu đẹp trai', 'Rubik siêu đẹp traitiếng anh', 'Rubik siêu đẹp traitiếng anh', '', '', ''),
-(363, 6, '', 'sanpham', '99+ mẫu rubik siêu chất tại Rubik TMT', 'Rubik Cơ bản, rubik TMT', '99+ mẫu rubik siêu chất tại Rubik TMT', '', '', '', '', ''),
-(367, 2, 'man_cat', 'sanpham', 'Rubik 2x2x2 - Rubik TMT', 'Rubik 2x2x2 , rubik 3x3x3, rubik cơ bản', 'Rubik 2x2x2', 'Rubik 2x2x2 tiếng anh', 'Rubik 2x2x2 tiếng anh', '', '', ''),
-(368, 7, '', 'muahang', 'Hướng dẫn mua hàng tại rubik TMT', '', '', '', '', '', '', '');
+(370, 93, 'man', 'san-pham', 'Rubik 5x5 GAN 562 UV Coated', 'Rubik 5x5 GAN 562 UV Coated', 'Mã SP: PVN1842 Loại: Rubik 5x5 Tình trạng: Còn hàng Thông tin sản phẩm 	 		 			Hãng sản xuất 			GAN CUBE 		 		 			Loại Rubik 			5x5 		 		 			Ngày mở bán', '', '', '', '', ''),
+(369, 92, 'man', 'san-pham', 'Rubik Qiyi M Pro Phiên Bản Quốc Tế Có Nam Châm Stickerless - Đồ Chơi P', 'Rubik Qiyi M Pro Phiên Bản Quốc Tế Có Nam Châm Stickerless - Đồ Chơi P', '???? Rubik 3x3 Qiyi M Pro 2023 Stickerless- Rubic 3x3 Qiyi M Pro Có Nam Châm 2 Phiên Bản Quốc Tế/ Nội Địa???? ???? THÔNG TIN CHI TIẾT SẢN PHẨM ✅ Thiết kế với cấu tr', '', '', '', '', '');
 
 -- --------------------------------------------------------
 
@@ -12247,7 +12233,7 @@ ALTER TABLE `tbl_district`
 -- AUTO_INCREMENT cho bảng `tbl_gallery`
 --
 ALTER TABLE `tbl_gallery`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=682;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=686;
 
 --
 -- AUTO_INCREMENT cho bảng `tbl_news`
@@ -12265,7 +12251,7 @@ ALTER TABLE `tbl_photo`
 -- AUTO_INCREMENT cho bảng `tbl_product`
 --
 ALTER TABLE `tbl_product`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=92;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=95;
 
 --
 -- AUTO_INCREMENT cho bảng `tbl_product_cat`
@@ -12283,7 +12269,7 @@ ALTER TABLE `tbl_product_list`
 -- AUTO_INCREMENT cho bảng `tbl_seo`
 --
 ALTER TABLE `tbl_seo`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=369;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=371;
 
 --
 -- AUTO_INCREMENT cho bảng `tbl_seopage`

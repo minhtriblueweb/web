@@ -1,10 +1,9 @@
 <div class="wrap-main wrap-home w-clear">
   <div class="wrap-product-list">
     <div class="wrap-content" style="background: unset;">
-      <?php
-      if (!empty($dm_c2_all)): ?>
+      <?php if (!empty($productCat)): ?>
         <div class="grid-list-no-index">
-          <?php foreach ($dm_c2_all as $c2): ?>
+          <?php foreach ($productCat as $c2): ?>
             <div class="item-list-noindex">
               <a href="<?= $c2['slugvi'] ?>">
                 <h3 class="m-0 text-capitalize"><?= htmlspecialchars($c2['namevi']) ?></h3>
@@ -17,7 +16,7 @@
   </div>
 
   <div class="title-list-hot text-center text-capitalize">
-    <h2><?= htmlspecialchars($dm['name' . $lang]) ?></h2>
+    <h2><?= htmlspecialchars($productList["name$lang"]) ?></h2>
     (<?= $total ?> sản phẩm)
   </div>
 

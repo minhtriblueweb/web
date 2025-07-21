@@ -1,27 +1,25 @@
 <div class="wrap-main wrap-home w-clear">
-  <!-- Danh mục cấp 2 -->
-  <?php if (!empty($list_danhmuc_c2)): ?>
-    <div class="wrap-product-list">
-      <div class="wrap-content" style="background: unset;">
+  <div class="wrap-product-list">
+    <div class="wrap-content" style="background: unset;">
+      <?php if (!empty($productCat_All)): ?>
         <div class="grid-list-no-index">
-          <?php foreach ($list_danhmuc_c2 as $dm_c2_item): ?>
-            <div class="item-list-noindex <?= $dm_c2_item['slug' . $lang] === $dm_c2['slug' . $lang] ? 'active' : '' ?>">
-              <a href="<?= BASE . $dm_c2_item['slug' . $lang] ?>">
-                <h3 class="m-0 text-capitalize"><?= $dm_c2_item['name' . $lang] ?></h3>
+          <?php foreach ($productCat_All as $c2): ?>
+            <div class="item-list-noindex <?= $c2["slug$lang"] ===  $productCat["slug$lang"] ? 'active' : '' ?>">
+              <a href="<?= BASE . $c2["slug$lang"] ?>">
+                <h3 class="m-0 text-capitalize"><?= $c2["name$lang"] ?></h3>
               </a>
             </div>
           <?php endforeach; ?>
         </div>
-      </div>
+      <?php endif; ?>
     </div>
-  <?php endif; ?>
-
+  </div>
 
   <!-- Tiêu đề danh mục -->
   <div class="wrap-product-list">
     <div class="wrap-content" style="background: unset;">
       <div class="title-list-hot text-center text-capitalize">
-        <h2><?= $dm_c2['name' . $lang] ?></h2>
+        <h2><?= $productCat["name$lang"] ?></h2>
         <p>(<?= $total ?> sản phẩm)</p>
       </div>
     </div>
@@ -30,12 +28,12 @@
   <!-- Danh sách sản phẩm -->
   <div class="wrap-main wrap-template w-clear" style="margin: 0 auto !important;">
     <div class="content-main">
-      <?php if (!empty($show_sanpham)): ?>
+      <?php if (!empty($product)): ?>
         <div class="grid-product" data-aos="fade-up" data-aos-duration="500">
-          <?php foreach ($show_sanpham as $sp): ?>
+          <?php foreach ($product as $sp): ?>
             <?php
-            $slug = $sp['slug' . $lang];
-            $name = htmlspecialchars($sp['name' . $lang]);
+            $slug = $sp["slug$lang"];
+            $name = htmlspecialchars($sp["name$lang"]);
             $sale = $sp['sale_price'] ?? '';
             $regular = $sp['regular_price'] ?? '';
             $views = $sp['views'] ?? 0;

@@ -30,6 +30,7 @@ $cache = new Cache($db);
 $fn  = new Functions();
 $fm  = new Format();
 $seo = new Seo();
+$breadcr = new breadcrumbs();
 
 // 6. Định nghĩa các hằng số dùng chung
 define('TEMPLATE', 'templates/');
@@ -44,7 +45,7 @@ define('BASE_ADMIN', $config['baseAdmin'] ?? '/admin/');
 define('NO_IMG', BASE_ADMIN . 'assets/img/noimage.png');
 
 // 7. Khởi tạo các class tiện ích mở rộng
-$classes = ['breadcrumbs', 'product', 'news',];
+$classes = ['product', 'news',];
 
 foreach ($classes as $class) {
   if (class_exists($class)) {

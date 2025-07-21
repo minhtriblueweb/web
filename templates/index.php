@@ -18,7 +18,7 @@
     include TEMPLATE . "seo.php";
     include TEMPLATE . "header.php";
     include TEMPLATE . "menu.php";
-    include TEMPLATE . ($page == 'home.php' ? 'slideshow.php' : 'breadcrumb.php');
+    include TEMPLATE . ($page == 'index.php' ? 'slideshow.php' : 'breadcrumb.php');
     echo $page_content;
     include TEMPLATE . "footer.php";
     include TEMPLATE . "js.php";

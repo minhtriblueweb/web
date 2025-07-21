@@ -61,11 +61,11 @@ $get_gallery = $fn->show_data([
 ]);
 
 //SEO
-$seo_data = $db->rawQueryOne("SELECT * FROM tbl_seo WHERE `id_parent` = ? AND `type` = ? AND `act` = ? LIMIT 1", [$id, 'sanpham', 'man']);
-$seo->set('h1', $seo_data['title' . $lang]);
-if (!empty($seo_data['title' . $lang])) $seo->set('title', $seo_data['title' . $lang]);
-if (!empty($seo_data['keywords' . $lang])) $seo->set('keywords', $seo_data['keywords' . $lang]);
-if (!empty($seo_data['description' . $lang])) $seo->set('description', $seo_data['description' . $lang]);
+$seo_data = $db->rawQueryOne("SELECT * FROM tbl_seo WHERE `id_parent` = ? AND `type` = ? AND `act` = ? LIMIT 1", [$id, 'san-pham', 'man']);
+$seo->set('h1', $seo_data["title$lang"]);
+if (!empty($seo_data["title$lang"])) $seo->set('title', $seo_data["title$lang"]);
+if (!empty($seo_data["keywords$lang"])) $seo->set('keywords', $seo_data["keywords$lang"]);
+if (!empty($seo_data["description$lang"])) $seo->set('description', $seo_data["description$lang"]);
 $imgJson = (!empty($seo_data['options'])) ? json_decode($seo_data['options'], true) : null;
 if (!empty($imgJson)) {
   $seo->set('photo:width', $imgJson['width']);

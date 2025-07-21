@@ -38,12 +38,7 @@ class Seo
       $this->set($default_seo);
       return $default_seo;
     }
-    $data = array_merge($default_seo, [
-      'h1'          => $row["title{$lang}"] ?? '',
-      'title'       => $row["title{$lang}"] ?? '',
-      'keywords'    => $row["keywords{$lang}"] ?? '',
-      'description' => $row["description{$lang}"] ?? ''
-    ]);
+    $data = array_merge($default_seo, []);
     $this->set($data);
     return array_merge($row, $data);
   }

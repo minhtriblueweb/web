@@ -30,9 +30,9 @@
   <!-- Danh sách sản phẩm -->
   <div class="wrap-main wrap-template w-clear" style="margin: 0 auto !important;">
     <div class="content-main">
-      <?php if (!empty($get_sp)): ?>
+      <?php if (!empty($show_sanpham)): ?>
         <div class="grid-product" data-aos="fade-up" data-aos-duration="500">
-          <?php foreach ($get_sp as $sp): ?>
+          <?php foreach ($show_sanpham as $sp): ?>
             <?php
             $slug = $sp['slug' . $lang];
             $name = htmlspecialchars($sp['name' . $lang]);
@@ -75,9 +75,7 @@
       <?php endif; ?>
 
       <!-- Phân trang -->
-      <div class="mt-3">
-        <?= $fn->renderPagination_tc($page, $total_pages, BASE . $dm_c2['slug' . $lang] . '/page-') ?>
-      </div>
+      <?php if ($paging): ?><div class="mt-3 mb-3"><?= $paging ?></div><?php endif; ?>
     </div>
   </div>
 </div>

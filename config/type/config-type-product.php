@@ -1,6 +1,6 @@
 <?php
 /* Sản phẩm */
-$type = "sanpham";
+$type = "san-pham";
 $config['product'][$type]['title_main'] = $config['size-img'][$type]['man']['title'] = "Sản Phẩm";
 $config['product'][$type]['dropdown'] = true;
 $config['product'][$type]['list'] = true;

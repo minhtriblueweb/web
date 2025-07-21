@@ -1,7 +1,8 @@
 <div class="wrap-main wrap-home w-clear">
   <div class="wrap-product-list">
     <div class="wrap-content" style="background: unset;">
-      <?php if (!empty($dm_c2_all)): ?>
+      <?php
+      if (!empty($dm_c2_all)): ?>
         <div class="grid-list-no-index">
           <?php foreach ($dm_c2_all as $c2): ?>
             <div class="item-list-noindex">
@@ -22,9 +23,9 @@
 
   <div class="wrap-main wrap-template w-clear" style="margin: 0 auto !important;">
     <div class="content-main">
-      <?php if (!empty($sp_all)): ?>
+      <?php if (!empty($show_sanpham)): ?>
         <div class="grid-product" data-perpage="<?= $per_page ?>" data-list="1" data-curpage="<?= $page ?>" data-total="<?= $total ?>">
-          <?php foreach ($sp_all as $sp): ?>
+          <?php foreach ($show_sanpham as $sp): ?>
             <?php
             $slug = $sp['slug' . $lang];
             $name = htmlspecialchars($sp['name' . $lang]);
@@ -65,10 +66,7 @@
           <strong>Không tìm thấy kết quả</strong>
         </div>
       <?php endif; ?>
-      <div class="mt-3">
-        <?= $fn->renderPagination_tc($page, $total_pages, BASE . $dm['slug' . $lang] . '/page-'); ?>
-      </div>
-
+      <?php if ($paging): ?><div class="mt-3 mb-3"><?= $paging ?></div><?php endif; ?>
       <?php if (!empty($dm['content' . $lang])): ?>
         <div class="desc-list mt-4">
           <div class="noidung_anhien">

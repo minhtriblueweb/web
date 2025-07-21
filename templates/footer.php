@@ -2,8 +2,9 @@
 $show_chinhsach = $fn->show_data(['table' => 'tbl_news', 'status' => 'hienthi', 'type'   => 'chinhsach', 'select' => "id, slug{$lang}, name{$lang}"]);
 $payment = $fn->show_data(['table' => 'tbl_photo', 'type'  => 'payment', 'status' => 'hienthi', 'select' => "id, file,name{$lang}"]);
 $footer_static = $db->rawQueryOne("SELECT content$lang FROM tbl_static WHERE type = ? AND FIND_IN_SET(?, status) LIMIT 1", ['footer', 'hienthi']);
-$hotrokhachhang = $db->rawQueryOne("SELECT content$lang FROM tbl_static WHERE type = ? AND FIND_IN_SET(?, status) LIMIT 1", ['hotrokhachhang', 'hienthi']);
-$hotro247 = $db->rawQueryOne("SELECT content$lang FROM tbl_static WHERE type = ? AND FIND_IN_SET(?, status) LIMIT 1", ['hotro247', 'hienthi']);
+$hotrokhachhang = $db->rawQueryOne("SELECT name$lang,content$lang FROM tbl_static WHERE type = ? AND FIND_IN_SET(?, status) LIMIT 1", ['hotrokhachhang', 'hienthi']);
+$dangkynhantin = $db->rawQueryOne("SELECT name$lang,content$lang FROM tbl_static WHERE type = ? AND FIND_IN_SET(?, status) LIMIT 1", ['dangkynhantin', 'hienthi']);
+$hotro247 = $db->rawQueryOne("SELECT name$lang,content$lang FROM tbl_static WHERE type = ? AND FIND_IN_SET(?, status) LIMIT 1", ['hotro247', 'hienthi']);
 ?>
 <div class="footer">
   <div class="footer-article">
@@ -61,22 +62,20 @@ $hotro247 = $db->rawQueryOne("SELECT content$lang FROM tbl_static WHERE type = ?
 
         <div class="box-policy">
           <div class="footer-policy">
-            <p class="footer-title">HỖ TRỢ KHÁCH HÀNG</p>
+            <p class="footer-title"><?= $hotrokhachhang["name$lang"] ?? '' ?></p>
             <?= $hotrokhachhang["content$lang"] ?? '' ?>
           </div>
         </div>
         <div class="box-policy">
           <div class="footer-policy">
-            <p class="footer-title">HỖ TRỢ 24/7</p>
+            <p class="footer-title"> <?= $hotro247["name$lang"] ?? '' ?></p>
             <div class="footer-info content-ck">
-              <?= $hotro247["content$lang"] ?? '' ?> </div>
+              <?= $hotro247["content$lang"] ?? '' ?>
+            </div>
           </div>
           <div class="footer-newsletter">
-            <p class="footer-title">ĐĂNG KÝ NHẬN TIN</p>
-            <p class="slogan-newsletter">
-              Đăng ký với chúng tôi ngay để không bỏ lỡ những chương trình
-              hấp dẫn
-            </p>
+            <p class="footer-title"><?= $dangkynhantin["name$lang"] ?? '' ?></p>
+            <p class="slogan-newsletter"><?= $dangkynhantin["content$lang"] ?? '' ?></p>
             <form class="FormNewsletter validation-newsletter" novalidate method="post" action=""
               enctype="multipart/form-data" data-aos="fade-left" data-aos-duration="500">
               <div class="newsletter-input">

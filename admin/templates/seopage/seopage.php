@@ -1,3 +1,8 @@
+<style>
+  .create-seo {
+    display: none !important;
+  }
+</style>
 <section class="content">
   <form class="validation-form" novalidate="" method="post" id="form-watermark" action="" enctype="multipart/form-data">
     <div class="card-footer text-sm sticky-top">
@@ -13,14 +18,23 @@
         <div class="form-group">
           <div class="upload-file">
             <p>Upload hình ảnh:</p>
+
             <?php
             $file = $seo_data['file'] ?? ($_POST['file'] ?? '');
+            if (!empty($file)) {
             ?>
-            <?php if (!empty($file)): ?>
               <div class="d-flex align-items-center justify-content-center" style="width:300px; height:200px;">
-                <?= $fn->getImage(['file' => $file, 'class' => 'img-fluid', 'id' => 'preview-image', 'style' => 'max-height:100%; max-width:100%;', 'alt'   => $config['seopage']['page'][$type], 'title' => $config['seopage']['page'][$type]]) ?>
+                <?= $fn->getImage([
+                  'file' => $file,
+                  'class' => 'img-fluid',
+                  'id' => 'preview-image',
+                  'style' => 'max-height:100%; max-width:100%;',
+                  'alt' => $config['seopage']['page'][$type],
+                  'title' => $config['seopage']['page'][$type]
+                ]) ?>
               </div>
-            <?php endif; ?>
+            <?php } ?>
+
 
             <label class="upload-file-label mb-2 mt-3" for="file">
               <div class="custom-file my-custom-file">
@@ -33,9 +47,9 @@
         </div>
         <?php include TEMPLATE . LAYOUT . 'seo.php'; ?>
         <input type="hidden" name="type" id="type" value="<?= $type ?>">
-        <input type="hidden" name="width" value="<?= $config['seopage']['width'] ?>">
-        <input type="hidden" name="height" value="<?= $config['seopage']['height'] ?>">
-        <input type="hidden" name="zc" value="<?= isset($config['seopage']['thumb']) && ($parts = explode('x', $config['seopage']['thumb'])) && isset($parts[2]) ? (int)$parts[2] : 1 ?>">
+        <input type="hidden" name="width" value="<?= $width ?>">
+        <input type="hidden" name="height" value="<?= $height ?>">
+        <input type="hidden" name="zc" value="<?= $zc ?>">
       </div>
     </div>
   </form>

@@ -1,13 +1,13 @@
 <?php
 /* Giới thiệu */
-$type = "gioithieu";
+$type = "gioi-thieu";
 $config['static'][$type]['title_main'] = "Giới thiệu";
 $config['static'][$type]['check'] = array("hienthi" => "Hiển thị");
 $config['static'][$type]['name'] = true;
 $config['static'][$type]['content_cke'] = true;
 
 /* Liên hệ */
-$type = "lienhe";
+$type = "lien-he";
 $config['static'][$type]['title_main'] = "Liên hệ";
 $config['static'][$type]['check'] = array("hienthi" => "Hiển thị");
 $config['static'][$type]['name'] = true;
@@ -21,26 +21,32 @@ $config['static'][$type]['name'] = true;
 $config['static'][$type]['content_cke'] = true;
 
 /* Mua hàng */
-$type = "muahang";
+$type = "mua-hang";
 $config['static'][$type]['title_main'] = "Mua hàng";
 $config['static'][$type]['check'] = array("hienthi" => "Hiển thị");
 $config['static'][$type]['name'] = true;
 $config['static'][$type]['content_cke'] = true;
 
 /* Hỗ trợ khách hàng */
-$type = "hotrokhachhang";
+$type = "ho-tro-khach-hang";
 $config['static'][$type]['title_main'] = "Hỗ trợ khách hàng";
 $config['static'][$type]['check'] = array("hienthi" => "Hiển thị");
 $config['static'][$type]['name'] = true;
 $config['static'][$type]['content_cke'] = true;
 
 /* Hỗ trợ 24/7 */
-$type = "hotro247";
+$type = "ho-tro-247";
 $config['static'][$type]['title_main'] = "Hỗ trợ 24/7";
 $config['static'][$type]['check'] = array("hienthi" => "Hiển thị");
 $config['static'][$type]['name'] = true;
 $config['static'][$type]['content_cke'] = true;
 
+/*Đăng ký nhận tin */
+$type = "dang-ky-nhan-tin";
+$config['static'][$type]['title_main'] = "Đăng ký nhận tin";
+$config['static'][$type]['check'] = array("hienthi" => "Hiển thị");
+$config['static'][$type]['name'] = true;
+$config['static'][$type]['content'] = true;
 /* Giới thiệu */
 // $type = "slide-info";
 // $config['static'][$type]['title_main'] = "Thông tin slide";

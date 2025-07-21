@@ -23,6 +23,33 @@ class Functions
     $pageURL .= $_SERVER["SERVER_NAME"] . $_SERVER["REQUEST_URI"];
     return $pageURL;
   }
+  /* Lấy getCurrentPageURL */
+  public function getCurrentPageURL()
+  {
+    $pageURL = 'http';
+    if (array_key_exists('HTTPS', $_SERVER) && $_SERVER["HTTPS"] == "on") $pageURL .= "s";
+    $pageURL .= "://";
+    $pageURL .= $_SERVER["SERVER_NAME"] . $_SERVER["REQUEST_URI"];
+    $urlpos = strpos($pageURL, "?p");
+    $pageURL = ($urlpos) ? explode("?p=", $pageURL) : explode("&p=", $pageURL);
+    return $pageURL[0];
+  }
+
+  /* Lấy getCurrentPageURL Cano */
+  public function getCurrentPageURL_CANO()
+  {
+    $pageURL = 'http';
+    if (array_key_exists('HTTPS', $_SERVER) && $_SERVER["HTTPS"] == "on") $pageURL .= "s";
+    $pageURL .= "://";
+    $pageURL .= $_SERVER["SERVER_NAME"] . $_SERVER["REQUEST_URI"];
+    $pageURL = str_replace("amp/", "", $pageURL);
+    $urlpos = strpos($pageURL, "?p");
+    $pageURL = ($urlpos) ? explode("?p=", $pageURL) : explode("&p=", $pageURL);
+    $pageURL = explode("?", $pageURL[0]);
+    $pageURL = explode("#", $pageURL[0]);
+    $pageURL = explode("index", $pageURL[0]);
+    return $pageURL[0];
+  }
   private function buildWhere(array $options): array
   {
     $where = [];
@@ -1187,53 +1214,115 @@ class Functions
     $html .= '</ul>';
     return $html;
   }
-
-  function renderPagination_tc($current_page, $total_pages, $base_url)
+  function pagination_tc(int $total = 0, int $perPage = 10, int $page = 1): string
   {
+    $total_pages = (int)ceil($total / $perPage);
     if ($total_pages <= 1) return '';
-    $pagination_html = '<ul class="pagination flex-wrap justify-content-center mb-0">';
-    if ($current_page > 1) {
-      $pagination_html .= '<li class="page-item">';
-      $pagination_html .= '<a class="page-link" href="' . $base_url . ($current_page - 1) . '"><i class="fas fa-angle-left"></i></a>';
-      $pagination_html .= '</li>';
+
+    // Lấy URL hiện tại và loại bỏ phần /page-[số] nếu có
+    $pageURL = $this->getPageURL();
+    $pageURL = preg_replace('#/page-\d+#', '', $pageURL);
+    $pageURL = rtrim($pageURL, '/'); // tránh trùng dấu "/"
+
+    $html = '<ul class="pagination flex-wrap justify-content-center mb-0">';
+
+    // Nút "Trước"
+    if ($page > 1) {
+      $html .= '<li class="page-item">';
+      $html .= '<a class="page-link" href="' . $pageURL . '/page-' . ($page - 1) . '"><i class="fas fa-angle-left"></i></a>';
+      $html .= '</li>';
     } else {
-      $pagination_html .= '<li class="page-item disabled">';
-      $pagination_html .= '<a class="page-link"><i class="fas fa-angle-left"></i></a>';
-      $pagination_html .= '</li>';
+      $html .= '<li class="page-item disabled">';
+      $html .= '<a class="page-link"><i class="fas fa-angle-left"></i></a>';
+      $html .= '</li>';
     }
+
     $range = 2;
     $show_dots = false;
     for ($i = 1; $i <= $total_pages; $i++) {
       if (
-        $i == 1 || $i == $total_pages || ($i >= $current_page - $range && $i <= $current_page + $range)
+        $i == 1 || $i == $total_pages || ($i >= $page - $range && $i <= $page + $range)
       ) {
         if ($show_dots) {
-          $pagination_html .= '<li class="page-item disabled"><a class="page-link">...</a></li>';
+          $html .= '<li class="page-item disabled"><a class="page-link">...</a></li>';
           $show_dots = false;
         }
-        $active_class = ($i === $current_page) ? 'active' : '';
-        $pagination_html .= '<li class="page-item ' . $active_class . '">';
-        $pagination_html .= '<a class="page-link" href="' . $base_url . $i . '">' . $i . '</a>';
-        $pagination_html .= '</li>';
+        $active_class = ($i === $page) ? 'active' : '';
+        $html .= '<li class="page-item ' . $active_class . '">';
+        $html .= '<a class="page-link" href="' . $pageURL . '/page-' . $i . '">' . $i . '</a>';
+        $html .= '</li>';
       } else {
         $show_dots = true;
       }
     }
-    if ($current_page < $total_pages) {
-      $pagination_html .= '<li class="page-item">';
-      $pagination_html .= '<a class="page-link" href="' . $base_url . ($current_page + 1) . '"><i class="fas fa-angle-right"></i></a>';
-      $pagination_html .= '</li>';
+
+    // Nút "Tiếp"
+    if ($page < $total_pages) {
+      $html .= '<li class="page-item">';
+      $html .= '<a class="page-link" href="' . $pageURL . '/page-' . ($page + 1) . '"><i class="fas fa-angle-right"></i></a>';
+      $html .= '</li>';
     } else {
-      $pagination_html .= '<li class="page-item disabled">';
-      $pagination_html .= '<a class="page-link"><i class="fas fa-angle-right"></i></a>';
-      $pagination_html .= '</li>';
+      $html .= '<li class="page-item disabled">';
+      $html .= '<a class="page-link"><i class="fas fa-angle-right"></i></a>';
+      $html .= '</li>';
     }
-    $pagination_html .= '<li class="page-item">';
-    $pagination_html .= '<a class="page-link" href="' . $base_url . $total_pages . '"><i class="fa-solid fa-angles-right"></i></a>';
-    $pagination_html .= '</li>';
-    $pagination_html .= '</ul>';
-    return $pagination_html;
+
+    // Nút "Cuối"
+    $html .= '<li class="page-item">';
+    $html .= '<a class="page-link" href="' . $pageURL . '/page-' . $total_pages . '"><i class="fa-solid fa-angles-right"></i></a>';
+    $html .= '</li>';
+
+    $html .= '</ul>';
+    return $html;
   }
+
+
+  // function renderPagination_tc($current_page, $total_pages, $base_url)
+  // {
+  //   if ($total_pages <= 1) return '';
+  //   $pagination_html = '<ul class="pagination flex-wrap justify-content-center mb-0">';
+  //   if ($current_page > 1) {
+  //     $pagination_html .= '<li class="page-item">';
+  //     $pagination_html .= '<a class="page-link" href="' . $base_url . ($current_page - 1) . '"><i class="fas fa-angle-left"></i></a>';
+  //     $pagination_html .= '</li>';
+  //   } else {
+  //     $pagination_html .= '<li class="page-item disabled">';
+  //     $pagination_html .= '<a class="page-link"><i class="fas fa-angle-left"></i></a>';
+  //     $pagination_html .= '</li>';
+  //   }
+  //   $range = 2;
+  //   $show_dots = false;
+  //   for ($i = 1; $i <= $total_pages; $i++) {
+  //     if (
+  //       $i == 1 || $i == $total_pages || ($i >= $current_page - $range && $i <= $current_page + $range)
+  //     ) {
+  //       if ($show_dots) {
+  //         $pagination_html .= '<li class="page-item disabled"><a class="page-link">...</a></li>';
+  //         $show_dots = false;
+  //       }
+  //       $active_class = ($i === $current_page) ? 'active' : '';
+  //       $pagination_html .= '<li class="page-item ' . $active_class . '">';
+  //       $pagination_html .= '<a class="page-link" href="' . $base_url . $i . '">' . $i . '</a>';
+  //       $pagination_html .= '</li>';
+  //     } else {
+  //       $show_dots = true;
+  //     }
+  //   }
+  //   if ($current_page < $total_pages) {
+  //     $pagination_html .= '<li class="page-item">';
+  //     $pagination_html .= '<a class="page-link" href="' . $base_url . ($current_page + 1) . '"><i class="fas fa-angle-right"></i></a>';
+  //     $pagination_html .= '</li>';
+  //   } else {
+  //     $pagination_html .= '<li class="page-item disabled">';
+  //     $pagination_html .= '<a class="page-link"><i class="fas fa-angle-right"></i></a>';
+  //     $pagination_html .= '</li>';
+  //   }
+  //   $pagination_html .= '<li class="page-item">';
+  //   $pagination_html .= '<a class="page-link" href="' . $base_url . $total_pages . '"><i class="fa-solid fa-angles-right"></i></a>';
+  //   $pagination_html .= '</li>';
+  //   $pagination_html .= '</ul>';
+  //   return $pagination_html;
+  // }
   public function to_slug($string)
   {
     $search = array(

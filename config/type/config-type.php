@@ -15,13 +15,13 @@ require_once 'config-type-product.php';
 
 /* Seo page */
 $config['seopage']['page'] = array(
-  "trangchu" => "Trang chủ",
-  "gioithieu" => "Giới thiệu",
-  "sanpham" => "Sản phẩm",
-  "muahang" => "Mua hàng",
-  "huongdanchoi" => "Hướng dẫn chơi ",
-  "tintuc" => "Tin tức",
-  "lienhe" => "Liên hệ"
+  "trang-chu" => "Trang chủ",
+  "gioi-thieu" => "Giới thiệu",
+  "san-pham" => "Sản phẩm",
+  "mua-hang" => "Mua hàng",
+  "huong-dan-choi" => "Hướng dẫn chơi ",
+  "tin-tuc" => "Tin tức",
+  "lien-he" => "Liên hệ"
 );
 $config['seopage']['width'] = 600;
 $config['seopage']['height'] = 315;

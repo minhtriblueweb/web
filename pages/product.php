@@ -21,7 +21,7 @@
     <div class="wrap-content" style="background: unset;">
       <div class="title-list-hot text-center">
         <h2>Sản Phẩm</h2>
-        (<?= $total_records ?> sản phẩm)
+        (<?= $total ?> sản phẩm)
       </div>
     </div>
   </div>
@@ -74,9 +74,7 @@
       <?php endif; ?>
 
       <!-- PHÂN TRANG -->
-      <div class="mt-3">
-        <?= $fn->renderPagination_tc($current_page, $total_pages, BASE . 'san-pham/page-'); ?>
-      </div>
+      <?php if ($paging): ?><div class="mt-3 mb-3"><?= $paging ?></div><?php endif; ?>
     </div>
   </div>
 </div>

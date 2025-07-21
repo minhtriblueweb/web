@@ -1,19 +1,10 @@
 <?php
 $slug = $_GET['slug'] ?? '';
-if (empty($slug)) {
-  http_response_code(404);
-  include '404.php';
-  exit();
-}
+if (!$slug) $fn->abort_404();
 
-// Lấy thông tin sản phẩm theo ngôn ngữ
+// Lấy thông tin sản phẩm
 $row_sp = $db->rawQueryOne("SELECT * FROM tbl_product WHERE FIND_IN_SET('hienthi', status) AND slug{$lang} = ? LIMIT 1", [$slug]);
-
-if (!$row_sp) {
-  http_response_code(404);
-  include '404.php';
-  exit();
-}
+if (!$row_sp) $fn->abort_404();
 
 $product->update_views($slug);
 
@@ -21,7 +12,7 @@ $id = $row_sp['id'];
 $id_list = $row_sp['id_list'];
 $id_cat = $row_sp['id_cat'];
 
-// Lấy thông tin danh mục C1, C2 theo JOIN và ngôn ngữ
+// Lấy thông tin danh mục C1, C2
 $dm_data = $fn->show_data([
   'table'  => 'tbl_product',
   'alias'  => 'sp',
@@ -45,25 +36,21 @@ $dm_c2_name = $dm['dm_c2_name'] ?? '';
 $dm_c1_slug = $dm['dm_c1_slug'] ?? '';
 $dm_c2_slug = $dm['dm_c2_slug'] ?? '';
 
-// Sản phẩm liên quan
-$records_per_page = 8;
-$current_page = max(1, (int)($_GET['page'] ?? 1));
-$total_records = $fn->count_data([
+// sản phẩm liên quan
+$curPage =  max(1, isset($_GET['page']) ? (int)$_GET['page'] : 1);
+$perPage = 10;
+$options = [
   'table' => 'tbl_product',
   'status' => 'hienthi',
   'type' => 'product',
-  'exclude_id' => $id
-]);
-$total_pages = max(1, ceil($total_records / $records_per_page));
-
-$sanpham_lienquan = $fn->show_data([
-  'table' => 'tbl_product',
-  'status' => 'hienthi',
   'exclude_id' => $id,
   'select' => "id,file, name{$lang}, slug{$lang}, regular_price, sale_price, views",
-  'records_per_page' => $records_per_page,
-  'current_page' => $current_page
-]);
+  'pagination'  => [$perPage, $curPage]
+];
+$sanpham_lienquan = $fn->show_data($options);
+$total_lienquan = $fn->count_data($options);
+$paging = $fn->pagination_tc($total_lienquan, $perPage, $curPage);
+
 
 // Hình ảnh con
 $get_gallery = $fn->show_data([
@@ -73,8 +60,19 @@ $get_gallery = $fn->show_data([
   'select' => "file"
 ]);
 
-// SEO
-$seo_data = $seo->get_seo($id, 'product');
+//SEO
+$seo_data = $db->rawQueryOne("SELECT * FROM tbl_seo WHERE `id_parent` = ? AND `type` = ? AND `act` = ? LIMIT 1", [$id, 'sanpham', 'man']);
+$seo->set('h1', $seo_data['title' . $lang]);
+if (!empty($seo_data['title' . $lang])) $seo->set('title', $seo_data['title' . $lang]);
+if (!empty($seo_data['keywords' . $lang])) $seo->set('keywords', $seo_data['keywords' . $lang]);
+if (!empty($seo_data['description' . $lang])) $seo->set('description', $seo_data['description' . $lang]);
+$imgJson = (!empty($seo_data['options'])) ? json_decode($seo_data['options'], true) : null;
+if (!empty($imgJson)) {
+  $seo->set('photo:width', $imgJson['width']);
+  $seo->set('photo:height', $imgJson['height']);
+}
+if (!empty($row_sp['file'])) $seo->set('photo',  $fn->getImageCustom(['file' => $row_sp['file'], 'width' => 600, 'height' => 315, 'zc' => 2, 'src_only' => true]));
+
 // Breadcrumbs
 $breadcrumbs->set('san-pham', 'Sản phẩm');
 if (!empty($dm_c1_slug) && !empty($dm_c1_name)) {

@@ -28,13 +28,13 @@
             <ul class="nav nav-tabs" id="custom-tabs-article-tab-lang" role="tablist">
               <?php foreach ($config['website']['lang'] as $k => $v) { ?>
                 <li class="nav-item">
-                  <a class="nav-link <?= ($k == 'vi') ? 'active' : '' ?>"
+                  <a class="nav-link <?= ($k == $lang) ? 'active' : '' ?>"
                     id="tabs-lang-article-<?= $k ?>"
                     data-toggle="pill"
                     href="#tabs-content-article-<?= $k ?>"
                     role="tab"
                     aria-controls="tabs-content-article-<?= $k ?>"
-                    aria-selected="<?= ($k == 'vi') ? 'true' : 'false' ?>">
+                    aria-selected="<?= ($k == $lang) ? 'true' : 'false' ?>">
                     <?= $v ?>
                   </a>
                 </li>
@@ -44,7 +44,7 @@
           <div class="card-body card-article">
             <div class="tab-content" id="custom-tabs-article-tabContent-lang">
               <?php foreach ($config['website']['lang'] as $k => $v) { ?>
-                <div class="tab-pane fade show <?= ($k == 'vi') ? 'active' : '' ?>"
+                <div class="tab-pane fade show <?= ($k == $lang) ? 'active' : '' ?>"
                   id="tabs-content-article-<?= $k ?>"
                   role="tabpanel"
                   aria-labelledby="tabs-lang-article-<?= $k ?>">
@@ -58,14 +58,14 @@
                         name="name<?= $k ?>" id="name<?= $k ?>"
                         placeholder="Tiêu đề (<?= $k ?>)"
                         value="<?= $_POST['name' . $k] ?? $result['name' . $k] ?? '' ?>"
-                        <?= ($k == 'vi') ? 'required' : '' ?> />
+                        <?= ($k == $lang) ? 'required' : '' ?> />
                     </div>
                   <?php endif; ?>
                   <!-- Mô tả -->
                   <?php if (!empty($config['static'][$type]['desc']) || !empty($config['static'][$type]['desc_cke'])): ?>
                     <div class="form-group">
                       <label for="desc<?= $k ?>">Mô tả (<?= $k ?>):</label>
-                      <textarea class="form-control for-seo text-sm <?= !empty($config['static'][$type]['desc_cke']) ? 'form-control-ckeditor' : '' ?>"
+                      <textarea rows="4" class="form-control for-seo text-sm <?= !empty($config['static'][$type]['desc_cke']) ? 'form-control-ckeditor' : '' ?>"
                         name="desc<?= $k ?>" id="desc<?= $k ?>"
                         placeholder="Mô tả (<?= $k ?>)"><?= $_POST['desc' . $k] ?? ($result['desc' . $k] ?? '') ?></textarea>
                     </div>
@@ -74,7 +74,7 @@
                   <?php if (!empty($config['static'][$type]['content']) || !empty($config['static'][$type]['content_cke'])): ?>
                     <div class="form-group">
                       <label for="content<?= $k ?>">Nội dung (<?= $k ?>):</label>
-                      <textarea class="form-control for-seo text-sm <?= !empty($config['static'][$type]['content_cke']) ? 'form-control-ckeditor' : '' ?>"
+                      <textarea rows="4" class="form-control for-seo text-sm <?= !empty($config['static'][$type]['content_cke']) ? 'form-control-ckeditor' : '' ?>"
                         name="content<?= $k ?>" id="content<?= $k ?>"
                         placeholder="Nội dung (<?= $k ?>)"><?= $_POST['content' . $k] ?? ($result['content' . $k] ?? '') ?></textarea>
                     </div>

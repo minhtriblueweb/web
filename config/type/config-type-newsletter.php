@@ -1,6 +1,6 @@
 <?php
 /* Đăng ký nhận tin */
-$nametype = "dangkynhantin";
+$nametype = "dang-ky-nhan-tin";
 $config['newsletter'][$nametype]['title_main'] = "Đăng ký nhận tin";
 $config['newsletter'][$nametype]['file'] = true;
 $config['newsletter'][$nametype]['email'] = true;

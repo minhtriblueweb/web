@@ -18,6 +18,7 @@ define("thongtinlienhe", "Thông tin liên hệ");
 define("sodienthoai", "Số điện thoại");
 define("hovaten", "Họ và tên");
 define("chude", "Chủ đề");
+define("muahang", "Mua hàng");
 define("noidung", "Nội dung");
 define("matkhaumoi", "Mật khẩu mới");
 define("nhaplaimatkhaumoi", "Nhập lại mật khẩu mới");

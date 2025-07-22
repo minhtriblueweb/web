@@ -1,18 +1,18 @@
 <div class="wrap-main wrap-home w-clear">
   <div class="wrap-product-list">
     <div class="title-list-hot mt-4">
-      <h2>Liên Hệ</h2>
+      <h2><?= $titleMain ?></h2>
       <div class="animate-border bg-animate-border mt-1"></div>
     </div>
     <div class="wrap-content" style="background: unset;">
       <div class="content-main">
         <div class="contact-article row">
           <div class="contact-text col-lg-6 mb-3" data-aos="fade-right" data-aos-duration="500">
-            <?= $row_lh['content' . $lang] ?></div>
+            <?= $static["content"] ?></div>
           <form data-aos="fade-left" data-aos-duration="500" class="contact-form validation-contact col-lg-6 mb-3"
             novalidate="" method="post" action="" enctype="multipart/form-data">
             <div class="social">
-              <p>ĐĂNG KÝ NHẬN TƯ VẤN</p>
+              <p><?= dangkynhantin ?></p>
             </div>
             <div class="form-row">
               <div class="contact-input col-sm-6">

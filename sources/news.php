@@ -39,7 +39,7 @@ if ($id != '') {
   $breadcr->set($type, $titleMain);
   $breadcr->set($rowDetail["slug$lang"], $rowDetail["name$lang"]);
   $breadcrumbs = $breadcr->get();
-  include TEMPLATE . "news/news_details.php";
+  include TEMPLATE . $template . ".php";
 } else {
 
   /* Trang danh sách  */
@@ -76,5 +76,5 @@ if ($id != '') {
   /* breadCrumbs */
   $breadcr->set($slug, $titleMain);
   $breadcrumbs =  $breadcr->get();
-  include TEMPLATE . "news/news.php";
+  include TEMPLATE . $template . ".php";
 }

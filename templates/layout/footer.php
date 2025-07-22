@@ -2,9 +2,9 @@
 $show_chinhsach = $fn->show_data(['table' => 'tbl_news', 'status' => 'hienthi', 'type'   => 'chinh-sach', 'select' => "id, slug{$lang}, name{$lang}"]);
 $payment = $fn->show_data(['table' => 'tbl_photo', 'type'  => 'payment', 'status' => 'hienthi', 'select' => "id, file,name{$lang}"]);
 $footer_static = $db->rawQueryOne("SELECT content$lang FROM tbl_static WHERE type = ? AND FIND_IN_SET(?, status) LIMIT 1", ['footer', 'hienthi']);
-$hotrokhachhang = $db->rawQueryOne("SELECT name$lang,content$lang FROM tbl_static WHERE type = ? AND FIND_IN_SET(?, status) LIMIT 1", ['hotrokhachhang', 'hienthi']);
-$dangkynhantin = $db->rawQueryOne("SELECT name$lang,content$lang FROM tbl_static WHERE type = ? AND FIND_IN_SET(?, status) LIMIT 1", ['dangkynhantin', 'hienthi']);
-$hotro247 = $db->rawQueryOne("SELECT name$lang,content$lang FROM tbl_static WHERE type = ? AND FIND_IN_SET(?, status) LIMIT 1", ['hotro247', 'hienthi']);
+$hotrokhachhang = $db->rawQueryOne("SELECT name$lang,content$lang FROM tbl_static WHERE type = ? AND FIND_IN_SET(?, status) LIMIT 1", ['ho-tro-khach-hang', 'hienthi']);
+$dangkynhantin = $db->rawQueryOne("SELECT name$lang,content$lang FROM tbl_static WHERE type = ? AND FIND_IN_SET(?, status) LIMIT 1", ['dang-ky-nhan-tin', 'hienthi']);
+$hotro247 = $db->rawQueryOne("SELECT name$lang,content$lang FROM tbl_static WHERE type = ? AND FIND_IN_SET(?, status) LIMIT 1", ['ho-tro-247', 'hienthi']);
 ?>
 <div class="footer">
   <div class="footer-article">

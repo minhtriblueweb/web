@@ -8,14 +8,14 @@ $slides = $fn->show_data([
 $tintuc = $fn->show_data([
   'table' => 'tbl_news',
   'status' => 'hienthi,noibat',
-  'type'   => 'tintuc',
+  'type'   => 'tin-tuc',
   'select' => "file, name{$lang}, desc{$lang}, slug{$lang}",
   'limit'  => 8
 ]);
 $tieuchi = $fn->show_data([
   'table' => 'tbl_news',
   'status' => 'hienthi',
-  'type'   => 'tieuchi',
+  'type'   => 'tieu-chi',
   'select' => "file, name{$lang}, desc{$lang}"
 ]);
 $feedback = $fn->show_data([
@@ -45,7 +45,7 @@ foreach ($sp_all ?? [] as $row) {
 }
 
 // SEO
-$seo_data = $db->rawQueryOne("SELECT * FROM tbl_seopage WHERE type = ?", ['trangchu']);
+$seo_data = $db->rawQueryOne("SELECT * FROM tbl_seopage WHERE type = ?", ['trang-chu']);
 $seo->set('h1', $seo_data['title' . $lang]);
 if (!empty($seo_data['title' . $lang])) $seo->set('title', $seo_data['title' . $lang]);
 if (!empty($seo_data['keywords' . $lang])) $seo->set('keywords', $seo_data['keywords' . $lang]);
@@ -56,10 +56,5 @@ if (!empty($imgJson)) {
   $seo->set('photo:height', $imgJson['height']);
 }
 if (!empty($seo_data['file'])) $seo->set('photo',  $fn->getImageCustom(['file' => $seo_data['file'], 'width' => 600, 'height' => 315, 'zc' => 2, 'src_only' => true]));
-include TEMPLATE . LAYOUT . 'tieuchi.php';
-include TEMPLATE . LAYOUT . 'banchay.php';
-include TEMPLATE . LAYOUT . 'danhmuc.php';
-include TEMPLATE . LAYOUT . 'sanpham.php';
-include TEMPLATE . LAYOUT . 'brand.php';
-include TEMPLATE . LAYOUT . 'feedback.php';
-include TEMPLATE . LAYOUT . 'tintuc.php';
+
+include TEMPLATE . $template . ".php";

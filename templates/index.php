@@ -18,7 +18,7 @@
     include TEMPLATE . LAYOUT . "seo.php";
     include TEMPLATE . LAYOUT . "header.php";
     include TEMPLATE . LAYOUT . "menu.php";
-    include TEMPLATE . LAYOUT . ($sources == 'index.php' ? 'slideshow.php' : 'breadcrumb.php');
+    include TEMPLATE . LAYOUT . ($sources == 'index' ? 'slideshow.php' : 'breadcrumb.php');
     echo $page_content;
     include TEMPLATE . LAYOUT . "footer.php";
     include TEMPLATE . LAYOUT . "js.php";

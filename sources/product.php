@@ -149,5 +149,5 @@ if ($id != '') {
   /* breadCrumbs */
   $breadcr->set($slug, $titleMain);
   $breadcrumbs =  $breadcr->get();
-  include TEMPLATE . "product/product.php";
+  include TEMPLATE . $template . ".php";
 }

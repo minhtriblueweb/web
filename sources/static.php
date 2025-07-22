@@ -2,30 +2,22 @@
 if (!defined('SOURCES')) die("Error");
 
 /* Lấy bài viết tĩnh */
-$static = $d->rawQueryOne("select id, type, name$lang, content$lang, photo, date_created, date_updated, options from #_static where type = ? limit 0,1", array($type));
+$static = $db->rawQueryOne("SELECT id, type, name$lang as name, content$lang as content, file FROM tbl_static WHERE type = ? LIMIT 1", [$type]);
 
-/* SEO */
-if (!empty($static)) {
-  $seoDB = $seo->getOnDB(0, 'static', 'update', $static['type']);
-  $seo->set('h1', $static['name' . $lang]);
-  if (!empty($seoDB['title' . $seolang])) $seo->set('title', $seoDB['title' . $seolang]);
-  else $seo->set('title', $static['name' . $lang]);
-  if (!empty($seoDB['keywords' . $seolang])) $seo->set('keywords', $seoDB['keywords' . $seolang]);
-  if (!empty($seoDB['description' . $seolang])) $seo->set('description', $seoDB['description' . $seolang]);
-  $seo->set('url', $func->getPageURL());
-  $imgJson = (!empty($static['options'])) ? json_decode($static['options'], true) : null;
-  if (empty($imgJson) || ($imgJson['p'] != $static['photo'])) {
-    $imgJson = $func->getImgSize($static['photo'], $static['photo']);
-    $seo->updateSeoDB(json_encode($imgJson), 'static', $static['id']);
-  }
-  if (!empty($imgJson)) {
-    $seo->set('photo', $configBase . THUMBS . '/' . $imgJson['w'] . 'x' . $imgJson['h'] . 'x2/' . $static['photo']);
-    $seo->set('photo:width', $imgJson['w']);
-    $seo->set('photo:height', $imgJson['h']);
-    $seo->set('photo:type', $imgJson['m']);
-  }
+//SEO
+$seo_data = $db->rawQueryOne("SELECT * FROM tbl_seopage WHERE type = ?", array($type));
+$seo->set('h1', $titleMain);
+if (!empty($seo_data['title' . $lang])) $seo->set('title', $seo_data['title' . $lang]);
+if (!empty($seo_data['keywords' . $lang])) $seo->set('keywords', $seo_data['keywords' . $lang]);
+if (!empty($seo_data['description' . $lang])) $seo->set('description', $seo_data['description' . $lang]);
+$imgJson = (!empty($seo_data['options'])) ? json_decode($seo_data['options'], true) : null;
+if (!empty($imgJson)) {
+  $seo->set('photo:width', $imgJson['width']);
+  $seo->set('photo:height', $imgJson['height']);
 }
+if (!empty($seo_data['file'])) $seo->set('photo',  $fn->getImageCustom(['file' => $seo_data['file'], 'width' => 600, 'height' => 315, 'zc' => 2, 'src_only' => true]));
 
 /* breadCrumbs */
-if (!empty($titleMain)) $breadcr->set($com, $titleMain);
+if (!empty($titleMain)) $breadcr->set($slug, $titleMain);
 $breadcrumbs = $breadcr->get();
+include TEMPLATE . $template . ".php";

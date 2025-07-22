@@ -15,14 +15,9 @@
     </div>
   </div>
 
-  <!-- Tiêu đề danh mục -->
-  <div class="wrap-product-list">
-    <div class="wrap-content" style="background: unset;">
-      <div class="title-list-hot text-center text-capitalize">
-        <h2><?= $productCat["name$lang"] ?></h2>
-        <p>(<?= $total ?> sản phẩm)</p>
-      </div>
-    </div>
+  <div class="title-list-hot text-center text-capitalize">
+    <h2><?= $productCat["name$lang"] ?></h2>
+    <p>(<?= $total ?> <?= sanpham ?>)</p>
   </div>
 
   <!-- Danh sách sản phẩm -->
@@ -74,6 +69,26 @@
 
       <!-- Phân trang -->
       <?php if ($paging): ?><div class="mt-3 mb-3"><?= $paging ?></div><?php endif; ?>
+
+      <?php if (!empty($productCat["content$lang"])): ?>
+        <div class="desc-list mt-4">
+          <div class="noidung_anhien">
+            <div class="wrap-toc">
+              <div class="meta-toc2">
+                <a class="mucluc-dropdown-list_button">Mục Lục</a>
+                <div class="box-readmore">
+                  <ul class="toc-list" data-toc="article" data-toc-headings="h1,h2,h3"></ul>
+                </div>
+              </div>
+            </div>
+            <div class="content-main content-ck pro_tpl" id="toc-content">
+              <?= $productCat["content$lang"]  ?>
+            </div>
+            <p class="anhien xemthemnd">Xem thêm nội dung</p>
+            <p class="anhien anbot">Ẩn bớt nội dung</p>
+          </div>
+        </div>
+      <?php endif; ?>
     </div>
   </div>
 </div>

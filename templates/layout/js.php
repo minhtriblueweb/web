@@ -66,4 +66,4 @@ echo $js->get();
   <?= $fn->decodeHtmlChars($optsetting['bodyjs']) ?>
 <?php } ?>
 <!-- Js Structdata -->
-<?php include TEMPLATE . "strucdata.php"; ?>
+<?php include TEMPLATE . LAYOUT . "strucdata.php"; ?>

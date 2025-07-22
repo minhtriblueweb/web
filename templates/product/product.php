@@ -1,13 +1,13 @@
 <div class="wrap-main wrap-home w-clear">
   <!-- DANH MỤC -->
-  <?php if (!empty($dm)): ?>
+  <?php if (!empty($product_list)): ?>
     <div class="wrap-product-list">
-      <div class="wrap-content" style="background: unset;">
+      <div class="wrap-content">
         <div class="grid-list-no-index">
-          <?php foreach ($dm as $row_dm): ?>
+          <?php foreach ($product_list as $row_dm): ?>
             <div class="item-list-noindex">
-              <a title="<?= $row_dm['name' . $lang] ?>" href="<?= $row_dm['slug' . $lang] ?>">
-                <h3 class="m-0"><?= $row_dm['name' . $lang] ?></h3>
+              <a title="<?= $row_dm["name$lang"] ?>" href="<?= $row_dm["slug$lang"] ?>">
+                <h3 class="m-0"><?= $row_dm["name$lang"] ?></h3>
               </a>
             </div>
           <?php endforeach; ?>
@@ -17,24 +17,21 @@
   <?php endif; ?>
 
   <!-- TITLE -->
-  <div class="wrap-product-list">
-    <div class="wrap-content" style="background: unset;">
-      <div class="title-list-hot text-center">
-        <h2>Sản Phẩm</h2>
-        (<?= $total ?> sản phẩm)
-      </div>
-    </div>
+  <div class="title-list-hot text-center">
+    <h2><?= sanpham ?></h2>
+    (<?= $total ?> <?= sanpham ?>)
   </div>
+
 
   <!-- DANH SÁCH SẢN PHẨM -->
   <div class="wrap-main wrap-template w-clear" style="margin: 0 auto !important;">
     <div class="content-main">
-      <?php if (!empty($show_sanpham)): ?>
+      <?php if (!empty($product)): ?>
         <div class="grid-product">
-          <?php foreach ($show_sanpham as $sp): ?>
+          <?php foreach ($product as $sp): ?>
             <?php
-            $slug = $sp['slug' . $lang];
-            $name = htmlspecialchars($sp['name' . $lang]);
+            $slug = $sp["slug$lang"];
+            $name = htmlspecialchars($sp["name$lang"]);
             $sale = $sp['sale_price'];
             $regular = $sp['regular_price'];
             $views = $sp['views'];
@@ -42,7 +39,7 @@
             <div class="item-product" data-aos="fade-up" data-aos-duration="1000">
               <a href="<?= $slug ?>">
                 <div class="images">
-                  <?= $fn->getImageCustom(['file'  => $sp['file'], 'class' => 'w-100', 'alt' => $name, 'title' => $name, 'width' => 500, 'height' => 500, 'zc' => 1, 'lazy'  => true, 'watermark' => true]) ?>
+                  <?= $fn->getImageCustom(['file' => $sp['file'], 'class' => 'w-100', 'alt' => $name, 'title' => $name, 'width' => 500, 'height' => 500, 'zc' => 1, 'lazy' => true, 'watermark' => true]) ?>
                 </div>
                 <div class="content">
                   <div class="title">
@@ -54,12 +51,12 @@
                       <?php elseif (!empty($regular)): ?>
                         <span class="price-new"><?= $regular ?>₫</span>
                       <?php else: ?>
-                        <span class="price-new">Liên hệ</span>
+                        <span class="price-new"><?= lienhe ?></span>
                       <?php endif; ?>
                     </p>
                     <div class="info-product">
-                      <p><i class="fa-solid fa-eye"></i> <?= $views ?> lượt xem</p>
-                      <p><span>Chi tiết</span></p>
+                      <p><i class="fa-solid fa-eye"></i> <?= $views ?> <?= luotxem ?></p>
+                      <p><span>chi tiết</span></p>
                     </div>
                   </div>
                 </div>

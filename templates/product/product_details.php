@@ -38,16 +38,16 @@
         <ul class="attr-pro-detail">
           <?php if (!empty($rowDetail['code'])): ?>
             <li>
-              <label class="attr-label-pro-detail">Mã sản phẩm:</label>
+              <label class="attr-label-pro-detail"><?= masp ?>:</label>
               <div class="attr-content-pro-detail"><?= $rowDetail['code'] ?></div>
             </li>
           <?php endif; ?>
           <li>
-            <label class="attr-label-pro-detail">Lượt xem:</label>
+            <label class="attr-label-pro-detail"><?= luotxem ?>:</label>
             <div class="attr-content-pro-detail"><?= $rowDetail['views'] ?></div>
           </li>
           <li>
-            <label class="attr-label-pro-detail">Giá:</label>
+            <label class="attr-label-pro-detail"><?= gia ?>:</label>
             <div class="attr-content-pro-detail">
               <?php if (!empty($rowDetail['sale_price']) && !empty($rowDetail['regular_price'])): ?>
                 <span class="price-new-pro-detail"><?= $rowDetail['sale_price'] ?> ₫</span>
@@ -57,7 +57,7 @@
               <?php elseif (!empty($rowDetail['regular_price'])): ?>
                 <span class="price-new-pro-detail"><?= $rowDetail['regular_price'] ?> ₫</span>
               <?php else: ?>
-                <span class="price-new-pro-detail">Liên hệ</span>
+                <span class="price-new-pro-detail"><?= lienhe ?></span>
               <?php endif; ?>
             </div>
           </li>
@@ -87,12 +87,12 @@
 
     <div class="tabs-pro-detail">
       <ul class="nav nav-tabs" id="tabsProDetail" role="tablist">
-        <li class="nav-item"><a class="nav-link active" id="info-pro-detail-tab" data-bs-toggle="tab" href="#info-pro-detail" role="tab">Thông tin sản phẩm</a></li>
-        <li class="nav-item"><a class="nav-link" id="commentfb-pro-detail-tab" data-bs-toggle="tab" href="#commentfb-pro-detail" role="tab">Bình luận</a></li>
+        <li class="nav-item"><a class="nav-link active" id="info-pro-detail-tab" data-bs-toggle="tab" href="#info-pro-detail" role="tab"><?= thongtinsanpham ?></a></li>
+        <li class="nav-item"><a class="nav-link" id="commentfb-pro-detail-tab" data-bs-toggle="tab" href="#commentfb-pro-detail" role="tab"><?= binhluan ?></a></li>
       </ul>
       <div class="tab-content" id="tabsProDetailContent">
         <div class="tab-pane fade show active" id="info-pro-detail" role="tabpanel">
-          <div class="content-main content-ck" id="toc-content"><?= $rowDetail['content' . $lang] ?></div>
+          <div class="content-main content-ck" id="toc-content"><?= $rowDetail["content$lang"] ?></div>
         </div>
         <div class="tab-pane fade" id="commentfb-pro-detail" role="tabpanel"></div>
       </div>
@@ -100,12 +100,12 @@
 
     <?php if (!empty($product)): ?>
       <div class="title-main mt-4" data-aos="fade-up" data-aos-duration="1000">
-        <h2>Sản phẩm cùng loại</h2>
+        <h2><?= sanphamcungloai ?></h2>
       </div>
       <div class="grid-product" data-aos="fade-up" data-aos-duration="1000">
         <?php foreach ($product as $row_lq): ?>
           <?php
-          $slug = $row_lq['slug' . $lang];
+          $slug = $row_lq["slug$lang"];
           $name = $row_lq["name$lang"];
           $views = $row_lq['views'] ?? 0;
           $sale_price = $row_lq['sale_price'];
@@ -126,11 +126,11 @@
                     <?php elseif (!empty($regular_price)): ?>
                       <span class="price-new"><?= $regular_price ?> ₫</span>
                     <?php else: ?>
-                      <span class="price-new">Liên hệ</span>
+                      <span class="price-new"><?= lienhe ?></span>
                     <?php endif; ?>
                   </p>
                   <div class="info-product">
-                    <p><i class="fa-solid fa-eye"></i> <?= $views ?> lượt xem</p>
+                    <p><i class="fa-solid fa-eye"></i> <?= $views ?> <?= luotxem ?></p>
                     <p><span>Chi tiết</span></p>
                   </div>
                 </div>

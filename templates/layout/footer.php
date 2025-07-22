@@ -1,5 +1,5 @@
 <?php
-$show_chinhsach = $fn->show_data(['table' => 'tbl_news', 'status' => 'hienthi', 'type'   => 'chinhsach', 'select' => "id, slug{$lang}, name{$lang}"]);
+$show_chinhsach = $fn->show_data(['table' => 'tbl_news', 'status' => 'hienthi', 'type'   => 'chinh-sach', 'select' => "id, slug{$lang}, name{$lang}"]);
 $payment = $fn->show_data(['table' => 'tbl_photo', 'type'  => 'payment', 'status' => 'hienthi', 'select' => "id, file,name{$lang}"]);
 $footer_static = $db->rawQueryOne("SELECT content$lang FROM tbl_static WHERE type = ? AND FIND_IN_SET(?, status) LIMIT 1", ['footer', 'hienthi']);
 $hotrokhachhang = $db->rawQueryOne("SELECT name$lang,content$lang FROM tbl_static WHERE type = ? AND FIND_IN_SET(?, status) LIMIT 1", ['hotrokhachhang', 'hienthi']);

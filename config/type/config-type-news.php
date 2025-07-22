@@ -1,6 +1,6 @@
 <?php
 /* Tin tức */
-$type = "tintuc";
+$type = "tin-tuc";
 $config['news'][$type]['title_main'] = $config['size-img'][$type]['man']['title']  = "Tin tức";
 $config['news'][$type]['view'] = true;
 $config['news'][$type]['copy'] = true;
@@ -22,7 +22,7 @@ $config['news'][$type]['img_type'] = '.jpg|.gif|.png|.jpeg|.gif';
 $config['size-img'][$type]['man']['active'] = true;
 
 //tiêu chí
-$type = "tieuchi";
+$type = "tieu-chi";
 $config['news'][$type]['title_main'] = $config['size-img'][$type]['man']['title']  = "Tiêu chí";
 $config['news'][$type]['dropdown'] = false;
 $config['news'][$type]['list'] = false;
@@ -46,7 +46,7 @@ $config['news'][$type]['img_type'] = '.jpg|.gif|.png|.jpeg|.gif';
 $config['size-img'][$type]['man']['active'] = false;
 
 //chính sách
-$type = "chinhsach";
+$type = "chinh-sach";
 $config['news'][$type]['title_main'] = $config['size-img'][$type]['man']['title']  = "Chính Sách";
 $config['news'][$type]['dropdown'] = false;
 $config['news'][$type]['list'] = false;
@@ -74,7 +74,7 @@ $config['news'][$type]['img_type'] = '.jpg|.gif|.png|.jpeg|.gif';
 $config['size-img'][$type]['man']['active'] = false;
 
 // đánh giá khách hàng
-$type = "danhgia";
+$type = "danh-gia";
 $config['news'][$type]['title_main'] = $config['size-img'][$type]['man']['title']  = "Đánh giá khách hàng";
 $config['news'][$type]['dropdown'] = false;
 $config['news'][$type]['list'] = false;
@@ -102,7 +102,7 @@ $config['news'][$type]['img_type'] = '.jpg|.gif|.png|.jpeg|.gif';
 $config['size-img'][$type]['man']['active'] = false;
 
 // hướng dẫn chơi
-$type = "huongdanchoi";
+$type = "huong-dan-choi";
 $config['news'][$type]['title_main'] = $config['size-img'][$type]['man']['title']  = "Hướng dẫn chơi";
 $config['news'][$type]['dropdown'] = false;
 $config['news'][$type]['list'] = false;

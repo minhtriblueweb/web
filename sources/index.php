@@ -56,3 +56,10 @@ if (!empty($imgJson)) {
   $seo->set('photo:height', $imgJson['height']);
 }
 if (!empty($seo_data['file'])) $seo->set('photo',  $fn->getImageCustom(['file' => $seo_data['file'], 'width' => 600, 'height' => 315, 'zc' => 2, 'src_only' => true]));
+include TEMPLATE . LAYOUT . 'tieuchi.php';
+include TEMPLATE . LAYOUT . 'banchay.php';
+include TEMPLATE . LAYOUT . 'danhmuc.php';
+include TEMPLATE . LAYOUT . 'sanpham.php';
+include TEMPLATE . LAYOUT . 'brand.php';
+include TEMPLATE . LAYOUT . 'feedback.php';
+include TEMPLATE . LAYOUT . 'tintuc.php';

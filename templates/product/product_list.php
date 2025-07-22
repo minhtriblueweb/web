@@ -26,8 +26,8 @@
         <div class="grid-product" data-perpage="<?= $per_page ?>" data-list="1" data-curpage="<?= $page ?>" data-total="<?= $total ?>">
           <?php foreach ($show_sanpham as $sp): ?>
             <?php
-            $slug = $sp['slug' . $lang];
-            $name = htmlspecialchars($sp['name' . $lang]);
+            $slug = $sp["slug$lang"];
+            $name = htmlspecialchars($sp["name$lang"]);
             $sale = $sp['sale_price'] ?? '';
             $regular = $sp['regular_price'] ?? '';
             $views = $sp['views'] ?? 0;
@@ -66,7 +66,7 @@
         </div>
       <?php endif; ?>
       <?php if ($paging): ?><div class="mt-3 mb-3"><?= $paging ?></div><?php endif; ?>
-      <?php if (!empty($dm['content' . $lang])): ?>
+      <?php if (!empty($productList["content$lang"])): ?>
         <div class="desc-list mt-4">
           <div class="noidung_anhien">
             <div class="wrap-toc">
@@ -78,7 +78,7 @@
               </div>
             </div>
             <div class="content-main content-ck pro_tpl" id="toc-content">
-              <?= $dm['content' . $lang] ?>
+              <?= $productList["content$lang"]  ?>
             </div>
             <p class="anhien xemthemnd">Xem thêm nội dung</p>
             <p class="anhien anbot">Ẩn bớt nội dung</p>

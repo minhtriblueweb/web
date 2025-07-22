@@ -12,57 +12,58 @@ if (preg_match('/^page-(\d+)$/', end($requestParts), $matches)) {
 $slug = implode('/', $requestParts);
 $_GET['page'] = $current_page;
 
-// Route tĩnh
-$routes = [
-  ''               => 'index.php',
-  'trang-chu'      => 'index.php',
-  'gioi-thieu'     => 'gioithieu.php',
-  'lien-he'        => 'lienhe.php',
-  'san-pham'       => 'product.php',
-  'mua-hang'       => 'muahang.php',
-  'huong-dan-choi' => 'news.php',
-  'chinh-sach'     => 'news.php',
-  'tin-tuc'        => 'news.php',
-  'tim-kiem'       => 'search.php'
+// Khởi tạo
+$sources = '';
+$requick = [
+  // Static pages
+  ['tbl' => '', 'source' => 'index', 'type' => '', 'field' => '', 'file' => 'index.php', 'slug' => 'trang-chu'],
+  ['tbl' => '', 'source' => 'static', 'type' => 'gioi-thieu', 'file' => 'static.php', 'slug' => 'gioi-thieu'],
+  ['tbl' => '', 'source' => 'static', 'type' => 'lien-he', 'field' => '', 'file' => 'lienhe.php',      'slug' => 'lien-he'],
+  ['tbl' => '', 'source' => 'static',   'type' => 'mua-hang', 'field' => '', 'file' => 'muahang.php',     'slug' => 'mua-hang'],
+  ['tbl' => '', 'source' => 'search', 'type' => '', 'field' => '', 'file' => 'search.php', 'slug' => 'tim-kiem'],
+
+  // Product routes
+  array("tbl" => "", "source" => "product", "type" => "san-pham", "field" => "", "file" => "product.php", "slug" => "san-pham", "titleMain" => "Sản phẩm"),
+  array("tbl" => "product", "source" => "product", "type" => "san-pham", "field" => "id", "file" => "product.php"),
+  array("tbl" => "product_list", "source" => "product", "type" => "san-pham", "field" => "idl", "file" => "product.php"),
+  array("tbl" => "product_cat", "source" => "product", "type" => "san-pham", "field" => "idc", "file" => "product.php"),
+
+  // News routes
+  array("tbl" => "news", "source" => "news", "type" => "tin-tuc", "field" => "id", "file" => "news.php", "slug" => "tin-tuc", "titleMain" => "Tin tức"),
+  array("tbl" => "news", "source" => "news", "type" => "chinh-sach", "field" => "id", "file" => "news.php", "slug" => "chinh-sach", "titleMain" => "Chính sách"),
+  array("tbl" => "news", "source" => "news", "type" => "huong-dan-choi", "field" => "id", "file" => "news.php", "slug" => "huong-dan-choi", "titleMain" => "Hướng dẫn chơi")
 ];
 
-// Mặc định là 404
-$page = '404.php';
-if (isset($routes[$slug])) {
-  $page = $routes[$slug];
-  $map_type = [
-    'huong-dan-choi' => 'huongdanchoi',
-    'chinh-sach'     => 'chinhsach',
-    'tin-tuc'        => 'tintuc'
-  ];
-  if (isset($map_type[$slug])) {
-    $_GET['type'] = $map_type[$slug];
+// Tìm route khớp
+$found = false;
+foreach ($requick as $r) {
+  $titleMain = $_GET['titleMain'] = $r['titleMain'] ?? "";
+  // Ưu tiên match theo slug nếu có
+  if (!empty($r['slug']) && $slug == $r['slug']) {
+    $type = $_GET['type'] = $r['type'];
+    $sources = $r['file'];
+    $found = true;
+
+    break;
   }
-} elseif (!empty($slug)) {
-  $requick = [
-    ['tbl' => 'product',      'type' => 'san-pham', 'field' => 'id'],
-    ['tbl' => 'product_list', 'type' => 'san-pham', 'field' => 'idl'],
-    ['tbl' => 'product_cat',  'type' => 'san-pham', 'field' => 'idc'],
-    ['tbl' => 'news',         'type' => '',         'field' => 'id']
-  ];
-  foreach ($requick as $rq) {
-    $tbl     = $rq['tbl'];
-    $type    = $rq['type'];
-    $field   = $rq['field'];
-    $row = $db->rawQueryOne("SELECT id, type FROM `tbl_$tbl` WHERE `slug$lang` = ? AND FIND_IN_SET('hienthi', status) LIMIT 1", [$slug]);
+
+  // Nếu có tbl thì kiểm tra động
+  if (!empty($r['tbl'])) {
+    $row = $db->rawQueryOne(
+      "SELECT id, type FROM tbl_{$r['tbl']} WHERE slug{$lang} = ? AND type = ? AND FIND_IN_SET('hienthi', status) LIMIT 1",
+      [$slug, $r['type']]
+    );
     if ($row) {
-      $_GET[$field] = $row['id'];
-      $_GET['slug'] = $slug;
-      if (!empty($row['type'])) $_GET['type'] = $row['type'];
-      switch ($type) {
-        case 'san-pham':
-          $page = 'product.php';
-          break;
-        case 'news':
-          $page = 'news_details.php';
-          break;
-      }
+      $_GET[$r['field']] = $row['id'];
+      $type = $_GET['type'] = $row['type'];
+      $sources = $r['file'];
+      $found = true;
       break;
     }
   }
+}
+
+// Nếu không tìm thấy route nào phù hợp
+if (!$found || !$sources) {
+  $sources = '404.php';
 }

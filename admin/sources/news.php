@@ -67,7 +67,7 @@ switch ($act) {
 
     if ($id !== null) {
       $result = $db->rawQueryOne("SELECT * FROM `$table` WHERE id = ? LIMIT 1", [$id]);
-      $seo_data = $result ? $seo->get_seo($id, $type) : [];
+      $seo_data = $db->rawQueryOne("SELECT * FROM tbl_seo WHERE `id_parent` = ? AND `type` = ?", [$id, $type]);
     }
 
     if ($_SERVER['REQUEST_METHOD'] === 'POST' && (isset($_POST['add']) || isset($_POST['edit']))) {

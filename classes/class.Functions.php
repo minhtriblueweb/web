@@ -50,6 +50,14 @@ class Functions
     $pageURL = explode("index", $pageURL[0]);
     return $pageURL[0];
   }
+  public function update_views(string $table, string $slug, string $lang = 'vi'): array|false
+  {
+    $row = $this->db->rawQueryOne("SELECT * FROM `$table` WHERE slug{$lang} = ? LIMIT 1", [$slug]);
+    if (!$row) return false;
+    $this->db->rawQuery("UPDATE `$table` SET views = views + 1 WHERE slug{$lang} = ?", [$slug]);
+    return $row;
+  }
+
   private function buildWhere(array $options): array
   {
     $where = [];
@@ -68,6 +76,7 @@ class Functions
 
     // Các field lọc theo giá trị
     $filters = [
+      'id'         => '=',
       'id_list'    => '=',
       'id_cat'     => '=',
       'id_parent'  => '=',
@@ -115,9 +124,11 @@ class Functions
       $sql .= " LIMIT $limit OFFSET $offset";
     }
     $result = $this->db->rawQueryArray($sql, $whereData['params']);
+    if (!empty($options['limit']) && $options['limit'] == 1) {
+      return $result[0] ?? null;
+    }
     return $result;
   }
-
   public function count_data(array $options = []): int
   {
     if (empty($options['table'])) return 0;

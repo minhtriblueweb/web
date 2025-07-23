@@ -1,13 +1,26 @@
 <div class="wrap-main wrap-home w-clear">
   <!-- DANH MỤC -->
-  <?php if (!empty($product_list)): ?>
+  <?php
+  $list = [];
+  $activeSlug = '';
+  if (empty($id)) {
+    if (empty($idl) && empty($idc) && !empty($productList)) {
+      $list = $productList;
+    } elseif (!empty($idl) && empty($idc) && !empty($productCat)) {
+      $list = $productCat;
+    } elseif (!empty($idc) && !empty($productCat_All)) {
+      $list = $productCat_All;
+      $activeSlug = $productCat["slug$lang"] ?? '';
+    }
+  }
+  if (!empty($list)): ?>
     <div class="wrap-product-list">
       <div class="wrap-content">
         <div class="grid-list-no-index">
-          <?php foreach ($product_list as $row_dm): ?>
-            <div class="item-list-noindex">
-              <a title="<?= $row_dm["name$lang"] ?>" href="<?= $row_dm["slug$lang"] ?>">
-                <h3 class="m-0"><?= $row_dm["name$lang"] ?></h3>
+          <?php foreach ($list as $k => $v): ?>
+            <div class="item-list-noindex <?= ($v["slug$lang"] === $activeSlug ? 'active' : '') ?>">
+              <a title="<?= $v["name$lang"] ?>" href="<?= $v["slug$lang"] ?>">
+                <h3 class="m-0"><?= htmlspecialchars($v["name$lang"]) ?></h3>
               </a>
             </div>
           <?php endforeach; ?>
@@ -16,9 +29,11 @@
     </div>
   <?php endif; ?>
 
+
+
   <!-- TITLE -->
   <div class="title-list-hot text-center">
-    <h2><?= sanpham ?></h2>
+    <h2><?= $productCat["name{$lang}"] ?? $productList["name{$lang}"] ?? sanpham ?></h2>
     (<?= $total ?> <?= sanpham ?>)
   </div>
 
@@ -66,7 +81,7 @@
         </div>
       <?php else: ?>
         <div class="alert alert-warning w-100" role="alert">
-          <strong>Không tìm thấy kết quả</strong>
+          <p class="m-0"><strong><?= noidungdangcapnhat ?></strong></p>
         </div>
       <?php endif; ?>
 

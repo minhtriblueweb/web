@@ -3,7 +3,7 @@
     <div class="wrap-content d-flex flex-wrap justify-content-between align-items-center">
       <marquee><?= $introduction ?></marquee>
       <div class="box-social">
-        <a class="pay" href="">Phương thức thanh toán</a>
+        <a class="pay" href="thanh-toan">Phương thức thanh toán</a>
         <?php if (!empty($show_social)): ?>
           <div class="social-header">
             <p>Kết nối :</p>

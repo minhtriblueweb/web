@@ -8,9 +8,10 @@ include_once 'lib/router.php';
 require_once SOURCES . "allpage.php";
 $sources_file = SOURCES . $sources . ".php";
 if (file_exists($sources_file)) {
-  ob_start();
   include_once $sources_file;
-  $page_content = ob_get_clean();
+  if (!isset($template)) {
+    $template = $sources . "/" . $sources;
+  }
 } else {
   $fn->abort_404();
 }

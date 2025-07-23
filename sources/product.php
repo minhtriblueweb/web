@@ -33,7 +33,7 @@ if ($id != '') {
   $rowDetailPhoto = $fn->show_data(['table' => 'tbl_gallery', 'status' => 'hienthi', 'id_parent' => $id, 'select' => "file"]);
 
   //SEO
-  $seo_data = $db->rawQueryOne("SELECT * FROM tbl_seo WHERE `id_parent` = ? AND `type` = ? AND `act` = ? LIMIT 0,1", [$id, 'san-pham', 'man']);
+  $seo_data = $db->rawQueryOne("SELECT * FROM tbl_seo WHERE `id_parent` = ? AND `type` = ? AND `act` = ? LIMIT 0,1", [$id, $type, 'man']);
   $seo->set('h1', $rowDetail["name$lang"]);
   $seo->set('title', !empty($seo_data["title$lang"]) ? $seo_data["title$lang"] : $rowDetail["name$lang"]);
   if (!empty($seo_data["keywords$lang"])) $seo->set('keywords', $seo_data["keywords$lang"]);
@@ -46,7 +46,7 @@ if ($id != '') {
   if (!empty($rowDetail['file'])) $seo->set('photo',  $fn->getImageCustom(['file' => $rowDetail['file'], 'width' => 600, 'height' => 315, 'zc' => 2, 'src_only' => true]));
 
   /* breadCrumbs */
-  $breadcr->set('san-pham', sanpham);
+  $breadcr->set($type, $titleMain);
   if (!empty($productList["slug$lang"]) && !empty($productList["name$lang"])) {
     $breadcr->set($productList["slug$lang"], $productList["name$lang"]);
   }
@@ -55,7 +55,6 @@ if ($id != '') {
   }
   $breadcr->set($rowDetail["slug$lang"], $rowDetail["name$lang"]);
   $breadcrumbs =  $breadcr->get();
-  include TEMPLATE . "product/product_details.php";
 } else if ($idl != '') {
   /* Lấy cấp 1 detail */
   $productList = $fn->show_data(['table' => 'tbl_product_list', 'status' => 'hienthi', 'type' => $type, 'id' => $idl, 'limit' => 1, 'select' => "id, name{$lang}, slug{$lang}, content{$lang}"]);
@@ -63,14 +62,14 @@ if ($id != '') {
   $productCat = $fn->show_data(['table' => 'tbl_product_cat', 'status' => 'hienthi', 'type' => $type, 'id_list' => $idl, 'select' => "id, name{$lang}, slug{$lang}"]);
   /* Lấy sản phẩm */
   $curPage =  max(1, isset($_GET['page']) ? (int)$_GET['page'] : 1);
-  $perPage = 10;
-  $options = ['table' => 'tbl_product', 'status' => 'hienthi', 'type' => $type, 'id_list' => $idl, 'select' => "id, name{$lang}, slug{$lang}, file, regular_price, sale_price, views", 'pagination'  => [$perPage, $curPage]];
+  $perPage = 20;
+  $options = ['table' => 'tbl_product', 'status' => 'hienthi', 'type' => $type, 'id_list' => $idl, 'select' => "id, name$lang, slug$lang, file, regular_price, sale_price, views", 'pagination'  => [$perPage, $curPage]];
   $total = $fn->count_data($options);
-  $show_sanpham = $fn->show_data($options);
+  $product = $fn->show_data($options);
   $paging = $fn->pagination_tc($total, $perPage, $curPage);
 
   /* SEO */
-  $seo_data = $db->rawQueryOne("SELECT * FROM tbl_seo WHERE `id_parent` = ? AND `type` = ? AND `act` = ? LIMIT 0,1", [$id, 'san-pham', 'man_list']);
+  $seo_data = $db->rawQueryOne("SELECT * FROM tbl_seo WHERE `id_parent` = ? AND `type` = ? AND `act` = ? LIMIT 0,1", [$idl, $type, 'man_list']);
   $seo->set('h1', $productList["name$lang"]);
   if (!empty($seo_data["title$lang"])) $seo->set('title', $seo_data["title$lang"]);
   if (!empty($seo_data["keywords$lang"])) $seo->set('keywords', $seo_data["keywords$lang"]);
@@ -83,10 +82,9 @@ if ($id != '') {
   if (!empty($productList['file'])) $seo->set('photo',  $fn->getImageCustom(['file' => $productList['file'], 'width' => 600, 'height' => 315, 'zc' => 2, 'src_only' => true]));
 
   /* breadCrumbs */
-  $breadcr->set('san-pham', sanpham);
+  $breadcr->set($type, $titleMain);
   $breadcr->set($productList["slug$lang"], $productList["name$lang"]);
   $breadcrumbs =  $breadcr->get();
-  include TEMPLATE . "product/product_list.php";
 } else if ($idc != '') {
   /* Lấy cấp 2 */
   $productCat = $fn->show_data(['table' => 'tbl_product_cat', 'status' => 'hienthi', 'type' => $type, 'id' => $idc, 'limit' => 1, 'select' => "id, id_list, name{$lang}, slug{$lang}, content{$lang}"]);
@@ -97,15 +95,15 @@ if ($id != '') {
 
   /* Lấy sản phẩm */
   $curPage =  max(1, isset($_GET['page']) ? (int)$_GET['page'] : 1);
-  $perPage = 10;
+  $perPage = 20;
   $options = ['table' => 'tbl_product', 'status' => 'hienthi', 'type' => $type, 'id_cat' => $idc, 'select' => "id, name{$lang}, slug{$lang}, file, regular_price, sale_price, views", 'pagination'  => [$perPage, $curPage]];
   $total = $fn->count_data($options);
   $product = $fn->show_data($options);
   $paging = $fn->pagination_tc($total, $perPage, $curPage);
 
-  //SEO
-  $seo_data = $db->rawQueryOne("SELECT * FROM tbl_seo WHERE `id_parent` = ? AND `type` = ? AND `act` = ? LIMIT 0,1", [$id, 'san-pham', 'man_list']);
-  $seo->set('h1', $productList["name$lang"]);
+  /* SEO */
+  $seo_data = $db->rawQueryOne("SELECT * FROM tbl_seo WHERE `id_parent` = ? AND `type` = ? AND `act` = ? LIMIT 0,1", [$idc, $type, 'man_cat']);
+  $seo->set('h1', $productCat["name$lang"]);
   if (!empty($seo_data["title$lang"])) $seo->set('title', $seo_data["title$lang"]);
   if (!empty($seo_data["keywords$lang"])) $seo->set('keywords', $seo_data["keywords$lang"]);
   if (!empty($seo_data["description$lang"])) $seo->set('description', $seo_data["description$lang"]);
@@ -114,23 +112,22 @@ if ($id != '') {
     $seo->set('photo:width', $imgJson['width']);
     $seo->set('photo:height', $imgJson['height']);
   }
-  if (!empty($productList['file'])) $seo->set('photo',  $fn->getImageCustom(['file' => $productList['file'], 'width' => 600, 'height' => 315, 'zc' => 2, 'src_only' => true]));
+  if (!empty($productCat['file'])) $seo->set('photo', $fn->getImageCustom(['file' => $productCat['file'], 'width' => 600, 'height' => 315, 'zc' => 2, 'src_only' => true]));
 
   /* breadCrumbs */
-  $breadcr->set('san-pham', sanpham);
+  $breadcr->set($type, $titleMain);
   $breadcr->set($productList["slug$lang"], $productList["name$lang"]);
   $breadcr->set($productCat["slug$lang"], $productCat["name$lang"]);
   $breadcrumbs =  $breadcr->get();
-  include TEMPLATE . "product/product_cat.php";
 } else {
   /* Lấy sản phẩm */
   $curPage =  max(1, isset($_GET['page']) ? (int)$_GET['page'] : 1);
   $perPage = 20;
   $options = ['table' => 'tbl_product', 'status' => 'hienthi', 'select' => "id, name{$lang}, slug{$lang}, file, regular_price, sale_price, views", 'pagination'  => [$perPage, $curPage]];
-  $options_list = ['table' => 'tbl_product_list', 'status' => 'hienthi', 'select' => " name{$lang}, slug{$lang}"];
+  $optionsList = ['table' => 'tbl_product_list', 'status' => 'hienthi', 'select' => " name{$lang}, slug{$lang}"];
   $total = $fn->count_data($options);
   $product = $fn->show_data($options);
-  $product_list = $fn->show_data($options_list);
+  $productList = $fn->show_data($optionsList);
   $paging = $fn->pagination_tc($total, $perPage, $curPage);
 
   //SEO
@@ -147,7 +144,6 @@ if ($id != '') {
   if (!empty($seo_data['file'])) $seo->set('photo',  $fn->getImageCustom(['file' => $seo_data['file'], 'width' => 600, 'height' => 315, 'zc' => 2, 'src_only' => true]));
 
   /* breadCrumbs */
-  $breadcr->set($slug, $titleMain);
+  $breadcr->set($type, $titleMain);
   $breadcrumbs =  $breadcr->get();
-  include TEMPLATE . $template . ".php";
 }

@@ -19,7 +19,7 @@
     include TEMPLATE . LAYOUT . "header.php";
     include TEMPLATE . LAYOUT . "menu.php";
     include TEMPLATE . LAYOUT . ($sources == 'index' ? 'slideshow.php' : 'breadcrumb.php');
-    echo $page_content;
+    include TEMPLATE . $template . ".php";
     include TEMPLATE . LAYOUT . "footer.php";
     include TEMPLATE . LAYOUT . "js.php";
     ?>

@@ -3,25 +3,11 @@ if (!defined('SOURCES')) die("Error");
 
 @$id = htmlspecialchars($_GET['id']);
 @$type = htmlspecialchars($_GET['type']);
-@$titleMain = htmlspecialchars($_GET['titleMain']);
 if ($id != '') {
-  $rowDetail = $fn->show_data([
-    'table'  => 'tbl_news',
-    'type'   => $type,
-    'status' => 'hienthi',
-    'id' => $id,
-    'select' => "id, file, name{$lang}, slug{$lang},content{$lang},slug{$lang}",
-    'limit' => 1
-  ]);
+  $rowDetail = $fn->show_data(['table' => 'tbl_news', 'type' => $type, 'status' => 'hienthi', 'id' => $id, 'select' => "id, file, name{$lang}, slug{$lang},content{$lang},slug{$lang}", 'limit' => 1]);
 
   // Tin liên quan
-  $relatedNews = $fn->show_data([
-    'table'      => 'tbl_news',
-    'status'     => 'hienthi',
-    'type'       => $type,
-    'exclude_id' =>  $rowDetail['id'],
-    'select'     => "id, name{$lang}, slug{$lang}, file"
-  ]);
+  $relatedNews = $fn->show_data(['table' => 'tbl_news', 'status' => 'hienthi', 'type' => $type, 'exclude_id' =>  $rowDetail['id'], 'select' => "id, name{$lang}, slug{$lang}, file"]);
 
   /* SEO */
   $seo_data = $db->rawQueryOne("SELECT * FROM tbl_seo WHERE `id_parent` = ? AND `type` = ? LIMIT 0,1", [$id, $type]);
@@ -39,7 +25,6 @@ if ($id != '') {
   $breadcr->set($type, $titleMain);
   $breadcr->set($rowDetail["slug$lang"], $rowDetail["name$lang"]);
   $breadcrumbs = $breadcr->get();
-  include TEMPLATE . $template . ".php";
 } else {
 
   /* Trang danh sách  */
@@ -47,15 +32,7 @@ if ($id != '') {
   // Lấy dữ liệu
   $curPage =  max(1, isset($_GET['page']) ? (int)$_GET['page'] : 1);
   $perPage = 10;
-
-  $options = [
-    'table' => 'tbl_news',
-    'status' => 'hienthi',
-    'type' => $type,
-    'select' => "id, file, slug{$lang}, name{$lang}, desc{$lang}",
-    'pagination'  => [$perPage, $curPage]
-  ];
-
+  $options = ['table' => 'tbl_news', 'status' => 'hienthi', 'type' => $type, 'select' => "id, file, slug{$lang}, name{$lang}, desc{$lang}", 'pagination' => [$perPage, $curPage]];
   $total = $fn->count_data($options);
   $show_data = $fn->show_data($options);
   $paging = $fn->pagination_tc($total, $perPage, $curPage);
@@ -74,7 +51,6 @@ if ($id != '') {
 
 
   /* breadCrumbs */
-  $breadcr->set($slug, $titleMain);
+  $breadcr->set($type, $titleMain);
   $breadcrumbs =  $breadcr->get();
-  include TEMPLATE . $template . ".php";
 }

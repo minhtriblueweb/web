@@ -56,5 +56,3 @@ if (!empty($imgJson)) {
   $seo->set('photo:height', $imgJson['height']);
 }
 if (!empty($seo_data['file'])) $seo->set('photo',  $fn->getImageCustom(['file' => $seo_data['file'], 'width' => 600, 'height' => 315, 'zc' => 2, 'src_only' => true]));
-
-include TEMPLATE . $template . ".php";

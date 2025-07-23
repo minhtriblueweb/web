@@ -118,15 +118,15 @@ $hotro247 = $db->rawQueryOne("SELECT name$lang,content$lang FROM tbl_static WHER
   <?php if (!empty($show_social)): ?>
     <?php
     $sameAs = [];
-    foreach ($show_social as $row_social): ?>
-      <?php $sameAs[] = $row_social['link'] ?>
-      <a href="<?= $row_social['link'] ?>" class="floating-support__item" target="_blank">
+    foreach ($show_social as $v): ?>
+      <?php $sameAs[] = $v['link'] ?>
+      <a href="<?= $v['link'] ?>" class="floating-support__item" target="_blank">
         <div class="floating-support__item__icon">
-          <?= $fn->getImageCustom(['file' =>  $row_social['file'], 'class'  => 'tada', 'width'  => 50, 'height'  => 50, 'zc'  => 1, 'alt'   => $row_social['name' . $lang], 'title' => $row_social['name' . $lang], 'lazy' => true]) ?>
+          <?= $fn->getImageCustom(['file' =>  $v['file'], 'class'  => 'tada', 'width'  => 50, 'height'  => 50, 'zc'  => 1, 'alt'   => $v["name$lang"], 'title' => $v["name$lang"], 'lazy' => true]) ?>
         </div>
         <div class="floating-support__item__content">
-          <p><b><?= $row_social['name' . $lang] ?></b></p>
-          <span><?= $row_social['desc' . $lang] ?></span>
+          <p><b><?= $v["name$lang"] ?></b></p>
+          <span><?= $v["desc$lang"] ?></span>
         </div>
       </a>
     <?php endforeach; ?>

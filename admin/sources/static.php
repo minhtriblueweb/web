@@ -6,9 +6,6 @@ if (!isset($config['static'][$type])) {
   $fn->transfer("Trang không tồn tại!", "index.php", false);
 }
 
-$name_page = $config['static'][$type]['title_main'];
-$status =  $config['static'][$type]['check'];
-
 $result = $db->rawQueryOne("SELECT * FROM tbl_static WHERE type = ? LIMIT 1", [$type]);
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['upload'])) {
@@ -16,11 +13,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['upload'])) {
     'table'         => 'tbl_static',
     'fields_multi'  => ['name', 'desc', 'content'],
     'fields_common' => ['type'],
-    'status_flags'  => array_keys($status),
+    'status_flags'  => array_keys($config['static'][$type]['check']),
     'redirect_page' => 'index.php?page=static&type=' . $type,
   ]);
 }
 
-$breadcrumb = [['label' => $name_page]];
+$breadcrumb = [['label' => $config['static'][$type]['title_main']]];
 include TEMPLATE . LAYOUT . 'breadcrumb.php';
 include TEMPLATE . "static/static.php";

@@ -7,14 +7,14 @@
     </div>
     <div class="card card-primary card-outline text-sm">
       <div class="card-header">
-        <h3 class="card-title">Nội dung <?= $name_page ?></h3>
+        <h3 class="card-title">Nội dung <?= $config['static'][$type]['title_main'] ?></h3>
         <div class="card-tools">
           <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
         </div>
       </div>
       <div class="card-body">
         <div class="form-group">
-          <?php foreach ($status as $check => $label): ?>
+          <?php foreach ($config['static'][$type]['check'] as $check => $label): ?>
             <div class="form-group d-inline-block mb-2 mr-5">
               <label for="<?= $check ?>-checkbox" class="d-inline-block align-middle mb-0 mr-3 form-label"><?= $label ?>:</label>
               <label class="switch switch-success">
@@ -57,8 +57,7 @@
                         class="form-control for-seo text-sm"
                         name="name<?= $k ?>" id="name<?= $k ?>"
                         placeholder="Tiêu đề (<?= $k ?>)"
-                        value="<?= $_POST['name' . $k] ?? $result['name' . $k] ?? '' ?>"
-                        <?= ($k == $lang) ? 'required' : '' ?> />
+                        value="<?= $_POST['name' . $k] ?? $result['name' . $k] ?? '' ?>" />
                     </div>
                   <?php endif; ?>
                   <!-- Mô tả -->

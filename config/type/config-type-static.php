@@ -27,6 +27,13 @@ $config['static'][$type]['check'] = array("hienthi" => "Hiển thị");
 $config['static'][$type]['name'] = true;
 $config['static'][$type]['content_cke'] = true;
 
+/* Phương thức thanh toán */
+$type = "thanh-toan";
+$config['static'][$type]['title_main'] = "Phương thức thanh toán";
+$config['static'][$type]['check'] = array("hienthi" => "Hiển thị");
+$config['static'][$type]['name'] = true;
+$config['static'][$type]['content_cke'] = true;
+
 /* Hỗ trợ khách hàng */
 $type = "ho-tro-khach-hang";
 $config['static'][$type]['title_main'] = "Hỗ trợ khách hàng";

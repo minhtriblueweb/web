@@ -20,4 +20,3 @@ if (!empty($seo_data['file'])) $seo->set('photo',  $fn->getImageCustom(['file' =
 /* breadCrumbs */
 if (!empty($titleMain)) $breadcr->set($slug, $titleMain);
 $breadcrumbs = $breadcr->get();
-include TEMPLATE . $template . ".php";

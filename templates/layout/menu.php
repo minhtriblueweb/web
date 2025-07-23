@@ -8,20 +8,13 @@
           <?php foreach ($menu_tree as $dm): ?>
             <?php
             $has_sub = count($dm['sub']) > 0;
-            $name = $dm['name' . $lang];
-            $slug = $dm['slug' . $lang];
+            $name = $dm["name$lang"];
+            $slug = $dm["slug$lang"];
             ?>
             <li>
               <a title="<?= $name ?>" href="<?= $slug ?>">
                 <span>
-                  <?= $fn->getImageCustom([
-                    'file' => $dm['file'],
-                    'width' => 25,
-                    'height' => 25,
-                    'zc' => 1,
-                    'alt' => $name,
-                    'title' => $name,
-                  ]) ?>
+                  <?= $fn->getImageCustom(['file' => $dm['file'], 'width' => 25, 'height' => 25, 'zc' => 1, 'alt' => $name, 'title' => $name]) ?>
                 </span>
                 <?= $name ?>
                 <?= $has_sub ? '<i class="fa-solid fa-angle-right"></i>' : '' ?>
@@ -31,8 +24,8 @@
                   <ul>
                     <?php foreach ($dm['sub'] as $dm2): ?>
                       <?php
-                      $name2 = $dm2['name' . $lang];
-                      $slug2 = $dm2['slug' . $lang];
+                      $name2 = $dm2["name$lang"];
+                      $slug2 = $dm2["slug$lang"];
                       ?>
                       <li>
                         <a class="transition" href="<?= $slug2 ?>" title="<?= $name2 ?>">
@@ -66,12 +59,7 @@
     <div class="box-banner">
       <div class="logo-mobile">
         <a href="./">
-          <?= $fn->getImageCustom([
-            'file' => $logo['file'],
-            'alt' => $web_name,
-            'title' => $web_name,
-            'lazy' => false
-          ]) ?>
+          <?= $fn->getImageCustom(['file' => $logo['file'], 'alt' => $optsetting["name$lang"], 'title' => $optsetting["name$lang"], 'width'  => 200, 'height'  => 200, 'zc' => 4, 'lazy' => false]) ?>
         </a>
       </div>
     </div>
@@ -97,8 +85,8 @@
         <ul>
           <?php foreach ($menu_tree as $lv1): ?>
             <?php
-            $name1 = $lv1['name' . $lang];
-            $slug1 = $lv1['slug' . $lang];
+            $name1 = $lv1["name$lang"];
+            $slug1 = $lv1["slug$lang"];
             ?>
             <li>
               <a href="<?= $slug1 ?>"><?= $name1 ?></a>
@@ -106,8 +94,8 @@
                 <ul>
                   <?php foreach ($lv1['sub'] as $lv2): ?>
                     <?php
-                    $name2 = $lv2['name' . $lang];
-                    $slug2 = $lv2['slug' . $lang];
+                    $name2 = $lv2["name$lang"];
+                    $slug2 = $lv2["slug$lang"];
                     ?>
                     <li><a href="<?= $slug2 ?>"><?= $name2 ?></a></li>
                   <?php endforeach; ?>

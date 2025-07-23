@@ -33,13 +33,13 @@ switch ($act) {
     break;
 
   case 'photo_static':
-    if (!$config['photo']['photo_man'][$type]) $fn->transfer("Trang không tồn tại!", "index.php", false);
+    if (!$config['photo']['photo_static'][$type]) $fn->transfer("Trang không tồn tại!", "index.php", false);
     $zc = 1;
-    if (!empty($config['photo']['photo_man'][$type]['thumb'])) {
-      $thumbParts = explode('x', $config['photo']['photo_man'][$type]['thumb']);
+    if (!empty($config['photo']['photo_static'][$type]['thumb'])) {
+      $thumbParts = explode('x', $config['photo']['photo_static'][$type]['thumb']);
       $zc = isset($thumbParts[2]) ? (int)$thumbParts[2] : 1;
     }
-    $fields_options = !empty($config['photo']['photo_man'][$type]['watermark-advanced'])
+    $fields_options = !empty($config['photo']['photo_static'][$type]['watermark-advanced'])
       ? ['position', 'per', 'small_per', 'max', 'min', 'opacity', 'offset_x', 'offset_y']
       : ['width', 'height', 'zc'];
 
@@ -56,7 +56,7 @@ switch ($act) {
       $fn->save_data($_POST, $_FILES, $result['id'] ?? null, [
         'table' => $table,
         'fields_options' => $fields_options,
-        'status_flags' => array_keys($config['photo']['photo_man'][$type]['status']),
+        'status_flags' => array_keys($config['photo']['photo_static'][$type]['status']),
         'redirect_page' => "index.php?page=photo&act=photo_static&type=$type"
       ]);
     }

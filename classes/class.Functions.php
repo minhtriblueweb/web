@@ -1066,6 +1066,7 @@ class Functions
   public function getImageCustom(array $data = []): string
   {
     global $config;
+
     $defaults = [
       'file'      => '',
       'alt'       => '',
@@ -1088,48 +1089,37 @@ class Functions
     ];
     $opt = array_merge($defaults, $data);
     $file = ltrim(str_replace(UPLOADS, '', (string)$opt['file']), '/');
-    if (empty($file)) {
-      $src = NO_IMG;
+    $baseFile  = basename($file);
+    $folder = dirname($file) !== '.' ? dirname($file) . '/' : '';
+    if (!isset($data['thumb'])) {
+      $opt['thumb'] = $opt['width'] && $opt['height'] && $opt['zc'];
+    }
+    $timestamp = time();
+    if ($opt['watermark']) {
+      $src = BASE . THUMB . "{$opt['width']}x{$opt['height']}x{$opt['zc']}/{$folder}{$baseFile}?wm=1&v={$timestamp}";
+    } elseif ($opt['thumb']) {
+      $src = BASE . THUMB . "{$opt['width']}x{$opt['height']}x{$opt['zc']}/{$folder}{$baseFile}?v={$timestamp}";
     } else {
-      $timestamp = time();
-      $baseFile  = basename($file);
-      $folder    = dirname($file) !== '.' ? dirname($file) . '/' : '';
-      if (!isset($data['thumb'])) {
-        $opt['thumb'] = $opt['width'] && $opt['height'] && $opt['zc'];
-      }
-      if ($opt['watermark']) {
-        $src = BASE . THUMB . "{$opt['width']}x{$opt['height']}x{$opt['zc']}/{$folder}{$baseFile}?wm=1&v={$timestamp}";
-      } elseif ($opt['thumb']) {
-        $src = BASE . THUMB . "{$opt['width']}x{$opt['height']}x{$opt['zc']}/{$folder}{$baseFile}?v={$timestamp}";
-      } else {
-        $src = BASE_ADMIN . UPLOADS . $folder . $baseFile . "?v={$timestamp}";
-      }
+      $src = BASE_ADMIN . UPLOADS . $folder . $baseFile . "?v={$timestamp}";
     }
-    if ($opt['src_only']) {
-      return $src;
-    }
+    if ($opt['src_only']) return $src;
     $srcset = $sizes = '';
-    if (
-      $opt['srcset'] &&
-      !empty($opt['point-srcset']) &&
-      $opt['thumb'] &&
-      !$opt['watermark']
-    ) {
+    if ($opt['srcset'] && !empty($opt['point-srcset']) && $opt['thumb'] && !$opt['watermark']) {
       $ratio = $opt['width'] / $opt['height'];
       $srcsets = [];
       foreach ($opt['point-srcset'] as $breakpoint => $scale) {
         $w = round($breakpoint / $scale);
         if ($w > $opt['width']) continue;
         $h = round($w / $ratio);
-        $srcsets[] = BASE . THUMB . "{$w}x{$h}x{$opt['zc']}/{$file} {$w}w";
+        $srcsets[] = BASE . THUMB . "{$w}x{$h}x{$opt['zc']}/{$folder}{$baseFile} {$w}w";
         $opt['sizes'][] = "(max-width:{$breakpoint}px) {$w}px";
       }
-      $srcsets[] = BASE . THUMB . "{$opt['width']}x{$opt['height']}x{$opt['zc']}/{$file} {$opt['width']}w";
+      $srcsets[] = BASE . THUMB . "{$opt['width']}x{$opt['height']}x{$opt['zc']}/{$folder}{$baseFile} {$opt['width']}w";
       $opt['sizes'][] = "{$opt['width']}px";
       $srcset = ' srcset="' . implode(', ', $srcsets) . '"';
       $sizes = ' sizes="' . implode(', ', $opt['sizes']) . '"';
     }
-    $alt = htmlspecialchars($opt['alt'] ?: pathinfo($file, PATHINFO_FILENAME));
+    $alt = htmlspecialchars($opt['alt'] ?: pathinfo($baseFile, PATHINFO_FILENAME));
     $title = htmlspecialchars($opt['title'] ?: $alt);
     $style = trim($opt['style']);
     if (empty($opt['height']) && !str_contains($style, 'height')) {
@@ -1145,7 +1135,7 @@ class Functions
       . ($opt['attr'] ? ' ' . $opt['attr'] : '')
       . $srcset . $sizes
       . ' alt="' . $alt . '" title="' . $title . '"'
-      . ' onerror="this.src=\'' . NO_IMG . '\'"'
+      . ' onerror="this.src=\'' . BASE . THUMB . "{$opt['width']}x{$opt['height']}x{$opt['zc']}/noimage.jpeg" . '\'"'
       . '>';
   }
   function pagination(int $total = 0, int $perPage = 10, int $page = 1, string $baseUrl = 'index.php'): string

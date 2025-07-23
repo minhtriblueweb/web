@@ -42,7 +42,8 @@ define('THUMB', 'thumb/');
 define('VERSION', $fn->generateHash());
 define('BASE', $config['base'] ?? '/');
 define('BASE_ADMIN', $config['baseAdmin'] ?? '/admin/');
-define('NO_IMG', BASE_ADMIN . 'assets/img/noimage.png');
+// define('NO_IMG', BASE_ADMIN . 'assets/img/noimage.png');
+define('NO_IMG', BASE_ADMIN . 'assets/img/noimage.jpeg');
 
 // 7. Khởi tạo các class tiện ích mở rộng
 $classes = ['product', 'news'];

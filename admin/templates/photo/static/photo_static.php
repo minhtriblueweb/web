@@ -10,11 +10,11 @@
     </div>
     <div class="card card-primary card-outline text-sm">
       <div class="card-header">
-        <h3 class="card-title">Cấu hình <?= $photoConfig['title_main'] ?></h3>
+        <h3 class="card-title">Cấu hình <?= $config['photo']['photo_static'][$type]['title_main'] ?></h3>
       </div>
       <div class="card-body">
         <div class="form-group">
-          <?php foreach ($photoConfig['status'] as $check => $label): ?>
+          <?php foreach ($config['photo']['photo_static'][$type]['status'] as $check => $label): ?>
             <div class="form-group d-inline-block mb-2 mr-5">
               <label for="<?= $check ?>-checkbox" class="d-inline-block align-middle mb-0 mr-3 form-label"><?= $label ?>:</label>
               <label class="switch switch-success">
@@ -32,7 +32,7 @@
                   <div class="upload-file-image rounded mb-3">
                     <div class="d-flex justify-content-center">
                       <div class="border rounded bg-white d-flex align-items-center justify-content-center">
-                        <?= $fn->getImage(['file' => $result['file'], 'class' => 'img-fluid', 'alt' => $photoConfig['title_main'], 'title' => $photoConfig['title_main'], 'id' => 'preview-image', 'style' => 'max-height:100%; max-width:100%;']) ?>
+                        <?= $fn->getImage(['file' => $result['file'], 'class' => 'img-fluid', 'alt' => $config['photo']['photo_static'][$type]['title_main'], 'title' => $config['photo']['photo_static'][$type]['title_main'], 'id' => 'preview-image', 'style' => 'max-height:100%; max-width:100%;']) ?>
                       </div>
                     </div>
                   </div>
@@ -41,7 +41,7 @@
                     <label class="custom-file-label mb-0" data-browse="Chọn" for="file">Chọn file</label>
                   </div>
                   <strong class="d-block text-sm">
-                    Width: <?= $photoConfig['width'] ?> px - Height: <?= $photoConfig['height'] ?> px (<?= $photoConfig['img_type'] ?>)
+                    Width: <?= $config['photo']['photo_static'][$type]['width'] ?> px - Height: <?= $config['photo']['photo_static'][$type]['height'] ?> px (<?= $config['photo']['photo_static'][$type]['img_type'] ?>)
                   </strong>
                 </label>
               </div>
@@ -122,8 +122,8 @@
         </div>
       </div>
     </div>
-    <input type="hidden" name="width" value="<?= $photoConfig['width'] ?>">
-    <input type="hidden" name="height" value="<?= $photoConfig['height'] ?>">
-    <input type="hidden" name="zc" value="<?= (!empty($photoConfig['thumb']) && isset(explode('x', $photoConfig['thumb'])[2])) ? intval(explode('x', $photoConfig['thumb'])[2]) : 1 ?>">
+    <input type="hidden" name="width" value="<?= $config['photo']['photo_static'][$type]['width'] ?>">
+    <input type="hidden" name="height" value="<?= $config['photo']['photo_static'][$type]['height'] ?>">
+    <input type="hidden" name="zc" value="<?= (!empty($config['photo']['photo_static'][$type]['thumb']) && isset(explode('x', $config['photo']['photo_static'][$type]['thumb'])[2])) ? intval(explode('x', $config['photo']['photo_static'][$type]['thumb'])[2]) : 1 ?>">
   </form>
 </section>

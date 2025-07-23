@@ -9,15 +9,7 @@
             <p>Kết nối :</p>
             <?php foreach ($show_social as $row): ?>
               <a href="<?= $row['link'] ?>" class="hvr-icon-rotate me-2" target="_blank" rel="noopener noreferrer">
-                <?= $fn->getImageCustom([
-                  'file'   => $row['file'],
-                  'width'  => 20,
-                  'height' => 20,
-                  'zc' => 1,
-                  'alt' => $row['name' . $lang],
-                  'title' => $row['name' . $lang],
-                  'lazy'   => false
-                ]) ?>
+                <?= $fn->getImageCustom(['file'   => $row['file'], 'width'  => 20, 'height' => 20, 'zc' => 1, 'alt' => $row["name$lang"], 'title' => $row["name$lang"], 'lazy'   => false]) ?>
               </a>
             <?php endforeach; ?>
           </div>
@@ -31,15 +23,7 @@
       <div class="banner-header">
         <div class="logo">
           <a href="./">
-            <?= $fn->getImageCustom([
-              'file' => $logo['file'],
-              'width'  => 200,
-              'height'  => 200,
-              'zc' => 4,
-              'alt' => $web_name,
-              'title' => $web_name,
-              'lazy' => false
-            ]) ?>
+            <?= $fn->getImageCustom(['file' => $logo['file'], 'width'  => 200, 'height'  => 200, 'zc' => 4, 'alt' => $optsetting["name$lang"], 'title' => $optsetting["name$lang"], 'lazy' => false]) ?>
           </a>
         </div>
       </div>

@@ -11,14 +11,14 @@
           ?>
 
             <div class="slideshow-item">
-              <a class="slideshow-image" href="<?= !empty($slide['link']) ? $slide['link'] : 'javascript:void(0)' ?>" target="_blank" title="<?= $slide['name' . $lang] ?>">
+              <a class="slideshow-image" href="<?= !empty($slide['link']) ? $slide['link'] : 'javascript:void(0)' ?>" target="_blank" title="<?= $slide["name$lang"] ?>">
                 <?= $fn->getImageCustom([
                   'file'   => $slide['file'],
                   'width' => $width,
                   'height' => $height,
                   'zc' => $zc,
-                  'title'  => $slide['name' . $lang],
-                  'alt'    => $slide['name' . $lang],
+                  'title'  => $slide["name$lang"],
+                  'alt'    => $slide["name$lang"],
                   'lazy'   => true
                 ]) ?>
               </a>

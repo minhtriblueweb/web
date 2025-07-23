@@ -3,7 +3,7 @@
 <!-- UTF-8 -->
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <!-- Title, Keywords, Description -->
-<title><?= $seo->get('title') ?: $optsetting['name' . $lang] ?></title>
+<title><?= $seo->get('title') ?: $optsetting["name$lang"] ?></title>
 <meta name="keywords" content="<?= $seo->get('keywords') ?>" />
 <meta name="description" content="<?= $seo->get('description') ?>" />
 <!-- Robots -->
@@ -17,12 +17,12 @@
 <meta name="ICBM" content="<?= $optsetting_json['coords'] ?>" />
 <!-- Author - Copyright -->
 <meta name='revisit-after' content='1 days' />
-<meta name="author" content="<?= $optsetting['name' . $lang] ?>" />
-<meta name="copyright" content="<?= $optsetting['name' . $lang] . " - [" . $optsetting_json['email'] . "]" ?>" />
+<meta name="author" content="<?= $optsetting["name$lang"] ?>" />
+<meta name="copyright" content="<?= $optsetting["name$lang"] . " - [" . $optsetting_json['email'] . "]" ?>" />
 
 <!-- Facebook -->
 <meta property="og:type" content="website" />
-<meta property="og:site_name" content="<?= $optsetting['name' . $lang] ?>" />
+<meta property="og:site_name" content="<?= $optsetting["name$lang"] ?>" />
 <meta property="og:title" content="<?= $seo->get('title') ?>" />
 <meta property="og:description" content="<?= $seo->get('description') ?>" />
 <meta property="og:url" content="<?= $seo->get('url') ?>" />
@@ -35,7 +35,7 @@
 <!-- Twitter -->
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:site" content="<?= $optsetting_json['email'] ?>" />
-<meta name="twitter:creator" content="<?= $optsetting['name' . $lang] ?>" />
+<meta name="twitter:creator" content="<?= $optsetting["name$lang"] ?>" />
 <meta property="og:url" content="<?= $seo->get('url') ?>" />
 <meta property="og:title" content="<?= $seo->get('title') ?>" />
 <meta property="og:description" content="<?= $seo->get('description') ?>" />

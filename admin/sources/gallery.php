@@ -1,6 +1,6 @@
 <?php
 $act        = $_GET['act'] ?? 'man';
-$type       = 'sanpham';
+$type       = $_GET['type'] ?? 'san-pham';
 $id         = $_GET['id'] ?? null;
 $id_child   = $_GET['id_child'] ?? null;
 $listid   = $_GET['listid'] ?? null;
@@ -10,9 +10,9 @@ $parent = [];
 if ($id) {
   $parent = $db->rawQueryOne("SELECT id, name{$lang},slug{$lang} FROM tbl_product WHERE id = ? LIMIT 1", [$id]);
 }
-$linkMan    = "index.php?page=gallery&act=man&id=$id";
-$linkForm   = "index.php?page=gallery&act=form&id=";
-$linkEdit   = "index.php?page=gallery&act=form&id_child=";
+$linkMan    = "index.php?page=gallery&act=man&type=$type&id=$id";
+$linkForm   = "index.php?page=gallery&act=form&type=$type&id=";
+$linkEdit   = "index.php?page=gallery&act=form&type=$type&id_child=";
 $linkDelete = "index.php?page=gallery&act=delete&id=$id&id_child=";
 $linkMulti  = "index.php?page=gallery&act=delete_multiple&id=$id";
 

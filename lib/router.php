@@ -11,8 +11,8 @@ if (preg_match('/^page-(\d+)$/', end($requestParts), $matches)) {
 $slug = implode('/', $requestParts);
 $_GET['page'] = $current_page;
 
-// Khởi tạo
-$sources = '';
+
+$sources = $type = '';
 $requick = array(
   // Static pages
   array("tbl" => "", "source" => "index", "type" => "index", "slug" => "trang-chu"),
@@ -34,14 +34,11 @@ $requick = array(
   array("tbl" => "news", "source" => "news", "type" => "huong-dan-choi", "field" => "id", "slug" => "huong-dan-choi", "titleMain" => "Hướng Dẫn Chơi")
 );
 
-
-// Tìm route khớp
 foreach ($requick as $r) {
   if ($slug == '') {
     $type = $_GET['type'] = 'index';
     $_GET['titleMain'] = $titleMain = 'Trang chủ';
     $sources = "index";
-    $template = "index/index";
     $seo->set('type', 'website');
     break;
   }
@@ -126,11 +123,12 @@ switch ($type) {
   default:
     $template = $sources . "/" . $sources;
     $seo->set('type', 'object');
+    // $fn->abort_404();
     break;
 }
 
 
 // Nếu không tìm thấy route nào phù hợp
 if (!$sources) {
-  $sources = '404.php';
+  $sources = '404';
 }

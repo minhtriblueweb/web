@@ -62,10 +62,7 @@ class Functions
   {
     $where = [];
     $params = [];
-
     $prefix = !empty($options['alias']) ? $options['alias'] . '.' : '';
-
-    // Trạng thái (FIND_IN_SET)
     if (!empty($options['status'])) {
       $statuses = is_array($options['status']) ? $options['status'] : explode(',', $options['status']);
       foreach ($statuses as $status) {
@@ -73,8 +70,6 @@ class Functions
         $params[] = trim($status);
       }
     }
-
-    // Các field lọc theo giá trị
     $filters = [
       'id'         => '=',
       'id_list'    => '=',
@@ -83,7 +78,6 @@ class Functions
       'type'       => '=',
       'exclude_id' => '!='
     ];
-
     foreach ($filters as $field => $operator) {
       if (isset($options[$field]) && $options[$field] !== '') {
         $column = ($field === 'exclude_id') ? 'id' : $field;
@@ -91,14 +85,11 @@ class Functions
         $params[] = $options[$field];
       }
     }
-
-    // Từ khóa tìm kiếm
     if (!empty($options['keyword'])) {
       $where[] = "({$prefix}`namevi` LIKE ? OR {$prefix}`nameen` LIKE ?)";
       $params[] = '%' . $options['keyword'] . '%';
       $params[] = '%' . $options['keyword'] . '%';
     }
-
     $sql = $where ? ' WHERE ' . implode(' AND ', $where) : '';
     return ['sql' => $sql, 'params' => $params];
   }
@@ -572,9 +563,7 @@ class Functions
     }
     if (!$matched) {
       $field = $name = 'id';
-      $data_level = '';
-      $data_table = '';
-      $data_child = '';
+      $data_level = $data_table =  $data_child = '';
     } else {
       $field = $name = $matched['field'];
       $data_level = 'data-level="' . $matched['data_level'] . '"';
@@ -927,47 +916,201 @@ class Functions
     imagedestroy($watermark);
     return true;
   }
+  // public function createThumb(string $source_path, string $thumb_name, bool $background = false, bool $add_watermark = false, bool $convert_webp = false): string|false
+  // {
+  //   if (!file_exists($source_path) || !preg_match('/^(\d+)x(\d+)(x(\d+))?$/', $thumb_name, $m)) return false;
+  //   $thumb_width  = (int)$m[1];
+  //   $thumb_height = (int)$m[2];
+  //   $zoom_crop    = isset($m[4]) ? (int)$m[4] : 1;
+  //   $image_type = exif_imagetype($source_path);
+  //   $ext_map = [IMAGETYPE_JPEG => 'jpg', IMAGETYPE_PNG => 'png', IMAGETYPE_WEBP => 'webp'];
+  //   $create_func = [IMAGETYPE_JPEG => 'imagecreatefromjpeg', IMAGETYPE_PNG => 'imagecreatefrompng', IMAGETYPE_WEBP => 'imagecreatefromwebp'];
+  //   if (!isset($ext_map[$image_type])) return false;
+  //   $ext = $ext_map[$image_type];
+  //   $thumb_ext = ($convert_webp || $ext === 'webp') ? 'webp' : $ext;
+  //   $filename = pathinfo($source_path, PATHINFO_FILENAME);
+  //   $base_dir = UPLOADS . THUMB . "{$thumb_width}x{$thumb_height}x{$zoom_crop}/";
+  //   // if ($add_watermark && method_exists($this, 'addWatermark')) {
+  //   //   $row = $this->db->rawQueryOne("SELECT file, options FROM tbl_photo WHERE type = 'watermark' LIMIT 1");
+  //   //   $options = json_decode($row['options'] ?? '', true);
+  //   //   $wm_data = $this->db->rawQueryOne("SELECT file, options, date_updated FROM tbl_photo WHERE type = 'watermark' LIMIT 1");
+  //   //   $options = json_decode($wm_data['options'] ?? '', true);
+  //   //   $updated = strtotime($wm_data['date_updated'] ?? '') ?: time();
+  //   //   $wm_hash = substr(md5(json_encode($options ?? []) . '_' . $updated), 0, 8);
+  //   //   $wm_dir = rtrim($base_dir, '/') . '/' . trim(WATERMARK, '/');
+  //   //   // $wm_path = $wm_dir . '/' . $filename . "." . $thumb_ext;
+  //   //   $wm_path = $wm_dir . '/' . $filename . "-$wm_hash." . $thumb_ext;
+  //   //   if (file_exists($wm_path)) return $wm_path;
+  //   //   if (!is_dir($wm_dir)) mkdir($wm_dir, 0755, true);
+  //   //   $thumb_temp = tempnam(sys_get_temp_dir(), 'thumb_');
+  //   //   $thumb_created = $this->generateThumbImage($source_path, $thumb_temp, $thumb_width, $thumb_height, $zoom_crop, $create_func[$image_type], $image_type, $thumb_ext, $background);
+  //   //   if (!$thumb_created) return false;
+  //   //   if (!$this->addWatermark($thumb_temp, $wm_path, $options)) {
+  //   //     @unlink($thumb_temp);
+  //   //     return false;
+  //   //   }
+  //   //   @unlink($thumb_temp);
+  //   //   return $wm_path;
+  //   // }
+  //   if ($add_watermark && method_exists($this, 'addWatermark')) {
+  //     // Lấy thông tin watermark từ DB
+  //     $wm_data = $this->db->rawQueryOne("SELECT file, options, date_updated FROM tbl_photo WHERE type = 'watermark' LIMIT 1");
+
+  //     $options = json_decode($wm_data['options'] ?? '', true);
+  //     $updated = strtotime($wm_data['date_updated'] ?? '') ?: time();
+  //     $wm_hash = substr(md5(json_encode($options) . '_' . $updated), 0, 8);
+
+  //     // Tạo đường dẫn output
+  //     $wm_dir = rtrim($base_dir, '/') . '/' . trim(WATERMARK, '/');
+  //     $wm_path = $wm_dir . '/' . $filename . '.' . $thumb_ext;
+  //     $wm_meta = $wm_dir . '/' . $filename . '.meta.json';
+
+  //     // Tạo thư mục nếu chưa có
+  //     if (!is_dir($wm_dir)) mkdir($wm_dir, 0755, true);
+
+  //     $need_create = true;
+
+  //     // Nếu ảnh đã tồn tại → kiểm tra meta hash
+  //     if (file_exists($wm_path)) {
+  //       if (file_exists($wm_meta)) {
+  //         $meta = json_decode(file_get_contents($wm_meta), true);
+  //         if (!empty($meta['hash']) && $meta['hash'] === $wm_hash) {
+  //           return $wm_path; // Ảnh cũ và watermark giống nhau → dùng lại
+  //         }
+  //       }
+  //       // Nếu meta không đúng → cho phép tạo lại và ghi đè
+  //       $need_create = true;
+  //     }
+
+  //     // Tạo ảnh thumb tạm
+  //     $thumb_temp = tempnam(sys_get_temp_dir(), 'thumb_');
+  //     $thumb_created = $this->generateThumbImage(
+  //       $source_path,
+  //       $thumb_temp,
+  //       $thumb_width,
+  //       $thumb_height,
+  //       $zoom_crop,
+  //       $create_func[$image_type],
+  //       $image_type,
+  //       $thumb_ext,
+  //       $background
+  //     );
+
+  //     if (!$thumb_created) {
+  //       @unlink($thumb_temp);
+  //       return false;
+  //     }
+
+  //     // Gắn watermark và lưu vào đè lên ảnh cũ
+  //     $wm_success = $this->addWatermark($thumb_temp, $wm_path, $options);
+  //     @unlink($thumb_temp);
+
+  //     if (!$wm_success) {
+  //       return false;
+  //     }
+
+  //     // Lưu hash vào file meta
+  //     file_put_contents($wm_meta, json_encode(['hash' => $wm_hash]));
+
+  //     return $wm_path;
+  //   }
+
+  //   $thumb_path = $base_dir . $filename . '.' . $thumb_ext;
+  //   if (file_exists($thumb_path)) return $thumb_path;
+  //   if (!is_dir($base_dir)) mkdir($base_dir, 0755, true);
+  //   $created = $this->generateThumbImage($source_path, $thumb_path, $thumb_width, $thumb_height, $zoom_crop, $create_func[$image_type], $image_type, $thumb_ext, $background);
+  //   return $created ? $thumb_path : false;
+  // }
+
   public function createThumb(string $source_path, string $thumb_name, bool $background = false, bool $add_watermark = false, bool $convert_webp = false): string|false
   {
     if (!file_exists($source_path) || !preg_match('/^(\d+)x(\d+)(x(\d+))?$/', $thumb_name, $m)) return false;
+
     $thumb_width  = (int)$m[1];
     $thumb_height = (int)$m[2];
     $zoom_crop    = isset($m[4]) ? (int)$m[4] : 1;
+
     $image_type = exif_imagetype($source_path);
     $ext_map = [IMAGETYPE_JPEG => 'jpg', IMAGETYPE_PNG => 'png', IMAGETYPE_WEBP => 'webp'];
     $create_func = [IMAGETYPE_JPEG => 'imagecreatefromjpeg', IMAGETYPE_PNG => 'imagecreatefrompng', IMAGETYPE_WEBP => 'imagecreatefromwebp'];
+
     if (!isset($ext_map[$image_type])) return false;
+
     $ext = $ext_map[$image_type];
     $thumb_ext = ($convert_webp || $ext === 'webp') ? 'webp' : $ext;
-    $filename = pathinfo($source_path, PATHINFO_FILENAME);
+
+    // Đảm bảo tên file duy nhất kể cả khi trùng tên
+    $path_hash = substr(md5($source_path), 0, 8);
+    $filename_safe = pathinfo($source_path, PATHINFO_FILENAME) . '_' . $path_hash;
+
     $base_dir = UPLOADS . THUMB . "{$thumb_width}x{$thumb_height}x{$zoom_crop}/";
+
     if ($add_watermark && method_exists($this, 'addWatermark')) {
-      $row = $this->db->rawQueryOne("SELECT file, options FROM tbl_photo WHERE type = 'watermark' LIMIT 1");
-      $options = json_decode($row['options'] ?? '', true);
       $wm_data = $this->db->rawQueryOne("SELECT file, options, date_updated FROM tbl_photo WHERE type = 'watermark' LIMIT 1");
       $options = json_decode($wm_data['options'] ?? '', true);
       $updated = strtotime($wm_data['date_updated'] ?? '') ?: time();
-      $wm_hash = substr(md5(json_encode($options ?? []) . '_' . $updated), 0, 8);
+      $wm_hash = substr(md5(json_encode($options) . '_' . $updated), 0, 8);
+
       $wm_dir = rtrim($base_dir, '/') . '/' . trim(WATERMARK, '/');
-      $wm_path = $wm_dir . '/' . $filename . "." . $thumb_ext;
-      if (file_exists($wm_path)) return $wm_path;
+      $wm_path = $wm_dir . '/' . $filename_safe . '.' . $thumb_ext;
+      $wm_meta = $wm_dir . '/' . $filename_safe . '.meta.json';
+
       if (!is_dir($wm_dir)) mkdir($wm_dir, 0755, true);
+
+      if (file_exists($wm_path) && file_exists($wm_meta)) {
+        $meta = json_decode(file_get_contents($wm_meta), true);
+        if (!empty($meta['hash']) && $meta['hash'] === $wm_hash) {
+          return $wm_path;
+        }
+      }
+
       $thumb_temp = tempnam(sys_get_temp_dir(), 'thumb_');
-      $thumb_created = $this->generateThumbImage($source_path, $thumb_temp, $thumb_width, $thumb_height, $zoom_crop, $create_func[$image_type], $image_type, $thumb_ext, $background);
-      if (!$thumb_created) return false;
-      if (!$this->addWatermark($thumb_temp, $wm_path, $options)) {
+      $thumb_created = $this->generateThumbImage(
+        $source_path,
+        $thumb_temp,
+        $thumb_width,
+        $thumb_height,
+        $zoom_crop,
+        $create_func[$image_type],
+        $image_type,
+        $thumb_ext,
+        $background
+      );
+
+      if (!$thumb_created) {
         @unlink($thumb_temp);
         return false;
       }
+
+      $wm_success = $this->addWatermark($thumb_temp, $wm_path, $options);
       @unlink($thumb_temp);
+
+      if (!$wm_success) return false;
+
+      file_put_contents($wm_meta, json_encode(['hash' => $wm_hash]));
       return $wm_path;
     }
-    $thumb_path = $base_dir . $filename . '.' . $thumb_ext;
+
+    // Trường hợp không watermark
+    $thumb_path = $base_dir . $filename_safe . '.' . $thumb_ext;
     if (file_exists($thumb_path)) return $thumb_path;
     if (!is_dir($base_dir)) mkdir($base_dir, 0755, true);
-    $created = $this->generateThumbImage($source_path, $thumb_path, $thumb_width, $thumb_height, $zoom_crop, $create_func[$image_type], $image_type, $thumb_ext, $background);
+
+    $created = $this->generateThumbImage(
+      $source_path,
+      $thumb_path,
+      $thumb_width,
+      $thumb_height,
+      $zoom_crop,
+      $create_func[$image_type],
+      $image_type,
+      $thumb_ext,
+      $background
+    );
+
     return $created ? $thumb_path : false;
   }
+
 
   public function uploadImage(array $options): string
   {

@@ -12,19 +12,13 @@ $tintuc = $fn->show_data([
   'select' => "file, name{$lang}, desc{$lang}, slug{$lang}",
   'limit'  => 8
 ]);
-$tieuchi = $fn->show_data([
-  'table' => 'tbl_news',
-  'status' => 'hienthi',
-  'type'   => 'tieu-chi',
-  'select' => "file, name{$lang}, desc{$lang}"
-]);
 $feedback = $fn->show_data([
   'table' => 'tbl_news',
   'status' => 'hienthi',
-  'type'   => 'danhgia',
+  'type'   => 'danh-gia',
   'select' => "file, name{$lang}, desc{$lang},content{$lang}"
 ]);
-$sanpham_banchay = $fn->show_data([
+$banchay = $fn->show_data([
   'table'  => 'tbl_product',
   'status' => 'hienthi,banchay',
   'select' => "id, file, slug{$lang}, name{$lang}, sale_price, regular_price, views"
@@ -46,13 +40,12 @@ foreach ($sp_all ?? [] as $row) {
 
 // SEO
 $seo_data = $db->rawQueryOne("SELECT * FROM tbl_seopage WHERE type = ?", ['trang-chu']);
-$seo->set('h1', $seo_data['title' . $lang]);
-if (!empty($seo_data['title' . $lang])) $seo->set('title', $seo_data['title' . $lang]);
-if (!empty($seo_data['keywords' . $lang])) $seo->set('keywords', $seo_data['keywords' . $lang]);
-if (!empty($seo_data['description' . $lang])) $seo->set('description', $seo_data['description' . $lang]);
-$imgJson = (!empty($seo_data['options'])) ? json_decode($seo_data['options'], true) : null;
-if (!empty($imgJson)) {
-  $seo->set('photo:width', $imgJson['width']);
-  $seo->set('photo:height', $imgJson['height']);
+$seo->set('h1', $seo_data["title$lang" ?? $optsetting["name$lang"] ?? '']);
+$seo->set('title', !empty($seo_data["title$lang"]) ? $seo_data["title$lang"] : $optsetting["name$lang"]);
+$seo->set('keywords', !empty($seo_data["keywords$lang"]) ? $seo_data["keywords$lang"] : '');
+$seo->set('description', !empty($seo_data["description$lang"]) ? $seo_data["description$lang"] : '');
+if (!empty($seo_data['options']) && ($imgJson = json_decode($seo_data['options'], true))) {
+  $seo->set('photo:width', $imgJson['width'] ?? '');
+  $seo->set('photo:height', $imgJson['height'] ?? '');
 }
-if (!empty($seo_data['file'])) $seo->set('photo',  $fn->getImageCustom(['file' => $seo_data['file'], 'width' => 600, 'height' => 315, 'zc' => 2, 'src_only' => true]));
+$seo->set('photo', !empty($seo_data['file']) ? $fn->getImageCustom(['file' => $seo_data['file'], 'width' => 600, 'height' => 315, 'zc' => 2, 'src_only' => true]) : '');

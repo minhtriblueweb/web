@@ -43,40 +43,8 @@
     <div class="content-main">
       <?php if (!empty($product)): ?>
         <div class="grid-product">
-          <?php foreach ($product as $sp): ?>
-            <?php
-            $slug = $sp["slug$lang"];
-            $name = htmlspecialchars($sp["name$lang"]);
-            $sale = $sp['sale_price'];
-            $regular = $sp['regular_price'];
-            $views = $sp['views'];
-            ?>
-            <div class="item-product" data-aos="fade-up" data-aos-duration="1000">
-              <a href="<?= $slug ?>">
-                <div class="images">
-                  <?= $fn->getImageCustom(['file' => $sp['file'], 'class' => 'w-100', 'alt' => $name, 'title' => $name, 'width' => 500, 'height' => 500, 'zc' => 1, 'lazy' => true, 'watermark' => true]) ?>
-                </div>
-                <div class="content">
-                  <div class="title">
-                    <h3><?= $name ?></h3>
-                    <p class="price-product">
-                      <?php if (!empty($sale) && !empty($regular)): ?>
-                        <span class="price-new"><?= $sale ?>₫</span>
-                        <span class="price-old"><?= $regular ?>₫</span>
-                      <?php elseif (!empty($regular)): ?>
-                        <span class="price-new"><?= $regular ?>₫</span>
-                      <?php else: ?>
-                        <span class="price-new"><?= lienhe ?></span>
-                      <?php endif; ?>
-                    </p>
-                    <div class="info-product">
-                      <p><i class="fa-solid fa-eye"></i> <?= $views ?> <?= luotxem ?></p>
-                      <p><span>chi tiết</span></p>
-                    </div>
-                  </div>
-                </div>
-              </a>
-            </div>
+          <?php foreach ($product as $k => $v): ?>
+            <?php include TEMPLATE . LAYOUT . 'item-product.php'; ?>
           <?php endforeach; ?>
         </div>
       <?php else: ?>

@@ -37,8 +37,8 @@ $sidebarMenu = [
           if (!empty($item['title_main'])) {
             $linkMan = "?page=product&type=$type&act=man";
             $linkForm = "?page=product&type=$type&act=form";
-            $linkGalleryMan = "?page=gallery&act=man";
-            $linkGalleryForm = "?page=gallery&act=form";
+            $linkGalleryMan = "?page=gallery&type=$type&act=man";
+            $linkGalleryForm = "?page=gallery&type=$type&act=form";
             $children[] = [
               'title'  => $item['title_main'],
               'active' => [$linkMan, $linkForm, $linkGalleryMan, $linkGalleryForm]

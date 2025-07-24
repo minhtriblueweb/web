@@ -35,15 +35,17 @@ if ($id != '') {
   //SEO
   $seo_data = $db->rawQueryOne("SELECT * FROM tbl_seo WHERE `id_parent` = ? AND `type` = ? AND `act` = ? LIMIT 0,1", [$id, $type, 'man']);
   $seo->set('h1', $rowDetail["name$lang"]);
-  $seo->set('title', !empty($seo_data["title$lang"]) ? $seo_data["title$lang"] : $rowDetail["name$lang"]);
-  if (!empty($seo_data["keywords$lang"])) $seo->set('keywords', $seo_data["keywords$lang"]);
-  if (!empty($seo_data["description$lang"])) $seo->set('description', $seo_data["description$lang"]);
-  $imgJson = (!empty($seo_data['options'])) ? json_decode($seo_data['options'], true) : null;
-  if (!empty($imgJson)) {
-    $seo->set('photo:width', $imgJson['width']);
-    $seo->set('photo:height', $imgJson['height']);
+  $seo->set('title', $seo_data["title$lang"] ?? $rowDetail["name$lang"]);
+  $seo->set('keywords', $seo_data["keywords$lang"] ?? '');
+  $seo->set('description', $seo_data["description$lang"] ?? '');
+
+  if (!empty($seo_data['options']) && ($imgJson = json_decode($seo_data['options'], true))) {
+    $seo->set('photo:width', $imgJson['width'] ?? '');
+    $seo->set('photo:height', $imgJson['height'] ?? '');
   }
   if (!empty($rowDetail['file'])) $seo->set('photo',  $fn->getImageCustom(['file' => $rowDetail['file'], 'width' => 600, 'height' => 315, 'zc' => 2, 'src_only' => true]));
+
+  $seo->set('photo', !empty($rowDetail['file']) ? $fn->getImageCustom(['file' => $rowDetail['file'], 'width' => 600, 'height' => 315, 'zc' => 2, 'src_only' => true]) : '');
 
   /* breadCrumbs */
   $breadcr->set($type, $titleMain);

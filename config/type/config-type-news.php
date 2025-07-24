@@ -67,9 +67,9 @@ $config['news'][$type]['desc'] = true;
 $config['news'][$type]['content'] = false;
 $config['news'][$type]['content_cke'] = true;
 $config['news'][$type]['seo'] = true;
-$config['news'][$type]['width'] = $config['size-img'][$type]['man']['width'] = 540;
-$config['news'][$type]['height'] = $config['size-img'][$type]['man']['height'] = 360;
-$config['news'][$type]['thumb'] = '100x' . round(100 / ($config['news'][$type]['width'] / $config['news'][$type]['height'])) . 'x1';
+$config['news'][$type]['width'] = $config['size-img'][$type]['man']['width'] = 740;
+$config['news'][$type]['height'] = $config['size-img'][$type]['man']['height'] = 480;
+$config['news'][$type]['thumb'] = '100x' . round(100 / ($config['news'][$type]['width'] / $config['news'][$type]['height'])) . 'x2';
 $config['news'][$type]['img_type'] = '.jpg|.gif|.png|.jpeg|.gif';
 $config['size-img'][$type]['man']['active'] = false;
 

@@ -2,6 +2,7 @@
 ob_start();
 session_start();
 include_once 'config/autoload.php';
+require_once 'config/type/config-type.php';
 include_once 'lib/router.php';
 
 // SOURCES

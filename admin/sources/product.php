@@ -17,8 +17,8 @@ switch ($act) {
       $linkEdit  = "$linkForm&id=";
       $linkDelete = "$linkProduct&act=delete&id=";
       $linkMulti  = "$linkProduct&act=delete_multiple";
-      $linkGalleryMan  = "index.php?page=gallery&act=man&id=";
-      $linkGalleryForm  = "index.php?page=gallery&act=form&id=";
+      $linkGalleryMan  = "index.php?page=gallery&act=man&type=$type&id=";
+      $linkGalleryForm  = "index.php?page=gallery&act=form&type=$type&id=";
       $join = "LEFT JOIN tbl_product_cat c2 ON p.id_cat = c2.id
       LEFT JOIN tbl_product_list c1 ON p.id_list = c1.id";
       $select = "p.*, c1.name{$lang} AS name_list, c2.name{$lang} AS name_cat";

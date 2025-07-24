@@ -57,7 +57,7 @@ class product
     $result = $this->db->execute("UPDATE `$table` SET " . implode(', ', $fields) . " WHERE id = ?", $params);
     $this->fn->transfer(
       $result ? "Cập nhật hình ảnh thành công" : "Cập nhật hình ảnh thất bại!",
-      "index.php?page=gallery&act=man&id=$id_parent",
+      "index.php?page=gallery&act=man&type=$type&id=$id_parent",
       $result
     );
   }

@@ -99,50 +99,18 @@
     </div>
 
     <?php if (!empty($product)): ?>
-      <div class="title-main mt-4" data-aos="fade-up" data-aos-duration="1000">
+      <div class="title-main mt-4" data-aos="fade-up" data-aos-duration="500">
         <h2><?= sanphamcungloai ?></h2>
       </div>
-      <div class="grid-product" data-aos="fade-up" data-aos-duration="1000">
-        <?php foreach ($product as $row_lq): ?>
-          <?php
-          $slug = $row_lq["slug$lang"];
-          $name = $row_lq["name$lang"];
-          $views = $row_lq['views'] ?? 0;
-          $sale_price = $row_lq['sale_price'];
-          $regular_price = $row_lq['regular_price'];
-          ?>
-          <div class="item-product">
-            <a class="text-decoration-none" href="<?= $slug ?>" title="<?= htmlspecialchars($name) ?>">
-              <div class="images">
-                <?= $fn->getImageCustom(['file' => $row_lq['file'], 'class' => 'w-100', 'alt' => $name, 'title' => $name, 'width' => 500, 'height' => 500, 'zc' => 1, 'lazy' => true, 'watermark' => true]) ?>
-              </div>
-              <div class="content">
-                <div class="title">
-                  <h3><?= htmlspecialchars($name) ?></h3>
-                  <p class="price-product">
-                    <?php if (!empty($sale_price) && !empty($regular_price)): ?>
-                      <span class="price-new"><?= $sale_price ?> ₫</span>
-                      <span class="price-old"><?= $regular_price ?> ₫</span>
-                    <?php elseif (!empty($regular_price)): ?>
-                      <span class="price-new"><?= $regular_price ?> ₫</span>
-                    <?php else: ?>
-                      <span class="price-new"><?= lienhe ?></span>
-                    <?php endif; ?>
-                  </p>
-                  <div class="info-product">
-                    <p><i class="fa-solid fa-eye"></i> <?= $views ?> <?= luotxem ?></p>
-                    <p><span>Chi tiết</span></p>
-                  </div>
-                </div>
-              </div>
-            </a>
-          </div>
+      <div class="grid-product" data-aos="fade-up" data-aos-duration="500">
+        <?php foreach ($product as $k => $v): ?>
+          <?php include TEMPLATE . LAYOUT . 'item-product.php'; ?>
         <?php endforeach; ?>
       </div>
-
       <div class="pagination-home w-100">
         <?php if ($paging): ?><div class="mt-3 mb-3"><?= $paging ?></div><?php endif; ?>
       </div>
     <?php endif; ?>
+    <?php include TEMPLATE . LAYOUT . 'danhmuc.php'; ?>
   </div>
 </div>

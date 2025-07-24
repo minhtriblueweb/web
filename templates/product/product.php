@@ -32,7 +32,7 @@
 
 
   <!-- TITLE -->
-  <div class="title-list-hot text-center">
+  <div class="title-list-hot text-center mt-3">
     <h2><?= $productCat["name{$lang}"] ?? $productList["name{$lang}"] ?? sanpham ?></h2>
     (<?= $total ?> <?= sanpham ?>)
   </div>

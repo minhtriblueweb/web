@@ -1,7 +1,7 @@
 <div class="wrap-main wrap-home w-clear">
   <div class="wrap-content mt-3 p-2">
     <div class="row">
-      <div class="col-lg-9 mb-3">
+      <div class="<?= !empty($relatedNews) ? 'col-lg-9 mb-3' : 'col-12' ?>">
         <div class="title-list-hot p-2">
           <h2 class="text-start"><?= $rowDetail["name$lang"] ?></h2>
         </div>
@@ -19,13 +19,12 @@
           </div>
         </div>
       </div>
-
-      <div class="col-lg-3">
-        <div class="share othernews mb-3">
-          <b>Tin liên quan:</b>
-          <div class="fix__row__news">
-            <div class="row">
-              <?php if (!empty($relatedNews)): ?>
+      <?php if (!empty($relatedNews)): ?>
+        <div class="col-lg-3">
+          <div class="share othernews mb-3">
+            <b>Tin liên quan:</b>
+            <div class="fix__row__news">
+              <div class="row">
                 <?php foreach ($relatedNews as $v): ?>
                   <?php
                   $slug = BASE . $v["slug$lang"];
@@ -49,11 +48,11 @@
                     </div>
                   </div>
                 <?php endforeach; ?>
-              <?php endif; ?>
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      <?php endif; ?>
     </div>
   </div>
 </div>

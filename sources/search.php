@@ -8,6 +8,9 @@ $options = ['table' => 'tbl_product', 'status' => 'hienthi', 'select' => "id, na
 $total = $fn->count_data($options);
 $product = $fn->show_data($options);
 $paging = $fn->pagination_tc($total, $perPage, $curPage);
+/* SEO */
+$seo->set('h1', $keyword);
+$seo->set('title', "Tìm kiếm : " . $keyword);
 
 /* breadCrumbs */
 $breadcr->set($slug, $titleMain);

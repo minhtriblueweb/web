@@ -71,9 +71,10 @@ if ($id != '') {
   /* SEO */
   $seo_data = $db->rawQueryOne("SELECT * FROM tbl_seo WHERE `id_parent` = ? AND `type` = ? AND `act` = ? LIMIT 0,1", [$idl, $type, 'man_list']);
   $seo->set('h1', $productList["name$lang"]);
-  if (!empty($seo_data["title$lang"])) $seo->set('title', $seo_data["title$lang"]);
-  if (!empty($seo_data["keywords$lang"])) $seo->set('keywords', $seo_data["keywords$lang"]);
-  if (!empty($seo_data["description$lang"])) $seo->set('description', $seo_data["description$lang"]);
+  $seo->set('title', !empty($seo_data["title$lang"]) ? $seo_data["title$lang"] : ($productList["name$lang"] ?? ''));
+  $seo->set('keywords', !empty($seo_data["keywords$lang"]) ? $seo_data["keywords$lang"] : '');
+  $seo->set('description', !empty($seo_data["description$lang"]) ? $seo_data["description$lang"] : '');
+
   $imgJson = (!empty($seo_data['options'])) ? json_decode($seo_data['options'], true) : null;
   if (!empty($imgJson)) {
     $seo->set('photo:width', $imgJson['width']);
@@ -104,9 +105,9 @@ if ($id != '') {
   /* SEO */
   $seo_data = $db->rawQueryOne("SELECT * FROM tbl_seo WHERE `id_parent` = ? AND `type` = ? AND `act` = ? LIMIT 0,1", [$idc, $type, 'man_cat']);
   $seo->set('h1', $productCat["name$lang"]);
-  if (!empty($seo_data["title$lang"])) $seo->set('title', $seo_data["title$lang"]);
-  if (!empty($seo_data["keywords$lang"])) $seo->set('keywords', $seo_data["keywords$lang"]);
-  if (!empty($seo_data["description$lang"])) $seo->set('description', $seo_data["description$lang"]);
+  $seo->set('title', !empty($seo_data["title$lang"]) ? $seo_data["title$lang"] : ($productCat["name$lang"] ?? ''));
+  $seo->set('keywords', !empty($seo_data["keywords$lang"]) ? $seo_data["keywords$lang"] : '');
+  $seo->set('description', !empty($seo_data["description$lang"]) ? $seo_data["description$lang"] : '');
   $imgJson = (!empty($seo_data['options'])) ? json_decode($seo_data['options'], true) : null;
   if (!empty($imgJson)) {
     $seo->set('photo:width', $imgJson['width']);

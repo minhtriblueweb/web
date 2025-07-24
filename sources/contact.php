@@ -7,9 +7,11 @@ $static = $db->rawQueryOne("SELECT id, type, name$lang as name, content$lang as 
 //SEO
 $seo_data = $db->rawQueryOne("SELECT * FROM tbl_seopage WHERE type = ?", array($type));
 $seo->set('h1', $titleMain);
-if (!empty($seo_data['title' . $lang])) $seo->set('title', $seo_data['title' . $lang]);
-if (!empty($seo_data['keywords' . $lang])) $seo->set('keywords', $seo_data['keywords' . $lang]);
-if (!empty($seo_data['description' . $lang])) $seo->set('description', $seo_data['description' . $lang]);
+$seo->set('title', !empty($seo_data["title$lang"]) ? $seo_data["title$lang"] : '');
+$seo->set('keywords', !empty($seo_data["keywords$lang"]) ? $seo_data["keywords$lang"] : '');
+$seo->set('description', !empty($seo_data["description$lang"]) ? $seo_data["description$lang"] : '');
+
+
 $imgJson = (!empty($seo_data['options'])) ? json_decode($seo_data['options'], true) : null;
 if (!empty($imgJson)) {
   $seo->set('photo:width', $imgJson['width']);

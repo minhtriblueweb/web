@@ -7,14 +7,15 @@ if ($id != '') {
   $rowDetail = $fn->show_data(['table' => 'tbl_news', 'type' => $type, 'status' => 'hienthi', 'id' => $id, 'select' => "id, file, name{$lang}, slug{$lang},content{$lang},slug{$lang}", 'limit' => 1]);
 
   // Tin liên quan
-  $relatedNews = $fn->show_data(['table' => 'tbl_news', 'status' => 'hienthi', 'type' => $type, 'exclude_id' =>  $rowDetail['id'], 'select' => "id, name{$lang}, slug{$lang}, file"]);
+  $relatedNews = $fn->show_data(['table' => 'tbl_news', 'status' => 'hienthi', 'type' => $type, 'exclude_id' =>  $rowDetail['id'], 'select' => "id, name{$lang}, slug{$lang}, file", 'limit' => 10]);
 
   /* SEO */
   $seo_data = $db->rawQueryOne("SELECT * FROM tbl_seo WHERE `id_parent` = ? AND `type` = ? LIMIT 0,1", [$id, $type]);
   $seo->set('h1', $rowDetail["name$lang"]);
   $seo->set('title', !empty($seo_data["title$lang"]) ? $seo_data["title$lang"] : $rowDetail["name$lang"]);
-  if (!empty($seo_data["keywords$lang"])) $seo->set('keywords', $seo_data["keywords$lang"]);
-  if (!empty($seo_data["description$lang"])) $seo->set('description', $seo_data["description$lang"]);
+  $seo->set('keywords', !empty($seo_data["keywords$lang"]) ? $seo_data["keywords$lang"] : '');
+  $seo->set('description', !empty($seo_data["description$lang"]) ? $seo_data["description$lang"] : '');
+
   $imgJson = (!empty($seo_data['options'])) ? json_decode($seo_data['options'], true) : null;
   if (!empty($imgJson)) {
     $seo->set('photo:width', $imgJson['width']);

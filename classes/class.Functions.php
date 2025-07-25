@@ -931,37 +931,39 @@ class Functions
     if ($add_watermark && method_exists($this, 'addWatermark')) {
       $wm_data = $this->db->rawQueryOne("SELECT file, options, date_updated, status FROM tbl_photo WHERE type = 'watermark' LIMIT 1");
 
-      if (empty($wm_data) || !in_array('hienthi', explode(',', $wm_data['status'] ?? ''))) return false;
+      $use_watermark = (!empty($wm_data) && in_array('hienthi', explode(',', $wm_data['status'] ?? '')));
 
-      $options = json_decode($wm_data['options'] ?? '', true);
-      $updated = strtotime($wm_data['date_updated'] ?? '') ?: time();
-      $wm_hash = substr(md5(json_encode($options ?? []) . '_' . $updated), 0, 8);
+      if ($use_watermark) {
+        $options = json_decode($wm_data['options'] ?? '', true);
+        $updated = strtotime($wm_data['date_updated'] ?? '') ?: time();
+        $wm_hash = substr(md5(json_encode($options ?? []) . '_' . $updated), 0, 8);
 
-      $wm_dir = rtrim($base_dir, '/') . '/' . trim(WATERMARK, '/');
-      if (!is_dir($wm_dir)) mkdir($wm_dir, 0755, true);
+        $wm_dir = rtrim($base_dir, '/') . '/' . trim(WATERMARK, '/');
+        if (!is_dir($wm_dir)) mkdir($wm_dir, 0755, true);
 
-      // 🧹 XÓA CÁC FILE CŨ CÓ CÙNG TÊN FILE NHƯNG KHÁC HASH
-      $pattern = $wm_dir . '/' . $filename . '-*.' . $thumb_ext;
-      foreach (glob($pattern) as $old_file) {
-        if (strpos($old_file, "-$wm_hash.$thumb_ext") === false) {
-          @unlink($old_file); // xoá file cũ khác hash
+        $pattern = $wm_dir . '/' . $filename . '-*.' . $thumb_ext;
+        foreach (glob($pattern) as $old_file) {
+          if (strpos($old_file, "-$wm_hash.$thumb_ext") === false) {
+            @unlink($old_file);
+          }
         }
-      }
 
-      $wm_path = $wm_dir . '/' . $filename . "-$wm_hash." . $thumb_ext;
-      if (file_exists($wm_path)) return $wm_path;
+        $wm_path = $wm_dir . '/' . $filename . "-$wm_hash." . $thumb_ext;
+        if (file_exists($wm_path)) return $wm_path;
 
-      $thumb_temp = tempnam(sys_get_temp_dir(), 'thumb_');
-      $thumb_created = $this->generateThumbImage($source_path, $thumb_temp, $thumb_width, $thumb_height, $zoom_crop, $create_func[$image_type], $image_type, $thumb_ext, $background);
-      if (!$thumb_created) return false;
+        $thumb_temp = tempnam(sys_get_temp_dir(), 'thumb_');
+        $thumb_created = $this->generateThumbImage($source_path, $thumb_temp, $thumb_width, $thumb_height, $zoom_crop, $create_func[$image_type], $image_type, $thumb_ext, $background);
+        if (!$thumb_created) return false;
 
-      if (!$this->addWatermark($thumb_temp, $wm_path, $options)) {
+        if (!$this->addWatermark($thumb_temp, $wm_path, $options)) {
+          @unlink($thumb_temp);
+          return false;
+        }
+
         @unlink($thumb_temp);
-        return false;
+        return $wm_path;
       }
-
-      @unlink($thumb_temp);
-      return $wm_path;
+      // Nếu không dùng watermark thì tiếp tục tạo ảnh thường
     }
 
     $thumb_path = $base_dir . $filename . '.' . $thumb_ext;

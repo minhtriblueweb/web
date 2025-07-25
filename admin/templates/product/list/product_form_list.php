@@ -1,3 +1,13 @@
+<section class="content-header text-sm">
+  <div class="container-fluid">
+    <div class="row">
+      <ol class="breadcrumb float-sm-left">
+        <li class="breadcrumb-item"><a href="index.php" title="<?= dashboard ?>"><?= dashboard ?></a></li>
+        <li class="breadcrumb-item active"><?= ($id > 0 ? 'Cập nhật ' : 'Thêm mới ') . ($config['product'][$type]['title_main_list'] ?? '') ?></li>
+      </ol>
+    </div>
+  </div>
+</section>
 <section class="content">
   <form class="validation-form" novalidate method="post" action="" enctype="multipart/form-data">
     <div class="card-footer text-sm sticky-top">

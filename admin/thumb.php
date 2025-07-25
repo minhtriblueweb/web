@@ -15,11 +15,7 @@ $ext = pathinfo($src, PATHINFO_EXTENSION);
 $thumb_name = "{$w}x{$h}x{$zc}";
 $folder = dirname($src);
 $folder = $folder !== '.' ? $folder . '/' : '';
-
-// Gốc file
 $source_path = __DIR__ . '/' . UPLOADS . $src;
-
-// Thư mục thumbnail
 $thumb_base_dir = __DIR__ . '/' . UPLOADS . THUMB;
 $thumb_sub_dir = $thumb_name . '/' . $folder;
 $thumb_filename = $base_filename . '.' . $ext;

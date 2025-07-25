@@ -1,3 +1,13 @@
+<section class="content-header text-sm">
+  <div class="container-fluid">
+    <div class="row">
+      <ol class="breadcrumb float-sm-left">
+        <li class="breadcrumb-item"><a href="index.php" title="<?= dashboard ?>"><?= dashboard ?></a></li>
+        <li class="breadcrumb-item active"><?= $config['product'][$type]['title_main'] ?></li>
+      </ol>
+    </div>
+  </div>
+</section>
 <section class="content">
   <div class="card-footer text-sm sticky-top">
     <a class="btn btn-sm bg-gradient-primary text-white" href="<?= $linkForm ?>" title="Thêm mới"><i class="fas fa-plus mr-2"></i>Thêm mới</a>
@@ -6,8 +16,7 @@
       <div class="input-group input-group-sm">
         <input class="form-control form-control-navbar text-sm" type="search" id="keyword" placeholder="Tìm kiếm" aria-label="Tìm kiếm" value="<?= $keyword ?>" onkeypress="doEnter(event,'keyword','<?= $linkMan ?>')">
         <div class="input-group-append bg-primary rounded-right">
-          <button class="btn btn-navbar text-white" type="button" onclick="onSearch('keyword','<?= $linkMan ?>')">
-            <i class="fas fa-search"></i>
+          <button class="btn btn-navbar text-white" type="button" onclick="onSearch('keyword','<?= $linkMan ?>')"><i class="fas fa-search"></i>
           </button>
         </div>
       </div>

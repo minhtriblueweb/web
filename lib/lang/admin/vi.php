@@ -118,6 +118,8 @@ define("dulieukhongcothuc", "Dữ liệu không có thực");
 define("khongnhanduocdulieu", "Không nhận được dữ liệu");
 
 define("capnhatdulieuthanhcong", "Cập nhật dữ liệu thành công");
+define("capnhathinhanhthanhcong", "Cập nhật hình ảnh thành công");
+define("capnhathinhanhthatbai", "Cập nhật hình ảnh thất bại!");
 
 define("capnhatdulieubiloi", "Cập nhật dữ liệu bị lỗi");
 

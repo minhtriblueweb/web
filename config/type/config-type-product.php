@@ -19,7 +19,7 @@ $config['product'][$type]['convert_webp'] = true;
 $config['product'][$type]['copy_image'] = true;
 $config['product'][$type]['comment'] = false;
 $config['product'][$type]['slug'] = true;
-$config['product'][$type]['check'] = array("hienthi" => "Hiển thị", "noibat" => "Nổi bật", "banchay" => "Bán chạy",);
+$config['product'][$type]['check'] = array("hienthi" => "Hiển thị", "noibat" => "Nổi bật", "banchay" => "Bán chạy");
 $config['product'][$type]['images'] = true;
 $config['product'][$type]['show_images'] = true;
 $config['product'][$type]['gallery'] = array(

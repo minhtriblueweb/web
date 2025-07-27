@@ -29,8 +29,6 @@
     </div>
   <?php endif; ?>
 
-
-
   <!-- TITLE -->
   <div class="title-list-hot text-center mt-3">
     <h2><?= $productCat["name{$lang}"] ?? $productList["name{$lang}"] ?? sanpham ?></h2>
@@ -44,7 +42,9 @@
       <?php if (!empty($product)): ?>
         <div class="grid-product">
           <?php foreach ($product as $k => $v): ?>
-            <?php include TEMPLATE . LAYOUT . 'item-product.php'; ?>
+            <div class="col-12" data-aos="fade-up" data-aos-duration="500">
+              <?php include TEMPLATE . LAYOUT . 'item-product.php'; ?>
+            </div>
           <?php endforeach; ?>
         </div>
       <?php else: ?>

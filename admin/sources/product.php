@@ -87,7 +87,6 @@ switch ($act) {
     $actBack = 'man';
     $linkMan = "$linkProduct&act=$actBack";
     $id = isset($_GET['id']) && is_numeric($_GET['id']) ? (int)$_GET['id'] : null;
-    $status_flags = array_keys($config['product'][$type]['check'] ?? []);
     $fields_multi  = ['slug', 'name', 'desc', 'content'];
     $fields_common = ['numb', 'type', 'id_list', 'id_cat', 'regular_price', 'sale_price', 'discount', 'code'];
 
@@ -98,7 +97,7 @@ switch ($act) {
         'act'            => $actBack,
         'fields_multi'   => $fields_multi,
         'fields_common'  => $fields_common,
-        'status_flags'   => $status_flags,
+        'status_flags'   => $config['product'][$type]['check'],
         'redirect_page'  => $linkMan,
         'convert_webp'   => $config['product'][$type]['convert_webp'],
         'enable_slug'    => $config['product'][$type]['slug'],
@@ -124,7 +123,7 @@ switch ($act) {
       $actBack = 'man_list';
       $linkMan = "$linkProduct&act=man_list";
       $id = isset($_GET['id']) && is_numeric($_GET['id']) ? (int)$_GET['id'] : null;
-      $status_flags = array_keys($config['product'][$type]['check_list'] ?? []);
+      $status_flags = $config['product'][$type]['check_list'] ?? [];
       $fields_multi  = ['slug', 'name', 'desc', 'content'];
       $fields_common = ['numb', 'type'];
 
@@ -148,7 +147,7 @@ switch ($act) {
       $result = $seo_data = [];
       if (!empty($id)) {
         $result = $db->rawQueryOne("SELECT * FROM `$table` WHERE id = ?", [$id]);
-        if (!$result) $fn->transfer("Dữ liệu không tồn tại", $linkMan, false);
+        if (!$result) $fn->transfer(dulieukhongcothuc, $linkMan, false);
         $seo_data = $db->rawQueryOne("SELECT * FROM tbl_seo WHERE `id_parent` = ? AND `type` = ? AND `act` = ?", [$id, $type, $actBack]);
       }
       $template = "product/list/product_form_list";
@@ -159,7 +158,7 @@ switch ($act) {
       $actBack = 'man_cat';
       $linkMan = "$linkProduct&act=$actBack";
       $id = isset($_GET['id']) && is_numeric($_GET['id']) ? (int)$_GET['id'] : null;
-      $status_flags = array_keys($config['product'][$type]['check_cat'] ?? []);
+      $status_flags = $config['product'][$type]['check_cat'] ?? [];
       $fields_multi  = ['slug', 'name', 'desc', 'content'];
       $fields_common = ['numb', 'type', 'id_list'];
 
@@ -183,10 +182,9 @@ switch ($act) {
       $result = $seo_data = [];
       if (!empty($id)) {
         $result = $db->rawQueryOne("SELECT * FROM `$table` WHERE id = ?", [$id]);
-        if (!$result) $fn->transfer("Dữ liệu không tồn tại", $linkMan, false);
+        if (!$result) $fn->transfer(dulieukhongcothuc, $linkMan, false);
         $seo_data = $db->rawQueryOne("SELECT * FROM tbl_seo WHERE `id_parent` = ? AND `type` = ? AND `act` = ?", [$id, $type, $actBack]);
       }
-      $breadcrumb = [['label' => ($id > 0 ? 'Cập nhật ' : 'Thêm mới ') . ($config['product'][$type]['title_main_cat'] ?? '')]];
       $template = "product/cat/product_form_cat";
       break;
     }

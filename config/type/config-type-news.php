@@ -44,6 +44,7 @@ $config['news'][$type]['height'] = $config['size-img'][$type]['man']['height'] =
 $config['news'][$type]['thumb'] = '100x' . round(100 / ($config['news'][$type]['width'] / $config['news'][$type]['height'])) . 'x1';
 $config['news'][$type]['img_type'] = '.jpg|.gif|.png|.jpeg|.gif';
 $config['size-img'][$type]['man']['active'] = false;
+$config['news'][$type]['convert_webp'] = true;
 
 //chính sách
 $type = "chinh-sach";
@@ -72,6 +73,7 @@ $config['news'][$type]['height'] = $config['size-img'][$type]['man']['height'] =
 $config['news'][$type]['thumb'] = '100x' . round(100 / ($config['news'][$type]['width'] / $config['news'][$type]['height'])) . 'x2';
 $config['news'][$type]['img_type'] = '.jpg|.gif|.png|.jpeg|.gif';
 $config['size-img'][$type]['man']['active'] = false;
+$config['news'][$type]['convert_webp'] = true;
 
 // đánh giá khách hàng
 $type = "danh-gia";
@@ -100,6 +102,7 @@ $config['news'][$type]['height'] = $config['size-img'][$type]['man']['height'] =
 $config['news'][$type]['thumb'] = '100x' . round(100 / ($config['news'][$type]['width'] / $config['news'][$type]['height'])) . 'x1';
 $config['news'][$type]['img_type'] = '.jpg|.gif|.png|.jpeg|.gif';
 $config['size-img'][$type]['man']['active'] = false;
+$config['news'][$type]['convert_webp'] = true;
 
 // hướng dẫn chơi
 $type = "huong-dan-choi";
@@ -128,6 +131,7 @@ $config['news'][$type]['height'] = $config['size-img'][$type]['man']['height'] =
 $config['news'][$type]['thumb'] = '100x' . round(100 / ($config['news'][$type]['width'] / $config['news'][$type]['height'])) . 'x1';
 $config['news'][$type]['img_type'] = '.jpg|.gif|.png|.jpeg|.gif';
 $config['size-img'][$type]['man']['active'] = false;
+$config['news'][$type]['convert_webp'] = true;
 
 /* Quản lý mục (Không cấp) */
 if (isset($config['news'])) {

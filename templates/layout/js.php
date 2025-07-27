@@ -8,7 +8,7 @@
   var RECAPTCHA_ACTIVE = true;
   var RECAPTCHA_SITEKEY = "6Lcy4r0ZAAAAAKCm-yZWmkiZK6GO49G--KW30rNS";
   var PATH_JSON = "";
-  var logo_img = "<?= $logo['file'] ?>";
+  var logo_img = "<?= !empty($logo['file']) ? $logo['file'] : '' ?>";
   var IDLIST = "";
   var TOTALPAGE = "";
   var LANG = {

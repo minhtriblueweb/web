@@ -11,9 +11,11 @@ $hotro247 = $db->rawQueryOne("SELECT name$lang,content$lang FROM tbl_static WHER
     <div class="wrap-content d-flex flex-wrap justify-content-between">
       <div class="footer-banner">
         <div class="logo-footer">
-          <a href="./">
-            <?= $fn->getImageCustom(['file' => $logo['file'], 'alt' => $web_name, 'title' => $web_name, 'width' => 300, 'height' => 120, 'zc' => 1, 'lazy' => true]) ?>
-          </a>
+          <?php if ($logo) : ?>
+            <a href="./">
+              <?= $fn->getImageCustom(['file' => $logo['file'], 'alt' => $web_name, 'title' => $web_name, 'width' => 300, 'height' => 120, 'zc' => 1, 'lazy' => true]) ?>
+            </a>
+          <?php endif ?>
         </div>
         <p class="footer-company"><?= $web_name ?></p>
         <div class="footer-info content-ck">
@@ -67,31 +69,35 @@ $hotro247 = $db->rawQueryOne("SELECT name$lang,content$lang FROM tbl_static WHER
           </div>
         </div>
         <div class="box-policy">
-          <div class="footer-policy">
-            <p class="footer-title"> <?= $hotro247["name$lang"] ?? '' ?></p>
-            <div class="footer-info content-ck">
-              <?= $hotro247["content$lang"] ?? '' ?>
+          <?php if ($hotro247) : ?>
+            <div class="footer-policy">
+              <p class="footer-title"> <?= $hotro247["name$lang"] ?? '' ?></p>
+              <div class="footer-info content-ck">
+                <?= $hotro247["content$lang"] ?? '' ?>
+              </div>
             </div>
-          </div>
-          <div class="footer-newsletter">
-            <p class="footer-title"><?= $dangkynhantin["name$lang"] ?? '' ?></p>
-            <p class="slogan-newsletter"><?= $dangkynhantin["content$lang"] ?? '' ?></p>
-            <form class="FormNewsletter validation-newsletter" novalidate method="post" action=""
-              enctype="multipart/form-data" data-aos="fade-left" data-aos-duration="500">
-              <div class="newsletter-input">
-                <input type="email" class="form-control text-sm" id="email-newsletter" name="dataNewsletter[email]"
-                  placeholder="Nhập vào email của bạn" required />
-              </div>
-              <div class="newsletter-button">
-                <button type="submit" class="btn-submit" name="submit-newsletter" value="Đăng ký">
-                  <i class="fa-solid fa-paper-plane"></i>
-                </button>
-                <input type="hidden" name="newsletter" value="submit" />
-                <input type="hidden" class="btn btn-sm btn-danger w-100" name="recaptcha_response_newsletter"
-                  id="recaptchaResponseNewsletter" />
-              </div>
-            </form>
-          </div>
+          <?php endif ?>
+          <?php if ($dangkynhantin) : ?>
+            <div class="footer-newsletter">
+              <p class="footer-title"><?= $dangkynhantin["name$lang"] ?? '' ?></p>
+              <p class="slogan-newsletter"><?= $dangkynhantin["content$lang"] ?? '' ?></p>
+              <form class="FormNewsletter validation-newsletter" novalidate method="post" action=""
+                enctype="multipart/form-data" data-aos="fade-left" data-aos-duration="500">
+                <div class="newsletter-input">
+                  <input type="email" class="form-control text-sm" id="email-newsletter" name="dataNewsletter[email]"
+                    placeholder="Nhập vào email của bạn" required />
+                </div>
+                <div class="newsletter-button">
+                  <button type="submit" class="btn-submit" name="submit-newsletter" value="Đăng ký">
+                    <i class="fa-solid fa-paper-plane"></i>
+                  </button>
+                  <input type="hidden" name="newsletter" value="submit" />
+                  <input type="hidden" class="btn btn-sm btn-danger w-100" name="recaptcha_response_newsletter"
+                    id="recaptchaResponseNewsletter" />
+                </div>
+              </form>
+            </div>
+          <?php endif ?>
         </div>
       </div>
     </div>

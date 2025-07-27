@@ -192,7 +192,6 @@ define("chuachontinhthanhpho", "No province/city selected");
 define("chuachonquanhuyen", "No district/district selected yet");
 define("chuachonphuongxa", "No ward/commune selected yet");
 define("thongtindonhangdaduocguithanhcong", "Order information has been sent successfully.");
-define("thongbao", "Notification");
 define("dongy", "OK");
 define("dungluonghinhanhlon", "Large image capacity. Allowed capacity &lt;= 4MB ~ 4096KB");
 define("dinhdanghinhanhkhonghople", "Invalid image format");

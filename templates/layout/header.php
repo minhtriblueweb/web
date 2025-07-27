@@ -20,11 +20,14 @@
   </div>
   <div class="header-banner">
     <div class="wrap-content d-flex flex-wrap justify-content-between align-items-center">
+
       <div class="banner-header">
         <div class="logo">
-          <a href="./">
-            <?= $fn->getImageCustom(['file' => $logo['file'], 'width'  => 200, 'height'  => 200, 'zc' => 4, 'alt' => $optsetting["name$lang"], 'title' => $optsetting["name$lang"], 'lazy' => false]) ?>
-          </a>
+          <?php if ($logo) : ?>
+            <a href="./">
+              <?= $fn->getImageCustom(['file' => $logo['file'], 'width'  => 200, 'height'  => 200, 'zc' => 4, 'alt' => $optsetting["name$lang"], 'title' => $optsetting["name$lang"], 'lazy' => false]) ?>
+            </a>
+          <?php endif ?>
         </div>
       </div>
 

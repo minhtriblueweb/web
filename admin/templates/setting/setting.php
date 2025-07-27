@@ -1,3 +1,13 @@
+<section class="content-header text-sm">
+  <div class="container-fluid">
+    <div class="row">
+      <ol class="breadcrumb float-sm-left">
+        <li class="breadcrumb-item"><a href="index.php" title="<?= dashboard ?>"><?= dashboard ?></a></li>
+        <li class="breadcrumb-item active">Cập nhật thông tin website</li>
+      </ol>
+    </div>
+  </div>
+</section>
 <section class="content">
   <form class="validation-form" novalidate method="post" action="" enctype="multipart/form-data">
     <div class="card-footer text-sm sticky-top">
@@ -156,17 +166,17 @@
         <div class="form-group">
           <label for="analytics">Google analytics:</label>
           <textarea class="form-control text-sm" name="analytics" id="analytics" rows="5"
-            placeholder="Google analytics"><?= isset($result['analytics']) ? htmlspecialchars($result['analytics']) : ''; ?></textarea>
+            placeholder="Google analytics"><?= isset($row['analytics']) ? htmlspecialchars($row['analytics']) : ''; ?></textarea>
         </div>
         <div class="form-group">
           <label for="headjs">Head JS:</label>
           <textarea class="form-control text-sm" name="headjs" id="headjs" rows="5"
-            placeholder="Head JS"><?= isset($result['headjs']) ? htmlspecialchars($result['headjs']) : ''; ?></textarea>
+            placeholder="Head JS"><?= isset($row['headjs']) ? htmlspecialchars($row['headjs']) : ''; ?></textarea>
         </div>
         <div class="form-group">
           <label for="bodyjs">Body JS:</label>
           <textarea class="form-control text-sm" name="bodyjs" id="bodyjs" rows="5"
-            placeholder="Body JS"><?= isset($result['bodyjs']) ? htmlspecialchars($result['bodyjs']) : ''; ?></textarea>
+            placeholder="Body JS"><?= isset($row['bodyjs']) ? htmlspecialchars($row['bodyjs']) : ''; ?></textarea>
         </div>
         <div class="card card-primary card-outline card-outline-tabs">
           <div class="card-header p-0 border-bottom-0">
@@ -200,7 +210,7 @@
                       class="form-control for-seo text-sm"
                       name="name<?= $k ?>" id="name<?= $k ?>"
                       placeholder="Tiêu đề (<?= $k ?>)"
-                      value="<?= $_POST['name' . $k] ?? $result['name' . $k] ?? '' ?>" />
+                      value="<?= $_POST['name' . $k] ?? $row['name' . $k] ?? '' ?>" />
                   </div>
                   <div class="form-group">
                     <label for="copyright<?= $k ?>">Copyright (<?= $k ?>):</label>
@@ -208,7 +218,7 @@
                       class="form-control for-seo text-sm"
                       name="copyright<?= $k ?>" id="copyright<?= $k ?>"
                       placeholder="Copyright (<?= $k ?>)"
-                      value="<?= $_POST['copyright' . $k] ?? $result['copyright' . $k] ?? '' ?>" />
+                      value="<?= $_POST['copyright' . $k] ?? $row['copyright' . $k] ?? '' ?>" />
                   </div>
                   <div class="form-group">
                     <label for="slogan<?= $k ?>">Slogan (<?= $k ?>):</label>
@@ -216,7 +226,7 @@
                       class="form-control for-seo text-sm"
                       name="slogan<?= $k ?>" id="slogan<?= $k ?>"
                       placeholder="Slogan (<?= $k ?>)"
-                      value="<?= $_POST['slogan' . $k] ?? $result['slogan' . $k] ?? '' ?>" />
+                      value="<?= $_POST['slogan' . $k] ?? $row['slogan' . $k] ?? '' ?>" />
                   </div>
                 </div>
               <?php } ?>

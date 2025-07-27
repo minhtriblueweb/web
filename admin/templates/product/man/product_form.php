@@ -21,6 +21,15 @@
       </button>
       <a class="btn btn-sm bg-gradient-danger" href="<?= $linkMan ?>" title="Thoát"><i class="fas fa-sign-out-alt mr-2"></i>Thoát</a>
     </div>
+    <div class="card bg-gradient-danger">
+      <div class="card-header">
+        <h3 class="card-title">Thông báo</h3>
+        <div class="card-tools"><button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fas fa-times"></i></button><button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button></div>
+      </div>
+      <div class="card-body">
+        <p class="mb-1">- Đường dẫn không hợp lệ</p>
+      </div>
+    </div>
     <div class="row">
       <div class="col-xl-8">
         <?php if (!empty($config['product'][$type]['slug'])): ?>

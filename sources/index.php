@@ -21,12 +21,14 @@ $feedback = $fn->show_data([
 $banchay = $fn->show_data([
   'table'  => 'tbl_product',
   'status' => 'hienthi,banchay',
-  'select' => "id, file, slug{$lang}, name{$lang}, sale_price, regular_price, views"
+  'select' => "id, file, slug{$lang}, name{$lang}, sale_price, regular_price, views",
+  'limit' => 10
 ]);
 $sp_all = $fn->show_data([
   'table'  => 'tbl_product',
   'status' => 'hienthi',
-  'select' => "id, file, slug{$lang}, name{$lang}, sale_price, regular_price, views, id_list, id_cat"
+  'select' => "id, file, slug{$lang}, name{$lang}, sale_price, regular_price, views, id_list, id_cat",
+  'limit' => 10
 ]);
 $sp_group = [];
 foreach ($sp_all ?? [] as $row) {

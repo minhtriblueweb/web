@@ -1,16 +1,15 @@
 <?php
 if (!defined('SOURCES')) die("Error");
-$act = $_GET['act'] ?? '';
-$type = $_GET['type'] ?? '';
 $table = 'tbl_news';
 if (!isset($config['news'][$type])) {
   $fn->transfer("Trang không tồn tại!", "index.php", false);
 }
-$linkMan = "index.php?page=news&act=man&type=$type";
-$linkForm = str_replace('man', 'form', $linkMan);
+$linkNews = "index.php?page=news&type=$type";
+$linkMan = "$linkNews&act=man";
+$linkForm = "$linkNews&act=form";
 $linkEdit = "$linkForm&id=";
-$linkDelete = "index.php?page=news&type=$type&act=delete&id=";
-$linkMulti  = "index.php?page=news&type=$type&act=delete_multiple";
+$linkDelete = "$linkNews&act=delete&id=";
+$linkMulti  = "$linkNews&act=delete_multiple";
 
 switch ($act) {
   case 'delete':
@@ -56,9 +55,7 @@ switch ($act) {
     $total = $fn->count_data($options);
     $show_data = $fn->show_data($options);
     $paging = $fn->pagination($total, $perPage, $curPage);
-    $breadcrumb = [['label' => $config['news'][$type]['title_main']]];
-    include TEMPLATE . LAYOUT . "breadcrumb.php";
-    include TEMPLATE . "news/news_man.php";
+    $template = "news/news_man";
     break;
 
   case 'form':
@@ -67,6 +64,7 @@ switch ($act) {
 
     if ($id !== null) {
       $result = $db->rawQueryOne("SELECT * FROM `$table` WHERE id = ? LIMIT 1", [$id]);
+      if (!$result) $fn->transfer(dulieukhongcothuc, $linkMan, false);
       $seo_data = $db->rawQueryOne("SELECT * FROM tbl_seo WHERE `id_parent` = ? AND `type` = ?", [$id, $type]);
     }
 
@@ -75,23 +73,19 @@ switch ($act) {
         'table'          => $table,
         'fields_multi'   => ['slug', 'name', 'desc', 'content'],
         'fields_common'  => ['numb', 'type'],
-        'status_flags'   => array_keys($config['news'][$type]['check']),
-        'redirect_page'  => $linkMan,
+        'status_flags'   => $config['news'][$type]['check'],
         'convert_webp'   => $config['news'][$type]['convert_webp'],
         'enable_slug'    => $config['news'][$type]['slug'],
         'enable_seo'     => $config['news'][$type]['seo'],
-        'enable_gallery' => $config['news'][$type]['gallery']
+        'enable_gallery' => $config['news'][$type]['gallery'],
+        'redirect_page'  => $linkMan,
       ];
       $fn->save_data($_POST, $_FILES, $id, $save_options);
     }
-
-
-    $breadcrumb = [['label' => ($id !== null ? 'Cập nhật ' : 'Thêm mới ') . $config['news'][$type]['title_main']]];
-    include TEMPLATE . LAYOUT . "breadcrumb.php";
-    include TEMPLATE . "news/news_form.php";
+    $template = "news/news_form";
     break;
 
   default:
-    $fn->transfer("Trang không tồn tại", "index.php", false);
+    $fn->transfer(trangkhongtontai, "index.php", false);
     break;
 }

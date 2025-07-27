@@ -1,14 +1,25 @@
+<section class="content-header text-sm">
+  <div class="container-fluid">
+    <div class="row">
+      <ol class="breadcrumb float-sm-left">
+        <li class="breadcrumb-item"><a href="index.php" title="<?= dashboard ?>"><?= dashboard ?></a></li>
+        <li class="breadcrumb-item active"><?= ($id_child > 0 ? 'Cập nhật ' : 'Thêm mới ') . ($config['product'][$type]['gallery'][$type]['title_main_photo'] ?? '') ?></li>
+
+      </ol>
+    </div>
+  </div>
+</section>
 <section class="content">
   <form class="validation-form" novalidate method="post" action="" enctype="multipart/form-data">
     <div class="card-footer text-sm sticky-top">
-      <button type="submit" name="<?= !empty($id) ? "add" : "edit"; ?>"
+      <button type="submit" name="<?= !empty($id_child) ? "edit" : "add"; ?>"
         class="btn btn-sm bg-gradient-primary btn-submit-HoldOn">
         <i class="far fa-save mr-2"></i>Lưu
       </button>
       <a class="btn btn-sm bg-gradient-danger" href="<?= $linkMan . $result['id_parent'] ?>" title="Thoát"><i class="fas fa-sign-out-alt mr-2"></i>Thoát</a>
     </div>
     <div class="row">
-      <?php if (!empty($id)) : ?>
+      <?php if (empty($id_child)) : ?>
         <div class="col-12">
           <div class="card card-primary card-outline text-sm">
             <div class="card-header">

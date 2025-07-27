@@ -45,15 +45,6 @@ define('BASE_ADMIN', $config['baseAdmin'] ?? '/admin/');
 // define('NO_IMG', BASE_ADMIN . 'assets/img/noimage.png');
 define('NO_IMG', BASE_ADMIN . 'assets/img/noimage.jpeg');
 
-// 7. Khởi tạo các class tiện ích mở rộng
-$classes = ['product', 'news'];
-
-foreach ($classes as $class) {
-  if (class_exists($class)) {
-    $$class = new $class();
-  }
-}
-
 // 8. Load các cài đặt từ DB (SEO, setting, ...)
 require_once $baseDir . '/config/init_settings.php';
 

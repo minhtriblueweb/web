@@ -244,7 +244,7 @@ class Functions
       $data_prepared['options'] = json_encode($options_data, JSON_UNESCAPED_UNICODE);
     }
     if (!empty($status_flags)) {
-      $data_prepared['status'] = implode(',', array_filter($status_flags, fn($f) => !empty($data[$f])));
+      $data_prepared['status'] = implode(',', array_filter(array_keys($status_flags ?? []), fn($f) => !empty($data[$f])));
     }
     if ($enable_slug) {
       foreach ($langs as $lang) {

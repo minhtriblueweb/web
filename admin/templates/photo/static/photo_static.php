@@ -1,3 +1,13 @@
+<section class="content-header text-sm">
+  <div class="container-fluid">
+    <div class="row">
+      <ol class="breadcrumb float-sm-left">
+        <li class="breadcrumb-item"><a href="index.php" title="<?= dashboard ?>"><?= dashboard ?></a></li>
+        <li class="breadcrumb-item active"><?= $config['photo']['photo_static'][$type]['title_main'] ?></li>
+      </ol>
+    </div>
+  </div>
+</section>
 <section class="content">
   <form class="validation-form" novalidate="" method="post" id="form-watermark" action="" enctype="multipart/form-data">
     <div class="card-footer text-sm sticky-top">
@@ -124,6 +134,6 @@
     </div>
     <input type="hidden" name="width" value="<?= $config['photo']['photo_static'][$type]['width'] ?>">
     <input type="hidden" name="height" value="<?= $config['photo']['photo_static'][$type]['height'] ?>">
-    <input type="hidden" name="zc" value="<?= (!empty($config['photo']['photo_static'][$type]['thumb']) && isset(explode('x', $config['photo']['photo_static'][$type]['thumb'])[2])) ? intval(explode('x', $config['photo']['photo_static'][$type]['thumb'])[2]) : 1 ?>">
+    <input type="hidden" name="zc" value="<?= substr($config['photo']['photo_static'][$type]['thumb'], -1) ?? 1 ?>">
   </form>
 </section>

@@ -35,23 +35,6 @@ $(document).ready(function () {
   });
 });
 
-
-
-$(document).ready(function () {
-  let path = window.location.pathname;
-  if (path === '/' || path.endsWith('/')) {
-    path = 'index';
-  } else {
-    let fileName = path.substring(path.lastIndexOf('/') + 1);
-    path = fileName.replace('.php', '');
-  }
-  $('.menu-bar a').each(function () {
-    let href = $(this).attr('href').replace('./', '').replace('.php', '');
-    if ((path === 'index' && (href === '' || href === 'index')) || path === href) {
-      $(this).addClass('active');
-    }
-  });
-});
 /* Lazys */
 NN_FRAMEWORK.Lazys = function () {
   if (isExist($(".lazy"))) {

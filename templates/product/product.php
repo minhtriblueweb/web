@@ -54,7 +54,7 @@
       <?php endif; ?>
 
       <!-- PHÂN TRANG -->
-      <?php if ($paging): ?><div class="mt-3 mb-3"><?= $paging ?></div><?php endif; ?>
+      <?php if ($paging): ?><div class="mt-3 mb-3 pagination-home w-100"><?= $paging ?></div><?php endif; ?>
     </div>
   </div>
 </div>

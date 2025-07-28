@@ -50,14 +50,12 @@
             <label class="attr-label-pro-detail"><?= gia ?>:</label>
             <div class="attr-content-pro-detail">
               <?php if (!empty($rowDetail['sale_price']) && !empty($rowDetail['regular_price'])): ?>
-                <span class="price-new-pro-detail"><?= $rowDetail['sale_price'] ?> ₫</span>
-                <span class="price-old-pro-detail"><?= $rowDetail['regular_price'] ?> ₫</span>
-              <?php elseif (!empty($rowDetail['sale_price'])): ?>
-                <span class="price-new-pro-detail"><?= $rowDetail['sale_price'] ?> ₫</span>
-              <?php elseif (!empty($rowDetail['regular_price'])): ?>
-                <span class="price-new-pro-detail"><?= $rowDetail['regular_price'] ?> ₫</span>
+                <span class="price-new-pro-detail"><?= $rowDetail['sale_price'] . ' ₫' ?></span>
+                <span class="price-old-pro-detail"><?= $rowDetail['regular_price'] . ' ₫' ?></span>
               <?php else: ?>
-                <span class="price-new-pro-detail"><?= lienhe ?></span>
+                <span class="price-new-pro-detail">
+                  <?= !empty($rowDetail['regular_price']) ? $rowDetail['regular_price'] . ' ₫' : lienhe ?>
+                </span>
               <?php endif; ?>
             </div>
           </li>

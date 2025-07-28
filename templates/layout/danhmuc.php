@@ -1,4 +1,4 @@
-<?php if (!empty($dm_c2_all)): ?>
+<?php if (!empty($dm_c2_all = $fn->show_data(['table' => 'tbl_product_cat', 'status' => 'hienthi,noibat', 'select' => "id, file,id_list, slug{$lang}, name{$lang}"]))): ?>
   <div class="wrap-product-list">
     <div class="wrap-content">
       <div class="title-list-hot">

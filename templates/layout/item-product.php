@@ -7,13 +7,13 @@
       <div class="title">
         <h3><?= htmlspecialchars($v["name$lang"]) ?></h3>
         <p class="price-product">
-          <?php if ($v['sale_price'] && $v['regular_price']): ?>
-            <span class="price-new"><?= $v['sale_price'] ?>₫</span>
-            <span class="price-old"><?= $v['regular_price'] ?>₫</span>
-          <?php elseif ($v['regular_price']): ?>
-            <span class="price-new"><?= $v['regular_price'] ?>₫</span>
+          <?php if (!empty($v['sale_price']) && !empty($v['regular_price'])): ?>
+            <span class="price-new"><?= $v['sale_price'] . '₫' ?></span>
+            <span class="price-old"><?= $v['regular_price'] . '₫' ?></span>
           <?php else: ?>
-            <span class="price-new"><?= lienhe ?></span>
+            <span class="price-new">
+              <?= !empty($v['regular_price']) ? $v['regular_price'] . '₫' : lienhe ?>
+            </span>
           <?php endif; ?>
         </p>
         <div class="info-product">

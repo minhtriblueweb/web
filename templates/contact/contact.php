@@ -12,7 +12,7 @@
           <form data-aos="fade-left" data-aos-duration="500" class="contact-form validation-contact col-lg-6 mb-3"
             novalidate="" method="post" action="" enctype="multipart/form-data">
             <div class="social">
-              <p><?= dangkynhantin ?></p>
+              <p class="text-uppercase"><?= dangkynhantin ?></p>
             </div>
             <div class="form-row">
               <div class="contact-input col-sm-6">

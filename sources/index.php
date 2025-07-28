@@ -27,17 +27,14 @@ $banchay = $fn->show_data([
 $sp_all = $fn->show_data([
   'table'  => 'tbl_product',
   'status' => 'hienthi',
-  'select' => "id, file, slug{$lang}, name{$lang}, sale_price, regular_price, views, id_list, id_cat",
-  'limit' => 10
+  'select' => "id, file, slug{$lang}, name{$lang}, sale_price, regular_price, views, id_list, id_cat"
 ]);
 $sp_group = [];
 foreach ($sp_all ?? [] as $row) {
   $id_list = $row['id_list'];
   $id_cat = $row['id_cat'];
   $sp_group[$id_list]['all'][] = $row;
-  if ($id_cat) {
-    $sp_group[$id_list]['cat'][$id_cat][] = $row;
-  }
+  if ($id_cat) $sp_group[$id_list]['cat'][$id_cat][] = $row;
 }
 
 // SEO

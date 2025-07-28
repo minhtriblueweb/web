@@ -20,7 +20,8 @@
   <?php foreach ($dm_c1_rows as $lv1): ?>
     <?php
     $id_list = $lv1['id'];
-    $sp_all = $sp_group[$id_list]['all'] ?? [];
+    // $sp_all = $sp_group[$id_list]['all'] ?? [];
+    $sp_all = array_slice($sp_group[$id_list]['all'] ?? [], 0, 10);
     $cat_list = $lv1['sub'] ?? [];
     ?>
     <?php if (!empty($sp_all)): ?>
@@ -51,7 +52,8 @@
         <?php foreach ($cat_list as $dm_c2): ?>
           <?php
           $id_cat = $dm_c2['id'];
-          $sp_cat = $sp_group[$id_list]['cat'][$id_cat] ?? [];
+          // $sp_cat = $sp_group[$id_list]['cat'][$id_cat] ?? [];
+          $sp_cat = array_slice($sp_group[$id_list]['cat'][$id_cat] ?? [], 0, 10);
           ?>
           <div class="paging-product-list tabcontent" id="tab-<?= $id_cat ?>" style="display: none;">
             <div class="grid-product">

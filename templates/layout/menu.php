@@ -47,8 +47,13 @@
       <li><a class="transition" href="./" title="Trang chủ"><span><i class="fa-solid fa-house"></i></span></a></li>
       <li><a class="transition" href="gioi-thieu" title="Giới thiệu"><span>Giới thiệu</span></a></li>
       <li><a class="transition" href="mua-hang" title="Mua hàng"><span>Mua hàng</span></a></li>
-      <li><a class="transition" href="huong-dan-choi" title="Hướng dẫn chơi"><span>Hướng dẫn chơi</span></a></li>
-      <li><a class="transition" href="tin-tuc" title="Tin tức"><span>Tin tức</span></a></li>
+      <li><a class="transition <?= ($type == 'huong-dan-choi') ? 'active' : '' ?>" href="huong-dan-choi" title="Hướng dẫn chơi"><span>Hướng dẫn chơi</span></a></li>
+      <li>
+        <a class="transition <?= ($type == 'tin-tuc') ? 'active' : '' ?>" href="tin-tuc" title="Tin tức">
+          <span>Tin tức</span>
+        </a>
+      </li>
+
       <li><a class="transition" href="lien-he" title="Liên hệ"><span>Liên hệ</span></a></li>
     </ul>
   </div>

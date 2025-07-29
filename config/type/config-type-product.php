@@ -74,7 +74,7 @@ $config['product'][$type]['title_main_list'] = $config['size-img'][$type]['list'
 $config['product'][$type]['images_list'] = true;
 $config['product'][$type]['show_images_list'] = true;
 $config['product'][$type]['slug_list'] = true;
-$config['product'][$type]['check_list'] = array("hienthi" => "Hiển thị", "noibat" => "Nổi bật");
+$config['product'][$type]['check_list'] = array("hienthi" => "Hiển thị", "noibat" => "Nổi bật", "menu" => "Menu");
 $config['product'][$type]['desc_list'] = true;
 $config['product'][$type]['desc_cke_list'] = false;
 $config['product'][$type]['content_list'] = false;

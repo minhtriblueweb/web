@@ -5,32 +5,36 @@
       <p class="title">DANH MỤC SẢN PHẨM</p>
       <div class="box-ul-left">
         <ul>
-          <?php foreach ($menu_tree as $dm): ?>
-            <?php
-            $has_sub = count($dm['sub']) > 0;
-            $name = $dm["name$lang"];
-            $slug = $dm["slug$lang"];
-            ?>
+          <?php
+          $menu_list = $fn->show_data([
+            'table'  => 'tbl_product_list',
+            'status' => 'hienthi,noibat,menu',
+            'select' => "id, file, slug$lang, name$lang"
+          ]);
+
+          foreach ($menu_list as $k => $v_list):
+            $menu_cat = $fn->show_data([
+              'table'  => 'tbl_product_cat',
+              'status' => 'hienthi,noibat',
+              'select' => "id, file, id_list, slug$lang, name$lang",
+              'id_list'  => $v_list['id']
+            ]);
+          ?>
             <li>
-              <a title="<?= $name ?>" href="<?= $slug ?>">
+              <a title="<?= $v_list["name$lang"] ?>" href="<?= $v_list["slug$lang"] ?>">
                 <span>
-                  <?= $fn->getImageCustom(['file' => $dm['file'], 'width' => 25, 'height' => 25, 'zc' => 1, 'alt' => $name, 'title' => $name]) ?>
+                  <?= $fn->getImageCustom(['file' => $v_list['file'], 'width' => 25, 'height' => 25, 'zc' => 1, 'alt' => $v_list["name$lang"], 'title' => $v_list["name$lang"]]) ?>
                 </span>
-                <?= $name ?>
-                <?= $has_sub ? '<i class="fa-solid fa-angle-right"></i>' : '' ?>
+                <?= $v_list["name$lang"] ?>
+                <?= !empty($menu_cat) ? '<i class="fa-solid fa-angle-right"></i>' : '' ?>
               </a>
-              <?php if ($has_sub): ?>
+
+              <?php if (!empty($menu_cat)): ?>
                 <div class="box-menu-cat-left">
                   <ul>
-                    <?php foreach ($dm['sub'] as $dm2): ?>
-                      <?php
-                      $name2 = $dm2["name$lang"];
-                      $slug2 = $dm2["slug$lang"];
-                      ?>
+                    <?php foreach ($menu_cat as $k => $v_cat): ?>
                       <li>
-                        <a class="transition" href="<?= $slug2 ?>" title="<?= $name2 ?>">
-                          <?= $name2 ?>
-                        </a>
+                        <a class="transition" href="<?= $v_cat["slug$lang"] ?>" title="<?= $v_cat["name$lang"] ?>"><?= $v_cat["name$lang"] ?></a>
                       </li>
                     <?php endforeach; ?>
                   </ul>
@@ -39,6 +43,7 @@
             </li>
           <?php endforeach; ?>
         </ul>
+
       </div>
     </div>
 
@@ -48,12 +53,7 @@
       <li><a class="transition <?= ($type == 'gioi-thieu') ? 'active' : '' ?>" href="gioi-thieu" title="Giới thiệu"><span>Giới thiệu</span></a></li>
       <li><a class="transition <?= ($type == 'mua-hang') ? 'active' : '' ?>" href="mua-hang" title="Mua hàng"><span>Mua hàng</span></a></li>
       <li><a class="transition <?= ($type == 'huong-dan-choi') ? 'active' : '' ?>" href="huong-dan-choi" title="Hướng dẫn chơi"><span>Hướng dẫn chơi</span></a></li>
-      <li>
-        <a class="transition <?= ($type == 'tin-tuc') ? 'active' : '' ?>" href="tin-tuc" title="Tin tức">
-          <span>Tin tức</span>
-        </a>
-      </li>
-
+      <li><a class="transition <?= ($type == 'tin-tuc') ? 'active' : '' ?>" href="tin-tuc" title="Tin tức"><span>Tin tức</span></a></li>
       <li><a class="transition <?= ($type == 'lien-he') ? 'active' : '' ?>" href="lien-he" title="Liên hệ"><span>Liên hệ</span></a></li>
     </ul>
   </div>
@@ -86,24 +86,23 @@
     <li><a href="gioi-thieu">Giới thiệu</a></li>
     <li>
       <a href="san-pham">Sản phẩm</a>
-      <?php if (!empty($menu_tree)): ?>
+      <?php if (!empty($menu_list)): ?>
         <ul>
-          <?php foreach ($menu_tree as $lv1): ?>
-            <?php
-            $name1 = $lv1["name$lang"];
-            $slug1 = $lv1["slug$lang"];
-            ?>
+          <?php foreach ($menu_list as $k => $v_list):
+            $menu_cat = $fn->show_data([
+              'table'  => 'tbl_product_cat',
+              'status' => 'hienthi,noibat',
+              'select' => "id, file, id_list, slug$lang, name$lang",
+              'id_list'  => $v_list['id']
+            ]);
+          ?>
             <li>
-              <a href="<?= $slug1 ?>"><?= $name1 ?></a>
-              <?php if (!empty($lv1['sub'])): ?>
+              <a href="<?= $v_list["slug$lang"] ?>"><?= $v_list["name$lang"] ?></a>
+              <?php if (!empty($menu_cat)): ?>
                 <ul>
-                  <?php foreach ($lv1['sub'] as $lv2): ?>
-                    <?php
-                    $name2 = $lv2["name$lang"];
-                    $slug2 = $lv2["slug$lang"];
-                    ?>
-                    <li><a href="<?= $slug2 ?>"><?= $name2 ?></a></li>
-                  <?php endforeach; ?>
+                  <?php foreach ($menu_cat as $k => $v_cat): ?>
+                    <li><a href="<?= $v_cat["slug$lang"] ?>"><?= $v_cat["name$lang"] ?></a></li>
+                  <?php endforeach ?>
                 </ul>
               <?php endif; ?>
             </li>

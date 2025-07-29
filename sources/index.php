@@ -3,31 +3,31 @@ $slides = $fn->show_data([
   'table'  => 'tbl_photo',
   'type'  => 'slideshow',
   'status' => 'hienthi',
-  'select' => "file, name{$lang}, link, options"
+  'select' => "file, name$lang, link, options"
 ]);
 $tintuc = $fn->show_data([
   'table' => 'tbl_news',
   'status' => 'hienthi,noibat',
   'type'   => 'tin-tuc',
-  'select' => "file, name{$lang}, desc{$lang}, slug{$lang}",
+  'select' => "file, name$lang, desc$lang, slug$lang",
   'limit'  => 8
 ]);
 $feedback = $fn->show_data([
   'table' => 'tbl_news',
   'status' => 'hienthi',
   'type'   => 'danh-gia',
-  'select' => "file, name{$lang}, desc{$lang},content{$lang}"
+  'select' => "file, name$lang, desc$lang,content$lang"
 ]);
 $banchay = $fn->show_data([
   'table'  => 'tbl_product',
   'status' => 'hienthi,banchay',
-  'select' => "id, file, slug{$lang}, name{$lang}, sale_price, regular_price, views",
+  'select' => "id, file, slug$lang, name$lang, sale_price, regular_price, views",
   'limit' => 10
 ]);
 $sp_all = $fn->show_data([
   'table'  => 'tbl_product',
   'status' => 'hienthi',
-  'select' => "id, file, slug{$lang}, name{$lang}, sale_price, regular_price, views, id_list, id_cat"
+  'select' => "id, file, slug$lang, name$lang, sale_price, regular_price, views, id_list, id_cat"
 ]);
 $sp_group = [];
 foreach ($sp_all ?? [] as $row) {

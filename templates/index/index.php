@@ -31,8 +31,8 @@
           <div class="box-tab-cat">
             <ul class="tab-cat" data-aos="fade-left" data-aos-duration="500">
               <li><a href="#" class="tab-cat-link active" data-tab="tab-all-<?= $id_list ?>">Tất cả</a></li>
-              <?php foreach ($cat_list as $dm_c2): ?>
-                <li><a href="#" class="tab-cat-link text-capitalize" data-tab="tab-<?= $dm_c2['id'] ?>"><?= $dm_c2["name$lang"] ?></a></li>
+              <?php foreach ($cat_list as $k => $v): ?>
+                <li><a href="#" class="tab-cat-link text-capitalize" data-tab="tab-<?= $v['id'] ?>"><?= $v["name$lang"] ?></a></li>
               <?php endforeach; ?>
             </ul>
             <a class="viewlist" href="<?= $lv1["slug$lang"] ?>">Xem tất cả</a>
@@ -49,9 +49,9 @@
         </div>
 
         <!-- Tab theo danh mục cấp 2 -->
-        <?php foreach ($cat_list as $dm_c2): ?>
+        <?php foreach ($cat_list as $k => $v): ?>
           <?php
-          $id_cat = $dm_c2['id'];
+          $id_cat = $v['id'];
           // $sp_cat = $sp_group[$id_list]['cat'][$id_cat] ?? [];
           $sp_cat = array_slice($sp_group[$id_list]['cat'][$id_cat] ?? [], 0, 10);
           ?>
@@ -62,7 +62,7 @@
                   <?php include TEMPLATE . LAYOUT . 'item-product.php'; ?>
                 <?php endforeach; ?>
               <?php else: ?>
-                <p class="alert alert-warning">Không có sản phẩm nào</p>
+                <p class="alert alert-warning"><?= noidungdangcapnhat ?></p>
               <?php endif; ?>
             </div>
           </div>
@@ -71,7 +71,6 @@
     <?php endif; ?>
   <?php endforeach; ?>
 </div>
-
 <?php if (!empty($feedback)): ?>
   <div class="wrap-feedback" data-aos="fade-up" data-aos-duration="500">
     <div class="wrap-content">

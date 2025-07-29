@@ -1,11 +1,11 @@
-<?php if (!empty($dm_c2_all = $fn->show_data(['table' => 'tbl_product_cat', 'status' => 'hienthi,noibat', 'select' => "id, file,id_list, slug{$lang}, name{$lang}"]))): ?>
+<?php if (!empty($productCat = $fn->show_data(['table' => 'tbl_product_cat', 'status' => 'hienthi,noibat', 'select' => "id, file,id_list, slug$lang, name$lang"]))): ?>
   <div class="wrap-product-list">
     <div class="wrap-content">
       <div class="title-list-hot">
         <h2>DANH MỤC BẠN QUAN TÂM</h2>
       </div>
       <div class="slick_product_list">
-        <?php foreach ($dm_c2_all as $v): ?>
+        <?php foreach ($productCat as $k => $v): ?>
           <a href="<?= $v["slug$lang"] ?>" title="<?= $v["name$lang"] ?>">
             <div class="item-list">
               <div class="item-list-img">

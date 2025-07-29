@@ -60,23 +60,22 @@
 </div>
 
 <div class="menu-mobile">
-  <div class="wrap-content d-flex flex-wrap justify-content-between align-items-center">
-    <div class="box-banner">
-      <div class="logo-mobile">
-        <a href="./">
-          <?= $fn->getImageCustom(['file' => $logo['file'], 'alt' => $optsetting["name$lang"], 'title' => $optsetting["name$lang"], 'width'  => 200, 'height'  => 200, 'zc' => 4, 'lazy' => false]) ?>
-        </a>
-      </div>
-    </div>
+  <div class="wrap-content">
     <div class="d-flex flex-wrap justify-content-between align-items-center">
       <div class="search-mobile">
-        <input type="text" id="keyword-res" placeholder="Nhập từ khóa tìm kiếm..."
-          onkeypress="doEnterMobile(event,'keyword-res');" />
+        <input type="text" id="keyword-res" placeholder="Nhập từ khóa tìm kiếm..." onkeypress="doEnterMobile(event,'keyword-res');" />
         <p onclick="onSearchMobile('keyword-res');">
           <i class="fa-solid fa-magnifying-glass"></i>
         </p>
       </div>
-      <a id="toggle_menu" href="" title="Menu"><span></span></a>
+      <div class="logo-mobile">
+        <a href="./">
+          <?= $fn->getImageCustom(['file' => $logo['file'], 'alt' => $optsetting["name$lang"], 'title' => $optsetting["name$lang"], 'width'  => 100, 'height'  => 100, 'zc' => 4, 'lazy' => false]) ?>
+        </a>
+      </div>
+      <div class="header-mobile-right">
+        <a id="toggle_menu" href="javascript:void(0)" title="Menu"><span></span></a>
+      </div>
     </div>
   </div>
 </div>
@@ -88,21 +87,21 @@
       <a href="san-pham">Sản phẩm</a>
       <?php if (!empty($menu_list)): ?>
         <ul>
-          <?php foreach ($menu_list as $k => $v_list):
+          <?php foreach ($menu_list as $v_list):
             $menu_cat = $fn->show_data([
-              'table'  => 'tbl_product_cat',
-              'status' => 'hienthi,noibat',
-              'select' => "id, file, id_list, slug$lang, name$lang",
-              'id_list'  => $v_list['id']
+              'table'   => 'tbl_product_cat',
+              'status'  => 'hienthi,noibat',
+              'select'  => "id, file, id_list, slug$lang, name$lang",
+              'id_list' => $v_list['id']
             ]);
           ?>
             <li>
               <a href="<?= $v_list["slug$lang"] ?>"><?= $v_list["name$lang"] ?></a>
               <?php if (!empty($menu_cat)): ?>
                 <ul>
-                  <?php foreach ($menu_cat as $k => $v_cat): ?>
+                  <?php foreach ($menu_cat as $v_cat): ?>
                     <li><a href="<?= $v_cat["slug$lang"] ?>"><?= $v_cat["name$lang"] ?></a></li>
-                  <?php endforeach ?>
+                  <?php endforeach; ?>
                 </ul>
               <?php endif; ?>
             </li>

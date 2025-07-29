@@ -17,60 +17,85 @@
 <?php endif; ?>
 <?php include TEMPLATE . LAYOUT . 'danhmuc.php'; ?>
 <div class="wrap-content">
-  <?php foreach ($dm_c1_rows as $lv1): ?>
-    <?php
-    $id_list = $lv1['id'];
-    // $sp_all = $sp_group[$id_list]['all'] ?? [];
-    $sp_all = array_slice($sp_group[$id_list]['all'] ?? [], 0, 10);
-    $cat_list = $lv1['sub'] ?? [];
-    ?>
-    <?php if (!empty($sp_all)): ?>
-      <div class="box-list" data-aos="fade-up" data-aos-duration="500">
-        <div class="title-list">
-          <h2><span class="text-split"><?= $lv1["name$lang"] ?></span></h2>
-          <div class="box-tab-cat">
-            <ul class="tab-cat" data-aos="fade-left" data-aos-duration="500">
-              <li><a href="#" class="tab-cat-link active" data-tab="tab-all-<?= $id_list ?>">Tất cả</a></li>
-              <?php foreach ($cat_list as $k => $v): ?>
-                <li><a href="#" class="tab-cat-link text-capitalize" data-tab="tab-<?= $v['id'] ?>"><?= $v["name$lang"] ?></a></li>
-              <?php endforeach; ?>
-            </ul>
-            <a class="viewlist" href="<?= $lv1["slug$lang"] ?>">Xem tất cả</a>
-          </div>
-        </div>
+  <?php
+  $productList = $fn->show_data([
+    'table'  => 'tbl_product_list',
+    'status' => 'hienthi,noibat',
+    'select' => "id, slug$lang, name$lang"
+  ]);
 
-        <!-- Tab Tất cả -->
-        <div class="paging-product-list tabcontent show-fade" id="tab-all-<?= $id_list ?>" style="display: block;">
-          <div class="grid-product">
-            <?php foreach ($sp_all as $k => $v): ?>
-              <?php include TEMPLATE . LAYOUT . 'item-product.php'; ?>
+  foreach ($productList as $v_list):
+    // Danh mục cấp 2 theo từng danh sách
+    $productCat = $fn->show_data([
+      'table'   => 'tbl_product_cat',
+      'status'  => 'hienthi,noibat',
+      'id_list' => $v_list['id'],
+      'select'  => "id, slug$lang, name$lang"
+    ]);
+
+    // Sản phẩm "Tất cả" theo id_list
+    $productsAll = $fn->show_data([
+      'table'   => 'tbl_product',
+      'status'  => 'hienthi',
+      'id_list' => $v_list['id'],
+      'limit'   => 10,
+      'select'  => "id, file, slug$lang, name$lang, sale_price, regular_price, views, id_list, id_cat"
+    ]);
+    if (empty($productsAll)) continue;
+  ?>
+    <div class="box-list" data-aos="fade-up" data-aos-duration="500">
+      <div class="title-list">
+        <h2><span class="text-split"><?= $v_list["name$lang"] ?></span></h2>
+        <div class="box-tab-cat">
+          <ul class="tab-cat" data-aos="fade-left" data-aos-duration="500">
+            <li><a href="#" class="tab-cat-link active" data-tab="tab-all-<?= $v_list['id'] ?>">Tất cả</a></li>
+            <?php foreach ($productCat as $v_cat): ?>
+              <li>
+                <a href="#" class="tab-cat-link text-capitalize" data-tab="tab-<?= $v_cat['id'] ?>">
+                  <?= $v_cat["name$lang"] ?>
+                </a>
+              </li>
             <?php endforeach; ?>
+          </ul>
+          <a class="viewlist" href="<?= $v_list["slug$lang"] ?>"><?= xemthem ?></a>
+        </div>
+      </div>
+
+      <!-- Tab "Tất cả" -->
+      <div class="paging-product-list tabcontent show-fade" id="tab-all-<?= $v_list['id'] ?>" style="display: block;">
+        <div class="grid-product">
+          <?php foreach ($productsAll as $v): ?>
+            <?php include TEMPLATE . LAYOUT . 'item-product.php'; ?>
+          <?php endforeach; ?>
+        </div>
+      </div>
+
+      <!-- Tab theo danh mục cấp 2 -->
+      <?php foreach ($productCat as $v_cat):
+        $productsCat = $fn->show_data([
+          'table'   => 'tbl_product',
+          'status'  => 'hienthi',
+          'id_cat'  => $v_cat['id'],
+          'limit'   => 10,
+          'select'  => "id, file, slug$lang, name$lang, sale_price, regular_price, views, id_list, id_cat"
+        ]);
+      ?>
+        <div class="paging-product-list tabcontent hidden" id="tab-<?= $v_cat['id'] ?>">
+          <div class="grid-product">
+            <?php if (!empty($productsCat)): ?>
+              <?php foreach ($productsCat as $v): ?>
+                <?php include TEMPLATE . LAYOUT . 'item-product.php'; ?>
+              <?php endforeach; ?>
+            <?php else: ?>
+              <p class="alert alert-warning"><?= noidungdangcapnhat ?></p>
+            <?php endif; ?>
           </div>
         </div>
-
-        <!-- Tab theo danh mục cấp 2 -->
-        <?php foreach ($cat_list as $k => $v): ?>
-          <?php
-          $id_cat = $v['id'];
-          // $sp_cat = $sp_group[$id_list]['cat'][$id_cat] ?? [];
-          $sp_cat = array_slice($sp_group[$id_list]['cat'][$id_cat] ?? [], 0, 10);
-          ?>
-          <div class="paging-product-list tabcontent" id="tab-<?= $id_cat ?>" style="display: none;">
-            <div class="grid-product">
-              <?php if (!empty($sp_cat)): ?>
-                <?php foreach ($sp_cat as $k => $v): ?>
-                  <?php include TEMPLATE . LAYOUT . 'item-product.php'; ?>
-                <?php endforeach; ?>
-              <?php else: ?>
-                <p class="alert alert-warning"><?= noidungdangcapnhat ?></p>
-              <?php endif; ?>
-            </div>
-          </div>
-        <?php endforeach; ?>
-      </div>
-    <?php endif; ?>
+      <?php endforeach; ?>
+    </div>
   <?php endforeach; ?>
 </div>
+
 <?php if (!empty($feedback)): ?>
   <div class="wrap-feedback" data-aos="fade-up" data-aos-duration="500">
     <div class="wrap-content">

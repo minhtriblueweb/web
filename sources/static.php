@@ -7,7 +7,7 @@ $static = $db->rawQueryOne("SELECT id, type, name$lang as name, content$lang as 
 //SEO
 $seo_data = $db->rawQueryOne("SELECT * FROM tbl_seopage WHERE type = ?", array($type));
 $seo->set('h1', $titleMain);
-$seo->set('title', !empty($seo_data["title$lang"]) ? $seo_data["title$lang"] : '');
+$seo->set('title', $seo_data["title$lang"] ?? $titleMain ?? '');
 $seo->set('keywords', !empty($seo_data["keywords$lang"]) ? $seo_data["keywords$lang"] : '');
 $seo->set('description', !empty($seo_data["description$lang"]) ? $seo_data["description$lang"] : '');
 

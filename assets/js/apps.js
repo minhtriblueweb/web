@@ -780,6 +780,17 @@ NN_FRAMEWORK.Toc = function () {
     });
   }
 };
+function goToByScroll(id) {
+  var $el = $(id);
+  if ($el.length) {
+    $("html, body").animate(
+      {
+        scrollTop: $el.offset().top - 90, // trừ khoảng top nếu có header
+      },
+      500
+    );
+  }
+}
 
 NN_FRAMEWORK.aweOwlPage = function () {
   var owl = $(".owl-carousel.in-page");

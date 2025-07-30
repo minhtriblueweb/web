@@ -70,7 +70,7 @@
       </div>
       <div class="logo-mobile">
         <a href="./">
-          <?= $fn->getImageCustom(['file' => $logo['file'], 'alt' => $optsetting["name$lang"], 'title' => $optsetting["name$lang"], 'width'  => 100, 'height'  => 100, 'zc' => 4, 'lazy' => false]) ?>
+          <?= $fn->getImageCustom(['file' => $logo['file'], 'alt' => $optsetting["name$lang"], 'title' => $optsetting["name$lang"], 'width'  => 120, 'height'  => 60, 'zc' => 3, 'lazy' => false]) ?>
         </a>
       </div>
       <div class="header-mobile-right">
@@ -91,7 +91,7 @@
             $menu_cat = $fn->show_data([
               'table'   => 'tbl_product_cat',
               'status'  => 'hienthi,noibat',
-              'select'  => "id, file, id_list, slug$lang, name$lang",
+              'select'  => "id_list, slug$lang, name$lang",
               'id_list' => $v_list['id']
             ]);
           ?>
@@ -100,7 +100,9 @@
               <?php if (!empty($menu_cat)): ?>
                 <ul>
                   <?php foreach ($menu_cat as $v_cat): ?>
-                    <li><a href="<?= $v_cat["slug$lang"] ?>"><?= $v_cat["name$lang"] ?></a></li>
+                    <li>
+                      <a href="<?= $v_cat["slug$lang"] ?>"><?= $v_cat["name$lang"] ?></a>
+                    </li>
                   <?php endforeach; ?>
                 </ul>
               <?php endif; ?>
@@ -109,6 +111,7 @@
         </ul>
       <?php endif; ?>
     </li>
+
     <li><a href="huong-dan-choi">Hướng dẫn chơi</a></li>
     <li><a href="tin-tuc">Tin tức</a></li>
     <li><a href="mua-hang">Mua hàng</a></li>

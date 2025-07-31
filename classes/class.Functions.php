@@ -14,6 +14,21 @@ class Functions
     $this->db = new Database();
     $this->fm = new Format();
   }
+
+  /* Markdown */
+  public function markdown($path = '', $params = array())
+  {
+    $content = '';
+
+    if (!empty($path)) {
+      ob_start();
+      include dirname(__DIR__) . "/sample/" . $path . ".php";
+      $content = ob_get_contents();
+      ob_clean();
+    }
+
+    return $content;
+  }
   /* Lấy getPageURL */
   public function getPageURL()
   {

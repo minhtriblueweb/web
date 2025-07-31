@@ -15,7 +15,18 @@
             </div>
           </div>
           <div class="content-main" id="toc-content">
-            <?= $rowDetail["content$lang"] ?>
+            <?= $fn->decodeHtmlChars($rowDetail["content$lang"] ?? '') ?>
+          </div>
+          <div class="share">
+            <b><?= chiase ?>:</b>
+            <div class="social-plugin w-clear">
+              <?php
+              $params = array();
+              $params['oaidzalo'] = $optsetting_json['oaidzalo'];
+              $params['data-href'] = $fn->getCurrentPageURL();
+              include TEMPLATE . LAYOUT . 'share.php'
+              ?>
+            </div>
           </div>
         </div>
       </div>

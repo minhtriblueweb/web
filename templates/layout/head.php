@@ -48,3 +48,4 @@
 
 <!-- Viewport -->
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+<script async src="https://static.addtoany.com/menu/page.js"></script>

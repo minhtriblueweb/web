@@ -35,7 +35,13 @@
 
       <div class="right-pro-detail">
         <p class="title-pro-detail mb-3"><?= $rowDetail["name$lang"] ?></p>
-        <ul class="attr-pro-detail">
+        <?php
+        $params = array();
+        $params['oaidzalo'] = $optsetting_json['oaidzalo'];
+        $params['data-href'] = $fn->getCurrentPageURL();
+        include TEMPLATE . LAYOUT . 'share.php'
+        ?>
+        <ul class="attr-pro-detail mt-3">
           <?php if (!empty($rowDetail['code'])): ?>
             <li>
               <label class="attr-label-pro-detail"><?= masp ?>:</label>

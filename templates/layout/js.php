@@ -2,7 +2,7 @@
   var NN_FRAMEWORK = NN_FRAMEWORK || {};
   var CONFIG_BASE = "<?= BASE ?>";
   var ASSET = "<?= BASE ?>";
-  var WEBSITE_NAME = "<?= $optsetting['name' . $lang] ?>";
+  var WEBSITE_NAME = "<?= (!empty($setting['name' . $lang])) ? addslashes($setting['name' . $lang]) : '' ?>";
   var TIMENOW = "<?= date('d/m/Y') ?>";
   var SHIP_CART = false;
   var RECAPTCHA_ACTIVE = true;
@@ -12,19 +12,18 @@
   var IDLIST = "";
   var TOTALPAGE = "";
   var LANG = {
-    no_keywords: "Chưa nhập từ khóa tìm kiếm",
-    delete_product_from_cart: "Bạn muốn xóa sản phẩm này khỏi giỏ hàng ? ",
-    no_products_in_cart: "Không tồn tại sản phẩm nào trong giỏ hàng !",
-    ward: "Phường/xã",
-    back_to_home: "Về trang chủ",
-    thongbao: "Thông báo",
-    dongy: "Đồng ý",
-    dungluonghinhanhlon: "Dung lượng hình ảnh lớn. Dung lượng cho phép &lt;= 4MB ~ 4096KB",
-    dulieukhonghople: "Dữ liệu không hợp lệ",
-    banchiduocchon1hinhanhdeuplen: "Bạn chỉ được chọn 1 hình ảnh để upload",
-    dinhdanghinhanhkhonghople: "Định dạng hình ảnh không hợp lệ",
-    huy: "Hủy",
-    chinhsach: "Chính Sách",
+    'no_keywords': '<?= chuanhaptukhoatimkiem ?>',
+    'delete_product_from_cart': '<?= banmuonxoasanphamnay ?>',
+    'no_products_in_cart': '<?= khongtontaisanphamtronggiohang ?>',
+    'ward': '<?= phuongxa ?>',
+    'back_to_home': '<?= vetrangchu ?>',
+    'thongbao': '<?= thongbao ?>',
+    'dongy': '<?= dongy ?>',
+    'dungluonghinhanhlon': '<?= dungluonghinhanhlon ?>',
+    'dulieukhonghople': '<?= dulieukhonghople ?>',
+    'banchiduocchon1hinhanhdeuplen': '<?= banchiduocchon1hinhanhdeuplen ?>',
+    'dinhdanghinhanhkhonghople': '<?= dinhdanghinhanhkhonghople ?>',
+    'huy': '<?= huy ?>'
   };
 </script>
 <?php

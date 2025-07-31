@@ -62,12 +62,12 @@
 <div class="menu-mobile">
   <div class="wrap-content">
     <div class="d-flex flex-wrap justify-content-between align-items-center">
-      <div class="search-mobile">
+      <!-- <div class="search-mobile">
         <input type="text" id="keyword-res" placeholder="Nhập từ khóa tìm kiếm..." onkeypress="doEnterMobile(event,'keyword-res');" />
         <p onclick="onSearchMobile('keyword-res');">
           <i class="fa-solid fa-magnifying-glass"></i>
         </p>
-      </div>
+      </div> -->
       <div class="logo-mobile">
         <a href="./">
           <?= $fn->getImageCustom(['file' => $logo['file'], 'alt' => $optsetting["name$lang"], 'title' => $optsetting["name$lang"], 'width'  => 120, 'height'  => 60, 'zc' => 3, 'lazy' => false]) ?>
@@ -80,10 +80,24 @@
   </div>
 </div>
 <nav id="menu">
+  <div class="box-menu-mobile-search">
+    <div class="menu-mobile-search">
+      <input
+        type="text"
+        id="keyword-res"
+        placeholder="Nhập từ khóa tìm kiếm..."
+        onkeypress="doEnterMobile(event, 'keyword-res');" />
+      <strong onclick="onSearchMobile('keyword-res');">
+        <i class="fa-solid fa-magnifying-glass"></i>
+      </strong>
+    </div>
+  </div>
+
+
   <ul>
-    <li><a href="./">Trang chủ</a></li>
-    <li><a href="gioi-thieu">Giới thiệu</a></li>
-    <li>
+    <li class="<?= ($type == 'index') ? 'active' : '' ?>"><a href="./">Trang chủ</a></li>
+    <li class="<?= ($type == 'gioi-thieu') ? 'active' : '' ?>"><a href="gioi-thieu">Giới thiệu</a></li>
+    <li class="<?= ($type == 'san-pham') ? 'active' : '' ?>">
       <a href="san-pham">Sản phẩm</a>
       <?php if (!empty($menu_list)): ?>
         <ul>
@@ -111,10 +125,9 @@
         </ul>
       <?php endif; ?>
     </li>
-
-    <li><a href="huong-dan-choi">Hướng dẫn chơi</a></li>
-    <li><a href="tin-tuc">Tin tức</a></li>
-    <li><a href="mua-hang">Mua hàng</a></li>
-    <li><a href="lien-he">Liên hệ</a></li>
+    <li class="<?= ($type == 'huong-dan-choi') ? 'active' : '' ?>"><a href="huong-dan-choi">Hướng dẫn chơi</a></li>
+    <li class="<?= ($type == 'tin-tuc') ? 'active' : '' ?>"><a href="tin-tuc">Tin tức</a></li>
+    <li class="<?= ($type == 'mua-hang') ? 'active' : '' ?>"><a href="mua-hang">Mua hàng</a></li>
+    <li class="<?= ($type == 'lien-he') ? 'active' : '' ?>"><a href="lien-he">Liên hệ</a></li>
   </ul>
 </nav>

@@ -118,6 +118,17 @@
                 <span class="text-split"><?= $v["content$lang"] ?></span>
               </div>
             </div>
+            <svg class="quote-icon" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+              <rect width="48" height="48" fill="white" />
+              <g transform="translate(0,48) scale(0.1,-0.1)" fill="var(--main-color)">
+                <path d="M5 458 c-3 -13 -4 -118 -3 -235 l3 -212 52 39 51 40 184 2 183 3 3
+      170 c1 94 0 180 -3 193 l-5 22 -230 0 -230 0 -5 -22z m189 -133 c-9 -14 -15
+      -27 -13 -28 2 -1 13 -7 24 -13 25 -14 31 -56 11 -73 -23 -19 -65 -5 -77 26
+      -14 38 -2 79 34 109 35 30 47 18 21 -21z m139 39 c3 -4 -3 -18 -13 -32 -25
+      -31 -25 -39 0 -47 25 -8 37 -50 20 -70 -18 -22 -57 -18 -74 7 -25 35 -19 73
+      15 113 31 35 40 40 52 29z" />
+              </g>
+            </svg>
           </div>
         <?php endforeach; ?>
       </div>

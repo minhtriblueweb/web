@@ -39,12 +39,12 @@ $config['news'][$type]['desc_cke'] = false;
 $config['news'][$type]['content'] = false;
 $config['news'][$type]['content_cke'] = false;
 $config['news'][$type]['seo'] = false;
-$config['news'][$type]['width'] = $config['size-img'][$type]['man']['width'] = 40;
-$config['news'][$type]['height'] = $config['size-img'][$type]['man']['height'] = 40;
+$config['news'][$type]['width'] = $config['size-img'][$type]['man']['width'] = 30;
+$config['news'][$type]['height'] = $config['size-img'][$type]['man']['height'] = 30;
 $config['news'][$type]['thumb'] = '100x' . round(100 / ($config['news'][$type]['width'] / $config['news'][$type]['height'])) . 'x1';
 $config['news'][$type]['img_type'] = '.jpg|.gif|.png|.jpeg|.gif';
 $config['size-img'][$type]['man']['active'] = false;
-$config['news'][$type]['convert_webp'] = true;
+$config['news'][$type]['convert_webp'] = false;
 
 //chính sách
 $type = "chinh-sach";

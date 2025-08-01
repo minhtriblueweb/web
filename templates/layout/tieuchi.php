@@ -6,12 +6,12 @@
           <div>
             <div class="item-criterion hvr-icon-rotate">
               <div class="images">
-                <a class="hvr-icon" title="<?= $row['name' . $lang] ?>">
+                <a class="hvr-icon me-2" title="<?= $row['name' . $lang] ?>">
                   <?= $fn->getImageCustom([
                     'file' =>  $row['file'],
-                    'width' => 40,
-                    'height' => 40,
-                    'zc' => 1,
+                    'width' => $config['news']['tieu-chi']['width'],
+                    'height' => $config['news']['tieu-chi']['height'],
+                    'zc' => substr($config['news']['tieu-chi']['thumb'], -1),
                     'alt' => $row['name' . $lang],
                     'title' => $row['name' . $lang],
                     'lazy' => true

@@ -12,21 +12,21 @@
   <form class="validation-form" novalidate="" method="post" id="form-watermark" action="" enctype="multipart/form-data">
     <div class="card-footer text-sm sticky-top">
       <button name="upload" type="submit" class="btn btn-sm bg-gradient-primary">
-        <i class="far fa-save mr-2"></i>Lưu
+        <i class="far fa-save mr-2"></i><?= luu ?>
       </button>
       <button type="reset" class="btn btn-sm bg-gradient-secondary">
-        <i class="fas fa-redo mr-2"></i>Làm lại
+        <i class="fas fa-redo mr-2"></i><?= lamlai ?>
       </button>
     </div>
     <div class="card card-primary card-outline text-sm">
       <div class="card-header">
-        <h3 class="card-title">Cấu hình <?= $config['photo']['photo_static'][$type]['title_main'] ?></h3>
+        <h3 class="card-title"><?= cauhinh ?> <?= $config['photo']['photo_static'][$type]['title_main'] ?></h3>
       </div>
       <div class="card-body">
         <div class="form-group">
           <?php foreach ($config['photo']['photo_static'][$type]['status'] as $check => $label): ?>
             <div class="form-group d-inline-block mb-2 mr-5">
-              <label for="<?= $check ?>-checkbox" class="d-inline-block align-middle mb-0 mr-3 form-label"><?= $label ?>:</label>
+              <label for="<?= $check ?>-checkbox" class="d-inline-block align-middle mb-0 mr-3 form-label"><?= defined($check) ? constant($check) : $check ?>:</label>
               <label class="switch switch-success">
                 <input type="checkbox" name="<?= $check ?>" class="switch-input custom-control-input .show-checkbox" id="<?= $check ?>-checkbox" <?= $fn->is_checked($check, $result['status'] ?? '', $result['id'] ?? '') ?>>
               </label>
@@ -37,7 +37,7 @@
           <div class="<?= ($type === 'watermark') ? 'col-xl-4' : 'col-xl-12' ?>">
             <div class="form-group">
               <div class="upload-file">
-                <p>Upload hình ảnh:</p>
+                <p><?= uploadhinhanh ?>:</p>
                 <label class="upload-file-label mb-2" for="<?= $type ?>-file">
                   <div class="upload-file-image rounded mb-3">
                     <div class="d-flex justify-content-center">
@@ -48,7 +48,7 @@
                   </div>
                   <div class="custom-file my-custom-file">
                     <input type="file" class="custom-file-input" name="file" id="file" lang="vi">
-                    <label class="custom-file-label mb-0" data-browse="Chọn" for="file">Chọn file</label>
+                    <label class="custom-file-label mb-0" data-browse="<?= chon ?>" for="file"><?= chonfile ?></label>
                   </div>
                   <strong class="d-block text-sm">
                     Width: <?= $config['photo']['photo_static'][$type]['width'] ?> px - Height: <?= $config['photo']['photo_static'][$type]['height'] ?> px (<?= $config['photo']['photo_static'][$type]['img_type'] ?>)
@@ -67,7 +67,7 @@
               $offset_y   = (int)$options['offset_y'] ?? '';
             ?>
               <div class="form-group">
-                <label>Vị trí đóng dấu:</label>
+                <label><?= vitridongdau ?>:</label>
                 <div class="watermark-position rounded">
                   <?php for ($i = 1; $i <= 9; $i++): ?>
                     <label class="<?= ($i === $position) ? 'active' : '' ?>">
@@ -124,7 +124,7 @@
 
               <div class="mt-2">
                 <p class="text-danger mb-0">
-                  <strong><i class="ti ti-exclamation-circle ms-1"></i> Lưu ý:</strong> Cần xóa cache nếu có thay đổi watermark
+                  <strong><i class="ti ti-exclamation-circle ms-1"></i> Lưu ý: </strong>Cần xóa cache nếu có thay đổi watermark
                 </p>
               </div>
             </div>

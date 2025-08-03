@@ -10,13 +10,14 @@
 </section>
 <section class="content">
   <div class="card-footer text-sm sticky-top">
-    <a class="btn btn-sm bg-gradient-primary text-white" href="<?= $linkForm ?>" title="Thêm mới"><i class="fas fa-plus mr-2"></i>Thêm mới</a>
-    <a class="btn btn-sm bg-gradient-danger text-white" id="delete-all" data-url="<?= $linkMulti ?>" title="Xóa tất cả"><i class="far fa-trash-alt mr-2"></i>Xóa tất cả</a>
+    <a class="btn btn-sm bg-gradient-primary text-white" href="<?= $linkForm ?>" title="<?= themmoi ?>"><i class="fas fa-plus mr-2"></i><?= themmoi ?></a>
+    <a class="btn btn-sm bg-gradient-danger text-white" id="delete-all" data-url="<?= $linkMulti ?>" title="<?= xoatatca ?>"><i class="far fa-trash-alt mr-2"></i><?= xoatatca ?></a>
     <div class="form-inline form-search d-inline-block align-middle ml-3">
       <div class="input-group input-group-sm">
-        <input class="form-control form-control-navbar text-sm" type="search" id="keyword" placeholder="Tìm kiếm" aria-label="Tìm kiếm" value="<?= $keyword ?>" onkeypress="doEnter(event,'keyword','<?= $linkMan ?>')">
+        <input class="form-control form-control-navbar text-sm" type="search" id="keyword" placeholder="<?= timkiem ?>" aria-label="<?= timkiem ?>" value="<?= $keyword ?>" onkeypress="doEnter(event,'keyword','<?= $linkMan ?>')">
         <div class="input-group-append bg-primary rounded-right">
-          <button class="btn btn-navbar text-white" type="button" onclick="onSearch('keyword','<?= $linkMan ?>')"><i class="fas fa-search"></i>
+          <button class="btn btn-navbar text-white" type="button" onclick="onSearch('keyword','<?= $linkMan ?>')">
+            <i class="fas fa-search"></i>
           </button>
         </div>
       </div>
@@ -32,7 +33,7 @@
   </div>
   <div class="card card-primary card-outline text-sm mb-0">
     <div class="card-header">
-      <h3 class="card-title">Danh sách <?= $config['product'][$type]['title_main'] ?></h3>
+      <h3 class="card-title"><?= danhsach ?> <?= $config['product'][$type]['title_main'] ?></h3>
     </div>
     <div class="card-body table-responsive p-0">
       <table class="table table-hover">
@@ -45,17 +46,17 @@
               </div>
             </th>
             <th class="align-middle text-center" style="width: 10%">STT</th>
-            <th class="align-middle">Hình</th>
-            <th class="align-middle" style="width: 20%">Tiêu đề</th>
+            <th class="align-middle"><?= hinh ?></th>
+            <th class="align-middle" style="width: 20%"><?= tieude ?></th>
             <?php if (!empty($config['product'][$type]['gallery'])): ?>
               <th class="align-middle">Gallery</th>
             <?php endif; ?>
-            <th class="align-middle">Cấp 1</th>
-            <th class="align-middle">Cấp 2</th>
+            <th class="align-middle"><?= danhmuccap1 ?></th>
+            <th class="align-middle"><?= danhmuccap2 ?></th>
             <?php foreach ($config['product'][$type]['check'] as $attr => $label): ?>
-              <th class="align-middle text-center"><?= $label ?></th>
+              <th class="align-middle text-center"><?= defined($attr) ? constant($attr) : $attr ?></th>
             <?php endforeach; ?>
-            <th class="align-middle text-center">Thao tác</th>
+            <th class="align-middle text-center"><?= thaotac ?></th>
           </tr>
         </thead>
         <form action="" method="POST">
@@ -107,13 +108,13 @@
                   <?php if (!empty($config['product'][$type]['gallery'])): ?>
                     <td class="align-middle">
                       <div class="dropdown">
-                        <button type="button" class="btn btn-sm bg-gradient-info dropdown-toggle" data-toggle="dropdown">Thêm</button>
+                        <button type="button" class="btn btn-sm bg-gradient-info dropdown-toggle" data-toggle="dropdown"><?= them ?></button>
                         <div class="dropdown-menu">
                           <a class="dropdown-item text-dark" href="<?= $linkGalleryForm . $row['id'] ?>" title="Gallery">
-                            <i class="far fa-caret-square-right text-secondary mr-2"></i>Thêm Gallery
+                            <i class="far fa-caret-square-right text-secondary mr-2"></i><?= them ?> Gallery
                           </a>
                           <a class="dropdown-item text-dark" href="<?= $linkGalleryMan . $row['id'] ?>" title="Gallery">
-                            <i class="far fa-caret-square-right text-secondary mr-2"></i>Danh sách Gallery
+                            <i class="far fa-caret-square-right text-secondary mr-2"></i><?= danhsach ?> Gallery
                           </a>
                         </div>
                       </div>
@@ -138,14 +139,18 @@
                   <?php endforeach; ?>
                   <!-- Hành động -->
                   <td class="align-middle text-center text-md text-nowrap">
-                    <a class="text-primary mr-2" href="<?= $linkEdit . $row['id'] ?>" title="Chỉnh sửa"><i class="fas fa-edit"></i></a>
-                    <a class="text-danger" id="delete-item" data-url="<?= $linkDelete . $row['id'] ?>" title="Xóa"><i class="fas fa-trash-alt"></i></a>
+                    <a class="text-primary mr-2" href="<?= $linkEdit . $row['id'] ?>" title="<?= chinhsua ?>">
+                      <i class="fas fa-edit"></i>
+                    </a>
+                    <a class="text-danger" id="delete-item" data-url="<?= $linkDelete . $row['id'] ?>" title="<?= xoa ?>">
+                      <i class="fas fa-trash-alt"></i>
+                    </a>
                   </td>
                 </tr>
               <?php endforeach; ?>
             <?php else: ?>
               <tr>
-                <td colspan="100" class="text-center">Không có dữ liệu</td>
+                <td colspan="100" class="text-center"><?= khongcodulieu ?></td>
               </tr>
             <?php endif; ?>
           </tbody>

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="<?= $config['website']['lang-doc'] ?>">
 
 <head>
   <meta charset="utf-8" />
@@ -49,7 +49,7 @@
           <a class="nav-link" data-widget="pushmenu" href="#"><i class="fas fa-bars"></i></a>
         </li>
         <li class="nav-item nav-item-hello d-sm-inline-block">
-          <a class="nav-link"><span class="text-split">Xin chào, admin!</span></a>
+          <a class="nav-link"><span class="text-split"><?= xinchao ?>, admin!</span></a>
         </li>
       </ul>
 
@@ -66,21 +66,21 @@
             <li>
               <a href="" class="dropdown-item">
                 <i class="fas fa-user-cog"></i>
-                <span>Thông tin admin</span>
+                <span><?= thongtinadmin ?></span>
               </a>
             </li>
             <div class="dropdown-divider"></div>
             <li>
               <a href="" class="dropdown-item">
                 <i class="fas fa-key"></i>
-                <span>Đổi mật khẩu</span>
+                <span><?= doimatkhau ?></span>
               </a>
             </li>
             <div class="dropdown-divider"></div>
             <li>
               <a href="" class="dropdown-item">
                 <i class="far fa-trash-alt"></i>
-                <span>Xóa bộ nhớ cache</span>
+                <span><?= xoabonhocache ?></span>
               </a>
             </li>
           </ul>
@@ -91,19 +91,15 @@
             <span class="badge badge-danger">0</span>
           </a>
           <div class="dropdown-menu dropdown-menu-right shadow">
-            <span class="dropdown-item dropdown-header p-0">Thông báo</span>
+            <span class="dropdown-item dropdown-header p-0"><?= thongbao ?></span>
             <div class="dropdown-divider"></div>
-            <a href="" class="dropdown-item"><i class="fas fa-envelope mr-2"></i><span
-                class="badge badge-danger mr-1">0</span> Liên hệ</a>
+            <a href="" class="dropdown-item"><i class="fas fa-envelope mr-2"></i><span class="badge badge-danger mr-1">0</span><?= lienhe ?></a>
             <div class="dropdown-divider"></div>
-            <a href="" class="dropdown-item"><i class="fas fa-mail-bulk mr-2"></i><span
-                class="badge badge-danger mr-1">0</span>
-              Đăng ký nhận tin
-            </a>
+            <a href="" class="dropdown-item"><i class="fas fa-mail-bulk mr-2"></i><span class="badge badge-danger mr-1">0</span><?= dangkynhantin ?></a>
           </div>
         </li>
         <li class="nav-item d-sm-inline-block">
-          <a href="logout.php" class="nav-link"><i class="fas fa-sign-out-alt mr-1"></i>Đăng xuất</a>
+          <a href="logout.php" class="nav-link"><i class="fas fa-sign-out-alt mr-1"></i><?= dangxuat ?></a>
         </li>
       </ul>
     </nav>

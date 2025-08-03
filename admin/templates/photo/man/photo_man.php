@@ -10,8 +10,8 @@
 </section>
 <section class="content">
   <div class="card-footer text-sm sticky-top">
-    <a class="btn btn-sm bg-gradient-primary text-white" href="<?= $linkForm ?>" title="Thêm mới"><i class="fas fa-plus mr-2"></i>Thêm mới</a>
-    <a class="btn btn-sm bg-gradient-danger text-white" id="delete-all" data-url="<?= $linkMulti ?>" title="Xóa tất cả"><i class="far fa-trash-alt mr-2"></i>Xóa tất cả</a>
+    <a class="btn btn-sm bg-gradient-primary text-white" href="<?= $linkForm ?>" title="<?= themmoi ?>"><i class="fas fa-plus mr-2"></i><?= themmoi ?></a>
+    <a class="btn btn-sm bg-gradient-danger text-white" id="delete-all" data-url="<?= $linkMulti ?>" title="<?= xoatatca ?>"><i class="far fa-trash-alt mr-2"></i><?= xoatatca ?></a>
     <div class="form-inline form-search d-inline-block align-middle ml-3">
       <div class="input-group input-group-sm">
         <input class="form-control form-control-navbar text-sm" type="search" id="keyword" placeholder="Tìm kiếm" aria-label="Tìm kiếm" value="<?= (isset($_GET['keyword'])) ? $_GET['keyword'] : '' ?>" onkeypress="doEnter(event,'keyword','<?= $linkMan ?>')">
@@ -25,7 +25,7 @@
   </div>
   <div class="card card-primary card-outline text-sm mb-0">
     <div class="card-header">
-      <h3 class="card-title">Danh sách <?= $config['photo']['photo_man'][$type]['title_main_photo'] ?></h3>
+      <h3 class="card-title"><?= danhsach ?> <?= $config['photo']['photo_man'][$type]['title_main_photo'] ?></h3>
     </div>
     <div class="card-body table-responsive p-0">
       <table class="table table-hover">
@@ -38,66 +38,58 @@
               </div>
             </th>
             <th class="align-middle text-center" width="10%">STT</th>
-            <th class="align-middle text-center" width="8%">Hình</th>
-            <th class="align-middle" width="20%">Tiêu đề</th>
+            <th class="align-middle"><?= hinh ?></th>
+            <th class="align-middle" style="width: 20%"><?= tieude ?></th>
             <?php if (!empty($config['photo']['photo_man'][$type]['link_photo'])): ?>
               <th class="align-middle">Link</th>
             <?php endif; ?>
             <?php foreach ($config['photo']['photo_man'][$type]['status_photo'] as $attr => $label): ?>
-              <th class="align-middle text-center"><?= $label ?></th>
+              <th class="align-middle text-center"><?= defined($attr) ? constant($attr) : $attr ?></th>
             <?php endforeach; ?>
-            <th class="align-middle text-center">Thao tác</th>
+            <th class="align-middle text-center"><?= thaotac ?></th>
           </tr>
         </thead>
         <tbody>
           <?php if (!empty($show_data)): ?>
-            <?php foreach ($show_data as $row):
-              $id = $row['id'];
-              $name = $row['namevi'];
-              $numb = $row['numb'];
-              $link = $row['link'];
-              $status = $row['status'] ?? '';
-              $file = $row['file'];
-              $linkEditId = $linkEdit . $id;
-              $linkDeleteId = $linkDelete . $id;
-            ?>
+            <?php foreach ($show_data as $row): ?>
               <tr>
                 <!-- Checkbox chọn nhiều -->
                 <td class="align-middle">
                   <div class="custom-control custom-checkbox my-checkbox">
-                    <input type="checkbox" class="custom-control-input select-checkbox" id="select-checkbox-<?= $id ?>" value="<?= $id ?>">
-                    <label for="select-checkbox-<?= $id ?>" class="custom-control-label"></label>
+                    <input type="checkbox" class="custom-control-input select-checkbox" id="select-checkbox-<?= $row['id'] ?>" value="<?= $row['id'] ?>">
+                    <label for="select-checkbox-<?= $row['id'] ?>" class="custom-control-label"></label>
                   </div>
                 </td>
 
                 <!-- Số thứ tự -->
                 <td class="align-middle">
                   <input type="number" class="form-control form-control-mini m-auto update-numb" min="0"
-                    value="<?= $numb ?>" data-id="<?= $id ?>" data-table="<?= $table ?>">
+                    value="<?= $row['numb'] ?>" data-id="<?= $row['id'] ?>" data-table="<?= $table ?>">
                 </td>
 
                 <!-- Hình ảnh -->
                 <td class="align-middle text-center">
-                  <a href="<?= $linkEditId ?>" title="<?= $name ?>">
+                  <a href="<?= $linkEdit . $row['id'] ?>" title="<?= $row["name$lang"] ?>">
                     <?= $fn->getImage([
-                      'file' => $file,
+                      'file' => $row['file'],
                       'class' => 'rounded img-preview',
-                      'alt' => $name,
+                      'alt' => $row["name$lang"],
+                      'title' => $row["name$lang"],
                     ]) ?>
                   </a>
                 </td>
 
                 <!-- Tên -->
                 <td class="align-middle">
-                  <a class="text-dark text-break" href="<?= $linkEditId ?>" title="<?= $name ?>">
-                    <?= $name ?>
+                  <a class="text-dark text-break" href="<?= $linkEdit . $row['id'] ?>" title="<?= $row["name$lang"] ?>">
+                    <?= $row["name$lang"] ?>
                   </a>
                 </td>
 
                 <!-- Link -->
                 <?php if (!empty($config['photo']['photo_man'][$type]['link_photo'])): ?>
                   <td class="align-middle">
-                    <?= $link ?>
+                    <?= $row['link'] ?>
                   </td>
                 <?php endif; ?>
 
@@ -116,10 +108,10 @@
 
                 <!-- Hành động -->
                 <td class="align-middle text-center text-md text-nowrap">
-                  <a class="text-primary mr-2" href="<?= $linkEditId ?>" title="Chỉnh sửa">
+                  <a class="text-primary mr-2" href="<?= $linkEdit . $row['id'] ?>" title="<?= chinhsua ?>">
                     <i class="fas fa-edit"></i>
                   </a>
-                  <a class="text-danger" id="delete-item" data-url="<?= $linkDeleteId ?>" title="Xóa">
+                  <a class="text-danger" id="delete-item" data-url="<?= $linkDelete . $row['id'] ?>" title="<?= xoa ?>">
                     <i class="fas fa-trash-alt"></i>
                   </a>
                 </td>
@@ -127,7 +119,7 @@
             <?php endforeach; ?>
           <?php else: ?>
             <tr>
-              <td colspan="100" class="text-center">Không có dữ liệu</td>
+              <td colspan="100" class="text-center"><?= khongcodulieu ?></td>
             </tr>
           <?php endif; ?>
         </tbody>

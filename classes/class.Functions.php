@@ -189,7 +189,7 @@ class Functions
       }
     }
     if (!empty($redirect_url)) {
-      $this->transfer($result ? "Cập nhật hình ảnh thành công" : "Cập nhật hình ảnh thất bại!", $redirect_url, $result);
+      $this->transfer($result ? capnhathinhanhthanhcong : capnhathinhanhthatbai, $redirect_url, $result);
     }
     return $result;
   }
@@ -327,7 +327,7 @@ class Functions
       if ($enable_gallery && !empty($files['files']['name'][0])) {
         $this->save_gallery($data, $files, $id, $type, false);
       }
-      $msg = $result ? "Cập nhật dữ liệu thành công" : "Cập nhật dữ liệu thất bại";
+      $msg = $result ? capnhatdulieuthanhcong : capnhatdulieubiloi;
     } else {
       $columns = array_keys($data_prepared);
       $placeholders = array_fill(0, count($columns), '?');
@@ -345,7 +345,7 @@ class Functions
       if ($enable_gallery && !empty($files['files']['name'][0])) {
         $this->save_gallery($data, $files, $insert_id, $type, false);
       }
-      $msg = $inserted ? "Thêm dữ liệu thành công" : "Thêm dữ liệu thất bại";
+      $msg = $inserted ? capnhatdulieuthanhcong : capnhatdulieubiloi;
     }
     $this->transfer($msg, $redirect_page, !empty($id) ? $result : $inserted);
   }
@@ -431,11 +431,7 @@ class Functions
 
     $deleted = $this->db->execute("DELETE FROM `$table` WHERE id = ?", [$id]);
 
-    $this->transfer(
-      $deleted ? "Xóa dữ liệu thành công!" : "Xóa dữ liệu thất bại!",
-      $redirect_page,
-      $deleted
-    );
+    $this->transfer($deleted ? xoadulieuthanhcong : xoadulieubiloi, $redirect_page, $deleted);
   }
   public function deleteMultiple_data(array $options = [])
   {
@@ -475,18 +471,21 @@ class Functions
       }
     }
     $delete_result = $this->db->execute("DELETE FROM `$table` WHERE id IN ($placeholders)", $ids);
-    $this->transfer(
-      $delete_result ? "Xóa dữ liệu thành công!" : "Xóa dữ liệu thất bại!",
-      $redirect_page,
-      $delete_result
-    );
+    $this->transfer($delete_result ? xoadulieuthanhcong : xoadulieubiloi, $redirect_page, $delete_result);
   }
-  public function galleryFiler($numb = 1, $id = 0, $photo = '', $name = '', $folder = '', $col = '')
+  public function galleryFiler($numb = 1, $id = 0, $photo = '', $name = '', $col = '')
   {
-    $image = $this->getImage(['file' => $photo, 'width' => 150, 'height' => 150, 'thumb' => false, 'class' => 'img-fluid rounded mx-auto d-block']);
-    $html = '<li class="jFiler-item ' . $col . '"><div class="jFiler-item-container"><div class="jFiler-item-inner"><div class="jFiler-item-thumb"><div class="jFiler-item-status"></div><div class="jFiler-item-thumb-overlay"><div class="jFiler-item-info"><div style="display: table-cell; vertical-align: middle;"><span class="jFiler-item-title"><b title="' . htmlspecialchars($name) . '">' . htmlspecialchars($name) . '</b></span></div></div></div>' . $image . '</div><div class="jFiler-item-assets jFiler-row"><ul class="list-inline pull-right d-flex align-items-center justify-content-between w-100"><li class="ml-1"><a class="icon-jfi-trash jFiler-item-trash-action my-jFiler-item-trash" data-id="' . (int)$id . '" data-folder="' . htmlspecialchars($folder) . '" data-photo="' . htmlspecialchars($photo) . '"></a></li><li class="mr-1"><div class="custom-control custom-checkbox d-inline-block align-middle text-md"><input type="checkbox" class="custom-control-input filer-checkbox" id="filer-checkbox-' . (int)$id . '" value="' . (int)$id . '"><label for="filer-checkbox-' . (int)$id . '" class="custom-control-label font-weight-normal" data-label="Chọn">Chọn</label></div></li></ul></div><input type="number" class="form-control form-control-sm mb-1" name="numb-filer[]" placeholder="Số thứ tự" value="' . (int)$numb . '"><input type="text" class="form-control form-control-sm" name="name-filer[]" placeholder="Tiêu đề" value="' . htmlspecialchars($name) . '"><input type="hidden" name="id-filer[]" value="' . (int)$id . '"><input type="hidden" name="photo-filer[]" value="' . htmlspecialchars($photo) . '"><input type="hidden" name="folder-filer[]" value="' . htmlspecialchars($folder) . '"></div></div></li>';
-    return $html;
+    $params = array();
+    $params['numb'] = $numb;
+    $params['id'] = $id;
+    $params['photo'] = $photo;
+    $params['name'] = $name;
+    $params['col'] = $col;
+    $str = $this->markdown('gallery/admin', $params);
+
+    return $str;
   }
+
   function isItemActive(array $activeList, string $currentPage, string $currentType): bool
   {
     $currentAct = $_GET['act'] ?? '';
@@ -522,7 +521,7 @@ class Functions
     include '404.php';
     exit();
   }
-  public function getLinkCategory($table = '', $selectedId = 0, $title_select = 'Chọn danh mục')
+  public function getLinkCategory($table = '', $selectedId = 0, $title_select = chondanhmuc)
   {
     $params = [];
     $where = ' WHERE 1';
@@ -555,12 +554,12 @@ class Functions
         $str .= '<option value="' . $row['id'] . '" ' . $selected . '>' . htmlspecialchars($row['namevi']) . '</option>';
       }
     } else {
-      $str .= '<option disabled>Không có dữ liệu</option>';
+      $str .= '<option disabled>' . khongcodulieu . '</option>';
     }
     $str .= '</select>';
     return $str;
   }
-  public function getAjaxCategory($table = '', $selectedId = 0, $id_list = null, $id_cat = null, $title_select = 'Chọn danh mục')
+  public function getAjaxCategory($table = '', $selectedId = 0, $id_list = null, $id_cat = null, $title_select = chondanhmuc)
   {
     $table = preg_replace('/[^a-zA-Z0-9_]/', '', $table);
     $params = [];
@@ -685,7 +684,7 @@ class Functions
     $lang = $data['lang'] ?? 'vi';
     if ($slug === '' || $table === '') return false;
     $slugCol = 'slug' . $lang;
-    $errorMsg = "Đường dẫn đã tồn tại. Vui lòng chọn đường dẫn khác để tránh trùng lặp.";
+    $errorMsg = duongdandatontaiduongdantruycapmucnaycothebitrunglap;
     $reservedSlugs = [
       'lien-he',
       'tin-tuc',
@@ -1160,20 +1159,16 @@ class Functions
   {
     $total_pages = (int)ceil($total / $perPage);
     if ($total_pages <= 1) return '';
-
     $queryParams = $_GET;
     unset($queryParams['p']);
     $queryString = http_build_query($queryParams);
     $queryString = $queryString ? $queryString . '&' : '';
-
-    // Chuẩn hóa URL: nếu không có dấu "?", thêm vào
     $baseUrl .= (strpos($baseUrl, '?') !== false ? '&' : '?') . $queryString;
-
     $html = '<ul class="pagination flex-wrap justify-content-center mb-0">';
-    $html .= '<li class="page-item"><a class="page-link">Trang ' . $page . ' / ' . $total_pages . '</a></li>';
+    $html .= '<li class="page-item"><a class="page-link">' . trang . ' ' . $page . ' / ' . $total_pages . '</a></li>';
 
     if ($page > 1) {
-      $html .= '<li class="page-item"><a class="page-link" href="' . $baseUrl . 'p=' . ($page - 1) . '">Trước</a></li>';
+      $html .= '<li class="page-item"><a class="page-link" href="' . $baseUrl . 'p=' . ($page - 1) . '">' . truoc . '</a></li>';
     }
 
     $range = 2;
@@ -1195,8 +1190,8 @@ class Functions
     }
 
     if ($page < $total_pages) {
-      $html .= '<li class="page-item"><a class="page-link" href="' . $baseUrl . 'p=' . ($page + 1) . '">Tiếp</a></li>';
-      $html .= '<li class="page-item"><a class="page-link" href="' . $baseUrl . 'p=' . $total_pages . '">Cuối</a></li>';
+      $html .= '<li class="page-item"><a class="page-link" href="' . $baseUrl . 'p=' . ($page + 1) . '">' . tiep . '</a></li>';
+      $html .= '<li class="page-item"><a class="page-link" href="' . $baseUrl . 'p=' . $total_pages . '">' . cuoi . '</a></li>';
     }
 
     $html .= '</ul>';

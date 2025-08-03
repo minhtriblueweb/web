@@ -76,7 +76,6 @@ switch ($act) {
     if (!$config['photo']['photo_man'][$type]) $fn->transfer(trangkhongtontai, "index.php", false);
     $id = isset($_GET['id']) && is_numeric($_GET['id']) ? (int)$_GET['id'] : null;
     $result = ($id !== null) ? $db->rawQueryOne("SELECT * FROM $table WHERE type = ? AND id = ?", [$type, $id]) : null;
-    if (!$result) $fn->transfer(dulieukhongcothuc, $linkMan, false);
     if ($_SERVER['REQUEST_METHOD'] === 'POST' && (isset($_POST['add']) || isset($_POST['edit']))) {
       $fn->save_data($_POST, $_FILES, $id, [
         'table'           => $table,

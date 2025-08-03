@@ -4,6 +4,22 @@ define("noibat", "Nổi bật");
 
 define("hienthi", "Hiển thị");
 
+define("menu", "Menu");
+
+define("banchay", "Bán chạy");
+
+define("hienthitrenketquatimkiem", "Hiển thị trên kết quả tìm kiếm");
+
+define("hienthitatca", "Hiển thị tất cả");
+
+define("tiep", "Tiếp");
+
+define("cuoi", "Cuối");
+
+define("truoc", "Trước");
+
+define("trang", "Trang");
+
 define("trangchu", "Trang chủ");
 
 define("sanpham", "Sản phẩm");
@@ -118,7 +134,9 @@ define("dulieukhongcothuc", "Dữ liệu không có thực");
 define("khongnhanduocdulieu", "Không nhận được dữ liệu");
 
 define("capnhatdulieuthanhcong", "Cập nhật dữ liệu thành công");
+
 define("capnhathinhanhthanhcong", "Cập nhật hình ảnh thành công");
+
 define("capnhathinhanhthatbai", "Cập nhật hình ảnh thất bại!");
 
 define("capnhatdulieubiloi", "Cập nhật dữ liệu bị lỗi");
@@ -630,8 +648,8 @@ define("daxem", "Đã xem");
 define("dalienhe", "Đã liên hệ");
 
 define("dathongbao", "Đã thông báo");
-define("matkhau", "Mật khẩu");
 
+define("matkhau", "Mật khẩu");
 
 define("hinhanhtintuccap1", "Hình ảnh Tin tức cấp 1");
 
@@ -639,11 +657,9 @@ define("videotintuccap1", "Video Tin tức cấp 1");
 
 define("chinhsach", "Chính sách");
 
-
 define("doitac", "Đối tác");
 
 define("watermarktintuc", "Watermark tin tức");
-
 
 define("gioithieu", "Giới thiệu");
 
@@ -689,7 +705,6 @@ define("laymanhung", "Lấy mã nhúng");
 
 define("thongtintaikhoan", "Thông tin tài khoản");
 
-
 define("matkhaucu", "Mật khẩu cũ");
 
 define("matkhaumoi", "Mật khẩu mới");
@@ -697,7 +712,6 @@ define("matkhaumoi", "Mật khẩu mới");
 define("taomatkhau", "Tạo mật khẩu");
 
 define("nhaplaimatkhaumoi", "Nhập lại mật khẩu mới");
-
 
 define("gioitinh", "Giới tính");
 

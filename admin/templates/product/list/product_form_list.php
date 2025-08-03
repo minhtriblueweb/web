@@ -3,7 +3,7 @@
     <div class="row">
       <ol class="breadcrumb float-sm-left">
         <li class="breadcrumb-item"><a href="index.php" title="<?= dashboard ?>"><?= dashboard ?></a></li>
-        <li class="breadcrumb-item active"><?= ($id > 0 ? 'Cập nhật ' : 'Thêm mới ') . ($config['product'][$type]['title_main_list'] ?? '') ?></li>
+        <li class="breadcrumb-item active"><?= ($id > 0 ? capnhat : themmoi) . ' ' . ($config['product'][$type]['title_main_list'] ?? '') ?></li>
       </ol>
     </div>
   </div>
@@ -14,12 +14,12 @@
       <button type="submit" name="<?= !empty($id) ? 'edit' : 'add'; ?>"
         class="btn btn-sm bg-gradient-primary <?= !empty($config['product'][$type]['slug_list']) ? 'submit-check' : '' ?>"
         <?= !empty($config['product'][$type]['slug_list']) ? 'disabled' : '' ?>>
-        <i class="far fa-save mr-2"></i>Lưu
+        <i class="far fa-save mr-2"></i><?= luu ?>
       </button>
       <button type="reset" class="btn btn-sm bg-gradient-secondary">
-        <i class="fas fa-redo mr-2"></i>Làm lại
+        <i class="fas fa-redo mr-2"></i><?= lamlai ?>
       </button>
-      <a class="btn btn-sm bg-gradient-danger" href="<?= $linkMan ?>" title="Thoát"><i class="fas fa-sign-out-alt mr-2"></i>Thoát</a>
+      <a class="btn btn-sm bg-gradient-danger" href="<?= $linkMan ?>" title="<?= thoat ?>"><i class="fas fa-sign-out-alt mr-2"></i><?= thoat ?></a>
     </div>
     <div class="row">
       <div class="col-xl-8">
@@ -28,7 +28,7 @@
         <?php endif; ?>
         <div class="card card-primary card-outline text-sm">
           <div class="card-header">
-            <h3 class="card-title">Nội dung <?= $config['product'][$type]['title_main_list'] ?></h3>
+            <h3 class="card-title"><?= noidung ?> <?= $config['product'][$type]['title_main_list'] ?></h3>
             <div class="card-tools">
               <button type="button" class="btn btn-tool" data-card-widget="collapse">
                 <i class="fas fa-minus"></i>
@@ -64,11 +64,11 @@
 
                       <!-- Tiêu đề -->
                       <div class="form-group">
-                        <label for="name<?= $k ?>">Tiêu đề (<?= $k ?>):</label>
+                        <label for="name<?= $k ?>"><?= tieude ?> (<?= $k ?>):</label>
                         <input type="text"
                           class="form-control for-seo text-sm"
                           name="name<?= $k ?>" id="name<?= $k ?>"
-                          placeholder="Tiêu đề (<?= $k ?>)"
+                          placeholder="<?= tieude ?> (<?= $k ?>)"
                           value="<?= $_POST['name' . $k] ?? ($result['name' . $k] ?? '') ?>"
                           <?= ($k == $lang) ? 'required' : '' ?> />
                       </div>
@@ -76,20 +76,20 @@
                       <!-- Mô tả -->
                       <?php if (!empty($config['product'][$type]['desc_cke_list']) || !empty($config['product'][$type]['desc_list'])): ?>
                         <div class="form-group">
-                          <label for="desc<?= $k ?>">Mô tả (<?= $k ?>):</label>
+                          <label for="desc<?= $k ?>"><?= mota ?> (<?= $k ?>):</label>
                           <textarea rows="4" class="form-control for-seo text-sm <?= !empty($config['product'][$type]['desc_cke_list']) ? 'form-control-ckeditor' : '' ?>"
                             name="desc<?= $k ?>" id="desc<?= $k ?>"
-                            placeholder="Mô tả (<?= $k ?>)"><?= $_POST['desc' . $k] ?? ($result['desc' . $k] ?? '') ?></textarea>
+                            placeholder="<?= mota ?> (<?= $k ?>)"><?= $_POST['desc' . $k] ?? ($result['desc' . $k] ?? '') ?></textarea>
                         </div>
                       <?php endif; ?>
 
                       <!-- Nội dung -->
                       <?php if (!empty($config['product'][$type]['content_cke_list']) || !empty($config['product'][$type]['content_list'])): ?>
                         <div class="form-group">
-                          <label for="content<?= $k ?>">Mô tả (<?= $k ?>):</label>
+                          <label for="content<?= $k ?>"><?= mota ?> (<?= $k ?>):</label>
                           <textarea rows="4" class="form-control for-seo text-sm <?= !empty($config['product'][$type]['content_cke_list']) ? 'form-control-ckeditor' : '' ?>"
                             name="content<?= $k ?>" id="content<?= $k ?>"
-                            placeholder="Mô tả (<?= $k ?>)"><?= $_POST['content' . $k] ?? ($result['content' . $k] ?? '') ?></textarea>
+                            placeholder="<?= mota ?> (<?= $k ?>)"><?= $_POST['content' . $k] ?? ($result['content' . $k] ?? '') ?></textarea>
                         </div>
                       <?php endif; ?>
                     </div>
@@ -104,7 +104,7 @@
         <?php if (!empty($config['product'][$type]['images_list'])): ?>
           <div class="card card-primary card-outline text-sm">
             <div class="card-header">
-              <h3 class="card-title">Icon <?= $config['product'][$type]['title_main_list'] ?></h3>
+              <h3 class="card-title"><?= hinhanh ?> <?= $config['product'][$type]['title_main_list'] ?></h3>
               <div class="card-tools">
                 <button type="button" class="btn btn-tool" data-card-widget="collapse">
                   <i class="fas fa-minus"></i>
@@ -122,7 +122,7 @@
         <?php endif; ?>
         <div class="card card-primary card-outline text-sm">
           <div class="card-header">
-            <h3 class="card-title">Thông tin</h3>
+            <h3 class="card-title"><?= thongtin ?></h3>
             <div class="card-tools">
               <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
             </div>
@@ -131,7 +131,7 @@
             <div class="form-group">
               <?php foreach ($config['product'][$type]['check_list'] as $check => $label): ?>
                 <div class="form-group d-inline-block mb-2 mr-5">
-                  <label for="<?= $check ?>-checkbox" class="d-inline-block align-middle mb-0 mr-3 form-label"><?= $label ?>:</label>
+                  <label for="<?= $check ?>-checkbox" class="d-inline-block align-middle mb-0 mr-3 form-label"><?= defined($check) ? constant($check) : $check ?>:</label>
                   <label class="switch switch-success">
                     <input type="checkbox" name="<?= $check ?>" class="switch-input custom-control-input .show-checkbox" id="<?= $check ?>-checkbox" <?= $fn->is_checked($check, $result['status'] ?? '', $id ?? '') ?>>
                   </label>
@@ -139,9 +139,9 @@
               <?php endforeach; ?>
             </div>
             <div class="form-group">
-              <label for="numb" class="d-inline-block align-middle mb-0 mr-2">Số thứ tự:</label>
+              <label for="numb" class="d-inline-block align-middle mb-0 mr-2"><?= sothutu ?>:</label>
               <input type="number" class="form-control form-control-mini d-inline-block align-middle text-sm" min="0"
-                name="numb" id="numb" placeholder="Số thứ tự" value="<?= $_POST['numb'] ?? (!empty($id) ? $result['numb'] : '1') ?>" />
+                name="numb" id="numb" placeholder="<?= sothutu ?>" value="<?= $_POST['numb'] ?? (!empty($id) ? $result['numb'] : '1') ?>" />
             </div>
           </div>
         </div>

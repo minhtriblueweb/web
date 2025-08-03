@@ -1,6 +1,14 @@
 <?php
 define("noibat", "Outstanding");
+define("menu", "Menu");
 define("hienthi", "Show");
+define("tiep", "Next");
+define("trang", "Page");
+define("truoc", "Previous");
+define("hienthitatca", "Show all");
+define("hienthitrenketquatimkiem", "Show on search results");
+define("cuoi", "Last");
+define("banchay", "Best-selling");
 define("trangchu", "Home");
 define("sanpham", "Product");
 define("tintuc", "News");

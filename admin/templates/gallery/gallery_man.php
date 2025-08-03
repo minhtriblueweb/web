@@ -11,14 +11,14 @@
 <section class="content">
   <div class="card-footer text-sm sticky-top">
     <a class="btn btn-sm bg-gradient-primary text-white" href="<?= $linkForm ?>"
-      title="Thêm mới"><i class="fas fa-plus mr-2"></i>Thêm mới</a>
-    <a class="btn btn-sm bg-gradient-danger text-white" id="delete-all" data-url="<?= $linkMulti ?>" title="Xóa tất cả"><i
-        class="far fa-trash-alt mr-2"></i>Xóa tất cả</a>
+      title="<?= themmoi ?>"><i class="fas fa-plus mr-2"></i><?= themmoi ?></a>
+    <a class="btn btn-sm bg-gradient-danger text-white" id="delete-all" data-url="<?= $linkMulti ?>" title="<?= xoatatca ?>"><i
+        class="far fa-trash-alt mr-2"></i><?= xoatatca ?></a>
     <a target="_blank" class="btn btn-sm bg-gradient-info text-white" id="" href="<?= BASE . $parent["slug$lang"] ?>" title="Xem sản phẩm"><i
         class="far fa-eye mr-2"></i>Xem sản phẩm</a>
     <div class="form-inline form-search d-inline-block align-middle ml-3">
       <div class="input-group input-group-sm">
-        <input class="form-control form-control-navbar text-sm" type="search" id="keyword" placeholder="Tìm kiếm" aria-label="Tìm kiếm" value="<?= (isset($_GET['keyword'])) ? $_GET['keyword'] : '' ?>" onkeypress="doEnter(event,'keyword','<?= $linkMan ?>')">
+        <input class="form-control form-control-navbar text-sm" type="search" id="keyword" placeholder="<?= timkiem ?>" aria-label="<?= timkiem ?>" value="<?= (isset($_GET['keyword'])) ? $_GET['keyword'] : '' ?>" onkeypress="doEnter(event,'keyword','<?= $linkMan ?>')">
         <div class="input-group-append bg-primary rounded-right">
           <button class="btn btn-navbar text-white" type="button" onclick="onSearch('keyword','<?= $linkMan ?>')"><i class="fas fa-search"></i></button>
         </div>
@@ -41,11 +41,11 @@
               </div>
             </th>
             <th class="align-middle text-center" width="10%">STT</th>
-            <th class="align-middle text-center" width="8%">Hình</th>
+            <th class="align-middle text-center" width="8%"><?= hinh ?></th>
             <?php foreach ($config['product'][$type]['gallery'][$type]['check_photo'] as $attr => $label): ?>
-              <th class="align-middle text-center"><?= $label ?></th>
+              <th class="align-middle text-center"><?= defined($attr) ? constant($attr) : $attr ?></th>
             <?php endforeach; ?>
-            <th class="align-middle text-center">Thao tác</th>
+            <th class="align-middle text-center"><?= thaotac ?></th>
           </tr>
         </thead>
         <tbody>
@@ -95,7 +95,7 @@
             <?php endforeach; ?>
           <?php else: ?>
             <tr>
-              <td colspan="100" class="text-center">Không có dữ liệu</td>
+              <td colspan="100" class="text-center"><?= khongcodulieu ?></td>
             </tr>
           <?php endif; ?>
         </tbody>

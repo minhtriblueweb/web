@@ -3,7 +3,7 @@
     <div class="row">
       <ol class="breadcrumb float-sm-left">
         <li class="breadcrumb-item"><a href="index.php" title="<?= dashboard ?>"><?= dashboard ?></a></li>
-        <li class="breadcrumb-item active">Cập nhật thông tin website</li>
+        <li class="breadcrumb-item active"><?= thongtincongty ?></li>
       </ol>
     </div>
   </div>
@@ -11,8 +11,8 @@
 <section class="content">
   <form class="validation-form" novalidate method="post" action="" enctype="multipart/form-data">
     <div class="card-footer text-sm sticky-top">
-      <button name="upload" type="submit" class="btn btn-sm bg-gradient-primary .submit-check"><i class="far fa-save mr-2"></i>Lưu</button>
-      <button type="reset" class="btn btn-sm bg-gradient-secondary"><i class="fas fa-redo mr-2"></i>Làm lại</button>
+      <button name="upload" type="submit" class="btn btn-sm bg-gradient-primary .submit-check"><i class="far fa-save mr-2"></i><?= luu ?></button>
+      <button type="reset" class="btn btn-sm bg-gradient-secondary"><i class="fas fa-redo mr-2"></i><?= lamlai ?></button>
     </div>
     <?php
     /* <div class="card card-primary card-outline text-sm">
@@ -43,12 +43,12 @@
     ?>
     <div class="card card-primary card-outline text-sm">
       <div class="card-header">
-        <h3 class="card-title">Thông tin chung</h3>
+        <h3 class="card-title"><?= thongtinchung ?></h3>
       </div>
       <div class="card-body">
         <?php if (count($config['website']['lang']) > 1) { ?>
           <div class="form-group">
-            <label>Ngôn ngữ mặc định:</label>
+            <label><?= ngonngumacdinh ?>:</label>
             <div class="form-group">
               <?php foreach ($config['website']['lang'] as $k => $v) { ?>
                 <div class="custom-control custom-radio d-inline-block mr-3 text-md">
@@ -64,7 +64,7 @@
         <div class="row">
           <?php if (!empty($config['setting']['color'])): ?>
             <div class="form-group col-md-4 col-sm-6">
-              <label for="color">Màu Website:</label>
+              <label for="color"><?= mausac ?>:</label>
               <input type="text"
                 class="form-control jscolor text-sm"
                 name="color"
@@ -132,8 +132,8 @@
           <?php endif; ?>
           <?php if (!empty($config['setting']['coords'])): ?>
             <div class="form-group col-md-4 col-sm-6">
-              <label for="coords">Tọa độ google map:</label>
-              <input type="text" class="form-control text-sm" name="coords" id="coords" placeholder="Tọa độ google map"
+              <label for="coords"><?= toadogooglemap ?>:</label>
+              <input type="text" class="form-control text-sm" name="coords" id="coords" placeholder="<?= toadogooglemap ?>"
                 value="<?= isset($options['coords']) ? htmlspecialchars($options['coords']) : ''; ?>">
             </div>
           <?php endif; ?>
@@ -146,8 +146,8 @@
           <?php endif; ?>
           <?php if (!empty($config['setting']['address'])): ?>
             <div class="form-group col-md-4 col-sm-6">
-              <label for="address">Địa chỉ:</label>
-              <input type="text" class="form-control text-sm" name="address" id="address" placeholder="Địa chỉ"
+              <label for="address"><?= diachi ?>:</label>
+              <input type="text" class="form-control text-sm" name="address" id="address" placeholder="<?= diachi ?>"
                 value="<?= isset($options['address']) ? htmlspecialchars($options['address']) : ''; ?>">
             </div>
           <?php endif; ?>
@@ -155,12 +155,12 @@
         <?php if (!empty($config['setting']['coords_iframe'])): ?>
           <div class="form-group">
             <label for="coords_iframe">
-              <span>Tọa độ google map iframe:</span>
+              <span><?= toadogooglemapiframe ?>:</span>
               <a class="text-sm font-weight-normal ml-1" href="https://www.google.com/maps" target="_blank"
-                title="Lấy mã nhúng google map">(Lấy mã nhúng)</a>
+                title="<?= laymanhung ?> google map">(<?= laymanhung ?>)</a>
             </label>
             <textarea class="form-control text-sm" name="coords_iframe" id="coords_iframe" rows="5"
-              placeholder="Tọa độ google map iframe"><?= isset($options['coords_iframe']) ? htmlspecialchars($options['coords_iframe']) : ''; ?></textarea>
+              placeholder="<?= toadogooglemapiframe ?>"><?= isset($options['coords_iframe']) ? htmlspecialchars($options['coords_iframe']) : ''; ?></textarea>
           </div>
         <?php endif; ?>
         <div class="form-group">
@@ -205,11 +205,11 @@
                   aria-labelledby="tabs-lang-article-<?= $k ?>">
 
                   <div class="form-group">
-                    <label for="name<?= $k ?>">Tiêu đề (<?= $k ?>):</label>
+                    <label for="name<?= $k ?>"><?= tieude ?> (<?= $k ?>):</label>
                     <input type="text"
                       class="form-control for-seo text-sm"
                       name="name<?= $k ?>" id="name<?= $k ?>"
-                      placeholder="Tiêu đề (<?= $k ?>)"
+                      placeholder="<?= tieude ?> (<?= $k ?>)"
                       value="<?= $_POST['name' . $k] ?? $row['name' . $k] ?? '' ?>" />
                   </div>
                   <div class="form-group">

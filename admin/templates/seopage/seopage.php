@@ -17,17 +17,17 @@
   <form class="validation-form" novalidate="" method="post" id="form-watermark" action="" enctype="multipart/form-data">
     <div class="card-footer text-sm sticky-top">
       <button name="upload" type="submit" class="btn btn-sm bg-gradient-primary .submit-check"><i
-          class="far fa-save mr-2"></i>Lưu</button>
-      <button type="reset" class="btn btn-sm bg-gradient-secondary"><i class="fas fa-redo mr-2"></i>Làm lại</button>
+          class="far fa-save mr-2"></i><?= luu ?></button>
+      <button type="reset" class="btn btn-sm bg-gradient-secondary"><i class="fas fa-redo mr-2"></i><?= lamlai ?></button>
     </div>
     <div class="card card-primary card-outline text-sm">
       <div class="card-header">
-        <h3 class="card-title">Thông tin SEO page - <?= $config['seopage']['page'][$type] ?></h3>
+        <h3 class="card-title"><?= thongtinseopage ?> - <?= $config['seopage']['page'][$type] ?></h3>
       </div>
       <div class="card-body">
         <div class="form-group">
           <div class="upload-file">
-            <p>Upload hình ảnh:</p>
+            <p><?= uploadhinhanh ?>:</p>
 
             <?php
             $file = $seo_data['file'] ?? ($_POST['file'] ?? '');
@@ -49,7 +49,7 @@
             <label class="upload-file-label mb-2 mt-3" for="file">
               <div class="custom-file my-custom-file">
                 <input type="file" class="custom-file-input" name="file" id="file" lang="vi">
-                <label class="custom-file-label mb-0" data-browse="Chọn" for="file">Chọn file</label>
+                <label class="custom-file-label mb-0" data-browse="<?= chon ?>" for="file"><?= chonfile ?></label>
               </div>
             </label>
             <strong class="d-block text-sm"> Width: <?= $config['seopage']['width'] ?> px - Height: <?= $config['seopage']['height'] ?> px (<?= $config['seopage']['img_type'] ?>)</strong>

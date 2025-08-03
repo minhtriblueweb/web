@@ -3,8 +3,7 @@
     <div class="row">
       <ol class="breadcrumb float-sm-left">
         <li class="breadcrumb-item"><a href="index.php" title="<?= dashboard ?>"><?= dashboard ?></a></li>
-        <li class="breadcrumb-item active"><?= ($id_child > 0 ? 'Cập nhật ' : 'Thêm mới ') . ($config['product'][$type]['gallery'][$type]['title_main_photo'] ?? '') ?></li>
-
+        <li class="breadcrumb-item active"><?= ($id_child > 0 ? capnhat : themmoi) . ($config['product'][$type]['gallery'][$type]['title_main_photo'] ?? '') ?></li>
       </ol>
     </div>
   </div>

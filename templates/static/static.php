@@ -7,10 +7,9 @@
       </div>
       <div class="wrap-content">
         <div class="row">
-<div class="col-12">
-           <?= $fn->decodeHtmlChars($static["content"] ?? '') ?>
-        </div>
-     
+          <div class="col-12">
+            <?= $fn->decodeHtmlChars($static["content"] ?? '') ?>
+          </div>
         </div>
         <div class="share">
           <b><?= chiase ?>:</b>

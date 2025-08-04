@@ -3,7 +3,7 @@
     <div class="row">
       <ol class="breadcrumb float-sm-left">
         <li class="breadcrumb-item"><a href="index.php" title="<?= dashboard ?>"><?= dashboard ?></a></li>
-        <li class="breadcrumb-item active"><?= ($id_child > 0 ? capnhat : themmoi) . ($config['product'][$type]['gallery'][$type]['title_main_photo'] ?? '') ?></li>
+        <li class="breadcrumb-item active"><?= ($id_child > 0 ? capnhat : themmoi) . ' ' . ($config['product'][$type]['gallery'][$type]['title_main_photo'] ?? '') ?></li>
       </ol>
     </div>
   </div>
@@ -22,7 +22,7 @@
         <div class="col-12">
           <div class="card card-primary card-outline text-sm">
             <div class="card-header">
-              <h3 class="card-title">Bộ sưu tập Sản phẩm</h3>
+              <h3 class="card-title"><?= bosuutap ?></h3>
               <div class="card-tools">
                 <button type="button" class="btn btn-tool" data-card-widget="collapse">
                   <i class="fas fa-minus"></i>
@@ -40,7 +40,7 @@
               </div>
 
               <div class="form-group d-inline-block mb-2 mr-5">
-                <label for="hienthi_all-checkbox" class="d-inline-block align-middle mb-0 mr-3 form-label">Hiển thị tất cả:</label>
+                <label for="hienthi_all-checkbox" class="d-inline-block align-middle mb-0 mr-3 form-label"><?= hienthitatca ?></label>
                 <label class="switch switch-success">
                   <input
                     type="checkbox"

@@ -4,39 +4,39 @@
     <h5 class="pt-3 pb-2">Bảng điều khiển</h5>
     <div class="row mb-2 text-sm">
       <div class="col-12 col-sm-6 col-md-3">
-        <a class="my-info-box info-box" href="index.php?com=setting&act=update" title="Cấu hình website">
+        <a class="my-info-box info-box" href="index.php?com=setting&act=update" title="<?= cauhinhwebsite ?>">
           <span class="my-info-box-icon info-box-icon bg-primary"><i class="fas fa-cogs"></i></span>
           <div class="info-box-content text-dark">
-            <span class="info-box-text text-capitalize">Cấu hình website</span>
-            <span class="info-box-number">Xem thêm</span>
+            <span class="info-box-text text-capitalize"><?= cauhinhwebsite ?></span>
+            <span class="info-box-number"><?= xemthem ?></span>
           </div>
         </a>
       </div>
       <div class="col-12 col-sm-6 col-md-3">
-        <a class="my-info-box info-box" href="index.php?com=user&act=info_admin" title="Tài khoản">
+        <a class="my-info-box info-box" href="index.php?com=user&act=info_admin" title="<?= taikhoan ?>">
           <span class="my-info-box-icon info-box-icon bg-danger"><i class="fas fa-user-cog"></i></span>
           <div class="info-box-content text-dark">
-            <span class="info-box-text text-capitalize">Tài khoản</span>
-            <span class="info-box-number">Xem thêm</span>
+            <span class="info-box-text text-capitalize"><?= taikhoan ?></span>
+            <span class="info-box-number"><?= xemthem ?></span>
           </div>
         </a>
       </div>
       <div class="clearfix hidden-md-up"></div>
       <div class="col-12 col-sm-6 col-md-3">
-        <a class="my-info-box info-box" href="index.php?com=user&act=info_admin&changepass=1" title="Đổi mật khẩu">
+        <a class="my-info-box info-box" href="index.php?com=user&act=info_admin&changepass=1" title="<?= doimatkhau ?>">
           <span class="my-info-box-icon info-box-icon bg-success"><i class="fas fa-key"></i></span>
           <div class="info-box-content text-dark">
-            <span class="info-box-text text-capitalize">Đổi mật khẩu</span>
-            <span class="info-box-number">Xem thêm</span>
+            <span class="info-box-text text-capitalize"><?= doimatkhau ?></span>
+            <span class="info-box-number"><?= xemthem ?></span>
           </div>
         </a>
       </div>
       <div class="col-12 col-sm-6 col-md-3">
-        <a class="my-info-box info-box" href="index.php?com=contact&act=man" title="Thư liên hệ">
+        <a class="my-info-box info-box" href="index.php?com=contact&act=man" title="<?= thulienhe ?>">
           <span class="my-info-box-icon info-box-icon bg-info"><i class="fas fa-address-book"></i></span>
           <div class="info-box-content text-dark">
-            <span class="info-box-text text-capitalize">Thư liên hệ</span>
-            <span class="info-box-number">Xem thêm</span>
+            <span class="info-box-text text-capitalize"><?= thulienhe ?></span>
+            <span class="info-box-number"><?= xemthem ?></span>
           </div>
         </a>
       </div>
@@ -47,7 +47,7 @@
   <div class="container-fluid">
     <div class="card">
       <div class="card-header">
-        <h5 class="mb-0">Thống kê truy cập tháng 09/2024</h5>
+        <h5 class="mb-0"><?= thongketruycapthang ?> 09/2024</h5>
       </div>
       <div class="card-body">
         <form class="form-filter-charts row align-items-center mb-1" action="index.php" method="get" name="form-thongke"
@@ -126,7 +126,7 @@
           <div class="col-md-4">
             <div class="form-group">
               <button type="submit" class="btn btn-success">
-                Thống Kê
+                <?= thongke ?>
               </button>
             </div>
           </div>

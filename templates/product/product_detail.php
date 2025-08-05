@@ -5,22 +5,22 @@
         <div class="d-flex justify-content-center align-items-center">
           <a id="Zoom-1" class="MagicZoom"
             data-options="zoomMode: magnifier; zoomPosition: inner; hint: off; rightClick: true; expandCaption: false; history: false;"
-            href="<?= $fn->getImageCustom(['file' => $rowDetail['file'], 'width' => 500, 'height' => 500, 'zc' => 1, 'src_only' => true, 'watermark' => true]) ?>" title="<?= $rowDetail["name$lang"] ?>">
-            <?= $fn->getImageCustom(['file' => $rowDetail['file'], 'alt' => $rowDetail["name$lang"], 'title' => $rowDetail["name$lang"], 'width' => 500, 'height' => 500, 'zc' => 1, 'lazy' => true, 'watermark' => true]) ?>
+            href="<?= $fn->getImageCustom(['file' => $rowDetail['file'], 'width' => $config['product'][$type]['width'], 'height' => $config['product'][$type]['height'], 'zc' => substr($config['product'][$type]['thumb'], -1), 'src_only' => true, 'watermark' => $config['product'][$type]['watermark']]) ?>" title="<?= $rowDetail["name$lang"] ?>">
+            <?= $fn->getImageCustom(['file' => $rowDetail['file'], 'alt' => $rowDetail["name$lang"], 'title' => $rowDetail["name$lang"], 'width' => $config['product'][$type]['width'], 'height' => $config['product'][$type]['height'], 'zc' => substr($config['product'][$type]['thumb'], -1), 'lazy' => true, 'watermark' => $config['product'][$type]['watermark']]) ?>
           </a>
         </div>
         <?php if (!empty($rowDetailPhoto)): ?>
           <div class="gallery-thumb-pro">
             <div class="slick-pro-detail">
               <div>
-                <a class="thumb-pro-detail" data-zoom-id="Zoom-1" href="<?= $fn->getImageCustom(['file' => $rowDetail['file'], 'watermark' => true, 'src_only' => true]) ?>">
-                  <?= $fn->getImageCustom(['file' => $rowDetail['file'], 'class' => '', 'width' => 500, 'height' => 500, 'zc' => 1, 'lazy' => true, 'watermark' => true]) ?>
+                <a class="thumb-pro-detail" data-zoom-id="Zoom-1" href="<?= $fn->getImageCustom(['file' => $rowDetail['file'], 'watermark' => $config['product'][$type]['watermark'], 'src_only' => true]) ?>">
+                  <?= $fn->getImageCustom(['file' => $rowDetail['file'], 'title' => $rowDetail["name$lang"], 'alt' => $rowDetail["name$lang"], 'class' => '', 'width' => $config['product'][$type]['width'], 'height' => $config['product'][$type]['height'], 'zc' => substr($config['product'][$type]['thumb'], -1), 'lazy' => true, 'watermark' => $config['product'][$type]['watermark']]) ?>
                 </a>
               </div>
               <?php foreach ($rowDetailPhoto as $gallery): ?>
                 <div>
-                  <a href=" <?= $fn->getImageCustom(['file' => $gallery['file'], 'watermark' => true, 'width' => 500, 'height' => 500, 'zc' => 1, 'src_only' => true]) ?>" class="thumb-pro-detail" data-zoom-id="Zoom-1">
-                    <?= $fn->getImageCustom(['file' => $gallery['file'], 'class' => '', 'width' => 500, 'height' => 500, 'zc' => 1, 'lazy' => true, 'watermark' => true]) ?>
+                  <a href=" <?= $fn->getImageCustom(['file' => $gallery['file'], 'watermark' => $config['product'][$type]['watermark'], 'width' => $config['product'][$type]['width'], 'height' => $config['product'][$type]['height'], 'zc' => substr($config['product'][$type]['thumb'], -1), 'src_only' => true]) ?>" class="thumb-pro-detail" data-zoom-id="Zoom-1">
+                    <?= $fn->getImageCustom(['file' => $gallery['file'], 'title' => $gallery['name'], 'alt' => $gallery['name'], 'class' => '', 'width' => $config['product'][$type]['width'], 'height' => $config['product'][$type]['height'], 'zc' => substr($config['product'][$type]['thumb'], -1), 'lazy' => true, 'watermark' => $config['product'][$type]['watermark']]) ?>
                   </a>
                 </div>
               <?php endforeach; ?>
@@ -78,7 +78,18 @@
           <?php foreach ($tieuchi as $row_tc): ?>
             <div class="list-policy">
               <div class="i-policy">
-                <?= $fn->getImageCustom(['file' => $row_tc['file'], 'class' => 'me-3', 'alt' => $row_tc["name$lang"], 'title' => $row_tc["name$lang"], 'width' => 40, 'height' => 40, 'zc' => 1, 'lazy' => true]) ?>
+                <a class="me-2" title="<?= $row_tc["name$lang"] ?>">
+                  <?= $fn->getImageCustom([
+                    'file' => $row_tc['file'],
+                    'class' => '',
+                    'alt' => $row_tc["name$lang"],
+                    'title' => $row_tc["name$lang"],
+                    'width' => $config['news']['tieu-chi']['width'],
+                    'height' => $config['news']['tieu-chi']['height'],
+                    'zc' => substr($config['news']['tieu-chi']['thumb'], -1),
+                    'lazy' => true
+                  ]) ?>
+                </a>
                 <div class="content">
                   <h3 class="text-split" title="<?= $row_tc["name$lang"] ?>"><?= $row_tc["name$lang"] ?></h3>
                 </div>
@@ -96,7 +107,7 @@
       </ul>
       <div class="tab-content" id="tabsProDetailContent">
         <div class="tab-pane fade show active" id="info-pro-detail" role="tabpanel">
-          <div class="content-main content-ck" id="toc-content"><?= $rowDetail["content$lang"] ?></div>
+          <div class="content-main content-ck" id="toc-content"><?= $fn->decodeHtmlChars($rowDetail["content$lang"]) ?></div>
         </div>
         <div class="tab-pane fade" id="commentfb-pro-detail" role="tabpanel"></div>
       </div>

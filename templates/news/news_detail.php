@@ -37,24 +37,22 @@
             <div class="fix__row__news">
               <div class="row">
                 <?php foreach ($relatedNews as $v): ?>
-                  <?php
-                  $slug = BASE . $v["slug$lang"];
-                  $name = $v["name$lang"];
-                  ?>
-                  <div class="col-lg-12 col-md-6 col-12">
+                  <div class="col-lg-12 col-md-6">
                     <div class="news-other d-flex flex-wrap">
-                      <a class="scale-img text-decoration-none pic-news-other" href="<?= $slug ?>" title="<?= $name ?>">
-                        <?= $fn->getImage([
+                      <a class="scale-img text-decoration-none pic-news-other" href="<?= $v["slug$lang"] ?>" title="<?= $v["name$lang"] ?>">
+                        <?= $fn->getImageCustom([
                           'file' => $v['file'],
                           'class' => 'w-100',
-                          'alt' => $name,
-                          'title' => $name,
+                          'width' => 210,
+                          'height' => 144,
+                          'zc' => 1,
+                          'alt' => $v["name$lang"],
+                          'title' => $v["name$lang"],
                           'lazy' => true
                         ]) ?>
-
                       </a>
                       <div class="info-news-other">
-                        <a class="name-news-other text-decoration-none" href="<?= $slug ?>" title="<?= $name ?>"><?= $name ?></a>
+                        <a class="name-news-other text-decoration-none" href="<?= $v["slug$lang"] ?>" title="<?= $v["name$lang"] ?>"><?= $v["name$lang"] ?></a>
                       </div>
                     </div>
                   </div>

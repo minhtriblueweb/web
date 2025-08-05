@@ -22,15 +22,14 @@ if ($id != '') {
 
   /* Lấy sản phẩm cùng loại */
   $curPage =  max(1, isset($_GET['page']) ? (int)$_GET['page'] : 1);
-  $perPage = 20;
+  $perPage = 10;
   $options = ['table' => 'tbl_product', 'status' => 'hienthi', 'type' => $type, 'exclude_id' => $id, 'select' => "id,file, name{$lang}, slug{$lang}, regular_price, sale_price, views", 'pagination' => [$perPage, $curPage]];
   $product = $fn->show_data($options);
   $total_product = $fn->count_data($options);
   $paging = $fn->pagination_tc($total_product, $perPage, $curPage);
 
-
   // Hình ảnh con
-  $rowDetailPhoto = $fn->show_data(['table' => 'tbl_gallery', 'status' => 'hienthi', 'id_parent' => $id, 'select' => "file"]);
+  $rowDetailPhoto = $fn->show_data(['table' => 'tbl_gallery', 'status' => 'hienthi', 'id_parent' => $id, 'select' => "file,name"]);
 
   //SEO
   $seo_data = $db->rawQueryOne("SELECT * FROM tbl_seo WHERE `id_parent` = ? AND `type` = ? AND `act` = ? LIMIT 0,1", [$id, $type, 'man']);
@@ -98,10 +97,13 @@ if ($id != '') {
 
   /* Lấy sản phẩm */
   $curPage =  max(1, isset($_GET['page']) ? (int)$_GET['page'] : 1);
-  $perPage = 20;
+  $perPage = 10;
   $options = ['table' => 'tbl_product', 'status' => 'hienthi', 'type' => $type, 'id_cat' => $idc, 'select' => "id, name{$lang}, slug{$lang}, file, regular_price, sale_price, views", 'pagination'  => [$perPage, $curPage]];
   $total = $fn->count_data($options);
   $product = $fn->show_data($options);
+  if ($curPage > (int)ceil($total / $perPage) && (int)ceil($total / $perPage) > 0) {
+    $fn->abort_404();
+  }
   $paging = $fn->pagination_tc($total, $perPage, $curPage);
 
   /* SEO */
@@ -131,6 +133,9 @@ if ($id != '') {
   $total = $fn->count_data($options);
   $product = $fn->show_data($options);
   $productList = $fn->show_data($optionsList);
+  if ($curPage > (int)ceil($total / $perPage) && (int)ceil($total / $perPage) > 0) {
+    $fn->abort_404();
+  }
   $paging = $fn->pagination_tc($total, $perPage, $curPage);
 
   //SEO

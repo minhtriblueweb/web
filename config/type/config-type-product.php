@@ -55,6 +55,7 @@ $config['size-img'][$type]['man']['height'] = 500;
 $config['product'][$type]['thumb'] = '100x' . round(100 / ($config['product'][$type]['width'] / $config['product'][$type]['height'])) . 'x1';
 $config['product'][$type]['img_type'] = '.jpg|.gif|.png|.jpeg|.gif';
 $config['size-img'][$type]['man']['active'] = true;
+$config['product'][$type]['watermark'] = true;
 
 /* Sản phẩm (Size) */
 /*$config['product'][$type]['check_size'] = array("hienthi" => "Hiển thị");*/

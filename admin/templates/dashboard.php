@@ -1,22 +1,36 @@
 <?php
 date_default_timezone_set('Asia/Ho_Chi_Minh');
-$month = isset($_GET['month']) ? (int)$_GET['month'] : date('m');
-$year = isset($_GET['year']) ? (int)$_GET['year'] : date('Y');
+
+// Lấy tháng và năm từ URL, mặc định là tháng/năm hiện tại
+$month = isset($_GET['month']) ? (int)$_GET['month'] : (int)date('m');
+$year = isset($_GET['year']) ? (int)$_GET['year'] : (int)date('Y');
+
+// Số ngày trong tháng
 $daysInMonth = cal_days_in_month(CAL_GREGORIAN, $month, $year);
+
+// Khởi tạo mảng dữ liệu biểu đồ
 $charts = [
-  'month' => str_pad($month, 2, '0', STR_PAD_LEFT),
+  'month' => str_pad($month, 2, '0', STR_PAD_LEFT), // Đảm bảo luôn 2 chữ số
+  'year' => $year, // ✅ Thêm năm vào để JS sử dụng
   'series' => [],
   'labels' => []
 ];
+
+// Lặp qua từng ngày trong tháng để đếm lượt truy cập
 for ($i = 1; $i <= $daysInMonth; $i++) {
   $begin = strtotime("$year-$month-$i 00:00:00");
-  $end = strtotime("$year-$month-$i 23:59:59") + 1;
-  $row = $db->rawQueryOne("SELECT COUNT(*) as total FROM tbl_counter WHERE tm >= ? AND tm < ?", [$begin, $end]);
-  $count = (int) $row['total'];
-  $charts['series'][] = $count;
+  $end   = strtotime("$year-$month-$i 23:59:59") + 1;
+
+  $row = $db->rawQueryOne(
+    "SELECT COUNT(*) as total FROM tbl_counter WHERE tm >= ? AND tm < ?",
+    [$begin, $end]
+  );
+
+  $charts['series'][] = (int)$row['total'];
   $charts['labels'][] = 'D' . $i;
 }
 ?>
+
 
 <?php include TEMPLATE . LAYOUT . 'loader.php'; ?>
 <section class="content mb-3">
@@ -86,7 +100,7 @@ for ($i = 1; $i <= $daysInMonth; $i++) {
             </div>
           </div>
           <div class="col-md-4">
-            <button type="submit" class="btn btn-success">Thống kê</button>
+            <div class="form-group"><button type="submit" class="btn btn-success" fdprocessedid="5x379q"><?= thongke ?></button></div>
           </div>
         </form>
         <div id="apexMixedChart"></div>

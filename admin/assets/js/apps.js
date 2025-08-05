@@ -2393,6 +2393,22 @@ $(document).ready(function () {
         enabled: false,
       },
       labels: CHARTS["labels"],
+      yaxis: {
+        labels: {
+          formatter: function (val) {
+            return Math.round(val); // ✅ hiển thị số nguyên trên trục Y
+          },
+        },
+        tickAmount: 6,
+        forceNiceScale: true,
+      },
+      tooltip: {
+        y: {
+          formatter: function (val) {
+            return Math.round(val) + ' lượt'; // ✅ tooltip cũng làm tròn
+          },
+        },
+      },
       legend: {
         position: "top",
         horizontalAlign: "right",
@@ -2408,4 +2424,5 @@ $(document).ready(function () {
     );
     apexMixedChart.render();
   }
+
 });

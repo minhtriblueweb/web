@@ -6,20 +6,20 @@
           <div>
             <div class="item-criterion hvr-icon-rotate">
               <div class="images">
-                <a class="hvr-icon me-2" title="<?= $row['name' . $lang] ?>">
+                <a class="hvr-icon me-2" title="<?= $row["name$lang"] ?>">
                   <?= $fn->getImageCustom([
                     'file' =>  $row['file'],
                     'width' => $config['news']['tieu-chi']['width'],
                     'height' => $config['news']['tieu-chi']['height'],
                     'zc' => substr($config['news']['tieu-chi']['thumb'], -1),
-                    'alt' => $row['name' . $lang],
-                    'title' => $row['name' . $lang],
+                    'alt' => $row["name$lang"],
+                    'title' => $row["name$lang"],
                     'lazy' => true
                   ]) ?>
                 </a>
-                <h3><span class="text-split"><?= $row['name' . $lang] ?></span></h3>
+                <h3><span class="text-split"><?= $row["name$lang"] ?></span></h3>
               </div>
-              <p class="text-split"><?= $row['desc' . $lang] ?></p>
+              <p class="text-split"><?= $row["desc$lang"] ?></p>
             </div>
           </div>
         <?php endforeach; ?>

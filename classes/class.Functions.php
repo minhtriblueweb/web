@@ -1201,11 +1201,15 @@ class Functions
   {
     $total_pages = (int)ceil($total / $perPage);
     if ($total_pages <= 1) return '';
+
     $fullUrl = $this->getPageURL();
     $parts = explode('?', $fullUrl, 2);
     $path = rtrim(preg_replace('#/page-\d+#', '', $parts[0]), '/');
     $query = isset($parts[1]) ? '?' . $parts[1] : '';
+
     $html = '<ul class="pagination flex-wrap justify-content-center mb-0">';
+
+    // Previous
     if ($page > 1) {
       $html .= '<li class="page-item">';
       $html .= '<a class="page-link" href="' . $path . '/page-' . ($page - 1) . $query . '"><i class="fas fa-angle-left"></i></a>';
@@ -1215,6 +1219,8 @@ class Functions
       $html .= '<a class="page-link"><i class="fas fa-angle-left"></i></a>';
       $html .= '</li>';
     }
+
+    // Page numbers with dots
     $range = 2;
     $show_dots = false;
     for ($i = 1; $i <= $total_pages; $i++) {
@@ -1231,6 +1237,8 @@ class Functions
         $show_dots = true;
       }
     }
+
+    // Next
     if ($page < $total_pages) {
       $html .= '<li class="page-item">';
       $html .= '<a class="page-link" href="' . $path . '/page-' . ($page + 1) . $query . '"><i class="fas fa-angle-right"></i></a>';
@@ -1240,12 +1248,11 @@ class Functions
       $html .= '<a class="page-link"><i class="fas fa-angle-right"></i></a>';
       $html .= '</li>';
     }
-    $html .= '<li class="page-item">';
-    $html .= '<a class="page-link" href="' . $path . '/page-' . $total_pages . $query . '"><i class="fa-solid fa-angles-right"></i></a>';
-    $html .= '</li>';
+
     $html .= '</ul>';
     return $html;
   }
+
   public function to_slug($string)
   {
     $search = array(

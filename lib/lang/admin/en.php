@@ -5,6 +5,7 @@ define("hienthi", "Show");
 define("tiep", "Next");
 define("trang", "Page");
 define("truoc", "Previous");
+define("luot", "turns");
 define("hienthitatca", "Show all");
 define("hienthitrenketquatimkiem", "Show on search results");
 define("cuoi", "Last");

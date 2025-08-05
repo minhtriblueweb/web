@@ -14,6 +14,8 @@ define("hienthitatca", "Hiển thị tất cả");
 
 define("tiep", "Tiếp");
 
+define("luot", "lượt");
+
 define("cuoi", "Cuối");
 
 define("truoc", "Trước");
@@ -91,7 +93,6 @@ define("taikhoanadmin", "Tài khoản admin");
 define("taikhoankhach", "Tài khoản khách");
 
 define("quanlythongbaoday", "Quản lý thông báo đẩy");
-
 
 define("thietlapthongtin", "Thiết lập thông tin");
 

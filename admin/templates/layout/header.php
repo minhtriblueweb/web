@@ -71,7 +71,7 @@
             </li>
             <div class="dropdown-divider"></div>
             <li>
-              <a href="" class="dropdown-item">
+              <a href="index.php?page=user&act=info_admin&changepass=1" class="dropdown-item">
                 <i class="fas fa-key"></i>
                 <span><?= doimatkhau ?></span>
               </a>

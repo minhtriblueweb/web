@@ -1,31 +1,18 @@
 <?php
 date_default_timezone_set('Asia/Ho_Chi_Minh');
-
-// Lấy tháng và năm từ URL, mặc định là tháng/năm hiện tại
 $month = isset($_GET['month']) ? (int)$_GET['month'] : (int)date('m');
 $year = isset($_GET['year']) ? (int)$_GET['year'] : (int)date('Y');
-
-// Số ngày trong tháng
 $daysInMonth = cal_days_in_month(CAL_GREGORIAN, $month, $year);
-
-// Khởi tạo mảng dữ liệu biểu đồ
 $charts = [
-  'month' => str_pad($month, 2, '0', STR_PAD_LEFT), // Đảm bảo luôn 2 chữ số
-  'year' => $year, // ✅ Thêm năm vào để JS sử dụng
+  'month' => str_pad($month, 2, '0', STR_PAD_LEFT),
+  'year' => $year,
   'series' => [],
   'labels' => []
 ];
-
-// Lặp qua từng ngày trong tháng để đếm lượt truy cập
 for ($i = 1; $i <= $daysInMonth; $i++) {
   $begin = strtotime("$year-$month-$i 00:00:00");
   $end   = strtotime("$year-$month-$i 23:59:59") + 1;
-
-  $row = $db->rawQueryOne(
-    "SELECT COUNT(*) as total FROM tbl_counter WHERE tm >= ? AND tm < ?",
-    [$begin, $end]
-  );
-
+  $row = $db->rawQueryOne("SELECT COUNT(*) as total FROM tbl_counter WHERE tm >= ? AND tm < ?", [$begin, $end]);
   $charts['series'][] = (int)$row['total'];
   $charts['labels'][] = 'D' . $i;
 }
@@ -38,7 +25,7 @@ for ($i = 1; $i <= $daysInMonth; $i++) {
     <h5 class="pt-3 pb-2">Bảng điều khiển</h5>
     <div class="row mb-2 text-sm">
       <div class="col-12 col-sm-6 col-md-3">
-        <a class="my-info-box info-box" href="index.php?com=setting&act=update" title="<?= cauhinhwebsite ?>">
+        <a class="my-info-box info-box" href="index.php?page=setting&act=update" title="<?= cauhinhwebsite ?>">
           <span class="my-info-box-icon info-box-icon bg-primary"><i class="fas fa-cogs"></i></span>
           <div class="info-box-content text-dark">
             <span class="info-box-text text-capitalize"><?= cauhinhwebsite ?></span>
@@ -47,7 +34,7 @@ for ($i = 1; $i <= $daysInMonth; $i++) {
         </a>
       </div>
       <div class="col-12 col-sm-6 col-md-3">
-        <a class="my-info-box info-box" href="index.php?com=user&act=info_admin" title="<?= taikhoan ?>">
+        <a class="my-info-box info-box" href="index.php?page=user&act=info_admin" title="<?= taikhoan ?>">
           <span class="my-info-box-icon info-box-icon bg-danger"><i class="fas fa-user-cog"></i></span>
           <div class="info-box-content text-dark">
             <span class="info-box-text text-capitalize"><?= taikhoan ?></span>
@@ -57,7 +44,7 @@ for ($i = 1; $i <= $daysInMonth; $i++) {
       </div>
       <div class="clearfix hidden-md-up"></div>
       <div class="col-12 col-sm-6 col-md-3">
-        <a class="my-info-box info-box" href="index.php?com=user&act=info_admin&changepass=1" title="<?= doimatkhau ?>">
+        <a class="my-info-box info-box" href="index.php?page=user&act=info_admin&changepass=1" title="<?= doimatkhau ?>">
           <span class="my-info-box-icon info-box-icon bg-success"><i class="fas fa-key"></i></span>
           <div class="info-box-content text-dark">
             <span class="info-box-text text-capitalize"><?= doimatkhau ?></span>

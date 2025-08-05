@@ -88,6 +88,8 @@
     'chihotrotaptinlahinhanhcodinhdang': '<?= chihotrotaptinlahinhanhcodinhdang ?>',
     'cokichthuocqualonvuilonguploadhinhanhcokichthuoctoida': '<?= cokichthuocqualonvuilonguploadhinhanhcokichthuoctoida ?>',
     'nhunghinhanhbanchoncokichthuocqualonvuilongchonnhunghinhanhcokichthuoctoida': '<?= nhunghinhanhbanchoncokichthuocqualonvuilongchonnhunghinhanhcokichthuoctoida ?>',
+    'thongketruycapthang': '<?= thongketruycapthang ?>',
+    'luot': '<?= luot ?>',
   };
 </script>
 <!-- Js Files -->
@@ -122,34 +124,25 @@ foreach ($jsFiles as $file) {
 ?>
 <script src="ckeditor/ckeditor.js"></script>
 <script>
-  // Gắn nhãn tháng/năm vào tiêu đề
   document.addEventListener('DOMContentLoaded', function() {
     if (typeof CHARTS !== 'undefined') {
       document.getElementById('month-label').textContent = CHARTS.month;
       document.getElementById('year-label').textContent = CHARTS.year || new Date().getFullYear();
     }
   });
-
   $(document).ready(function() {
     const selectedMonth = parseInt(CHARTS?.month || (new Date().getMonth() + 1));
     const selectedYear = parseInt(CHARTS?.year || new Date().getFullYear());
-
-    // Sinh danh sách tháng
     for (let i = 1; i <= 12; i++) {
       const selected = i === selectedMonth ? 'selected' : '';
       $('#month').append(`<option value="${i}" ${selected}>Tháng ${i}</option>`);
     }
-
-    // Sinh danh sách năm (từ 2000 đến 10 năm sau hiện tại)
     const currentYear = new Date().getFullYear();
     for (let y = 2000; y <= currentYear + 10; y++) {
       const selected = y === selectedYear ? 'selected' : '';
       $('#year').append(`<option value="${y}" ${selected}>Năm ${y}</option>`);
     }
-
-    // Kích hoạt Select2
     $('.select2').select2();
-
   });
 </script>
 

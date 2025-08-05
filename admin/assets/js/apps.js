@@ -2371,7 +2371,7 @@ $(document).ready(function () {
       },
       series: [
         {
-          name: "Thống kê truy cập tháng " + CHARTS["month"],
+          name: LANG.thongketruycapthang + ' ' + CHARTS["month"],
           type: "line",
           data: CHARTS["series"],
         },
@@ -2396,7 +2396,7 @@ $(document).ready(function () {
       yaxis: {
         labels: {
           formatter: function (val) {
-            return Math.round(val); // ✅ hiển thị số nguyên trên trục Y
+            return Math.round(val);
           },
         },
         tickAmount: 6,
@@ -2405,7 +2405,7 @@ $(document).ready(function () {
       tooltip: {
         y: {
           formatter: function (val) {
-            return Math.round(val) + ' lượt'; // ✅ tooltip cũng làm tròn
+            return Math.round(val) + ' ' + LANG.luot;
           },
         },
       },

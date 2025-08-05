@@ -21,7 +21,7 @@ class adminlogin
     if (empty($username) || empty($password)) {
       return "Không được để trống tài khoản hoặc mật khẩu!";
     }
-    $user = $this->db->rawQueryOne("SELECT * FROM admin WHERE username = ? LIMIT 1", [$username]);
+    $user = $this->db->rawQueryOne("SELECT * FROM `tbl_user` WHERE username = ? LIMIT 1", [$username]);
     if ($user) {
       $hashedPassword = $user['password'];
       if (password_verify($password, $hashedPassword)) {

@@ -52,22 +52,53 @@ $linkSave = "index.php?page=user&act=info_admin" . $changepass;
           <?php if (!empty($changepass)) { ?>
             <div class="form-group col-xl-4 col-lg-6 col-md-6">
               <label for="old-password"><?= matkhaucu ?>:</label>
-              <input type="password" class="form-control text-sm" name="old-password" id="old-password" placeholder="<?= matkhaucu ?>">
+              <div class="input-group">
+                <input type="password" class="form-control text-sm" name="old-password" id="old-password" placeholder="<?= matkhaucu ?>">
+                <div class="input-group-append">
+                  <div class="input-group-text show-password">
+                    <span class="fas fa-eye"></span>
+                  </div>
+                </div>
+              </div>
             </div>
+
             <div class="form-group col-xl-4 col-lg-6 col-md-6">
               <label for="new-password">
                 <span class="d-inline-block align-middle"><?= matkhaumoi ?>:</span>
                 <span class="text-danger ml-2" id="show-password"></span>
               </label>
               <div class="row align-items-center">
-                <div class="col-6"><input type="password" class="form-control text-sm" name="new-password" id="new-password" placeholder="<?= matkhaumoi ?>"></div>
-                <div class="col-6"><a class="btn btn-sm bg-gradient-primary text-sm" href="#" onclick="randomPassword()"><i class="fas fa-random mr-2"></i><?= taomatkhau ?></a></div>
+                <div class="col-6">
+                  <div class="input-group">
+                    <input type="password" class="form-control text-sm" name="new-password" id="new-password" placeholder="<?= matkhaumoi ?>">
+
+                    <div class="input-group-append">
+                      <div class="input-group-text show-password">
+                        <span class="fas fa-eye"></span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-6">
+                  <a class="btn btn-sm bg-gradient-primary text-sm" href="#" onclick="randomPassword()">
+                    <i class="fas fa-random mr-2"></i><?= taomatkhau ?>
+                  </a>
+                </div>
               </div>
             </div>
+
             <div class="form-group col-xl-4 col-lg-6 col-md-6">
               <label for="renew-password"><?= nhaplaimatkhaumoi ?>:</label>
-              <input type="password" class="form-control text-sm" name="renew-password" id="renew-password" placeholder="<?= nhaplaimatkhaumoi ?>">
+              <div class="input-group">
+                <input type="password" class="form-control text-sm" name="renew-password" id="renew-password" placeholder="<?= nhaplaimatkhaumoi ?>">
+                <div class="input-group-append">
+                  <div class="input-group-text show-password">
+                    <span class="fas fa-eye"></span>
+                  </div>
+                </div>
+              </div>
             </div>
+
           <?php } else { ?>
             <div class="form-group col-xl-4 col-lg-6 col-md-6">
               <label for="username"><?= taikhoan ?>: <span class="text-danger">*</span></label>
@@ -112,3 +143,25 @@ $linkSave = "index.php?page=user&act=info_admin" . $changepass;
     </div>
   </form>
 </section>
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    const showPasswordToggles = document.querySelectorAll(".show-password");
+
+    showPasswordToggles.forEach(toggle => {
+      toggle.addEventListener("click", function() {
+        const input = this.closest(".input-group").querySelector("input");
+        const icon = this.querySelector("span");
+
+        if (input.type === "password") {
+          input.type = "text";
+          icon.classList.remove("fa-eye");
+          icon.classList.add("fa-eye-slash");
+        } else {
+          input.type = "password";
+          icon.classList.remove("fa-eye-slash");
+          icon.classList.add("fa-eye");
+        }
+      });
+    });
+  });
+</script>

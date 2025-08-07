@@ -75,8 +75,7 @@ class Functions
 
   private function buildWhere(array $options): array
   {
-    $where = [];
-    $params = [];
+    $where = $params = [];
     $prefix = !empty($options['alias']) ? $options['alias'] . '.' : '';
     if (!empty($options['status'])) {
       $statuses = is_array($options['status']) ? $options['status'] : explode(',', $options['status']);
@@ -482,7 +481,6 @@ class Functions
     $params['name'] = $name;
     $params['col'] = $col;
     $str = $this->markdown('gallery/admin', $params);
-
     return $str;
   }
 
@@ -523,11 +521,12 @@ class Functions
   }
   public function getLinkCategory($table = '', $selectedId = 0, $title_select = chondanhmuc)
   {
+    $table = preg_replace('/[^a-zA-Z0-9_]/', '', $table);
     $params = [];
     $where = ' WHERE 1';
     $name = $id = '';
     if (str_contains($table, '_list')) {
-      $name = $id = 'id_list'; // cấp 1
+      $name = $id = 'id_list';
     } elseif (str_contains($table, '_cat')) {
       $name = $id = 'id_cat';
       $id_list = $_REQUEST['id_list'] ?? 0;
@@ -603,11 +602,17 @@ class Functions
     return $str;
   }
 
-  function transfer($msg, $page = 'index.php?page=', $numb = true)
+  function transfer($msg, $page, $numb = true)
   {
     $_SESSION['transfer_data'] = ['msg' => $msg, 'page' => $page, 'numb' => $numb];
     define('IS_TRANSFER', true);
     header("Location: index.php?page=transfer");
+    exit();
+  }
+  function notiToast($msg, $page, $status, $title = thongbao)
+  {
+    $_SESSION['toast'] = ['title' => $title, 'msg' => $msg, 'status' => $status];
+    header("Location: $page");
     exit();
   }
   public function convert_type(string $type)

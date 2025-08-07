@@ -25,7 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST["btn_login"])) {
     $error = $login_check;
   }
 }
-// $password = "oVY!^CjhV";
+// $password = "%Q@Q#Tc@V";
 // $hashed = password_hash($password, PASSWORD_DEFAULT);
 // echo "Mật khẩu đã hash: " . $hashed;
 ?>

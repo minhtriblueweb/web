@@ -4,7 +4,6 @@ if (!empty($_GET['changepass']) && ($_GET['changepass'] == 1)) {
 } else {
   $changepass = '';
 }
-
 $linkSave = "index.php?page=user&act=info_admin" . $changepass;
 ?>
 <!-- Content Header -->
@@ -25,44 +24,6 @@ $linkSave = "index.php?page=user&act=info_admin" . $changepass;
       <button type="submit" class="btn btn-sm bg-gradient-primary submit-check" disabled><i class="far fa-save mr-2"></i><?= luu ?></button>
       <button type="reset" class="btn btn-sm bg-gradient-secondary"><i class="fas fa-redo mr-2"></i><?= lamlai ?></button>
     </div>
-    <?php if (!empty($_SESSION['toast'])): ?>
-      <?php
-      $toast = $_SESSION['toast'];
-      $title = $toast['title'];
-      $message = $toast['message'];
-      $type = $toast['type'];
-      unset($_SESSION['toast']);
-      ?>
-      <div aria-live="polite" aria-atomic="true" class="position-fixed bottom-0 end-0 p-3" style="z-index: 9999;">
-        <div class="toast-container">
-          <div id="liveToast" class="toast align-items-center text-white bg-<?= $type ?> border-0 shadow" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="3000">
-            <div class="d-flex">
-              <div class="toast-body">
-                <strong><?= $title ?>:</strong> <?= $message ?>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    <?php endif; ?>
-    <?php if (!empty($message)): ?>
-      <div class="card bg-gradient-danger">
-        <div class="card-header">
-          <h3 class="card-title"><?= thongbao ?></h3>
-          <div class="card-tools">
-            <button type="button" class="btn btn-tool" data-card-widget="remove">
-              <i class="fas fa-times"></i>
-            </button>
-            <button type="button" class="btn btn-tool" data-card-widget="collapse">
-              <i class="fas fa-minus"></i>
-            </button>
-          </div>
-        </div>
-        <div class="card-body">
-          <p class="mb-1"><?= $message ?></p>
-        </div>
-      </div>
-    <?php endif; ?>
     <div class="card card-primary card-outline text-sm">
       <div class="card-header">
         <h3 class="card-title"><?= thongtinadmin ?></h3>
@@ -181,14 +142,5 @@ $linkSave = "index.php?page=user&act=info_admin" . $changepass;
         }
       });
     });
-  });
-  window.addEventListener('DOMContentLoaded', () => {
-    const toastEl = document.getElementById('liveToast');
-    if (toastEl) {
-      const toast = new bootstrap.Toast(toastEl, {
-        delay: 3000
-      });
-      toast.show();
-    }
   });
 </script>

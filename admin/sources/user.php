@@ -1,20 +1,12 @@
 <?php
 if (!defined('SOURCES')) die("Error");
-
 $table = 'tbl_user';
+$linkSave = "index.php?page=user&act=info_admin";
+$adminId = Session::get('adminId');
 switch ($act) {
   case 'info_admin':
-    $adminId = Session::get('adminId');
-    $result = [];
-    $result = $db->rawQueryOne("SELECT * FROM tbl_user WHERE id = ? LIMIT 1", [$adminId]);
-    if (!empty($_POST)) {
-      $messages = infoAdmin();
-
-      if (!empty($messages)) {
-        $message = implode('<br>', $messages);
-      }
-    }
-
+    $result = $db->rawQueryOne("SELECT * FROM `$table` WHERE id = ? LIMIT 1", [$adminId]) ?? [];
+    if (!empty($_POST)) infoAdmin();
     $template = "user/man_admin/info";
     break;
 
@@ -24,123 +16,139 @@ switch ($act) {
 }
 function infoAdmin()
 {
-  global $db, $fn;
-  $linkSave = "index.php?page=user&act=info_admin";
+  global $db, $fn, $adminId, $linkSave;
   $changepass = (!empty($_GET['changepass']) && $_GET['changepass'] == 1);
-  $messages = [];
+  $response['messages'] = [];
 
-  $adminId = Session::get('adminId');
   if (!$adminId) {
-    $messages[] = "Bạn chưa đăng nhập";
-    return $messages;
+    $fn->notiToast(banchuacotaikhoan, $linkSave, 'error');
+    exit;
   }
 
+  // Xử lý đổi mật khẩu
   if ($changepass) {
     $linkSave .= "&changepass=1";
-
     $old_pass   = $_POST['old-password'] ?? '';
     $new_pass   = $_POST['new-password'] ?? '';
     $renew_pass = $_POST['renew-password'] ?? '';
-    if (empty($old_pass)) {
-      $messages[] = "Mật khẩu cũ không được để trống";
-    }
+
+    if (empty($old_pass)) $response['messages'][] = matkhaukhongduoctrong;
     if (empty($new_pass)) {
-      $messages[] = "Mật khẩu mới không được để trống";
+      $response['messages'][] = matkhaumoikhongduoctrong;
     } else {
       $weak_passwords = ['123', '123456', '12345678', '123qwe', '111111', 'password', 'abc123'];
       if (strlen($new_pass) < 6 || in_array(strtolower($new_pass), $weak_passwords)) {
-        $messages[] = "Mật khẩu mới quá đơn giản. Vui lòng đặt mật khẩu phức tạp hơn.";
+        $response['messages'][] = matkhaubandatquadongian;
       }
       if ($new_pass !== $renew_pass) {
-        $messages[] = "Nhập lại mật khẩu không trùng khớp";
+        $response['messages'][] = matkhaumoikhongtrungkhop;
       }
     }
-    if (!empty($messages)) return $messages;
+
+    if (!empty($response['messages'])) {
+      $fn->notiToast(implode(",", $response['messages']), $linkSave, 'error');
+      exit;
+    }
+
     $user = $db->rawQueryOne("SELECT id, password FROM tbl_user WHERE id = ? LIMIT 1", [$adminId]);
     if (!$user) {
-      $messages[] = "Tài khoản không tồn tại";
-      return $messages;
+      $fn->notiToast(taikhoandatontai, $linkSave, 'error');
+      exit;
     }
+
     if (!password_verify($old_pass, $user['password'])) {
-      $messages[] = "Mật khẩu cũ không đúng";
-      return $messages;
+      $fn->notiToast(matkhaucukhongchinhxac, $linkSave, 'error');
+      exit;
     }
+
     $hashedPassword = password_hash($new_pass, PASSWORD_DEFAULT);
     $success = $db->execute("UPDATE tbl_user SET password = ? WHERE id = ?", [$hashedPassword, $adminId]);
+
     if ($success) {
-      $fn->transfer("Cập nhật mật khẩu thành công. Vui lòng đăng nhập lại.", "logout.php?change_success=1", true);
+      $fn->transfer("Cập nhật mật khẩu thành công. Vui lòng đăng nhập lại.", "logout.php", true);
       exit;
     } else {
-      $messages[] = "Có lỗi xảy ra khi cập nhật mật khẩu";
-    }
-  } else {
-    $data = $_POST['data'] ?? [];
-    $fieldTypes = [
-      'username' => 'string',
-      'fullname' => 'string',
-      'email'    => 'string',
-      'phone'    => 'string',
-      'address'  => 'string',
-      'gender'   => 'int',
-      'birthday' => 'date'
-    ];
-    $data_sql = $messages = [];
-    $raw_birthday = trim($data['birthday'] ?? '');
-    if (empty($raw_birthday)) {
-      $messages[] = 'Ngày sinh không được trống';
-    }
-    if (!empty($raw_birthday) && !$fn->isDate($raw_birthday)) {
-      $messages[] = 'Ngày sinh không hợp lệ';
-    }
-    foreach ($fieldTypes as $key => $type) {
-      $value = $data[$key] ?? '';
-      switch ($type) {
-        case 'string':
-          $value = trim($value);
-          break;
-        case 'int':
-          $value = (int)$value;
-          break;
-        case 'date':
-          $value = strtotime(str_replace('/', '-', $value)) ?: 0;
-          break;
-      }
-      $data_sql[$key] = $value;
-    }
-    if (!$data_sql['username']) $messages[] = 'Tài khoản không được để trống';
-    if (!$data_sql['fullname']) $messages[] = 'Họ tên không được để trống';
-    if (!$data_sql['address'])  $messages[] = 'Địa chỉ không được để trống';
-    if (!$data_sql['gender'])   $messages[] = 'Vui lòng chọn giới tính';
-    if (empty($data_sql['phone'])) {
-      $messages[] = 'Số điện thoại không được để trống';
-    }
-    if (!empty($data_sql['phone']) && !$fn->isPhone($data_sql['phone'])) {
-      $messages[] = 'Số điện thoại không hợp lệ';
-    }
-    if (!empty($messages)) return $messages;
-    $fields = $params = [];
-    foreach ($data_sql as $key => $val) {
-      $fields[] = "`$key` = ?";
-      $params[] = $val;
-    }
-    $params[] = $adminId;
-    $sql = "UPDATE `tbl_user` SET " . implode(', ', $fields) . " WHERE id = ?";
-    $success = $db->execute($sql, $params);
-    if ($success) {
-      // $fn->transfer(capnhatdulieuthanhcong, $linkSave, true);
-      // exit;
-      $_SESSION['toast'] = [
-        'title' => 'Thành công',
-        'message' => 'Cập nhật dữ liệu thành công!',
-        'type' => 'success' // Có thể là: success | error | warning | info
-      ];
-      header("Location: " . $_SERVER['REQUEST_URI']);
-      exit;
-    } else {
-      $messages[] = capnhatdulieubiloi;
+      $fn->notiToast(capnhatdulieubiloi, $linkSave, 'error');
       exit;
     }
   }
 
-  return $messages;
+  // Xử lý cập nhật thông tin cá nhân
+  $data = $_POST['data'] ?? [];
+  $fieldTypes = [
+    'username' => 'string',
+    'fullname' => 'string',
+    'email'    => 'string',
+    'phone'    => 'string',
+    'address'  => 'string',
+    'gender'   => 'int',
+    'birthday' => 'date'
+  ];
+
+  $data_sql = [];
+  $raw_birthday = trim($data['birthday'] ?? '');
+  if (empty($raw_birthday)) {
+    $response['messages'][] = ngaysinhkhongduoctrong;
+  } elseif (!$fn->isDate($raw_birthday)) {
+    $response['messages'][] = ngaysinhkhonghople;
+  }
+
+  foreach ($fieldTypes as $key => $type) {
+    $value = $data[$key] ?? '';
+    switch ($type) {
+      case 'string':
+        $value = trim($value);
+        break;
+      case 'int':
+        $value = (int)$value;
+        break;
+      case 'date':
+        $value = strtotime(str_replace('/', '-', $value)) ?: 0;
+        break;
+    }
+    $data_sql[$key] = $value;
+  }
+
+  if (!$data_sql['username']) {
+    $response['messages'][] = taikhoankhongduoctrong;
+  } elseif (!$fn->isAlphaNum($data_sql['username'])) {
+    $response['messages'][] = 'Tài khoản chỉ được nhập chữ thường và số (không dấu, không khoảng trắng)';
+  }
+
+  if (!$data_sql['fullname']) $response['messages'][] = vuilongnhaphoten;
+  if (!$data_sql['address'])  $response['messages'][] = vuilongnhapdiachi;
+  if (!$data_sql['gender'])   $response['messages'][] = 'Vui lòng chọn giới tính';
+
+  if (!$data_sql['email']) {
+    $response['messages'][] = emailkhongduoctrong;
+  } elseif (!$fn->isEmail($data_sql['email'])) {
+    $response['messages'][] = emailkhonghople;
+  }
+
+  if (!$data_sql['phone']) {
+    $response['messages'][] = sodienthoaikhongduoctrong;
+  } elseif (!$fn->isPhone($data_sql['phone'])) {
+    $response['messages'][] = sodienthoaikhonghople;
+  }
+
+  if (!empty($response['messages'])) {
+    $fn->notiToast(implode("<br>", $response['messages']), $linkSave, 'error');
+    exit;
+  }
+
+  $fields = $params = [];
+  foreach ($data_sql as $key => $val) {
+    $fields[] = "`$key` = ?";
+    $params[] = $val;
+  }
+  $params[] = $adminId;
+
+  $success = $db->execute("UPDATE `tbl_user` SET " . implode(', ', $fields) . " WHERE id = ?", $params);
+  if ($success) {
+    $fn->notiToast(capnhatdulieuthanhcong, $linkSave, 'success');
+  } else {
+    $fn->notiToast(capnhatdulieubiloi, $linkSave, 'error');
+  }
+
+  return $response['messages'];
 }

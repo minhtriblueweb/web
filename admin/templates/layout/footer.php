@@ -145,9 +145,30 @@ foreach ($jsFiles as $file) {
     $('.select2').select2();
   });
 </script>
-
-
-
+<?php
+if (isset($_SESSION['toast'])) {
+  $toast = $_SESSION['toast'];
+  unset($_SESSION['toast']);
+?>
+  <script>
+    window.addEventListener('DOMContentLoaded', () => {
+      new Notify({
+        status: '<?= $toast['status'] ?>',
+        title: '<?= $toast['title'] ?>',
+        text: '<?= $toast['msg'] ?>',
+        // effect: 'slide',
+        ffect: 'fade',
+        speed: 1000,
+        autoclose: true,
+        autotimeout: 5000,
+        position: 'bottom right',
+        gap: 20,
+        distance: 20,
+        type: 3
+      });
+    });
+  </script>
+<?php } ?>
 </body>
 
 </html>

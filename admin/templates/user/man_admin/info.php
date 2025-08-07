@@ -25,6 +25,26 @@ $linkSave = "index.php?page=user&act=info_admin" . $changepass;
       <button type="submit" class="btn btn-sm bg-gradient-primary submit-check" disabled><i class="far fa-save mr-2"></i><?= luu ?></button>
       <button type="reset" class="btn btn-sm bg-gradient-secondary"><i class="fas fa-redo mr-2"></i><?= lamlai ?></button>
     </div>
+    <?php if (!empty($_SESSION['toast'])): ?>
+      <?php
+      $toast = $_SESSION['toast'];
+      $title = $toast['title'];
+      $message = $toast['message'];
+      $type = $toast['type'];
+      unset($_SESSION['toast']);
+      ?>
+      <div aria-live="polite" aria-atomic="true" class="position-fixed bottom-0 end-0 p-3" style="z-index: 9999;">
+        <div class="toast-container">
+          <div id="liveToast" class="toast align-items-center text-white bg-<?= $type ?> border-0 shadow" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="3000">
+            <div class="d-flex">
+              <div class="toast-body">
+                <strong><?= $title ?>:</strong> <?= $message ?>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    <?php endif; ?>
     <?php if (!empty($message)): ?>
       <div class="card bg-gradient-danger">
         <div class="card-header">
@@ -39,7 +59,7 @@ $linkSave = "index.php?page=user&act=info_admin" . $changepass;
           </div>
         </div>
         <div class="card-body">
-          <p class="mb-1">- <?= $message ?></p>
+          <p class="mb-1"><?= $message ?></p>
         </div>
       </div>
     <?php endif; ?>
@@ -53,7 +73,7 @@ $linkSave = "index.php?page=user&act=info_admin" . $changepass;
             <div class="form-group col-xl-4 col-lg-6 col-md-6">
               <label for="old-password"><?= matkhaucu ?>:</label>
               <div class="input-group">
-                <input type="password" class="form-control text-sm" name="old-password" id="old-password" placeholder="<?= matkhaucu ?>">
+                <input type="password" class="form-control text-sm" name="old-password" id="old-password" placeholder="<?= matkhaucu ?>" value="<?= $_POST['old-password'] ?? ($_POST['old-password'] ?? '') ?>">
                 <div class="input-group-append">
                   <div class="input-group-text show-password">
                     <span class="fas fa-eye"></span>
@@ -61,7 +81,6 @@ $linkSave = "index.php?page=user&act=info_admin" . $changepass;
                 </div>
               </div>
             </div>
-
             <div class="form-group col-xl-4 col-lg-6 col-md-6">
               <label for="new-password">
                 <span class="d-inline-block align-middle"><?= matkhaumoi ?>:</span>
@@ -86,7 +105,6 @@ $linkSave = "index.php?page=user&act=info_admin" . $changepass;
                 </div>
               </div>
             </div>
-
             <div class="form-group col-xl-4 col-lg-6 col-md-6">
               <label for="renew-password"><?= nhaplaimatkhaumoi ?>:</label>
               <div class="input-group">
@@ -98,39 +116,40 @@ $linkSave = "index.php?page=user&act=info_admin" . $changepass;
                 </div>
               </div>
             </div>
-
           <?php } else { ?>
             <div class="form-group col-xl-4 col-lg-6 col-md-6">
               <label for="username"><?= taikhoan ?>: <span class="text-danger">*</span></label>
-              <input type="text" class="form-control text-sm" name="data[username]" id="username" placeholder="<?= taikhoan ?>" value="" required>
+              <input type="text" class="form-control text-sm" id="username" value="<?= $result['username'] ?>" disabled>
+              <input type="hidden" name="data[username]" value="<?= $result['username'] ?>">
             </div>
             <div class="form-group col-xl-4 col-lg-6 col-md-6">
               <label for="fullname"><?= hoten ?>: <span class="text-danger">*</span></label>
-              <input type="text" class="form-control text-sm" name="data[fullname]" id="fullname" placeholder="<?= hoten ?>" value="" required>
+              <input type="text" class="form-control text-sm" name="data[fullname]" id="fullname" placeholder="<?= hoten ?>" value="<?= $result['fullname'] ?>" required>
             </div>
             <div class="form-group col-xl-4 col-lg-6 col-md-6">
               <label for="email">Email:</label>
-              <input type="email" class="form-control text-sm" name="data[email]" id="email" placeholder="Email" value="">
+              <input type="email" class="form-control text-sm" name="data[email]" id="email" placeholder="Email" value="<?= $result['email'] ?>">
             </div>
             <div class="form-group col-xl-4 col-lg-6 col-md-6">
               <label for="phone"><?= dienthoai ?>:</label>
-              <input type="text" class="form-control text-sm" name="data[phone]" id="phone" placeholder="<?= dienthoai ?>" value="">
+              <input type="text" class="form-control text-sm" name="data[phone]" id="phone" placeholder="<?= dienthoai ?>" value="<?= $result['phone'] ?>">
             </div>
             <div class="form-group col-xl-4 col-lg-6 col-md-6">
               <label for="gender"><?= gioitinh ?>:</label>
               <select class="custom-select text-sm" name="data[gender]" id="gender" required>
                 <option value=""><?= chongioitinh ?></option>
-                <option value="1"><?= nam ?></option>
-                <option value="2"><?= nu ?></option>
+                <option value="1" <?= (isset($result['gender']) && $result['gender'] == 1) ? 'selected' : '' ?>><?= nam ?></option>
+                <option value="2" <?= (isset($result['gender']) && $result['gender'] == 2) ? 'selected' : '' ?>><?= nu ?></option>
               </select>
             </div>
             <div class="form-group col-xl-4 col-lg-6 col-md-6">
               <label for="birthday"><?= ngaysinh ?>:</label>
-              <input type="text" class="form-control text-sm max-date" name="data[birthday]" id="birthday" placeholder="<?= ngaysinh ?>" value="" required autocomplete="off">
+              <input type="text" class="form-control text-sm max-date" name="data[birthday]" id="birthday" placeholder="<?= ngaysinh ?>" value="<?= (!empty($result['birthday']) ? date('d/m/Y', $result['birthday']) : '') ?>" required autocomplete="off">
+
             </div>
             <div class="form-group col-xl-4 col-lg-6 col-md-6">
               <label for="address"><?= diachi ?>:</label>
-              <input type="text" class="form-control text-sm" name="data[address]" id="address" placeholder="<?= diachi ?>" value="" required>
+              <input type="text" class="form-control text-sm" name="data[address]" id="address" placeholder="<?= diachi ?>" value="<?= $result['address'] ?>" required>
             </div>
           <?php } ?>
         </div>
@@ -146,7 +165,6 @@ $linkSave = "index.php?page=user&act=info_admin" . $changepass;
 <script>
   document.addEventListener("DOMContentLoaded", function() {
     const showPasswordToggles = document.querySelectorAll(".show-password");
-
     showPasswordToggles.forEach(toggle => {
       toggle.addEventListener("click", function() {
         const input = this.closest(".input-group").querySelector("input");
@@ -163,5 +181,14 @@ $linkSave = "index.php?page=user&act=info_admin" . $changepass;
         }
       });
     });
+  });
+  window.addEventListener('DOMContentLoaded', () => {
+    const toastEl = document.getElementById('liveToast');
+    if (toastEl) {
+      const toast = new bootstrap.Toast(toastEl, {
+        delay: 3000
+      });
+      toast.show();
+    }
   });
 </script>

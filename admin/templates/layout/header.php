@@ -64,7 +64,7 @@
             class="nav-link dropdown-toggle"><i class="fas fa-cogs"></i></a>
           <ul aria-labelledby="dropdownSubMenu-info" class="dropdown-menu dropdown-menu-right border-0 shadow">
             <li>
-              <a href="" class="dropdown-item">
+              <a href="index.php?page=user&act=info_admin" class="dropdown-item">
                 <i class="fas fa-user-cog"></i>
                 <span><?= thongtinadmin ?></span>
               </a>

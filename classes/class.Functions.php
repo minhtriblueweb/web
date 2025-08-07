@@ -675,6 +675,174 @@ class Functions
     }
     return $result;
   }
+  /* Format money */
+  public function formatMoney($price = 0, $unit = 'đ', $html = false)
+  {
+    $str = '';
+
+    if ($price) {
+      $str .= number_format($price, 0, ',', '.');
+      if ($unit != '') {
+        if ($html) {
+          $str .= '<span>' . $unit . '</span>';
+        } else {
+          $str .= $unit;
+        }
+      }
+    }
+
+    return $str;
+  }
+
+  /* Is phone */
+  public function isPhone($number)
+  {
+    $number = trim($number);
+    if (preg_match_all('/^(0|84)(2(0[3-9]|1[0-6|8|9]|2[0-2|5-9]|3[2-9]|4[0-9]|5[1|2|4-9]|6[0-3|9]|7[0-7]|8[0-9]|9[0-4|6|7|9])|3[2-9]|5[5|6|8|9]|7[0|6-9]|8[0-6|8|9]|9[0-4|6-9])([0-9]{7})$/m', $number, $matches, PREG_SET_ORDER, 0)) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  /* Format phone */
+  public function formatPhone($number, $dash = ' ')
+  {
+    if (preg_match('/^(\d{4})(\d{3})(\d{3})$/', $number, $matches) || preg_match('/^(\d{3})(\d{4})(\d{4})$/', $number, $matches)) {
+      return $matches[1] . $dash . $matches[2] . $dash . $matches[3];
+    }
+  }
+
+  /* Parse phone */
+  public function parsePhone($number)
+  {
+    return (!empty($number)) ? preg_replace('/[^0-9]/', '', $number) : '';
+  }
+
+  /* Check letters and nums */
+  public function isAlphaNum($str)
+  {
+    if (preg_match('/^[a-z0-9]+$/', $str)) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  /* Is email */
+  public function isEmail($email)
+  {
+    if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  /* Is match */
+  public function isMatch($value1, $value2)
+  {
+    if ($value1 == $value2) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  /* Is decimal */
+  public function isDecimal($number)
+  {
+    if (preg_match('/^\d{1,10}(\.\d{1,4})?$/', $number)) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  /* Is coordinates */
+  public function isCoords($str)
+  {
+    if (preg_match('/^[-+]?([1-8]?\d(\.\d+)?|90(\.0+)?),\s*[-+]?(180(\.0+)?|((1[0-7]\d)|([1-9]?\d))(\.\d+)?)$/', $str)) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  /* Is url */
+  public function isUrl($str)
+  {
+    if (preg_match('/^(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})/', $str)) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  /* Is url youtube */
+  public function isYoutube($str)
+  {
+    if (preg_match('/https?:\/\/(?:[a-zA_Z]{2,3}.)?(?:youtube\.com\/watch\?)((?:[\w\d\-\_\=]+&amp;(?:amp;)?)*v(?:&lt;[A-Z]+&gt;)?=([0-9a-zA-Z\-\_]+))/i', $str)) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  /* Is fanpage */
+  public function isFanpage($str)
+  {
+    if (preg_match('/^(https?:\/\/)?(?:www\.)?facebook\.com\/(?:(?:\w)*#!\/)?(?:pages\/)?(?:[\w\-]*\/)*([\w\-\.]*)/', $str)) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  /* Is date */
+  public function isDate($str)
+  {
+    if (preg_match('/^([0-2][0-9]|(3)[0-1])(\/)(((0)[0-9])|((1)[0-2]))(\/)\d{4}$/', $str)) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  /* Is date by format */
+  public function isDateByFormat($str, $format = 'd/m/Y')
+  {
+    $dt = DateTime::createFromFormat($format, $str);
+    return $dt && $dt->format($format) == $str;
+  }
+
+  /* Is number */
+  public function isNumber($numbs)
+  {
+    if (preg_match('/^[0-9]+$/', $numbs)) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  /* Check account */
+  public function checkAccount($data = '', $type = '', $tbl = '', $id = 0)
+  {
+    $result = false;
+    $row = array();
+
+    if (!empty($data) && !empty($type) && !empty($tbl)) {
+      $where = (!empty($id)) ? ' and id != ' . $id : '';
+      $row = $this->db->rawQueryOne("select id from #_$tbl where $type = ? $where limit 0,1", array($data));
+
+      if (!empty($row)) {
+        $result = true;
+      }
+    }
+
+    return $result;
+  }
 
   public function checkSlug(array $data = []): string|false
   {

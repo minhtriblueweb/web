@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Máy chủ: 127.0.0.1
--- Thời gian đã tạo: Th8 05, 2025 lúc 07:56 PM
+-- Thời gian đã tạo: Th8 07, 2025 lúc 12:02 PM
 -- Phiên bản máy phục vụ: 10.4.32-MariaDB
 -- Phiên bản PHP: 8.2.12
 
@@ -143,7 +143,15 @@ INSERT INTO `tbl_counter` (`id`, `tm`, `ip`) VALUES
 (0, 1754374872, '::1'),
 (0, 1754384293, '::1'),
 (0, 1754409247, '::1'),
-(0, 1754409460, '::1');
+(0, 1754409460, '::1'),
+(0, 1754442452, '::1'),
+(0, 1754445649, '::1'),
+(0, 1754460847, '::1'),
+(0, 1754468935, '::1'),
+(0, 1754529301, '::1'),
+(0, 1754543303, '::1'),
+(0, 1754549704, '::1'),
+(0, 1754555789, '::1');
 
 -- --------------------------------------------------------
 
@@ -1053,7 +1061,7 @@ INSERT INTO `tbl_product` (`id`, `slugvi`, `slugen`, `namevi`, `nameen`, `descvi
 (104, 'hoa-bo-92314', '', 'Hoa bó 92314', '', '', '', '', '', 'hoa-bo-92314_eb63.webp', 2, 2, '', '', 0, '', 'san-pham', 'hienthi,noibat,banchay', 1, 6, '2025-07-27 01:50:32', '2025-08-05 23:28:49'),
 (105, 'hoa-bo-19864', '', 'Hoa bó 19864', '', '', '', '', '', 'hoa-bo-19864_33b2.webp', 2, 2, '', '', 0, '', 'san-pham', 'hienthi,noibat,banchay', 1, 2, '2025-07-27 01:50:50', '2025-08-05 13:43:10'),
 (106, 'hoa-bo-26938', '', 'Hoa bó 26938', '', '', '', '', '', 'hoa-bo-26938_c056.webp', 2, 2, '', '', 0, '', 'san-pham', 'hienthi,noibat,banchay', 1, 0, '2025-07-27 01:51:05', '2025-07-27 01:51:05'),
-(107, 'hoa-bo-30504', 'hoa-bo-tieng-anhh', 'Hoa bó 30504', 'hoa bó tiếng anh', '', '', '', '', 'hoa-bo-30504_ad8b.webp', 2, 2, '', '', 0, '', 'san-pham', 'hienthi,banchay,noibat', 1, 2, '2025-07-27 01:52:37', '2025-08-03 23:11:16');
+(107, 'hoa-bo-30504', 'hoa-bo-tieng-anhh', 'Hoa bó 30504', 'hoa bó tiếng anh', '', '', '', '', 'hoa-bo-30504_ad8b.webp', 2, 2, '', '', 0, '', 'san-pham', 'hienthi,banchay,noibat', 1, 4, '2025-07-27 01:52:37', '2025-08-06 08:08:01');
 
 -- --------------------------------------------------------
 
@@ -1516,16 +1524,32 @@ INSERT INTO `tbl_type` (`id`, `lang_define`, `langvi`, `langen`, `numb`) VALUES
 CREATE TABLE `tbl_user` (
   `id` int(10) NOT NULL,
   `username` varchar(100) NOT NULL,
-  `password` varchar(255) NOT NULL
+  `password` varchar(255) NOT NULL,
+  `id_permission` int(11) DEFAULT 0,
+  `confirm_code` varchar(255) DEFAULT NULL,
+  `avatar` varchar(255) DEFAULT NULL,
+  `fullname` varchar(225) DEFAULT NULL,
+  `phone` varchar(20) DEFAULT NULL,
+  `email` varchar(100) DEFAULT NULL,
+  `address` varchar(225) DEFAULT NULL,
+  `gender` tinyint(1) DEFAULT 0,
+  `login_session` varchar(255) DEFAULT NULL,
+  `user_token` varchar(255) DEFAULT NULL,
+  `lastlogin` varchar(255) DEFAULT NULL,
+  `status` varchar(255) DEFAULT NULL,
+  `role` tinyint(1) DEFAULT 1,
+  `secret_key` varchar(255) DEFAULT NULL,
+  `birthday` int(11) DEFAULT 0,
+  `numb` int(11) DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Đang đổ dữ liệu cho bảng `tbl_user`
 --
 
-INSERT INTO `tbl_user` (`id`, `username`, `password`) VALUES
-(1, 'admin', '$2y$10$UV9BNgF5sa1L3FBLx9D1kO.BIZwMvd/ytA4XQaG/H..9eD6tPG56K'),
-(2, 'minhtri', 'kXRs^Ywq)');
+INSERT INTO `tbl_user` (`id`, `username`, `password`, `id_permission`, `confirm_code`, `avatar`, `fullname`, `phone`, `email`, `address`, `gender`, `login_session`, `user_token`, `lastlogin`, `status`, `role`, `secret_key`, `birthday`, `numb`) VALUES
+(1, 'admin', '$2y$10$jceXBd8dqj3n.uv.71rsOuBfHBVoXM3tv6qC1OOxLVXFUqI4PECrK', 0, NULL, NULL, 'Administrator', '0328732834', 'minhtri.blueweb@gmail.com', '152/18, Dương Thị Mười, P.Tân Thới Hiệp, Quận 12, TpHCM', 1, NULL, NULL, NULL, NULL, 1, NULL, 968968800, 0),
+(2, 'minhtri', 'Gb%jLaKwH', 0, NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, NULL, NULL, NULL, 1, NULL, 0, 0);
 
 -- --------------------------------------------------------
 
@@ -1544,7 +1568,7 @@ CREATE TABLE `tbl_user_online` (
 --
 
 INSERT INTO `tbl_user_online` (`session`, `last_activity`, `ip`) VALUES
-('rc19ip9ruu7p9cpe09qvn3qqk9', 1754413607, '::1');
+('6ejhvg7o7c20vlmhn6l6hpv3ub', 1754560905, '::1');
 
 -- --------------------------------------------------------
 

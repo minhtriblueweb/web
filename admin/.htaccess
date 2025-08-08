@@ -7,4 +7,3 @@ RewriteRule ^ - [L]
 
 # Routing nội bộ (nếu có)
 RewriteRule ^trang-chu$ index.php [L]
-RewriteRule ^dang-nhap$ login.php [L]

@@ -145,9 +145,8 @@ $page = $_GET['page'] ?? '';
 $type = $_GET['type'] ?? '';
 $act  = $_GET['act'] ?? '';
 ?>
-
 <aside class="main-sidebar sidebar-dark-primary elevation-4 text-sm">
-  <a class="brand-link" href="index.php?page=dashboard">
+  <a class="brand-link" href="index.php">
     <img class="brand-image" src="./assets/img/chuky.png" />
   </a>
   <div class="sidebar">
@@ -201,5 +200,3 @@ $act  = $_GET['act'] ?? '';
     </nav>
   </div>
 </aside>
-
-<div class="content-wrapper">

@@ -4,6 +4,15 @@ $table = 'tbl_user';
 $linkSave = "index.php?page=user&act=info_admin";
 $adminId = Session::get('adminId');
 switch ($act) {
+  case "login":
+    if (!empty($_SESSION[$loginAdmin]['active'])) $fn->transfer(trangkhongtontai, "index.php", false);
+    else $template = "user/login";
+    break;
+
+  case "logout":
+    logout();
+    break;
+
   case 'info_admin':
     $result = $db->rawQueryOne("SELECT * FROM `$table` WHERE id = ? LIMIT 1", [$adminId]) ?? [];
     if (!empty($_POST)) infoAdmin();
@@ -151,4 +160,12 @@ function infoAdmin()
   }
 
   return $response['messages'];
+}
+function logout()
+{
+  session_start();
+  session_unset();
+  session_destroy();
+  header("Location: index.php?page=user&act=login");
+  exit();
 }

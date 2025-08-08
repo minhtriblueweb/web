@@ -75,14 +75,14 @@ for ($i = 1; $i <= $daysInMonth; $i++) {
           <div class="col-md-4">
             <div class="form-group">
               <select class="form-control select2" name="month" id="month">
-                <option value="">Chọn tháng</option>
+                <option value=""><?= thang ?></option>
               </select>
             </div>
           </div>
           <div class="col-md-4">
             <div class="form-group">
               <select class="form-control select2" name="year" id="year">
-                <option value="">Chọn năm</option>
+                <option value=""><?= nam ?></option>
               </select>
             </div>
           </div>

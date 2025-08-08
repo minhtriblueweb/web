@@ -31,17 +31,12 @@ class Session
   public static function checkSession()
   {
     self::init();
-
     $last_activity = self::get("last_activity");
-
-    // Nếu chưa đăng nhập hoặc vượt quá thời gian timeout
     if (self::get("adminlogin") == false || !$last_activity || (time() - $last_activity > self::$timeout)) {
       self::destroy();
-      header("Location:dang-nhap");
+      header("Location: index.php?page=user&act=login");
       exit();
     }
-
-    // Cập nhật thời gian hoạt động mỗi lần tương tác
     self::set("last_activity", time());
   }
 
@@ -56,11 +51,9 @@ class Session
 
   public static function destroy()
   {
-    if (session_id() == '') session_start(); // Đảm bảo session đã được khởi động
+    if (session_id() == '') session_start();
     session_unset();
     session_destroy();
-
-    // Xóa cookie nếu có dùng
     if (ini_get("session.use_cookies")) {
       $params = session_get_cookie_params();
       setcookie(

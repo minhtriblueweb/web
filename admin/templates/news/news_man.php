@@ -1,3 +1,9 @@
+<?php
+$linkForm = "$linkNews&act=form";
+$linkEdit = "$linkForm&id=";
+$linkDelete = "$linkNews&act=delete&id=";
+$linkMulti  = "$linkNews&act=delete_multiple";
+?>
 <section class="content-header text-sm">
   <div class="container-fluid">
     <div class="row">

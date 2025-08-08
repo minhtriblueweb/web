@@ -6,10 +6,7 @@ if (!isset($config['news'][$type])) {
 }
 $linkNews = "index.php?page=news&type=$type";
 $linkMan = "$linkNews&act=man";
-$linkForm = "$linkNews&act=form";
-$linkEdit = "$linkForm&id=";
-$linkDelete = "$linkNews&act=delete&id=";
-$linkMulti  = "$linkNews&act=delete_multiple";
+
 
 switch ($act) {
   case 'delete':

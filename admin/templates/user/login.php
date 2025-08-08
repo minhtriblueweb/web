@@ -1,30 +1,4 @@
 <?php
-include_once '../lib/session.php';
-Session::init();
-
-if (Session::get("adminlogin")) {
-  header("Location: index.php");
-  exit();
-}
-
-include_once '../classes/class.adminlogin.php';
-include_once '../lib/validation.php';
-
-$login = new adminlogin();
-
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST["btn_login"])) {
-  $username = $_POST['username'] ?? '';
-  $password = $_POST['password'] ?? '';
-  $login_check = $login->login($username, $password);
-  if ($login_check === "success") {
-    Session::set("adminlogin", true);
-    Session::set("last_activity", time());
-    header("Location: index.php");
-    exit();
-  } else {
-    $error = $login_check;
-  }
-}
 // $password = "%Q@Q#Tc@V";
 // $hashed = password_hash($password, PASSWORD_DEFAULT);
 // echo "Mật khẩu đã hash: " . $hashed;

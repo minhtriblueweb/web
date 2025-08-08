@@ -16,49 +16,20 @@ $linkMulti = "$linkBase&act=delete_multiple";
 
 switch ($act) {
   case 'delete':
-    $fn->delete_data([
-      'id' => $id_child,
-      'table' => $table,
-      'type' => $type,
-      'redirect_page' => $linkMan
-    ]);
+    delete();
     break;
 
   case 'delete_multiple':
-    $fn->deleteMultiple_data([
-      'listid' => $_GET['listid'] ?? '',
-      'table' => $table,
-      'type' => $type,
-      'redirect_page' => $linkMan
-    ]);
+    deleteMultiple();
     break;
 
   case 'man':
-    $perPage = 10;
-    $curPage = max(1, (int)($_GET['p'] ?? 1));
-    $options = [
-      'table' => $table,
-      'type' => $type,
-      'id_parent' => $id,
-      'keyword' => $keyword,
-      'pagination' => [$perPage, $curPage]
-    ];
-    $total = $fn->count_data($options);
-    $show_data = $fn->show_data($options);
-    $paging = $fn->pagination($total, $perPage, $curPage);
+    view();
     $template = "gallery/gallery_man";
     break;
 
   case 'form':
-    $isPost = ($_SERVER['REQUEST_METHOD'] === 'POST');
-    $isAdd  = ($isPost && isset($_POST['add']) && $id);
-    $isEdit = ($isPost && isset($_POST['edit']) && $id_child > 0);
-    if ($isAdd) save_gallery($_POST, $_FILES, $id);
-    $result = $db->rawQueryOne("SELECT * FROM $table WHERE id = ? LIMIT 1", [$id_child]);
-    if ($isEdit && $result && isset($result['id_parent'])) {
-      upload_gallery($_POST, $_FILES, $id_child, $result['id_parent']);
-    }
-
+    add();
     $template = "gallery/gallery_form";
     break;
 
@@ -108,7 +79,7 @@ function save_gallery($data, $files, $id_parent)
       }
     }
   }
-  $fn->transfer($result ? "Cập nhật hình ảnh thành công" : "Cập nhật hình ảnh thất bại!",  $redirect_page, $result);
+  $fn->transfer($result ? capnhathinhanhthanhcong : capnhathinhanhthatbai,  $redirect_page, $result);
   return $result;
 }
 function upload_gallery($data, $files, $id, $id_parent)
@@ -158,4 +129,60 @@ function upload_gallery($data, $files, $id, $id_parent)
   $success = $db->execute("UPDATE `$table` SET " . implode(', ', $sqlFields) . " WHERE id = ?", $params);
 
   $fn->transfer($success ? capnhathinhanhthanhcong : capnhathinhanhthatbai, $redirect_page, $success);
+}
+function view()
+{
+  global $fn, $id, $table, $type, $keyword, $paging, $show_data;
+  $perPage = 10;
+  $curPage = max(1, (int)($_GET['p'] ?? 1));
+  $options = [
+    'table' => $table,
+    'type' => $type,
+    'id_parent' => $id,
+    'keyword' => $keyword,
+    'pagination' => [$perPage, $curPage]
+  ];
+  $total = $fn->count_data($options);
+  $show_data = $fn->show_data($options);
+  $paging = $fn->pagination($total, $perPage, $curPage);
+}
+function add()
+{
+  global $db, $table, $id_child, $id, $result;
+  $isPost = ($_SERVER['REQUEST_METHOD'] === 'POST');
+  $isAdd  = ($isPost && isset($_POST['add']) && $id);
+  $isEdit = ($isPost && isset($_POST['edit']) && $id_child > 0);
+  if ($isAdd) save_gallery($_POST, $_FILES, $id);
+  $result = $db->rawQueryOne("SELECT * FROM $table WHERE id = ? LIMIT 1", [$id_child]);
+  if ($isEdit && $result && isset($result['id_parent'])) {
+    upload_gallery($_POST, $_FILES, $id_child, $result['id_parent']);
+  }
+}
+function delete()
+{
+  global $fn, $table, $type,  $id_child, $linkMan;
+  if (is_numeric($_GET['id'] ?? null)) {
+    $fn->delete_data([
+      'id' => $id_child,
+      'table' => $table,
+      'type' => $type,
+      'redirect_page' => $linkMan
+    ]);
+  } else {
+    $fn->transfer(khongnhanduocdulieu, $linkMan, false);
+  }
+}
+function deleteMultiple()
+{
+  global $fn, $table, $type, $linkMan;
+  if (!empty($_GET['listid'])) {
+    $fn->deleteMultiple_data([
+      'listid' => $_GET['listid'] ?? '',
+      'table' => $table,
+      'type' => $type,
+      'redirect_page' => $linkMan
+    ]);
+  } else {
+    $fn->transfer(khongnhanduocdulieu, $linkMan, false);
+  }
 }

@@ -1,3 +1,9 @@
+<?php
+$linkForm   = "index.php?page=photo&act=photo_form&type=$type";
+$linkEdit   = "$linkForm&id=";
+$linkDelete = "index.php?page=photo&act=delete&type=$type&id=";
+$linkMulti  = "index.php?page=photo&act=delete_multiple&type=$type";
+?>
 <section class="content-header text-sm">
   <div class="container-fluid">
     <div class="row">

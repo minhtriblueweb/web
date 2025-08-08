@@ -1,3 +1,10 @@
+<?php
+$linkMan = "$linkProduct&act=man_cat";
+$linkForm  = "$linkProduct&act=form_cat";
+$linkEdit  = "$linkForm&id=";
+$linkDelete = "$linkProduct&act=delete_cat&id=";
+$linkMulti  = "$linkProduct&act=delete_multiple_cat";
+?>
 <section class="content-header text-sm">
   <div class="container-fluid">
     <div class="row">

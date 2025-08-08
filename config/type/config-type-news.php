@@ -59,7 +59,7 @@ $config['news'][$type]['view'] = true;
 $config['news'][$type]['copy'] = true;
 $config['news'][$type]['copy_image'] = true;
 $config['news'][$type]['comment'] = false;
-$config['news'][$type]['slug'] = false;
+$config['news'][$type]['slug'] = true;
 $config['news'][$type]['check'] = array("hienthi" => "Hiển thị");
 $config['news'][$type]['images'] = true;
 $config['news'][$type]['show_images'] = true;

@@ -3,7 +3,7 @@ $sidebarMenu = [
   [
     'title' => 'Bảng điều khiển',
     'icon' => 'fas fa-tachometer-alt',
-    'active' => ['?page=dashboard', 'index.php'],
+    'active' => [''],
   ],
   [
     'title' => 'Sản phẩm',

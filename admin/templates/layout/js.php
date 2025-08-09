@@ -110,49 +110,25 @@ foreach ($jsFiles as $file) {
 }
 ?>
 <script src="ckeditor/ckeditor.js"></script>
-<script>
-  document.addEventListener('DOMContentLoaded', function() {
-    if (typeof CHARTS !== 'undefined') {
-      document.getElementById('month-label').textContent = CHARTS.month;
-      document.getElementById('year-label').textContent = CHARTS.year || new Date().getFullYear();
-    }
-  });
-  $(document).ready(function() {
-    const selectedMonth = parseInt(CHARTS?.month || (new Date().getMonth() + 1));
-    const selectedYear = parseInt(CHARTS?.year || new Date().getFullYear());
-    for (let i = 1; i <= 12; i++) {
-      const selected = i === selectedMonth ? 'selected' : '';
-      $('#month').append(`<option value="${i}" ${selected}>Tháng ${i}</option>`);
-    }
-    const currentYear = new Date().getFullYear();
-    for (let y = 2000; y <= currentYear + 10; y++) {
-      const selected = y === selectedYear ? 'selected' : '';
-      $('#year').append(`<option value="${y}" ${selected}>Năm ${y}</option>`);
-    }
-    $('.select2').select2();
-  });
-</script>
-<?php
-if (isset($_SESSION['toast'])) {
-  $toast = $_SESSION['toast'];
-  unset($_SESSION['toast']);
-?>
+<?php if (!empty($_SESSION['notify']) && is_array($_SESSION['notify'])): ?>
   <script>
-    window.addEventListener('DOMContentLoaded', () => {
-      new Notify({
-        status: '<?= $toast['status'] ?>',
-        title: '<?= $toast['title'] ?>',
-        text: '<?= $toast['msg'] ?>',
-        // effect: 'slide',
-        ffect: 'fade',
-        speed: 1000,
-        autoclose: true,
-        autotimeout: 5000,
-        position: 'bottom right',
-        gap: 20,
-        distance: 20,
-        type: 3
-      });
+    $(function() {
+      <?php foreach ($_SESSION['notify'] as $notify): ?>
+        new Notify({
+          status: '<?= $notify['status'] ?>', // success, error, warning, info
+          title: '<?= $notify['title'] ?>',
+          text: '<?= $notify['msg'] ?>',
+          effect: 'slide',
+          speed: 1000,
+          autoclose: true,
+          autotimeout: 5000,
+          position: 'top right',
+          gap: 60,
+          distance: 20,
+          type: 1
+        });
+      <?php endforeach; ?>
     });
   </script>
-<?php } ?>
+  <?php unset($_SESSION['notify']); ?>
+<?php endif; ?>

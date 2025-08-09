@@ -1,29 +1,28 @@
 <?php
 require_once 'init.php';
-require_once '../lib/session.php';
-require_once '../classes/class.adminlogin.php';
-require_once '../lib/validation.php';
-
 Session::init();
 $login = new adminlogin();
 $error = null;
 
-// Lấy biến page & act từ URL
-$page = $_GET['page'] ?? '';
-$act = $_GET['act'] ?? '';
+/* ===== LẤY PAGE/ACT ===== */
+$page = preg_replace('/[^a-zA-Z0-9_-]/', '', basename($_GET['page'] ?? 'index'));
+$act  = $_GET['act'] ?? '';
 
-// ==== XỬ LÝ ĐĂNG NHẬP ====
+/* ===== SET TEMPLATE */
 if ($page === 'user' && $act === 'login') {
+  $template = 'user/login';
+} else {
+  $template = $page;
+}
+
+/* ===== XỬ LÝ ĐĂNG NHẬP ===== */
+if ($template === 'user/login') {
   if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST["btn_login"])) {
     $username = $_POST['username'] ?? '';
     $password = $_POST['password'] ?? '';
     $login_check = $login->login($username, $password);
-
     if ($login_check === "success") {
-      Session::set("adminlogin", [
-        'active' => true,
-        'name' => $username
-      ]);
+      Session::set("adminlogin", ['active' => true, 'name' => $username]);
       Session::set("last_activity", time());
       header("Location: index.php");
       exit();
@@ -31,35 +30,36 @@ if ($page === 'user' && $act === 'login') {
       $error = $login_check;
     }
   }
-
-  // Hiển thị giao diện login
-  include TEMPLATE . "user/login.php";
-  exit();
+} else {
+  Session::checkSession();
 }
 
-// ==== KIỂM TRA PHIÊN ====
-Session::checkSession();
+/* ===== TRẠNG THÁI LOGIN ===== */
+$is_logged_in = Session::get("adminlogin")['active'] ?? false;
 
-// ==== LẤY & LỌC TRANG ====
-$page = $_GET['page'] ?? 'index';
-$template = $page = preg_replace('/[^a-zA-Z0-9_-]/', '', basename($page));
-
-// ==== TRANG THÔNG BÁO ====
+/* ===== TRANG TRANSFER ===== */
 if ($page === 'transfer') {
   define('IS_TRANSFER', true);
-  $transferData = $_SESSION['transfer_data'] ?? ['msg' => 'Không có thông báo', 'page' => 'index.php', 'numb' => false];
+  $transferData  = $_SESSION['transfer_data'] ?? [
+    'msg'  => 'Không có thông báo',
+    'page' => 'index.php',
+    'numb' => false
+  ];
   unset($_SESSION['transfer_data']);
-  $showtext = $transferData['msg'];
+  $showtext      = $transferData['msg'];
   $page_transfer = $transferData['page'];
-  $numb = $transferData['numb'];
+  $numb          = $transferData['numb'];
   include TEMPLATE . LAYOUT . "transfer.php";
   exit();
 }
 
-// ==== FILE SOURCES ====
+/* ===== FILE SOURCES ===== */
 $source_file = SOURCES . $page . ".php";
-$page_file = TEMPLATE . $page . ".php";
-if (!file_exists($source_file) && !file_exists($page_file)) {
+if (file_exists($source_file)) {
+  include_once $source_file;
+}
+$page_file = TEMPLATE . $template . ".php";
+if (!file_exists($page_file)) {
   define('IS_404', true);
 }
 ?>
@@ -75,30 +75,28 @@ if (!file_exists($source_file) && !file_exists($page_file)) {
   <?php include TEMPLATE . LAYOUT . "css.php"; ?>
 </head>
 
-<body class="sidebar-mini hold-transition text-sm">
-
+<body class="sidebar-mini hold-transition text-sm <?= $is_logged_in ? '' : 'login-page' ?>">
   <!-- Loader -->
-  <?php if ($template == 'index' || $template == 'user/login') include TEMPLATE . LAYOUT . "loader.php"; ?>
+  <?php if ($template === 'index' || $template === 'user/login') include TEMPLATE . LAYOUT . "loader.php"; ?>
 
-  <div class="wrapper">
-    <?php
-    include TEMPLATE . LAYOUT . "header.php";
-    include TEMPLATE . LAYOUT . "sidebar.php";
-    ?>
-    <div class="content-wrapper">
+  <?php if ($is_logged_in) { ?>
+    <div class="wrapper">
       <?php
-      if (!defined('IS_404') && file_exists($source_file)) {
-        include_once $source_file;
-        include TEMPLATE . $template . ".php";
-      } elseif (!defined('IS_404') && file_exists($page_file)) {
-        include $page_file;
-      } else {
-        $fn->abort_404();
-      }
+      include TEMPLATE . LAYOUT . "header.php";
+      include TEMPLATE . LAYOUT . "sidebar.php";
       ?>
+      <div class="content-wrapper">
+        <?php
+        if (!defined('IS_404') && file_exists($page_file)) include $page_file;
+        else $fn->abort_404();
+        ?>
+      </div>
+      <?php include TEMPLATE . LAYOUT . "footer.php"; ?>
     </div>
-    <?php include TEMPLATE . LAYOUT . "footer.php"; ?>
-  </div>
+  <?php } else {
+    include TEMPLATE . "user/login.php";
+  } ?>
+
   <?php include TEMPLATE . LAYOUT . "js.php"; ?>
 </body>
 

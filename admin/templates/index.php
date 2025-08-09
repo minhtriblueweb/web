@@ -1,7 +1,17 @@
 <?php
 date_default_timezone_set('Asia/Ho_Chi_Minh');
 $month = isset($_GET['month']) ? (int)$_GET['month'] : (int)date('m');
-$year = isset($_GET['year']) ? (int)$_GET['year'] : (int)date('Y');
+$year  = isset($_GET['year']) ? (int)$_GET['year'] : (int)date('Y');
+$currentMonth = (int)date('m');
+$currentYear  = (int)date('Y');
+if ($year > $currentYear) {
+  $fn->notiToast("Năm không hợp lệ", "index.php", "error");
+  exit;
+}
+if ($year == $currentYear && $month > $currentMonth) {
+  $fn->notiToast("Tháng không hợp lệ", "index.php", "error");
+  exit;
+}
 $daysInMonth = cal_days_in_month(CAL_GREGORIAN, $month, $year);
 $charts = [
   'month' => str_pad($month, 2, '0', STR_PAD_LEFT),
@@ -9,6 +19,7 @@ $charts = [
   'series' => [],
   'labels' => []
 ];
+
 for ($i = 1; $i <= $daysInMonth; $i++) {
   $begin = strtotime("$year-$month-$i 00:00:00");
   $end   = strtotime("$year-$month-$i 23:59:59") + 1;
@@ -17,7 +28,6 @@ for ($i = 1; $i <= $daysInMonth; $i++) {
   $charts['labels'][] = 'D' . $i;
 }
 ?>
-
 
 <?php include TEMPLATE . LAYOUT . 'loader.php'; ?>
 <section class="content mb-3">
@@ -68,14 +78,48 @@ for ($i = 1; $i <= $daysInMonth; $i++) {
   <div class="container-fluid">
     <div class="card">
       <div class="card-header">
-        <h5 class="mb-0"><?= thongketruycapthang ?> <span id="month-label"></span>/<span id="year-label"></span></h5>
+        <h5 class="mb-0">
+          <?= thongketruycapthang ?> <?= str_pad($month, 2, '0', STR_PAD_LEFT) ?>/<?= $year ?>
+        </h5>
       </div>
       <div class="card-body">
+        <?php
+        date_default_timezone_set('Asia/Ho_Chi_Minh');
+
+        $month = isset($_GET['month']) ? (int)$_GET['month'] : (int)date('m');
+        $year = isset($_GET['year']) ? (int)$_GET['year'] : (int)date('Y');
+
+        $daysInMonth = cal_days_in_month(CAL_GREGORIAN, $month, $year);
+
+        $charts = [
+          'month' => str_pad($month, 2, '0', STR_PAD_LEFT),
+          'year' => $year,
+          'series' => [],
+          'labels' => []
+        ];
+
+        for ($i = 1; $i <= $daysInMonth; $i++) {
+          $begin = strtotime("$year-$month-$i 00:00:00");
+          $end   = strtotime("$year-$month-$i 23:59:59") + 1;
+          $row = $db->rawQueryOne(
+            "SELECT COUNT(*) as total FROM tbl_counter WHERE tm >= ? AND tm < ?",
+            [$begin, $end]
+          );
+          $charts['series'][] = (int)$row['total'];
+          $charts['labels'][] = 'D' . $i;
+        }
+        ?>
+
         <form class="form-filter-charts row align-items-center mb-3" method="get">
           <div class="col-md-4">
             <div class="form-group">
               <select class="form-control select2" name="month" id="month">
                 <option value=""><?= thang ?></option>
+                <?php for ($i = 1; $i <= 12; $i++): ?>
+                  <option value="<?= $i ?>" <?= $i == $month ? 'selected' : '' ?>>
+                    Tháng <?= $i ?>
+                  </option>
+                <?php endfor; ?>
               </select>
             </div>
           </div>
@@ -83,13 +127,24 @@ for ($i = 1; $i <= $daysInMonth; $i++) {
             <div class="form-group">
               <select class="form-control select2" name="year" id="year">
                 <option value=""><?= nam ?></option>
+                <?php
+                $currentYear = date('Y');
+                for ($y = 2000; $y <= $currentYear + 10; $y++):
+                ?>
+                  <option value="<?= $y ?>" <?= $y == $year ? 'selected' : '' ?>>
+                    Năm <?= $y ?>
+                  </option>
+                <?php endfor; ?>
               </select>
             </div>
           </div>
           <div class="col-md-4">
-            <div class="form-group"><button type="submit" class="btn btn-success" fdprocessedid="5x379q"><?= thongke ?></button></div>
+            <div class="form-group">
+              <button type="submit" class="btn btn-success"><?= thongke ?></button>
+            </div>
           </div>
         </form>
+
         <div id="apexMixedChart"></div>
       </div>
     </div>

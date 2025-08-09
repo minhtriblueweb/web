@@ -97,7 +97,7 @@ $linkSave = "index.php?page=user&act=info_admin" . $changepass;
             </div>
             <div class="form-group col-xl-4 col-lg-6 col-md-6">
               <label for="gender"><?= gioitinh ?>:</label>
-              <select class="custom-select text-sm" name="data[gender]" id="gender" required>
+              <select class="custom-select text-sm" name="data[gender]" id="gender">
                 <option value=""><?= chongioitinh ?></option>
                 <option value="1" <?= (isset($result['gender']) && $result['gender'] == 1) ? 'selected' : '' ?>><?= nam ?></option>
                 <option value="2" <?= (isset($result['gender']) && $result['gender'] == 2) ? 'selected' : '' ?>><?= nu ?></option>
@@ -105,7 +105,7 @@ $linkSave = "index.php?page=user&act=info_admin" . $changepass;
             </div>
             <div class="form-group col-xl-4 col-lg-6 col-md-6">
               <label for="birthday"><?= ngaysinh ?>:</label>
-              <input type="text" class="form-control text-sm max-date" name="data[birthday]" id="birthday" placeholder="<?= ngaysinh ?>" value="<?= (!empty($result['birthday']) ? date('d/m/Y', $result['birthday']) : '') ?>" required autocomplete="off">
+              <input type="text" class="form-control text-sm max-date" name="data[birthday]" id="birthday" placeholder="<?= ngaysinh ?>" value="<?= (!empty($result['birthday']) ? date('d/m/Y', $result['birthday']) : '') ?>" autocomplete="off">
 
             </div>
             <div class="form-group col-xl-4 col-lg-6 col-md-6">

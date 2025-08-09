@@ -5,7 +5,7 @@ $linkSave = "index.php?page=user&act=info_admin";
 $adminId = Session::get('adminId');
 switch ($act) {
   case "login":
-    if (!empty($_SESSION[$loginAdmin]['active'])) $fn->transfer(trangkhongtontai, "index.php", false);
+    if (!empty($is_logged_in)) $fn->transfer(trangkhongtontai, "index.php", false);
     else $template = "user/login";
     break;
 
@@ -30,7 +30,7 @@ function infoAdmin()
   $response['messages'] = [];
 
   if (!$adminId) {
-    $fn->notiToast(banchuacotaikhoan, $linkSave, 'error');
+    $fn->Notify(banchuacotaikhoan, $linkSave, 'error');
     exit;
   }
 
@@ -55,18 +55,18 @@ function infoAdmin()
     }
 
     if (!empty($response['messages'])) {
-      $fn->notiToast(implode(",", $response['messages']), $linkSave, 'error');
+      $fn->Notify($response['messages'], $linkSave, 'error');
       exit;
     }
 
     $user = $db->rawQueryOne("SELECT id, password FROM tbl_user WHERE id = ? LIMIT 1", [$adminId]);
     if (!$user) {
-      $fn->notiToast(taikhoandatontai, $linkSave, 'error');
+      $fn->Notify(taikhoandatontai, $linkSave, 'error');
       exit;
     }
 
     if (!password_verify($old_pass, $user['password'])) {
-      $fn->notiToast(matkhaucukhongchinhxac, $linkSave, 'error');
+      $fn->Notify(matkhaucukhongchinhxac, $linkSave, 'error');
       exit;
     }
 
@@ -74,10 +74,10 @@ function infoAdmin()
     $success = $db->execute("UPDATE tbl_user SET password = ? WHERE id = ?", [$hashedPassword, $adminId]);
 
     if ($success) {
-      $fn->transfer("Cập nhật mật khẩu thành công. Vui lòng đăng nhập lại.", "logout.php", true);
+      $fn->transfer("Cập nhật mật khẩu thành công. Vui lòng đăng nhập lại.", "index.php?page=user&act=logout", true);
       exit;
     } else {
-      $fn->notiToast(capnhatdulieubiloi, $linkSave, 'error');
+      $fn->Notify(capnhatdulieubiloi, $linkSave, 'error');
       exit;
     }
   }
@@ -126,7 +126,6 @@ function infoAdmin()
 
   if (!$data_sql['fullname']) $response['messages'][] = vuilongnhaphoten;
   if (!$data_sql['address'])  $response['messages'][] = vuilongnhapdiachi;
-  if (!$data_sql['gender'])   $response['messages'][] = 'Vui lòng chọn giới tính';
 
   if (!$data_sql['email']) {
     $response['messages'][] = emailkhongduoctrong;
@@ -141,7 +140,7 @@ function infoAdmin()
   }
 
   if (!empty($response['messages'])) {
-    $fn->notiToast(implode("<br>", $response['messages']), $linkSave, 'error');
+    $fn->Notify($response['messages'], $linkSave, 'error');
     exit;
   }
 
@@ -154,9 +153,9 @@ function infoAdmin()
 
   $success = $db->execute("UPDATE `tbl_user` SET " . implode(', ', $fields) . " WHERE id = ?", $params);
   if ($success) {
-    $fn->notiToast(capnhatdulieuthanhcong, $linkSave, 'success');
+    $fn->Notify(capnhatdulieuthanhcong, $linkSave, 'success');
   } else {
-    $fn->notiToast(capnhatdulieubiloi, $linkSave, 'error');
+    $fn->Notify(capnhatdulieubiloi, $linkSave, 'error');
   }
 
   return $response['messages'];

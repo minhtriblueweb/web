@@ -602,19 +602,39 @@ class Functions
     return $str;
   }
 
-  function transfer($msg, $page, $numb = true)
+  public function transfer($msg, $page, $numb = true)
   {
     $_SESSION['transfer_data'] = ['msg' => $msg, 'page' => $page, 'numb' => $numb];
     define('IS_TRANSFER', true);
     header("Location: index.php?page=transfer");
     exit();
   }
-  function notiToast($msg, $page, $status, $title = thongbao)
+  public function Notify($msg, $page, $status, $title = thongbao)
   {
-    $_SESSION['toast'] = ['title' => $title, 'msg' => $msg, 'status' => $status];
-    header("Location: $page");
-    exit();
+    if (!isset($_SESSION['notify']) || !is_array($_SESSION['notify'])) {
+      $_SESSION['notify'] = [];
+    }
+    if (is_array($msg) && !isset($msg['msg'])) {
+      foreach ($msg as $m) {
+        $_SESSION['notify'][] = [
+          'status' => $status,
+          'title'  => $title,
+          'msg'    => $m
+        ];
+      }
+    } else {
+      $_SESSION['notify'][] = [
+        'status' => $status,
+        'title'  => $title,
+        'msg'    => is_array($msg) && isset($msg['msg']) ? $msg['msg'] : $msg
+      ];
+    }
+    if (!empty($page)) {
+      header("Location: $page");
+      exit();
+    }
   }
+
   public function convert_type(string $type)
   {
     $type = trim($type);

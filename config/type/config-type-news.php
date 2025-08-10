@@ -43,7 +43,7 @@ $config['news'][$type]['width'] = $config['size-img'][$type]['man']['width'] = 2
 $config['news'][$type]['height'] = $config['size-img'][$type]['man']['height'] = 24;
 $config['news'][$type]['thumb'] = '100x' . round(100 / ($config['news'][$type]['width'] / $config['news'][$type]['height'])) . 'x1';
 $config['news'][$type]['img_type'] = '.jpg|.gif|.png|.jpeg|.gif';
-$config['size-img'][$type]['man']['active'] = false;
+$config['size-img'][$type]['man']['active'] = true;
 $config['news'][$type]['convert_webp'] = false;
 
 //chính sách
@@ -72,7 +72,7 @@ $config['news'][$type]['width'] = $config['size-img'][$type]['man']['width'] = 7
 $config['news'][$type]['height'] = $config['size-img'][$type]['man']['height'] = 480;
 $config['news'][$type]['thumb'] = '100x' . round(100 / ($config['news'][$type]['width'] / $config['news'][$type]['height'])) . 'x2';
 $config['news'][$type]['img_type'] = '.jpg|.gif|.png|.jpeg|.gif';
-$config['size-img'][$type]['man']['active'] = false;
+$config['size-img'][$type]['man']['active'] = true;
 $config['news'][$type]['convert_webp'] = true;
 
 // đánh giá khách hàng
@@ -101,7 +101,7 @@ $config['news'][$type]['width'] = $config['size-img'][$type]['man']['width'] = 1
 $config['news'][$type]['height'] = $config['size-img'][$type]['man']['height'] = 100;
 $config['news'][$type]['thumb'] = '100x' . round(100 / ($config['news'][$type]['width'] / $config['news'][$type]['height'])) . 'x1';
 $config['news'][$type]['img_type'] = '.jpg|.gif|.png|.jpeg|.gif';
-$config['size-img'][$type]['man']['active'] = false;
+$config['size-img'][$type]['man']['active'] = true;
 $config['news'][$type]['convert_webp'] = true;
 
 // hướng dẫn chơi
@@ -130,7 +130,7 @@ $config['news'][$type]['width'] = $config['size-img'][$type]['man']['width'] = 5
 $config['news'][$type]['height'] = $config['size-img'][$type]['man']['height'] = 360;
 $config['news'][$type]['thumb'] = '100x' . round(100 / ($config['news'][$type]['width'] / $config['news'][$type]['height'])) . 'x1';
 $config['news'][$type]['img_type'] = '.jpg|.gif|.png|.jpeg|.gif';
-$config['size-img'][$type]['man']['active'] = false;
+$config['size-img'][$type]['man']['active'] = true;
 $config['news'][$type]['convert_webp'] = true;
 
 /* Quản lý mục (Không cấp) */

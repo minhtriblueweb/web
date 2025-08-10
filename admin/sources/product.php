@@ -97,7 +97,6 @@ function viewLists()
     'keyword' => $keyword,
     'pagination'  => [$perPage, $curPage]
   ];
-
   $total = $fn->count_data($options);
   $show_data = $fn->show_data($options);
   $paging = $fn->pagination($total, $perPage, $curPage);
@@ -112,7 +111,6 @@ function viewCats()
     'keyword' => $keyword,
     'pagination'  => [$perPage, $curPage]
   ];
-
   $total = $fn->count_data($options);
   $show_data = $fn->show_data($options);
   $paging = $fn->pagination($total, $perPage, $curPage);
@@ -121,21 +119,15 @@ function saveMan()
 {
   global $db, $fn, $table, $linkProduct, $type, $config, $id, $result, $seo_data, $gallery;
   $table = 'tbl_product';
-  $actBack = 'man';
-  $linkMan = "$linkProduct&act=$actBack";
+  $act = 'man';
+  $linkMan = "$linkProduct&act=$act";
   $id = isset($_GET['id']) && is_numeric($_GET['id']) ? (int)$_GET['id'] : null;
-  $fields_multi  = ['slug', 'name', 'desc', 'content'];
-  $fields_common = ['numb', 'type', 'id_list', 'id_cat', 'regular_price', 'sale_price', 'discount', 'code'];
-
   if ($_SERVER['REQUEST_METHOD'] === 'POST' && (isset($_POST['add']) || isset($_POST['edit']))) {
-    $fn->save_data($_POST, $_FILES, $id, [
+    $fn->save_data($_POST['data'] ?? [], $_FILES, $id, [
       'table'          => $table,
       'type'           => $type,
-      'act'            => $actBack,
-      'fields_multi'   => $fields_multi,
-      'fields_common'  => $fields_common,
-      'status_flags'   => $config['product'][$type]['check'],
-      'redirect_page'  => $linkMan,
+      'act'            => $act,
+      'redirect'       => $linkMan,
       'convert_webp'   => $config['product'][$type]['convert_webp'],
       'enable_slug'    => $config['product'][$type]['slug'],
       'enable_seo'     => $config['product'][$type]['seo'],
@@ -147,7 +139,7 @@ function saveMan()
   if (!empty($id)) {
     $result = $db->rawQueryOne("SELECT * FROM `$table` WHERE id = ?", [$id,]);
     if (!$result) $fn->transfer(dulieukhongcothuc, $linkMan, false);
-    $seo_data = $db->rawQueryOne("SELECT * FROM tbl_seo WHERE `id_parent` = ? AND `type` = ? AND `act` = ?", [$id, $type, $actBack]);
+    $seo_data = $db->rawQueryOne("SELECT * FROM tbl_seo WHERE `id_parent` = ? AND `type` = ? AND `act` = ?", [$id, $type, $act]);
     $gallery = $db->rawQuery("SELECT * FROM tbl_gallery WHERE id_parent = ? AND type = ? ORDER BY numb, id DESC", [$id, $type]);
   }
 }
@@ -155,26 +147,19 @@ function saveList()
 {
   global $db, $fn, $table, $linkProduct, $type, $config, $id, $result, $seo_data;
   $table = 'tbl_product_list';
-  $actBack = 'man_list';
-  $linkMan = "$linkProduct&act=$actBack";
+  $act = 'man_list';
+  $linkMan = "$linkProduct&act=$act";
   $id = isset($_GET['id']) && is_numeric($_GET['id']) ? (int)$_GET['id'] : null;
-  $status_flags = $config['product'][$type]['check_list'] ?? [];
-  $fields_multi  = ['slug', 'name', 'desc', 'content'];
-  $fields_common = ['numb', 'type'];
-
   if ($_SERVER['REQUEST_METHOD'] === 'POST' && (isset($_POST['add']) || isset($_POST['edit']))) {
-    $fn->save_data($_POST, $_FILES, $id, [
-      'table'         => $table,
-      'type'          => $type,
-      'act'           => $actBack,
-      'fields_multi'  => $fields_multi,
-      'fields_common' => $fields_common,
-      'status_flags'  => $status_flags,
-      'redirect_page' => $linkMan,
+    $fn->save_data($_POST['data'] ?? [], $_FILES, $id, [
+      'table'          => $table,
+      'type'           => $type,
+      'act'            => $act,
+      'redirect'       => $linkMan,
       'convert_webp'   => $config['product'][$type]['convert_webp_list'],
       'enable_slug'    => $config['product'][$type]['slug_list'],
       'enable_seo'     => $config['product'][$type]['seo_list'],
-      'enable_gallery' => $config['product'][$type]['gallery_list']
+      'enable_gallery' => $config['product'][$type]['gallery_list'],
     ]);
   }
 
@@ -182,41 +167,33 @@ function saveList()
   if (!empty($id)) {
     $result = $db->rawQueryOne("SELECT * FROM `$table` WHERE id = ?", [$id]);
     if (!$result) $fn->transfer(dulieukhongcothuc, $linkMan, false);
-    $seo_data = $db->rawQueryOne("SELECT * FROM tbl_seo WHERE `id_parent` = ? AND `type` = ? AND `act` = ?", [$id, $type, $actBack]);
+    $seo_data = $db->rawQueryOne("SELECT * FROM tbl_seo WHERE `id_parent` = ? AND `type` = ? AND `act` = ?", [$id, $type, $act]);
   }
 }
 function saveCat()
 {
   global $db, $fn, $table, $linkProduct, $type, $config, $id, $result, $seo_data;
   $table = 'tbl_product_cat';
-  $actBack = 'man_cat';
-  $linkMan = "$linkProduct&act=$actBack";
+  $act = 'man_cat';
+  $linkMan = "$linkProduct&act=$act";
   $id = isset($_GET['id']) && is_numeric($_GET['id']) ? (int)$_GET['id'] : null;
-  $status_flags = $config['product'][$type]['check_cat'] ?? [];
-  $fields_multi  = ['slug', 'name', 'desc', 'content'];
-  $fields_common = ['numb', 'type', 'id_list'];
-
   if ($_SERVER['REQUEST_METHOD'] === 'POST' && (isset($_POST['add']) || isset($_POST['edit']))) {
-    $fn->save_data($_POST, $_FILES, $id, [
+    $fn->save_data($_POST['data'] ?? [], $_FILES, $id, [
       'table'          => $table,
       'type'           => $type,
-      'act'            => $actBack,
-      'fields_multi'   => $fields_multi,
-      'fields_common'  => $fields_common,
-      'status_flags'   => $status_flags,
-      'redirect_page'  => $linkMan,
+      'act'            => $act,
+      'redirect'       => $linkMan,
       'convert_webp'   => $config['product'][$type]['convert_webp_cat'],
       'enable_slug'    => $config['product'][$type]['slug_cat'],
       'enable_seo'     => $config['product'][$type]['seo_cat'],
       'enable_gallery' => $config['product'][$type]['gallery_cat']
     ]);
   }
-
   $result = $seo_data = [];
   if (!empty($id)) {
     $result = $db->rawQueryOne("SELECT * FROM `$table` WHERE id = ?", [$id]);
     if (!$result) $fn->transfer(dulieukhongcothuc, $linkMan, false);
-    $seo_data = $db->rawQueryOne("SELECT * FROM tbl_seo WHERE `id_parent` = ? AND `type` = ? AND `act` = ?", [$id, $type, $actBack]);
+    $seo_data = $db->rawQueryOne("SELECT * FROM tbl_seo WHERE `id_parent` = ? AND `type` = ? AND `act` = ?", [$id, $type, $act]);
   }
 }
 function deleteMan()
@@ -226,7 +203,7 @@ function deleteMan()
     'id'             => (int)$_GET['id'],
     'table'          => 'tbl_product',
     'type'           => $type,
-    'redirect_page'  => "$linkProduct&act=man",
+    'redirect'       => "$linkProduct&act=man",
     'delete_seo'     => $config['product'][$type]['seo'],
     'delete_gallery' => $config['product'][$type]['gallery']
   ]);
@@ -238,7 +215,7 @@ function deleteList()
     'id'             => (int)$_GET['id'],
     'table'          => 'tbl_product_list',
     'type'           => $type,
-    'redirect_page'  => "$linkProduct&act=man_list",
+    'redirect'       => "$linkProduct&act=man_list",
     'delete_seo'     => $config['product'][$type]['seo_list'],
     'delete_gallery' => $config['product'][$type]['gallery_list']
   ]);
@@ -250,7 +227,7 @@ function deleteCat()
     'id'             => (int)$_GET['id'],
     'table'          => 'tbl_product_cat',
     'type'           => $type,
-    'redirect_page'  => "$linkProduct&act=man_cat",
+    'redirect'       => "$linkProduct&act=man_cat",
     'delete_seo'     => $config['product'][$type]['seo_cat'],
     'delete_gallery' => $config['product'][$type]['gallery_cat']
   ]);
@@ -262,7 +239,7 @@ function deleteMultipleMan()
     'listid'         => $_GET['listid'],
     'table'          => 'tbl_product',
     'type'           => $type,
-    'redirect_page'  => "$linkProduct&act=man",
+    'redirect'       => "$linkProduct&act=man",
     'delete_seo'     => $config['product'][$type]['seo'],
     'delete_gallery' => $config['product'][$type]['gallery']
   ]);
@@ -274,7 +251,7 @@ function deleteMultipleList()
     'listid'         => $_GET['listid'],
     'table'          => 'tbl_product_list',
     'type'           => $type,
-    'redirect_page'  => "$linkProduct&act=man_list",
+    'redirect'       => "$linkProduct&act=man_list",
     'delete_seo'     => $config['product'][$type]['seo_list'],
     'delete_gallery' => $config['product'][$type]['gallery_list']
   ]);
@@ -286,7 +263,7 @@ function deleteMultipleCat()
     'listid'         => $_GET['listid'],
     'table'          => 'tbl_product_cat',
     'type'           => $type,
-    'redirect_page'  => "$linkProduct&act=man_cat",
+    'redirect'       => "$linkProduct&act=man_cat",
     'delete_seo'     => $config['product'][$type]['seo_cat'],
     'delete_gallery' => $config['product'][$type]['gallery_cat']
   ]);

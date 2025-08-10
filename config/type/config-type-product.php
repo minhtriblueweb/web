@@ -86,7 +86,7 @@ $config['product'][$type]['width_list'] = $config['size-img'][$type]['list']['wi
 $config['product'][$type]['height_list'] = $config['size-img'][$type]['list']['height'] = 50;
 $config['product'][$type]['thumb_list'] = '100x' . round(100 / ($config['product'][$type]['width_list'] / $config['product'][$type]['height_list'])) . 'x1';
 $config['product'][$type]['img_type_list'] = '.jpg|.gif|.png|.jpeg|.gif';
-$config['size-img'][$type]['list']['active'] = false;
+$config['size-img'][$type]['list']['active'] = true;
 /* Sản phẩm (Cat) */
 $config['product'][$type]['title_main_cat'] = $config['size-img'][$type]['cat']['title'] = "Sản phẩm cấp 2";
 $config['product'][$type]['images_cat'] = true;
@@ -103,7 +103,7 @@ $config['product'][$type]['width_cat'] = $config['size-img'][$type]['cat']['widt
 $config['product'][$type]['height_cat'] = $config['size-img'][$type]['cat']['height'] = 100;
 $config['product'][$type]['thumb_cat'] = '100x' . round(100 / ($config['product'][$type]['width_cat'] / $config['product'][$type]['height_cat'])) . 'x1';
 $config['product'][$type]['img_type_cat'] = '.jpg|.gif|.png|.jpeg|.gif';
-$config['size-img'][$type]['cat']['active'] = false;
+$config['size-img'][$type]['cat']['active'] = true;
 /* Sản phẩm (Item) */
 $config['product'][$type]['title_main_item'] = $config['size-img'][$type]['item']['title'] = "Sản phẩm cấp 3";
 $config['product'][$type]['images_item'] = true;

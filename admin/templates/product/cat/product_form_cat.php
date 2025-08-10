@@ -65,7 +65,7 @@
                         <label for="name<?= $k ?>"><?= tieude ?> (<?= $k ?>):</label>
                         <input type="text"
                           class="form-control for-seo text-sm"
-                          name="name<?= $k ?>" id="name<?= $k ?>"
+                          name="data[name<?= $k ?>]" id="name<?= $k ?>"
                           placeholder="<?= tieude ?> (<?= $k ?>)"
                           value="<?= $_POST['name' . $k] ?? ($result['name' . $k] ?? '') ?>"
                           <?= ($k == $lang) ? 'required' : '' ?> />
@@ -76,7 +76,7 @@
                         <div class="form-group">
                           <label for="desc<?= $k ?>"><?= mota ?> (<?= $k ?>):</label>
                           <textarea rows="4" class="form-control for-seo text-sm <?= !empty($config['product'][$type]['desc_cke_cat']) ? 'form-control-ckeditor' : '' ?>"
-                            name="desc<?= $k ?>" id="desc<?= $k ?>"
+                            name="data[desc<?= $k ?>]" id="desc<?= $k ?>"
                             placeholder="<?= mota ?> (<?= $k ?>)"><?= $_POST['desc' . $k] ?? ($result['desc' . $k] ?? '') ?></textarea>
                         </div>
                       <?php endif; ?>
@@ -86,7 +86,7 @@
                         <div class="form-group">
                           <label for="content<?= $k ?>"><?= mota ?> (<?= $k ?>):</label>
                           <textarea rows="4" class="form-control for-seo text-sm <?= !empty($config['product'][$type]['content_cke_cat']) ? 'form-control-ckeditor' : '' ?>"
-                            name="content<?= $k ?>" id="content<?= $k ?>"
+                            name="data[content<?= $k ?>]" id="content<?= $k ?>"
                             placeholder="<?= mota ?> (<?= $k ?>)"><?= $_POST['content' . $k] ?? ($result['content' . $k] ?? '') ?></textarea>
                         </div>
                       <?php endif; ?>
@@ -142,7 +142,7 @@
                   <label class="switch switch-success">
                     <input
                       type="checkbox"
-                      name="<?= $check ?>"
+                      name="data[status][<?= $check ?>]"
                       class="switch-input custom-control-input .show-checkbox"
                       id="<?= $check ?>-checkbox"
                       <?= $fn->is_checked($check, $result['status'] ?? '', $id ?? '') ?>>
@@ -153,7 +153,7 @@
             <div class="form-group">
               <label for="numb" class="d-inline-block align-middle mb-0 mr-2"><?= sothutu ?>:</label>
               <input type="number" class="form-control form-control-mini d-inline-block align-middle text-sm" min="0"
-                name="numb" id="numb" placeholder="Số thứ tự" value="<?= $_POST['numb'] ?? (!empty($id) ? $result['numb'] : '1') ?>" />
+                name="data[numb]" id="numb" placeholder="Số thứ tự" value="<?= $_POST['numb'] ?? (!empty($id) ? $result['numb'] : '1') ?>" />
             </div>
           </div>
         </div>
@@ -162,6 +162,6 @@
     <?php if (!empty($config['product'][$type]['seo_list'])): ?>
       <?php include TEMPLATE . LAYOUT . 'seo.php'; ?>
     <?php endif; ?>
-    <input type="hidden" name="type" value="<?= $type ?>">
+    <input type="hidden" name="data[type]" value="<?= $type ?>">
   </form>
 </section>

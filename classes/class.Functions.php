@@ -151,67 +151,92 @@ class Functions
     $id_parent = (int)$id_parent;
     $table = 'tbl_gallery';
     $result = false;
+
+    // Lấy tên cha
     $parent = $this->db->rawQueryOne("SELECT namevi FROM tbl_product WHERE id = ? LIMIT 1", [$id_parent]);
     $parent_name = $parent['namevi'] ?? 'gallery';
+
+    // Cập nhật gallery có sẵn
     if (!empty($data['id-filer'])) {
       foreach ($data['id-filer'] as $i => $gid) {
-        $gid = (int)$gid;
+        $gid  = (int)$gid;
         $numb = (int)($data['numb-filer'][$i] ?? 0);
         $name = trim($data['name-filer'][$i] ?? '');
         $this->db->execute("UPDATE $table SET numb = ?, name = ? WHERE id = ?", [$numb, $name, $gid]);
       }
     }
+
+    // Upload ảnh mới
     $total = count($files['files']['name'] ?? []);
     for ($i = 0; $i < $total; $i++) {
       if (!empty($files['files']['name'][$i]) && $files['files']['error'][$i] === 0) {
         $file = [
-          'name' => $files['files']['name'][$i],
-          'type' => $files['files']['type'][$i],
+          'name'     => $files['files']['name'][$i],
+          'type'     => $files['files']['type'][$i],
           'tmp_name' => $files['files']['tmp_name'][$i],
-          'error' => $files['files']['error'][$i],
-          'size' => $files['files']['size'][$i]
+          'error'    => $files['files']['error'][$i],
+          'size'     => $files['files']['size'][$i]
         ];
+
         $thumb_filename = $this->uploadImage([
-          'file' => $file,
-          'custom_name' => $parent_name,
+          'file'          => $file,
+          'custom_name'   => $parent_name,
           'old_file_path' => '',
-          'watermark' => true,
-          'convert_webp' => true
+          'watermark'     => true,
+          'convert_webp'  => true
         ]);
+
         if (!empty($thumb_filename)) {
+          // Dùng index $i của file upload mới để lấy name/numb tương ứng
           $numb = (int)($data['numb-filer'][$i] ?? 0);
           $name = trim($data['name-filer'][$i] ?? '');
+
           $fields = ['id_parent', 'type', 'file', 'numb', 'name', 'status'];
-          $params = [$id_parent, $type, $thumb_filename, $numb, $name, !empty($data['hienthi_all']) ? 'hienthi' : ''];
-          $result = $this->db->execute("INSERT INTO `$table` (" . implode(', ', $fields) . ") VALUES (" . implode(', ', array_fill(0, count($fields), '?')) . ")", $params);
+          $params = [
+            $id_parent,
+            $type,
+            $thumb_filename,
+            $numb,
+            $name,
+            !empty($data['hienthi_all']) ? 'hienthi' : ''
+          ];
+
+          $result = $this->db->execute(
+            "INSERT INTO `$table` (" . implode(', ', $fields) . ") VALUES (" . implode(', ', array_fill(0, count($fields), '?')) . ")",
+            $params
+          );
         }
       }
     }
+
+    // Redirect nếu cần
     if (!empty($redirect_url)) {
       $this->transfer($result ? capnhathinhanhthanhcong : capnhathinhanhthatbai, $redirect_url, $result);
     }
+
     return $result;
   }
-  public function save_seo(string $type, int $id_parent, array $data, array $langs, string $act): void
+
+  public function save_seo(string $type, int $id_parent, array $data, string $act): void
   {
     $seo_table = 'tbl_seo';
-    $fields_multi = ['title', 'keywords', 'description', 'schema'];
+    $columns = $this->getColumnNames($seo_table);
     $data_sql = ['id_parent' => $id_parent, 'type' => $type, 'act' => $act];
     $has_data = false;
-    foreach ($langs as $lang) {
-      foreach ($fields_multi as $field) {
-        $key = $field . $lang;
-        $value = $data[$key] ?? '';
-        $data_sql[$key] = $value;
-        if (!$has_data && trim($value) !== '') {
-          $has_data = true;
+    if (!empty($data['seo']) && is_array($data['seo'])) {
+      foreach ($data['seo'] as $key => $value) {
+        if (in_array($key, $columns)) {
+          $data_sql[$key] = $value;
+          if (!$has_data && trim($value) !== '') {
+            $has_data = true;
+          }
         }
       }
     }
     if (!$has_data) return;
     $existing = $this->db->rawQueryOne("SELECT id FROM `$seo_table` WHERE id_parent = ? AND `type` = ? AND `act` = ?", [$id_parent, $type, $act]);
     if ($existing) {
-      $fields =  $params = [];
+      $fields = $params = [];
       foreach ($data_sql as $key => $val) {
         $fields[] = "`$key` = ?";
         $params[] = $val;
@@ -219,50 +244,40 @@ class Functions
       $params[] = $existing['id'];
       $this->db->execute("UPDATE `$seo_table` SET " . implode(', ', $fields) . " WHERE id = ?", $params);
     } else {
-      $columns = array_map(fn($col) => "`$col`", array_keys($data_sql));
-      $placeholders = array_fill(0, count($columns), '?');
+      $cols = array_map(fn($col) => "`$col`", array_keys($data_sql));
+      $placeholders = array_fill(0, count($cols), '?');
       $params = array_values($data_sql);
-      $this->db->execute("INSERT INTO `$seo_table` (" . implode(',', $columns) . ") VALUES (" . implode(',', $placeholders) . ")", $params);
+      $this->db->execute("INSERT INTO `$seo_table` (" . implode(',', $cols) . ") VALUES (" . implode(',', $placeholders) . ")", $params);
     }
   }
+
   public function save_data($data, $files = null, $id = null, $options = [])
   {
     global $config;
     $langs = array_keys($config['website']['lang']);
     $table = $options['table'] ?? '';
-    $fields_multi = $options['fields_multi'] ?? [];
-    $fields_common = $options['fields_common'] ?? [];
-    $fields_options = $options['fields_options'] ?? [];
-    $status_flags = $options['status_flags'] ?? [];
-    $redirect_page = $options['redirect_page'] ?? 'index.php';
+    $redirect = $options['redirect'] ?? 'index.php';
     $enable_gallery = $options['enable_gallery'] ?? false;
     $enable_seo = $options['enable_seo'] ?? false;
     $enable_slug = $options['enable_slug'] ?? false;
     $convert_webp = $options['convert_webp'] ?? false;
+    $columns = $this->getColumnNames($table);
     $data_prepared = [];
-    foreach ($langs as $lang) {
-      foreach ($fields_multi as $field) {
-        $key = $field . $lang;
-        $data_prepared[$key] = $data[$key] ?? '';
-      }
+    foreach ($data as $key => $val) {
+      if ($key === 'options') continue;
+      if (!in_array($key, $columns)) continue;
+      $data_prepared[$key] = $val;
     }
-    foreach ($fields_common as $field) {
-      $data_prepared[$field] = $data[$field] ?? '';
+    if (!empty($data['options']) && is_array($data['options']) && in_array('options', $columns)) {
+      $data_prepared['options'] = json_encode($data['options'], JSON_UNESCAPED_UNICODE);
     }
-    $type = $data_prepared['type'] ?? '';
-    if (!empty($fields_options)) {
-      $options_data = [];
-      foreach ($fields_options as $field) {
-        $options_data[$field] = $data[$field] ?? '';
-      }
-      $data_prepared['options'] = json_encode($options_data, JSON_UNESCAPED_UNICODE);
-    }
-    if (!empty($status_flags)) {
-      $data_prepared['status'] = implode(',', array_filter(array_keys($status_flags ?? []), fn($f) => !empty($data[$f])));
+    if (!empty($data['status']) && is_array($data['status']) && in_array('status', $columns)) {
+      $data_prepared['status'] = implode(',', array_keys(array_filter($data['status'])));
     }
     if ($enable_slug) {
       foreach ($langs as $lang) {
-        $slug = $data_prepared['slug' . $lang] ?? '';
+        $slug_key = 'slug' . $lang;
+        $slug = $data_prepared[$slug_key] ?? '';
         if ($this->checkSlug(['slug' => $slug, 'table' => $table, 'exclude_id' => $id ?? '', 'lang' => $lang])) {
           return $this->checkSlug(['slug' => $slug, 'table' => $table, 'exclude_id' => $id ?? '', 'lang' => $lang]);
         }
@@ -277,7 +292,7 @@ class Functions
     if ($has_file_column) {
       $thumb_filename = $this->uploadImage([
         'file' => $files['file'],
-        'custom_name' => $data_prepared['namevi'] ?? $type,
+        'custom_name' => $data_prepared['namevi'] ?? ($data_prepared['type'] ?? ''),
         'old_file_path' => UPLOADS . $old_filename,
         'convert_webp' => $convert_webp,
         'background' => $options['background'] ?? [255, 255, 255, 0]
@@ -287,19 +302,22 @@ class Functions
       $thumb_filename = '';
     }
     if (!empty($id)) {
+      // UPDATE bản ghi
       $fields = $params = [];
       foreach ($data_prepared as $key => $val) {
         $fields[] = "`$key` = ?";
         $params[] = $val;
       }
       if ($has_file_column || (!empty($data['photo_deleted']) && $data['photo_deleted'] == '1')) {
-        $fields[] = "`file` = ?";
-        $params[] = $thumb_filename;
+        if (in_array('file', $columns)) {
+          $fields[] = "`file` = ?";
+          $params[] = $thumb_filename;
+        }
       }
       $params[] = (int)$id;
       $result = $this->db->execute("UPDATE $table SET " . implode(', ', $fields) . " WHERE id = ?", $params);
       if ($enable_seo && $result) {
-        $this->save_seo($type, (int)$id, $data, $langs, $options['act'] ?? '');
+        $this->save_seo($data_prepared['type'] ?? '', (int)$id, $data, $options['act'] ?? '');
       }
       if ($enable_gallery && !empty($data['deleted_images'])) {
         foreach (explode('|', $data['deleted_images']) as $gid) {
@@ -324,30 +342,42 @@ class Functions
         }
       }
       if ($enable_gallery && !empty($files['files']['name'][0])) {
-        $this->save_gallery($data, $files, $id, $type, false);
+        $this->save_gallery($data, $files, $id, $data_prepared['type'] ?? '', false);
       }
+
       $msg = $result ? capnhatdulieuthanhcong : capnhatdulieubiloi;
     } else {
-      $columns = array_keys($data_prepared);
-      $placeholders = array_fill(0, count($columns), '?');
+      // INSERT bản ghi mới
+      $columns_insert = array_keys($data_prepared);
+      $placeholders = array_fill(0, count($columns_insert), '?');
       $params = array_values($data_prepared);
-      if ($has_file_column) {
-        $columns[] = 'file';
+      if ($has_file_column && in_array('file', $columns)) {
+        $columns_insert[] = 'file';
         $placeholders[] = '?';
         $params[] = $thumb_filename;
       }
-      $inserted = $this->db->execute("INSERT INTO $table (" . implode(', ', $columns) . ") VALUES (" . implode(', ', $placeholders) . ")", $params);
+      $inserted = $this->db->execute("INSERT INTO $table (" . implode(', ', $columns_insert) . ") VALUES (" . implode(', ', $placeholders) . ")", $params);
       $insert_id = $inserted ? $this->db->getInsertId() : 0;
+
       if ($enable_seo && $insert_id) {
-        $this->save_seo($type, $insert_id, $data, $langs, $options['act'] ?? '');
+        $this->save_seo($data_prepared['type'] ?? '', $insert_id, $data, $options['act'] ?? '');
       }
       if ($enable_gallery && !empty($files['files']['name'][0])) {
-        $this->save_gallery($data, $files, $insert_id, $type, false);
+        $this->save_gallery($data, $files, $insert_id, $data_prepared['type'] ?? '', false);
       }
       $msg = $inserted ? capnhatdulieuthanhcong : capnhatdulieubiloi;
     }
-    $this->transfer($msg, $redirect_page, !empty($id) ? $result : $inserted);
+
+    $this->transfer($msg, $redirect, !empty($id) ? $result : $inserted);
   }
+
+  // Hàm lấy tên cột bảng
+  public function getColumnNames($table)
+  {
+    $result = $this->db->rawQueryArray("SHOW COLUMNS FROM `$table`");
+    return array_column($result, 'Field');
+  }
+
   public function deleteFile($file = '')
   {
     if (!$file) return true;
@@ -379,31 +409,23 @@ class Functions
     $id = (int)($options['id'] ?? 0);
     $table = $options['table'] ?? '';
     $type = $options['type'] ?? '';
-    $redirect_page = $options['redirect_page'] ?? '';
+    $redirect = $options['redirect'] ?? '';
     $delete_seo = $options['delete_seo'] ?? false;
     $delete_gallery = $options['delete_gallery'] ?? false;
     $delete_file = $options['delete_file'] ?? true;
-
     if (!$id || !$table) {
-      $this->transfer("Thiếu thông tin xóa!", $redirect_page, false);
+      $this->transfer(dulieukhonghople, $redirect, false);
     }
-
     $row = $this->db->rawQueryOne("SELECT file FROM `$table` WHERE id = ?", [$id]);
     if (!$row) {
-      $this->transfer("Dữ liệu không tồn tại!", $redirect_page, false);
+      $this->transfer("Dữ liệu không tồn tại!", $redirect, false);
     }
     if ($table === 'tbl_gallery') {
       if (!empty($row['file'])) {
         $this->deleteFile(UPLOADS . $row['file']);
       }
-
       $deleted = $this->db->execute("DELETE FROM tbl_gallery WHERE id = ?", [$id]);
-
-      $this->transfer(
-        $deleted ? "Xóa ảnh thành công!" : "Xóa ảnh thất bại!",
-        $redirect_page,
-        $deleted
-      );
+      $this->transfer($deleted ? xoadulieuthanhcong : xoadulieubiloi, $redirect, $deleted);
       return;
     }
     if ($delete_file && !empty($row['file'])) {
@@ -430,20 +452,20 @@ class Functions
 
     $deleted = $this->db->execute("DELETE FROM `$table` WHERE id = ?", [$id]);
 
-    $this->transfer($deleted ? xoadulieuthanhcong : xoadulieubiloi, $redirect_page, $deleted);
+    $this->transfer($deleted ? xoadulieuthanhcong : xoadulieubiloi, $redirect, $deleted);
   }
   public function deleteMultiple_data(array $options = [])
   {
     $listid = $options['listid'] ?? '';
     $table = $options['table'] ?? '';
     $type = $options['type'] ?? '';
-    $redirect_page = $options['redirect_page'] ?? '';
+    $redirect = $options['redirect'] ?? '';
     $delete_seo = $options['delete_seo'] ?? false;
     $delete_gallery = $options['delete_gallery'] ?? false;
     $delete_file = $options['delete_file'] ?? true;
     $ids = array_filter(array_map('intval', explode(',', $listid)));
     if (empty($ids) || !$table) {
-      $this->transfer("Danh sách ID không hợp lệ!", $redirect_page, false);
+      $this->transfer("Danh sách ID không hợp lệ!", $redirect, false);
     }
     $placeholders = implode(',', array_fill(0, count($ids), '?'));
     $rows = $this->db->rawQuery("SELECT id, file FROM `$table` WHERE id IN ($placeholders)", $ids);
@@ -470,7 +492,7 @@ class Functions
       }
     }
     $delete_result = $this->db->execute("DELETE FROM `$table` WHERE id IN ($placeholders)", $ids);
-    $this->transfer($delete_result ? xoadulieuthanhcong : xoadulieubiloi, $redirect_page, $delete_result);
+    $this->transfer($delete_result ? xoadulieuthanhcong : xoadulieubiloi, $redirect, $delete_result);
   }
   public function galleryFiler($numb = 1, $id = 0, $photo = '', $name = '', $col = '')
   {
@@ -545,7 +567,7 @@ class Functions
       $name = $id = 'id';
     }
     $rows = $this->db->rawQuery("SELECT id, namevi FROM `$table` $where ORDER BY numb, id DESC", $params);
-    $str = '<select id="' . $id . '" name="' . $name . '" onchange="onchangeCategory($(this))" class="form-control filter-category select2">';
+    $str = '<select id="' . $id . '" name="data[' . $name . ']" onchange="onchangeCategory($(this))" class="form-control filter-category select2">';
     $str .= '<option value="0">' . htmlspecialchars($title_select) . '</option>';
     if (!empty($rows)) {
       foreach ($rows as $row) {
@@ -588,7 +610,7 @@ class Functions
       }
     }
     $rows = $this->db->rawQuery("SELECT id, namevi FROM `$table` $where ORDER BY numb, id DESC", $params);
-    $str = '<select id="' . $field . '" name="' . $name . '" ' . $data_level . ' ' . $data_table . ' ' . $data_child . ' class="' . $class . '">';
+    $str = '<select id="' . $field . '" name="data[' . $name . ']" ' . $data_level . ' ' . $data_table . ' ' . $data_child . ' class="' . $class . '">';
     $str .= '<option value="0">' . htmlspecialchars($title_select) . '</option>';
     if (!empty($rows)) {
       foreach ($rows as $row) {
@@ -596,7 +618,7 @@ class Functions
         $str .= '<option value="' . $row['id'] . '" ' . $selected . '>' . htmlspecialchars($row['namevi']) . '</option>';
       }
     } else {
-      $str .= '<option disabled>Không có dữ liệu</option>';
+      $str .= '<option disabled>' . khongcodulieu . '</option>';
     }
     $str .= '</select>';
     return $str;

@@ -1,7 +1,6 @@
 <?php
 // $password = 'fX*%DaY$p';
-// $hashed = password_hash($password, PASSWORD_DEFAULT);
-// echo "Mật khẩu đã hash: " . $hashed;
+// echo $hashed = password_hash($password, PASSWORD_DEFAULT);
 ?>
 <div class="login_blueweb blue-wrap-main">
   <div class="login_blueweb_content">
@@ -89,14 +88,6 @@
       showPasswordIcon.classList.toggle("fa-eye-slash");
       showPasswordBtn.classList.toggle("active");
     });
-  });
-  window.addEventListener("load", function() {
-    const loader = document.getElementById("global-loader");
-    if (loader) {
-      loader.style.transition = "opacity 0.5s";
-      loader.style.opacity = 0;
-      setTimeout(() => loader.remove(), 500);
-    }
   });
   window.addEventListener('DOMContentLoaded', function() {
     setTimeout(function() {

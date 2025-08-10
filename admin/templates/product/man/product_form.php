@@ -66,7 +66,7 @@
                         <label for="name<?= $k ?>"><?= tieude ?> (<?= $k ?>):</label>
                         <input type="text"
                           class="form-control for-seo text-sm"
-                          name="name<?= $k ?>" id="name<?= $k ?>"
+                          name="data[name<?= $k ?>]" id="name<?= $k ?>"
                           placeholder="<?= tieude ?> (<?= $k ?>)"
                           value="<?= $_POST['name' . $k] ?? ($result['name' . $k] ?? '') ?>"
                           <?= ($k == $lang) ? 'required' : '' ?> />
@@ -76,9 +76,7 @@
                       <?php if (!empty($config['product'][$type]['desc_cke']) || !empty($config['product'][$type]['desc'])): ?>
                         <div class="form-group">
                           <label for="desc<?= $k ?>"><?= mota ?> (<?= $k ?>):</label>
-                          <textarea rows="4" class="form-control for-seo text-sm <?= !empty($config['product'][$type]['desc_cke']) ? 'form-control-ckeditor' : '' ?>"
-                            name="desc<?= $k ?>" id="desc<?= $k ?>"
-                            placeholder="<?= mota ?> (<?= $k ?>)"><?= $_POST['desc' . $k] ?? ($result['desc' . $k] ?? '') ?></textarea>
+                          <textarea rows="4" class="form-control for-seo text-sm <?= !empty($config['product'][$type]['desc_cke']) ? 'form-control-ckeditor' : '' ?>" name="data[desc<?= $k ?>]" id="desc<?= $k ?>" placeholder="<?= mota ?> (<?= $k ?>)"><?= $_POST['desc' . $k] ?? ($result['desc' . $k] ?? '') ?></textarea>
                         </div>
                       <?php endif; ?>
 
@@ -86,9 +84,7 @@
                       <?php if (!empty($config['product'][$type]['content_cke']) || !empty($config['product'][$type]['content'])): ?>
                         <div class="form-group">
                           <label for="content<?= $k ?>"><?= mota ?> (<?= $k ?>):</label>
-                          <textarea rows="4" class="form-control for-seo text-sm <?= !empty($config['product'][$type]['content_cke']) ? 'form-control-ckeditor' : '' ?>"
-                            name="content<?= $k ?>" id="content<?= $k ?>"
-                            placeholder="<?= mota ?> (<?= $k ?>)"><?= $_POST['content' . $k] ?? ($result['content' . $k] ?? '') ?></textarea>
+                          <textarea rows="4" class="form-control for-seo text-sm <?= !empty($config['product'][$type]['content_cke']) ? 'form-control-ckeditor' : '' ?>" name="data[content<?= $k ?>]" id="content<?= $k ?>" placeholder="<?= mota ?> (<?= $k ?>)"><?= $_POST['content' . $k] ?? ($result['content' . $k] ?? '') ?></textarea>
                         </div>
                       <?php endif; ?>
                     </div>
@@ -119,7 +115,7 @@
                 <?= $fn->getAjaxCategory(
                   'tbl_product_cat',
                   $_POST['id_cat'] ?? $result['id_cat'] ?? '',
-                  $_POST['id_list'] ?? $result['id_list'] ?? 0,
+                  $_POST['id_list'] ?? $result['id_list'] ?? '',
                 ) ?>
               </div>
             </div>
@@ -139,7 +135,7 @@
                 <div class="form-group col-md-6">
                   <label class="d-block" for="regular_price"><?= gia ?>:</label>
                   <div class="input-group">
-                    <input type="text" class="form-control format-price regular_price text-sm" name="regular_price"
+                    <input type="text" class="form-control format-price regular_price text-sm" name="data[regular_price]"
                       id="regular_price" placeholder="<?= gia ?>" value="<?= $_POST['regular_price'] ?? $result['regular_price'] ?? '' ?>">
                     <div class="input-group-append">
                       <div class="input-group-text"><strong>VNĐ</strong></div>
@@ -151,7 +147,7 @@
                 <div class="form-group col-md-6">
                   <label class="d-block" for="sale_price"><?= giamoi ?>:</label>
                   <div class="input-group">
-                    <input type="text" class="form-control format-price sale_price text-sm" name="sale_price"
+                    <input type="text" class="form-control format-price sale_price text-sm" name="data[sale_price]"
                       id="sale_price" placeholder="<?= giamoi ?>" value="<?= $_POST['sale_price'] ?? $result['sale_price'] ?? '' ?>">
                     <div class="input-group-append">
                       <div class="input-group-text"><strong>VNĐ</strong></div>
@@ -163,7 +159,7 @@
                 <div class="form-group col-md-4">
                   <label class="d-block" for="discount">Chiếc khấu:</label>
                   <div class="input-group">
-                    <input type="text" class="form-control discount text-sm" name="discount" id="discount"
+                    <input type="text" class="form-control discount text-sm" name="data[discount]" id="discount"
                       placeholder="Chiếc khấu" value="<?= $_POST['discount'] ?? $result['discount'] ?? '' ?>" maxlength="3" readonly>
                     <div class="input-group-append">
                       <div class="input-group-text"><strong>%</strong></div>
@@ -174,7 +170,7 @@
               <?php if (!empty($config['product'][$type]['code'])): ?>
                 <div class="form-group col-md-12">
                   <label class="d-block" for="code"><?= masp ?>:</label>
-                  <input type="text" class="form-control text-sm" name="code" id="code" placeholder="<?= masp ?>"
+                  <input type="text" class="form-control text-sm" name="data[code]" id="code" placeholder="<?= masp ?>"
                     value="<?= $_POST['code'] ?? $result['code'] ?? '' ?>">
                 </div>
               <?php endif; ?>
@@ -186,7 +182,7 @@
                   <label class="switch switch-success">
                     <input
                       type="checkbox"
-                      name="<?= $check ?>"
+                      name="data[status][<?= $check ?>]"
                       class="switch-input custom-control-input .show-checkbox"
                       id="<?= $check ?>-checkbox"
                       <?= $fn->is_checked($check, $result['status'] ?? '', $id ?? '') ?>>
@@ -197,7 +193,7 @@
             <div class="form-group">
               <label for="numb" class="d-inline-block align-middle mb-0 mr-2"><?= sothutu ?>:</label>
               <input type="number" class="form-control form-control-mini d-inline-block align-middle text-sm" min="0"
-                name="numb" id="numb" placeholder="Số thứ tự" value="<?= $_POST['numb'] ?? (!empty($id) ? $result['numb'] : '1') ?>" />
+                name="data[numb]" id="numb" placeholder="Số thứ tự" value="<?= $_POST['numb'] ?? (!empty($id) ? $result['numb'] : '1') ?>" />
             </div>
           </div>
         </div>
@@ -239,7 +235,7 @@
             <input type="file" name="files[]" id="filer-gallery" multiple="multiple">
             <input type="hidden" name="id_parent" value="<?= $id ?>">
             <input type="hidden" class="col-filer" value="col-xl-2 col-lg-3 col-md-3 col-sm-4 col-6">
-            <input type="hidden" name="deleted_images" class="deleted-images" value="">
+            <input type="hidden" name="data[deleted_images]" class="deleted-images" value="">
           </div>
           <?php if (!empty($gallery)) { ?>
             <div class="form-group form-group-gallery">
@@ -260,7 +256,7 @@
           <div class="form-group d-inline-block mb-2 mr-5">
             <label for="hienthi_all-checkbox" class="d-inline-block align-middle mb-0 mr-3 form-label"><?= hienthitatca ?>:</label>
             <label class="switch switch-success">
-              <input type="checkbox" name="hienthi_all" class="switch-input custom-control-input" id="hienthi_all-checkbox" value="hienthi" checked>
+              <input type="checkbox" name="data[hienthi_all]" class="switch-input custom-control-input" id="hienthi_all-checkbox" value="hienthi" checked>
             </label>
           </div>
         </div>
@@ -269,6 +265,6 @@
     <?php if (!empty($config['product'][$type]['seo'])): ?>
       <?php include TEMPLATE . LAYOUT . 'seo.php'; ?>
     <?php endif; ?>
-    <input type="hidden" name="type" value="<?= $type ?>">
+    <input type="hidden" name="data[type]" value="<?= $type ?>">
   </form>
 </section>

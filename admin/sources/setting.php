@@ -7,30 +7,10 @@ if (!($row = $db->rawQueryOne("SELECT * FROM tbl_setting LIMIT 1"))) {
 
 $options = json_decode($row['options'] ?? '{}', true);
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['upload'])) {
-  $fn->save_data($_POST, null, 1, [
-    'table'           => "tbl_setting",
-    'fields_multi'    => ['name', 'slogan', 'copyright'],
-    'fields_common'   => ['video', 'mastertool', 'analytics', 'headjs', 'bodyjs'],
-    'fields_options'  => [
-      'address',
-      'opendoor',
-      'phone',
-      'hotline',
-      'zalo',
-      'oaidzalo',
-      'email',
-      'website',
-      'fanpage',
-      'coords',
-      'coords_iframe',
-      'coords_link',
-      'slogan',
-      'color',
-      'copyright',
-      'lang_default'
-    ],
-    'redirect_page'   => $linkMan
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+  $fn->save_data($_POST['data'] ?? [], null, 1, [
+    'table'     => "tbl_setting",
+    'redirect'  => $linkMan
   ]);
 }
 

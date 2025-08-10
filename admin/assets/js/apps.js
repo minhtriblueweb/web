@@ -383,18 +383,14 @@ function deleteTempFiler(index) {
 }
 function deleteAllFiler() {
   let deletedAll = $(".deleted-images").val();
-
   $(".filer-checkbox:checked").each(function () {
     const $checkbox = $(this);
     const $item = $checkbox.closest(".jFiler-item");
-    const id = $item.find('input[name="id-filer[]"]').val();
-
+    const id = $item.find('input[name="data[id-filer][]"]').val();
     if (!id) return;
-
     deletedAll += deletedAll ? "|" + id : id;
     $item.remove();
   });
-
   $(".deleted-images").val(deletedAll);
 }
 
@@ -2005,7 +2001,7 @@ $(document).ready(function () {
 
           $(".jFiler-items-list li.jFiler-item").each(function () {
             lastOrder++;
-            $(this).find("input[name='numb-filer[]']").val(lastOrder);
+            $(this).find("input[name='data[numb-filer][]']").val(lastOrder);
             $(this).addClass(colClass);
           });
           HoldOn.close();
@@ -2015,7 +2011,7 @@ $(document).ready(function () {
       removeConfirmation: false,
       templates: {
         box: '<ul class="jFiler-items-list jFiler-items-grid row scroll-bar"></ul>',
-        item: `<li class="jFiler-item"><div class="jFiler-item-container"><div class="jFiler-item-inner"><div class="jFiler-item-thumb"><div class="jFiler-item-status"></div><div class="jFiler-item-thumb-overlay"><div class="jFiler-item-info"><div style="display:table-cell;vertical-align:middle;"><span class="jFiler-item-title"><b title="{{fi-name}}">{{fi-name}}</b></span></div></div></div>{{fi-image}}</div><div class="jFiler-item-assets jFiler-row"><ul class="list-inline pull-right d-flex align-items-center justify-content-between w-100"><li class="ml-1"><a class="icon-jfi-trash jFiler-item-trash-action my-jFiler-item-trash" data-id="{{fi-id}}" data-photo="{{fi-photo}}"></a></li><li class="mr-1"><div class="custom-control custom-checkbox d-inline-block align-middle text-md"><input type="checkbox" class="custom-control-input filer-checkbox" id="filer-checkbox-{{fi-id}}" value="{{fi-id}}"><label for="filer-checkbox-{{fi-id}}" class="custom-control-label font-weight-normal" data-label="${LANG['chon']}">${LANG['chon']}</label></div></li></ul></div><input type="number" class="form-control form-control-sm mb-1" name="numb-filer[]" placeholder="${LANG['sothutu']}" value=""><input type="text" class="form-control form-control-sm" name="name-filer[]" placeholder="${LANG['tieude']}" value=""><input type="hidden" name="id-filer[]" value="{{fi-id}}"><input type="hidden" name="photo-filer[]" value="{{fi-photo}}"></div></div></li>`,
+        item: `<li class="jFiler-item"><div class="jFiler-item-container"><div class="jFiler-item-inner"><div class="jFiler-item-thumb"><div class="jFiler-item-status"></div><div class="jFiler-item-thumb-overlay"><div class="jFiler-item-info"><div style="display:table-cell;vertical-align:middle;"><span class="jFiler-item-title"><b title="{{fi-name}}">{{fi-name}}</b></span></div></div></div>{{fi-image}}</div><div class="jFiler-item-assets jFiler-row"><ul class="list-inline pull-right d-flex align-items-center justify-content-between w-100"><li class="ml-1"><a class="icon-jfi-trash jFiler-item-trash-action my-jFiler-item-trash" data-id="{{fi-id}}" data-photo="{{fi-photo}}"></a></li><li class="mr-1"><div class="custom-control custom-checkbox d-inline-block align-middle text-md"><input type="checkbox" class="custom-control-input filer-checkbox" id="filer-checkbox-{{fi-id}}" value="{{fi-id}}"><label for="filer-checkbox-{{fi-id}}" class="custom-control-label font-weight-normal" data-label="${LANG['chon']}">${LANG['chon']}</label></div></li></ul></div><input type="number" class="form-control form-control-sm mb-1" name="data[numb-filer][]" placeholder="${LANG['sothutu']}" value=""><input type="text" class="form-control form-control-sm" name="data[name-filer][]" placeholder="${LANG['tieude']}" value=""><input type="hidden" name="data[id-filer][]" value="{{fi-id}}"><input type="hidden" name="data[photo-filer][]" value="{{fi-photo}}"></div></div></li>`,
         progressBar: '<div class="bar"></div>',
         itemAppendToEnd: true,
         canvasImage: false,
@@ -2101,7 +2097,7 @@ $(document).ready(function () {
       },
       templates: {
         box: '<ul class="jFiler-items-list jFiler-items-grid row scroll-bar"></ul>',
-        item: `<li class="jFiler-item"><div class="jFiler-item-container"><div class="jFiler-item-inner"><div class="jFiler-item-thumb"><div class="jFiler-item-status"></div><div class="jFiler-item-thumb-overlay"><div class="jFiler-item-info"><div style="display:table-cell;vertical-align:middle;"><span class="jFiler-item-title"><b title="{{fi-name}}">{{fi-name}}</b></span></div></div></div>{{fi-image}}</div><div class="jFiler-item-assets jFiler-row"><ul class="list-inline pull-right d-flex align-items-center justify-content-between w-100"><li class="ml-1"><a class="icon-jfi-trash jFiler-item-trash-action my-jFiler-item-trash" data-id="{{fi-id}}" data-photo="{{fi-photo}}"></a></li><li class="mr-1"><div class="custom-control custom-checkbox d-inline-block align-middle text-md"><input type="checkbox" class="custom-control-input filer-checkbox" id="filer-checkbox-{{fi-id}}" value="{{fi-id}}"><label for="filer-checkbox-{{fi-id}}" class="custom-control-label font-weight-normal" data-label="Chọn">Chọn</label></div></li></ul></div><input type="number" class="form-control form-control-sm mb-1" name="numb-filer[]" placeholder="${LANG['sothutu']}" value=""><input type="text" class="form-control form-control-sm" name="name-filer[]" placeholder="${LANG['tieude']}" value=""><input type="hidden" name="id-filer[]" value="{{fi-id}}"><input type="hidden" name="photo-filer[]" value="{{fi-photo}}"></div></div></li>`,
+        item: `<li class="jFiler-item"><div class="jFiler-item-container"><div class="jFiler-item-inner"><div class="jFiler-item-thumb"><div class="jFiler-item-status"></div><div class="jFiler-item-thumb-overlay"><div class="jFiler-item-info"><div style="display:table-cell;vertical-align:middle;"><span class="jFiler-item-title"><b title="{{fi-name}}">{{fi-name}}</b></span></div></div></div>{{fi-image}}</div><div class="jFiler-item-assets jFiler-row"><ul class="list-inline pull-right d-flex align-items-center justify-content-between w-100"><li class="ml-1"><a class="icon-jfi-trash jFiler-item-trash-action my-jFiler-item-trash" data-id="{{fi-id}}" data-photo="{{fi-photo}}"></a></li><li class="mr-1"><div class="custom-control custom-checkbox d-inline-block align-middle text-md"><input type="checkbox" class="custom-control-input filer-checkbox" id="filer-checkbox-{{fi-id}}" value="{{fi-id}}"><label for="filer-checkbox-{{fi-id}}" class="custom-control-label font-weight-normal" data-label="Chọn">Chọn</label></div></li></ul></div><input type="number" class="form-control form-control-sm mb-1" name="data[numb-filer][]" placeholder="${LANG['sothutu']}" value=""><input type="text" class="form-control form-control-sm" name="data[name-filer][]" placeholder="${LANG['tieude']}" value=""><input type="hidden" name="data[id-filer][]" value="{{fi-id}}"><input type="hidden" name="data[photo-filer][]" value="{{fi-photo}}"></div></div></li>`,
         itemAppend: null,
         progressBar: '<div class="bar"></div>',
         itemAppendToEnd: true,

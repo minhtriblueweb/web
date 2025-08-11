@@ -5,12 +5,10 @@ if (!isset($config['static'][$type])) $fn->transfer(trangkhongtontai, "index.php
 $result = $db->rawQueryOne("SELECT * FROM tbl_static WHERE type = ? LIMIT 1", [$type]);
 if (!$result) $fn->transfer(dulieukhongcothuc, $linkUpload, false);
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['upload'])) {
-  $fn->save_data($_POST, $_FILES, $result['id'], [
-    'table'         => 'tbl_static',
-    'fields_multi'  => ['name', 'desc', 'content'],
-    'fields_common' => ['type'],
-    'status_flags'  => $config['static'][$type]['check'],
-    'redirect_page' => $linkUpload
+  $fn->save_data($_POST['data'] ?? [], $_FILES, $result['id'], [
+    'table'    => 'tbl_static',
+    'type'     => $type,
+    'redirect' => $linkUpload
   ]);
 }
 $template = "static/static";

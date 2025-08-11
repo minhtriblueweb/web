@@ -15,6 +15,10 @@
 <!-- Favicon -->
 <link rel="shortcut icon" type="image/x-icon" href="<?= $seo->get('favicon') ?>" />
 
+<!-- Webmaster Tool -->
+<?= $fn->decodeHtmlChars($optsetting['mastertool']) ?>
+
+
 <!-- GEO -->
 <meta name="geo.region" content="VN" />
 <meta name="geo.placename" content="Hồ Chí Minh" />
@@ -59,18 +63,17 @@
 <script async src="https://static.addtoany.com/menu/page.js"></script>
 
 <script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "WebSite",
-  "name": "<?= $optsetting["name$lang"] ?>",
-  "url": "<?= $seo->get('url') ?>",
-  "description": "<?= $seo->get('description') ?>",
-  "image": {
-    "@type": "ImageObject",
-    "url": "<?= $seo->get('photo') ?>",
-    "width": <?= $seo->get('photo:width') ?: 1200 ?>,
-    "height": <?= $seo->get('photo:height') ?: 630 ?>
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "<?= $optsetting["name$lang"] ?>",
+    "url": "<?= $seo->get('url') ?>",
+    "description": "<?= $seo->get('description') ?>",
+    "image": {
+      "@type": "ImageObject",
+      "url": "<?= $seo->get('photo') ?>",
+      "width": <?= $seo->get('photo:width') ?: 1200 ?>,
+      "height": <?= $seo->get('photo:height') ?: 630 ?>
+    }
   }
-}
 </script>
-

@@ -1,7 +1,7 @@
 <div class="item-service">
   <div class="images">
     <a class="scale-img hover-glass text-decoration-none" href="<?= $v["slug$lang"] ?>" title="<?= $v["name$lang"] ?>">
-      <?= $fn->getImageCustom(['width' => $config['news'][$type]['width'], 'height' => $config['news'][$type]['height'], 'zc' => substr($config['news'][$type]['thumb'], -1), 'file' => $v['file'], 'class' => 'w-100', 'alt' => $v["name$lang"], 'title' => $v["name$lang"], 'lazy' => true]) ?>
+      <?= $fn->getImageCustom(['width' => $optsetting_json["{$type}_man_width"], 'height' => $optsetting_json["{$type}_man_height"], 'zc' => $optsetting_json["{$type}_man_zc"], 'file' => $v['file'], 'class' => 'w-100', 'alt' => $v["name$lang"], 'title' => $v["name$lang"], 'lazy' => true]) ?>
     </a>
   </div>
   <a href="<?= $v["slug$lang"] ?>">

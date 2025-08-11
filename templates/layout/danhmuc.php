@@ -9,7 +9,7 @@
           <a href="<?= $v["slug$lang"] ?>" title="<?= $v["name$lang"] ?>">
             <div class="item-list">
               <div class="item-list-img">
-                <?= $fn->getImageCustom(['file'  => $v['file'], 'alt' => $v["name$lang"], 'title' => $v["name$lang"], 'width' => $config['product']['san-pham']['width_cat'], 'height' => $config['product']['san-pham']['height_cat'], 'zc' => substr($config['product']['san-pham']['thumb_cat'], -1)]) ?>
+                <?= $fn->getImageCustom(['file'  => $v['file'], 'alt' => $v["name$lang"], 'title' => $v["name$lang"], 'width' => $optsetting_json["san-pham_cat_width"], 'height' => $optsetting_json["san-pham_cat_height"], 'zc' => $optsetting_json["san-pham_cat_zc"]]) ?>
               </div>
               <div class="item-list-name">
                 <h3 class="m-0"><?= $v["name$lang"] ?></h3>

@@ -9,9 +9,9 @@
                 <a class="hvr-icon me-2" title="<?= $row["name$lang"] ?>">
                   <?= $fn->getImageCustom([
                     'file' =>  $row['file'],
-                    'width' => $config['news']['tieu-chi']['width'],
-                    'height' => $config['news']['tieu-chi']['height'],
-                    'zc' => substr($config['news']['tieu-chi']['thumb'], -1),
+                    'width' => $optsetting_json["tieu-chi_man_width"],
+                    'height' => $optsetting_json["tieu-chi_man_height"],
+                    'zc' => $optsetting_json["tieu-chi_man_zc"],
                     'alt' => $row["name$lang"],
                     'title' => $row["name$lang"],
                     'lazy' => true

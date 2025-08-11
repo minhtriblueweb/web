@@ -1,12 +1,10 @@
 <?php
 if (!defined('SOURCES')) die("Error");
+if (!isset($config['news'][$type])) $fn->transfer("Trang không tồn tại!", "index.php", false);
+
 $table = 'tbl_news';
-if (!isset($config['news'][$type])) {
-  $fn->transfer("Trang không tồn tại!", "index.php", false);
-}
 $linkNews = "index.php?page=news&type=$type";
 $linkMan = "$linkNews&act=man";
-
 
 switch ($act) {
   case 'delete':
@@ -59,18 +57,15 @@ function save()
   }
 
   if ($_SERVER['REQUEST_METHOD'] === 'POST' && (isset($_POST['add']) || isset($_POST['edit']))) {
-    $save_options = [
+    $options = [
       'table'          => $table,
-      'fields_multi'   => ['slug', 'name', 'desc', 'content'],
-      'fields_common'  => ['numb', 'type'],
-      'status_flags'   => $config['news'][$type]['check'],
       'convert_webp'   => $config['news'][$type]['convert_webp'],
       'enable_slug'    => $config['news'][$type]['slug'],
       'enable_seo'     => $config['news'][$type]['seo'],
       'enable_gallery' => $config['news'][$type]['gallery'],
-      'redirect_page'  => $linkMan,
+      'redirect'  => $linkMan
     ];
-    $fn->save_data($_POST, $_FILES, $id, $save_options);
+    $fn->save_data($_POST['data'] ?? [], $_FILES, $id, $options);
   }
 }
 function delete()
@@ -81,7 +76,7 @@ function delete()
       'id' => (int)$_GET['id'],
       'table' => $table,
       'type' => $type,
-      'redirect_page' => $linkMan,
+      'redirect' => $linkMan,
       'delete_seo'     => $config['news'][$type]['seo'],
       'delete_gallery' => $config['news'][$type]['gallery']
     ]);
@@ -97,7 +92,7 @@ function deleteMultiple()
       'listid' => $_GET['listid'],
       'table' => $table,
       'type' => $type,
-      'redirect_page' => $linkMan,
+      'redirect' => $linkMan,
       'delete_seo'     => $config['news'][$type]['seo'],
       'delete_gallery' => $config['news'][$type]['gallery']
     ]);

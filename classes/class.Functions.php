@@ -262,6 +262,7 @@ class Functions
     $enable_slug = $options['enable_slug'] ?? false;
     $convert_webp = $options['convert_webp'] ?? false;
     $columns = $this->getColumnNames($table);
+
     $data_prepared = [];
     foreach ($data as $key => $val) {
       if ($key === 'options') continue;
@@ -271,8 +272,12 @@ class Functions
     if (!empty($data['options']) && is_array($data['options']) && in_array('options', $columns)) {
       $data_prepared['options'] = json_encode($data['options'], JSON_UNESCAPED_UNICODE);
     }
-    if (!empty($data['status']) && is_array($data['status']) && in_array('status', $columns)) {
-      $data_prepared['status'] = implode(',', array_keys(array_filter($data['status'])));
+    if (in_array('status', $columns)) {
+      if (!empty($data['status']) && is_array($data['status'])) {
+        $data_prepared['status'] = implode(',', array_keys(array_filter($data['status'])));
+      } else {
+        $data_prepared['status'] = '';
+      }
     }
     if ($enable_slug) {
       foreach ($langs as $lang) {
@@ -283,12 +288,15 @@ class Functions
         }
       }
     }
+
     $thumb_filename = $old_filename = '';
     $has_file_column = is_array($files) && isset($files['file']) && is_uploaded_file($files['file']['tmp_name']);
-    if ($has_file_column && !empty($id)) {
+
+    if ((!empty($id) && ($has_file_column || (!empty($data['photo_deleted']) && $data['photo_deleted'] == '1')))) {
       $old = $this->db->rawQueryOne("SELECT file FROM $table WHERE id = ?", [(int)$id]);
       $old_filename = $old['file'] ?? '';
     }
+
     if ($has_file_column) {
       $thumb_filename = $this->uploadImage([
         'file' => $files['file'],
@@ -297,12 +305,14 @@ class Functions
         'convert_webp' => $convert_webp,
         'background' => $options['background'] ?? [255, 255, 255, 0]
       ]);
-    } elseif (!empty($data['photo_deleted']) && $data['photo_deleted'] == '1' && $old_filename) {
-      $this->deleteFile($old_filename);
+    } elseif (!empty($data['photo_deleted']) && $data['photo_deleted'] == '1') {
+      if (!empty($old_filename)) {
+        $this->deleteFile($old_filename);
+      }
       $thumb_filename = '';
     }
+
     if (!empty($id)) {
-      // UPDATE bản ghi
       $fields = $params = [];
       foreach ($data_prepared as $key => $val) {
         $fields[] = "`$key` = ?";
@@ -316,9 +326,11 @@ class Functions
       }
       $params[] = (int)$id;
       $result = $this->db->execute("UPDATE $table SET " . implode(', ', $fields) . " WHERE id = ?", $params);
+
       if ($enable_seo && $result) {
         $this->save_seo($data_prepared['type'] ?? '', (int)$id, $data, $options['act'] ?? '');
       }
+
       if ($enable_gallery && !empty($data['deleted_images'])) {
         foreach (explode('|', $data['deleted_images']) as $gid) {
           $gid = (int)$gid;
@@ -347,7 +359,6 @@ class Functions
 
       $msg = $result ? capnhatdulieuthanhcong : capnhatdulieubiloi;
     } else {
-      // INSERT bản ghi mới
       $columns_insert = array_keys($data_prepared);
       $placeholders = array_fill(0, count($columns_insert), '?');
       $params = array_values($data_prepared);
@@ -371,11 +382,25 @@ class Functions
     $this->transfer($msg, $redirect, !empty($id) ? $result : $inserted);
   }
 
+
   // Hàm lấy tên cột bảng
   public function getColumnNames($table)
   {
     $result = $this->db->rawQueryArray("SHOW COLUMNS FROM `$table`");
     return array_column($result, 'Field');
+  }
+  private function ensureLangColumns($table, $baseFields, $langs)
+  {
+    $columns = $this->getColumnNames($table);
+
+    foreach ($langs as $lang) {
+      foreach ($baseFields as $field) {
+        $colName = $field . $lang;
+        if (!in_array($colName, $columns)) {
+          $this->db->execute("ALTER TABLE `$table` ADD `$colName` TEXT NULL");
+        }
+      }
+    }
   }
 
   public function deleteFile($file = '')

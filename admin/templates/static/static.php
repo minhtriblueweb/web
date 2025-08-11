@@ -28,7 +28,7 @@
             <div class="form-group d-inline-block mb-2 mr-5">
               <label for="<?= $check ?>-checkbox" class="d-inline-block align-middle mb-0 mr-3 form-label"><?= defined($check) ? constant($check) : $check ?>:</label>
               <label class="switch switch-success">
-                <input type="checkbox" name="<?= $check ?>" class="switch-input custom-control-input .show-checkbox" id="<?= $check ?>-checkbox" <?= $fn->is_checked($check, $result['status'] ?? '', $result['id'] ?? '') ?>>
+                <input type="checkbox" name="data[status][<?= $check ?>]" class="switch-input custom-control-input" id="<?= $check ?>-checkbox" <?= $fn->is_checked($check, $result['status'] ?? '', $result['id'] ?? '') ?>>
               </label>
             </div>
           <?php endforeach; ?>
@@ -65,7 +65,7 @@
                       <label for="name<?= $k ?>"><?= tieude ?> (<?= $k ?>):</label>
                       <input type="text"
                         class="form-control for-seo text-sm"
-                        name="name<?= $k ?>" id="name<?= $k ?>"
+                        name="data[name<?= $k ?>]" id="name<?= $k ?>"
                         placeholder="<?= tieude ?> (<?= $k ?>)"
                         value="<?= $_POST['name' . $k] ?? $result['name' . $k] ?? '' ?>" />
                     </div>
@@ -75,7 +75,7 @@
                     <div class="form-group">
                       <label for="desc<?= $k ?>"><?= mota ?> (<?= $k ?>):</label>
                       <textarea rows="4" class="form-control for-seo text-sm <?= !empty($config['static'][$type]['desc_cke']) ? 'form-control-ckeditor' : '' ?>"
-                        name="desc<?= $k ?>" id="desc<?= $k ?>"
+                        name="data[desc<?= $k ?>]" id="desc<?= $k ?>"
                         placeholder="<?= mota ?> (<?= $k ?>)"><?= $_POST['desc' . $k] ?? ($result['desc' . $k] ?? '') ?></textarea>
                     </div>
                   <?php endif; ?>
@@ -84,7 +84,7 @@
                     <div class="form-group">
                       <label for="content<?= $k ?>"><?= mota ?> (<?= $k ?>):</label>
                       <textarea rows="4" class="form-control for-seo text-sm <?= !empty($config['static'][$type]['content_cke']) ? 'form-control-ckeditor' : '' ?>"
-                        name="content<?= $k ?>" id="content<?= $k ?>"
+                        name="data[content<?= $k ?>]" id="content<?= $k ?>"
                         placeholder="<?= mota ?> (<?= $k ?>)"><?= $_POST['content' . $k] ?? ($result['content' . $k] ?? '') ?></textarea>
                     </div>
                   <?php endif; ?>
@@ -95,6 +95,6 @@
         </div>
       </div>
     </div>
-    <input type="hidden" name="type" id="type" value="<?= $type ?>">
+    <input type="hidden" name="data[type]" id="type" value="<?= $type ?>">
   </form>
 </section>

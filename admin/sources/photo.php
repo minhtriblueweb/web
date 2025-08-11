@@ -39,7 +39,7 @@ function delete()
       'id' => (int)$_GET['id'],
       'table' => $table,
       'type' => $type,
-      'redirect_page' => $linkMan
+      'redirect' => $linkMan
     ]);
   } else {
     $fn->transfer(khongnhanduocdulieu, $linkMan, false);
@@ -53,7 +53,7 @@ function deleteMultiple()
       'listid' => $_GET['listid'],
       'table' => $table,
       'type' => $type,
-      'redirect_page' => $linkMan
+      'redirect' => $linkMan
     ]);
   } else {
     $fn->transfer(khongnhanduocdulieu, $linkMan, false);
@@ -63,20 +63,11 @@ function savePhotoStatic()
 {
   global $fn, $table, $type, $config, $result, $options;
   if (!$config['photo']['photo_static'][$type]) $fn->transfer(trangkhongtontai, "index.php", false);
-  $fields_options = !empty($config['photo']['photo_static'][$type]['watermark-advanced'])
-    ? ['position', 'per', 'small_per', 'max', 'min', 'opacity', 'offset_x', 'offset_y']
-    : ['width', 'height', 'zc'];
-
   $options = json_decode($result['options'] ?? '', true);
-  foreach ($fields_options as $opt) {
-    $$opt = $options[$opt] ?? ($$opt ?? '');
-  }
   if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['upload'])) {
-    $fn->save_data($_POST, $_FILES, $result['id'] ?? null, [
+    $fn->save_data($_POST['data'], $_FILES, $result['id'] ?? null, [
       'table' => $table,
-      'fields_options' => $fields_options,
-      'status_flags' => $config['photo']['photo_static'][$type]['status'],
-      'redirect_page' => "index.php?page=photo&act=photo_static&type=$type"
+      'redirect' => "index.php?page=photo&act=photo_static&type=$type"
     ]);
   }
 }
@@ -103,14 +94,11 @@ function savePhoto()
   $id = isset($_GET['id']) && is_numeric($_GET['id']) ? (int)$_GET['id'] : null;
   $result = ($id !== null) ? $db->rawQueryOne("SELECT * FROM $table WHERE type = ? AND id = ?", [$type, $id]) : null;
   if ($_SERVER['REQUEST_METHOD'] === 'POST' && (isset($_POST['add']) || isset($_POST['edit']))) {
-    $fn->save_data($_POST, $_FILES, $id, [
-      'table'           => $table,
-      'fields_multi'    => ['name', 'desc', 'content'],
-      'fields_common'   => ['numb', 'type', 'link'],
-      'fields_options'  => ['width', 'height', 'zc'],
-      'status_flags'    => $config['photo']['photo_man'][$type]['status_photo'],
-      'redirect_page'   => $linkMan,
-      'convert_webp'    => $config['photo']['photo_man'][$type]['convert_webp']
+    $fn->save_data($_POST['data'], $_FILES, $id, [
+      'table'        => $table,
+      'type'         => $type,
+      'convert_webp' => $config['photo']['photo_man'][$type]['convert_webp'],
+      'redirect'     => $linkMan
     ]);
   }
 }

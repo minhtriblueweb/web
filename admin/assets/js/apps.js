@@ -423,7 +423,7 @@ function deletePhoto(_root) {
     $("<input>", {
       type: "hidden",
       id: "photo-deleted-flag",
-      name: "photo_deleted",
+      name: "data[photo_deleted]",
       value: "1",
     }).appendTo(form);
   }

@@ -28,7 +28,7 @@
             <div class="form-group d-inline-block mb-2 mr-5">
               <label for="<?= $check ?>-checkbox" class="d-inline-block align-middle mb-0 mr-3 form-label"><?= defined($check) ? constant($check) : $check ?>:</label>
               <label class="switch switch-success">
-                <input type="checkbox" name="<?= $check ?>" class="switch-input custom-control-input .show-checkbox" id="<?= $check ?>-checkbox" <?= $fn->is_checked($check, $result['status'] ?? '', $result['id'] ?? '') ?>>
+                <input type="checkbox" name="data[status][<?= $check ?>]" class="switch-input custom-control-input .show-checkbox" id="<?= $check ?>-checkbox" <?= $fn->is_checked($check, $result['status'] ?? '', $result['id'] ?? '') ?>>
               </label>
             </div>
           <?php endforeach; ?>
@@ -71,7 +71,7 @@
                 <div class="watermark-position rounded">
                   <?php for ($i = 1; $i <= 9; $i++): ?>
                     <label class="<?= ($i === $position) ? 'active' : '' ?>">
-                      <input type="radio" name="position" value="<?= $i ?>" <?= ($i === $position) ? 'checked' : '' ?>>
+                      <input type="radio" name="data[options][position]" value="<?= $i ?>" <?= ($i === $position) ? 'checked' : '' ?>>
                       <?= $fn->getImage([
                         'file' => ($i === $position) ? $result['file'] : '',
                         'class' => 'rounded',
@@ -88,38 +88,38 @@
             <div class="col-xl-8">
               <div class="form-group">
                 <label for="opacity">Độ trong suốt:</label>
-                <input type="number" class="form-control" id="opacity" name="opacity" min="0" max="100" value="<?= $opacity ?>">
+                <input type="number" class="form-control" id="opacity" name="data[options][opacity]" min="0" max="100" value="<?= $opacity ?>">
                 <p class="text-danger mt-1 small">Giá trị từ 0 - 100</p>
               </div>
 
               <div class="form-group">
                 <label for="per">Tỉ lệ:</label>
-                <input type="text" class="form-control text-sm" id="per" name="per" value="<?= $per ?>" placeholder="2">
+                <input type="text" class="form-control text-sm" id="per" name="data[options][per]" value="<?= $per ?>" placeholder="2">
               </div>
 
               <div class="form-group">
                 <label for="small_per">Tỉ lệ &lt; 300px:</label>
-                <input type="text" class="form-control text-sm" id="small_per" name="small_per" value="<?= $small_per ?>" placeholder="3">
+                <input type="text" class="form-control text-sm" id="small_per" name="data[options][small_per]" value="<?= $small_per ?>" placeholder="3">
               </div>
 
               <div class="form-group">
                 <label for="max">Kích thước tối đa:</label>
-                <input type="text" class="form-control text-sm" id="max" name="max" value="<?= $max ?>" placeholder="600">
+                <input type="text" class="form-control text-sm" id="max" name="data[options][max]" value="<?= $max ?>" placeholder="600">
               </div>
 
               <div class="form-group">
                 <label for="min">Kích thước tối thiểu:</label>
-                <input type="text" class="form-control text-sm" id="min" name="min" value="<?= $min ?>" placeholder="100">
+                <input type="text" class="form-control text-sm" id="min" name="data[options][min]" value="<?= $min ?>" placeholder="100">
               </div>
 
               <div class="form-group">
                 <label for="offset_x">Độ lệch X:</label>
-                <input type="text" class="form-control" id="offset_x" name="offset_x" value="<?= $offset_x ?>">
+                <input type="text" class="form-control" id="offset_x" name="data[options][offset_x]" value="<?= $offset_x ?>">
               </div>
 
               <div class="form-group">
                 <label for="offset_y">Độ lệch Y:</label>
-                <input type="text" class="form-control" id="offset_y" name="offset_y" value="<?= $offset_y ?>">
+                <input type="text" class="form-control" id="offset_y" name="data[options][offset_y]" value="<?= $offset_y ?>">
               </div>
 
               <div class="mt-2">
@@ -132,8 +132,8 @@
         </div>
       </div>
     </div>
-    <input type="hidden" name="width" value="<?= $config['photo']['photo_static'][$type]['width'] ?>">
-    <input type="hidden" name="height" value="<?= $config['photo']['photo_static'][$type]['height'] ?>">
-    <input type="hidden" name="zc" value="<?= substr($config['photo']['photo_static'][$type]['thumb'], -1) ?? 1 ?>">
+    <input type="hidden" name="data[options][width]" value="<?= $config['photo']['photo_static'][$type]['width'] ?>">
+    <input type="hidden" name="data[options][height]" value="<?= $config['photo']['photo_static'][$type]['height'] ?>">
+    <input type="hidden" name="data[options][zc]" value="<?= substr($config['photo']['photo_static'][$type]['thumb'], -1) ?? 1 ?>">
   </form>
 </section>

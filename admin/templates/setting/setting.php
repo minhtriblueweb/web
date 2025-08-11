@@ -197,12 +197,12 @@
         </div>
         <div class="form-group">
           <label for="headjs">Head JS:</label>
-          <textarea class="form-control text-sm" name="data[headjs]" id="headjs" rows="5"
+          <textarea class="form-control text-sm" name="data[headjs]" id="headjs" rows="6"
             placeholder="Head JS"><?= isset($row['headjs']) ? htmlspecialchars($row['headjs']) : ''; ?></textarea>
         </div>
         <div class="form-group">
           <label for="bodyjs">Body JS:</label>
-          <textarea class="form-control text-sm" name="data[bodyjs]" id="bodyjs" rows="5"
+          <textarea class="form-control text-sm" name="data[bodyjs]" id="bodyjs" rows="6"
             placeholder="Body JS"><?= isset($row['bodyjs']) ? htmlspecialchars($row['bodyjs']) : ''; ?></textarea>
         </div>
         <div class="card card-primary card-outline card-outline-tabs">

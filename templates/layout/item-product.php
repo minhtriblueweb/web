@@ -1,7 +1,7 @@
 <div class="item-product">
   <a href="<?= htmlspecialchars($v["slug$lang"]) ?>">
     <div class="images">
-      <?= $fn->getImageCustom(['file'  => $v['file'], 'class' => 'w-100', 'alt'   => htmlspecialchars($v["name$lang"]), 'title' => htmlspecialchars($v["name$lang"]), 'width' => $config['product']['san-pham']['width'], 'height' => $config['product']['san-pham']['height'], 'zc' => substr($config['product']['san-pham']['thumb'], -1), 'lazy'  => true, 'watermark' => $config['product']['san-pham']['watermark']]) ?>
+      <?= $fn->getImageCustom(['file'  => $v['file'], 'class' => 'w-100', 'alt'   => htmlspecialchars($v["name$lang"]), 'title' => htmlspecialchars($v["name$lang"]), 'width' => $optsetting_json["san-pham_man_width"], 'height' => $optsetting_json["san-pham_man_height"], 'zc' => $optsetting_json["san-pham_man_zc"], 'lazy'  => true, 'watermark' => $config['product']['san-pham']['watermark']]) ?>
     </div>
     <div class="content">
       <div class="title">

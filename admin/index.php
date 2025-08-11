@@ -5,8 +5,9 @@ $login = new adminlogin();
 $error = null;
 
 /* ===== LẤY PAGE/ACT ===== */
-$page = preg_replace('/[^a-zA-Z0-9_-]/', '', basename($_GET['page'] ?? 'index'));
+$page = $_GET['page'] ?? 'index';
 $act  = $_GET['act'] ?? '';
+$type  = $_GET['type'] ?? '';
 
 /* ===== SET TEMPLATE */
 if ($page === 'user' && $act === 'login') {

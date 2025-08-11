@@ -31,7 +31,7 @@ ob_start();
           <li>
             <a href="<?= $v_list["slug$lang"] ?>" title="<?= $v_list["name$lang"] ?>">
               <span>
-                <?= $fn->getImageCustom(['file' => $v_list['file'], 'width' => 25, 'height' => 25, 'zc' => 1, 'alt' => $v_list["name$lang"], 'title' => $v_list["name$lang"]]) ?>
+                <?= $fn->getImageCustom(['file' => $v_list['file'], 'width' => $optsetting_json["san-pham_list_width"], 'height' => $optsetting_json["san-pham_list_height"], 'zc' => $optsetting_json["san-pham_list_zc"], 'alt' => $v_list["name$lang"], 'title' => $v_list["name$lang"], 'lazy' => false]) ?>
               </span>
               <?= $v_list["name$lang"] ?>
               <?= !empty($v_list['cats']) ? '<i class="fa-solid fa-angle-right"></i>' : '' ?>

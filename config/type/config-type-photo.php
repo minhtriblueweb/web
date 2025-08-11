@@ -54,7 +54,7 @@ $config['photo']['photo_static'][$type]['img_type'] = '.png|.PNG|.Png';
 
 /* Slideshow */
 $type = "slideshow";
-$config['photo']['photo_man'][$type]['title_main_photo'] = "Slideshow";
+$config['photo']['photo_man'][$type]['title_main_photo'] = $config['size-img'][$type]['man']['title'] = "Slideshow";
 $config['photo']['photo_man'][$type]['status_photo'] = array("hienthi" => "Hiển thị");
 $config['photo']['photo_man'][$type]['images_photo'] = true;
 $config['photo']['photo_man'][$type]['link_photo'] = true;
@@ -64,6 +64,7 @@ $config['photo']['photo_man'][$type]['height_photo'] = 600;
 $config['photo']['photo_man'][$type]['convert_webp'] = true;
 $config['photo']['photo_man'][$type]['thumb_photo'] = '100x' . round(100 / ($config['photo']['photo_man'][$type]['width_photo'] / $config['photo']['photo_man'][$type]['height_photo'])) . 'x1';
 $config['photo']['photo_man'][$type]['img_type_photo'] = '.jpg|.gif|.png|.jpeg|.gif';
+// $config['size-img'][$type]['man']['active'] = true;
 
 /* Social */
 $type = "social";

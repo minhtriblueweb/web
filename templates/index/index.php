@@ -111,7 +111,7 @@
             <div class="content">
               <a class="scale-img hover-glass text-decoration-none"
                 title="<?= $v["name$lang"] ?>" style="width: 100px; height: 100px;">
-                <?= $fn->getImageCustom(['file' => $v['file'], 'width' => $config['news'][$type]['width'], 'height' => $config['news'][$type]['height'], 'zc' => substr($config['news'][$type]['thumb'], -1), 'alt' => $v["name$lang"], 'title' => $v["name$lang"], 'lazy' => true]) ?>
+                <?= $fn->getImageCustom(['file' => $v['file'], 'width' => $optsetting_json["danh-gia_man_width"], 'height' => $optsetting_json["danh-gia_man_height"], 'zc' => $optsetting_json["danh-gia_man_zc"], 'alt' => $v["name$lang"], 'title' => $v["name$lang"], 'lazy' => true]) ?>
               </a>
               <div class="title">
                 <h3 class="text-split"><?= $v["name$lang"] ?></h3>

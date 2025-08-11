@@ -166,7 +166,7 @@ function delete()
       'id' => $id_child,
       'table' => $table,
       'type' => $type,
-      'redirect_page' => $linkMan
+      'redirect' => $linkMan
     ]);
   } else {
     $fn->transfer(khongnhanduocdulieu, $linkMan, false);
@@ -180,7 +180,7 @@ function deleteMultiple()
       'listid' => $_GET['listid'] ?? '',
       'table' => $table,
       'type' => $type,
-      'redirect_page' => $linkMan
+      'redirect' => $linkMan
     ]);
   } else {
     $fn->transfer(khongnhanduocdulieu, $linkMan, false);

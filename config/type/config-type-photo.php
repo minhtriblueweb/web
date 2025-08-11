@@ -52,6 +52,16 @@ $config['photo']['photo_static'][$type]['height'] = 50;
 $config['photo']['photo_static'][$type]['thumb'] = '50x50x1';
 $config['photo']['photo_static'][$type]['img_type'] = '.png|.PNG|.Png';
 
+/* Background bán chạy */
+$type = "background_bc";
+$config['photo']['photo_static'][$type]['title_main'] = "Background bán chạy";
+$config['photo']['photo_static'][$type]['status'] = array("hienthi" => "Hiển thị");
+$config['photo']['photo_static'][$type]['images'] = true;
+$config['photo']['photo_static'][$type]['width'] = 1300;
+$config['photo']['photo_static'][$type]['height'] = 100;
+$config['photo']['photo_static'][$type]['thumb'] = '1300x100x1';
+$config['photo']['photo_static'][$type]['img_type'] = '.jpg|.png|.jpeg';
+
 /* Slideshow */
 $type = "slideshow";
 $config['photo']['photo_man'][$type]['title_main_photo'] = $config['size-img'][$type]['man']['title'] = "Slideshow";

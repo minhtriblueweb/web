@@ -2,7 +2,8 @@
 <?php if (!empty($banchay)): ?>
   <div class="wrap-product-hot">
     <div class="wrap-content" data-aos="fade-up" data-aos-duration="500">
-      <div class="title-product-hot">
+      <?php $background_bc = ($db->rawQueryOne("SELECT `file` FROM tbl_photo WHERE type = ? AND FIND_IN_SET('hienthi', status) LIMIT 1", ['background_bc'])); ?>
+      <div class="title-product-hot" style="background: url('<?= BASE_ADMIN . UPLOADS . $background_bc['file'] ?>') no-repeat center center / 100% 100%;">
         <h2>SẢN PHẨM BÁN CHẠY</h2>
       </div>
       <div class="slick-product slick-d-none">

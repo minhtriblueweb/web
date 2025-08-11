@@ -45,7 +45,7 @@ $linkMulti  = "index.php?page=photo&act=delete_multiple&type=$type";
             </th>
             <th class="align-middle text-center" width="10%">STT</th>
             <th class="align-middle"><?= hinh ?></th>
-            <th class="align-middle" style="width: 20%"><?= tieude ?></th>
+            <th class="align-middle" style="width: 30%"><?= tieude ?></th>
             <?php if (!empty($config['photo']['photo_man'][$type]['link_photo'])): ?>
               <th class="align-middle">Link</th>
             <?php endif; ?>
@@ -74,7 +74,7 @@ $linkMulti  = "index.php?page=photo&act=delete_multiple&type=$type";
                 </td>
 
                 <!-- Hình ảnh -->
-                <td class="align-middle text-center">
+                <td class="align-middle">
                   <a href="<?= $linkEdit . $row['id'] ?>" title="<?= $row["name$lang"] ?>">
                     <?= $fn->getImage([
                       'file' => $row['file'],

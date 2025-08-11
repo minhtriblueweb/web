@@ -1802,9 +1802,6 @@ img:not([src]) {
 .title-product-hot {
   text-align: center;
   position: relative;
-  margin-bottom: 0;
-  background: url(../images/bg-title-bc.png) no-repeat;
-  background-size: 100% 100%;
   padding: 20px 0;
 }
 

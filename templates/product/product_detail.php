@@ -117,13 +117,10 @@
       <div class="title-main mt-4" data-aos="fade-up" data-aos-duration="500">
         <h2><?= sanphamcungloai ?></h2>
       </div>
-      <div class="grid-product" data-aos="fade-up" data-aos-duration="500">
+      <div class="slick-product slick-d-none" data-aos="fade-up" data-aos-duration="500">
         <?php foreach ($product as $k => $v): ?>
           <?php include TEMPLATE . LAYOUT . 'item-product.php'; ?>
         <?php endforeach; ?>
-      </div>
-      <div class="pagination-home w-100">
-        <?php if ($paging): ?><div class="mt-3 mb-3"><?= $paging ?></div><?php endif; ?>
       </div>
     <?php endif; ?>
     <?php include TEMPLATE . LAYOUT . 'danhmuc.php'; ?>

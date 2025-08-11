@@ -2,7 +2,7 @@
 if (!defined('SOURCES')) die("Error");
 $table = 'tbl_photo';
 $result = $db->rawQueryOne("SELECT * FROM $table WHERE type = ? LIMIT 1", [$type]) ?? '';
-if (!$result) $fn->transfer(dulieukhongcothuc, $linkMan, false);
+// if (!$result) $fn->transfer(dulieukhongcothuc, $linkMan, false);
 $linkMan = "index.php?page=photo&act=photo_man&type=$type";
 switch ($act) {
   case 'delete':
@@ -67,6 +67,7 @@ function savePhotoStatic()
   if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['upload'])) {
     $fn->save_data($_POST['data'], $_FILES, $result['id'] ?? null, [
       'table' => $table,
+      'type' => $type,
       'redirect' => "index.php?page=photo&act=photo_static&type=$type"
     ]);
   }

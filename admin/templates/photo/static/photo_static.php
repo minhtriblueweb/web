@@ -42,7 +42,7 @@
                   <div class="upload-file-image rounded mb-3">
                     <div class="d-flex justify-content-center">
                       <div class="border rounded bg-white d-flex align-items-center justify-content-center">
-                        <?= $fn->getImage(['file' => $result['file'], 'class' => 'img-fluid', 'alt' => $config['photo']['photo_static'][$type]['title_main'], 'title' => $config['photo']['photo_static'][$type]['title_main'], 'id' => 'preview-image', 'style' => 'max-height:100%; max-width:100%;']) ?>
+                        <?= $fn->getImage(['file' => $result['file'] ?? '', 'class' => 'img-fluid', 'alt' => $config['photo']['photo_static'][$type]['title_main'], 'title' => $config['photo']['photo_static'][$type]['title_main'], 'id' => 'preview-image', 'style' => 'max-height:100%; max-width:100%;']) ?>
                       </div>
                     </div>
                   </div>
@@ -135,5 +135,6 @@
     <input type="hidden" name="data[options][width]" value="<?= $config['photo']['photo_static'][$type]['width'] ?>">
     <input type="hidden" name="data[options][height]" value="<?= $config['photo']['photo_static'][$type]['height'] ?>">
     <input type="hidden" name="data[options][zc]" value="<?= substr($config['photo']['photo_static'][$type]['thumb'], -1) ?? 1 ?>">
+    <input type="hidden" name="data[type]" value="<?= $type ?>">
   </form>
 </section>

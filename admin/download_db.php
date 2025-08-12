@@ -1,59 +1,83 @@
 <?php
+date_default_timezone_set('Asia/Ho_Chi_Minh'); // Giờ VN
+
 require_once 'init.php';
 
-// Lấy thông tin từ config
-$dbHost    = $config['database']['host'];
-$dbUser    = $config['database']['username'];
-$dbPass    = $config['database']['password'];
-$dbName    = $config['database']['dbname'];
-$dbCharset = $config['database']['charset'] ?? 'utf8mb4';
-
-try {
-  // Kết nối PDO
-  $dsn = "mysql:host=$dbHost;dbname=$dbName;charset=$dbCharset";
-  $pdo = new PDO($dsn, $dbUser, $dbPass, [
-    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-    PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES $dbCharset"
-  ]);
-
-  // Lấy danh sách bảng
-  $tables = [];
-  $stmt = $pdo->query("SHOW TABLES");
-  while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
-    $tables[] = $row[0];
-  }
-
-  // Bắt đầu tạo nội dung SQL
-  $sql = "-- Backup Database: $dbName\n";
-  $sql .= "-- Created: " . date('Y-m-d H:i:s') . "\n\n";
-  $sql .= "SET FOREIGN_KEY_CHECKS=0;\n\n";
-
-  foreach ($tables as $table) {
-    // CREATE TABLE
-    $stmt2 = $pdo->query("SHOW CREATE TABLE `$table`");
-    $row2 = $stmt2->fetch(PDO::FETCH_ASSOC);
-    $sql .= "DROP TABLE IF EXISTS `$table`;\n";
-    $sql .= $row2['Create Table'] . ";\n\n";
-
-    // Dữ liệu bảng
-    $stmt3 = $pdo->query("SELECT * FROM `$table`");
-    while ($row3 = $stmt3->fetch(PDO::FETCH_ASSOC)) {
-      $cols = array_map(fn($col) => "`" . str_replace("`", "``", $col) . "`", array_keys($row3));
-      $vals = array_map(fn($val) => $val === null ? "NULL" : $pdo->quote($val), array_values($row3));
-      $sql .= "INSERT INTO `$table` (" . implode(", ", $cols) . ") VALUES (" . implode(", ", $vals) . ");\n";
-    }
-    $sql .= "\n";
-  }
-
-  $sql .= "SET FOREIGN_KEY_CHECKS=1;\n";
-
-  // Xuất file
-  $fileName = "backup_" . date('Y-m-d_H-i-s') . ".sql";
-  header('Content-Type: application/octet-stream');
-  header('Content-Disposition: attachment; filename="' . $fileName . '"');
-  header('Content-Length: ' . strlen($sql));
-  echo $sql;
-  exit;
-} catch (PDOException $e) {
-  die("Lỗi kết nối database: " . $e->getMessage());
+// ====== Cấu hình ======
+$backupDir = __DIR__ . '/backups';
+if (!is_dir($backupDir)) {
+  mkdir($backupDir, 0777, true);
 }
+
+$dbName    = $config['database']['dbname'] ?? 'database';
+$dateTime  = date('Y-m-d_H-i-s');
+$fileName  = "db_{$dbName}_{$dateTime}.sql"; // Giờ VN chính xác
+$filePath  = $backupDir . '/' . $fileName;
+
+// ====== Lấy danh sách bảng ======
+$tables = [];
+$result = $db->select("SHOW TABLES");
+while ($row = $result->fetch_array()) {
+  $tables[] = $row[0];
+}
+
+// ====== Bắt đầu xuất dữ liệu ======
+$sqlDump  = "-- Database: {$dbName}\n";
+$sqlDump .= "-- Created: " . date('Y-m-d H:i:s') . "\n\n";
+$sqlDump .= "SET FOREIGN_KEY_CHECKS=0;\n\n";
+
+foreach ($tables as $table) {
+  $sqlDump .= "DROP TABLE IF EXISTS `$table`;\n";
+  $resCreate = $db->select("SHOW CREATE TABLE `$table`");
+  $rowCreate = $resCreate->fetch_assoc();
+  $sqlDump .= $rowCreate['Create Table'] . ";\n\n";
+
+  $resData = $db->select("SELECT * FROM `$table`");
+  if ($resData && $resData->num_rows > 0) {
+    $columns = array_keys($resData->fetch_assoc());
+    $insertPrefix = "INSERT INTO `$table` (`" . implode("`, `", $columns) . "`) VALUES\n";
+    $resData->data_seek(0); // Quay lại đầu
+
+    $batchSize = 200; // số dòng / batch
+    $batchRows = [];
+    $count = 0;
+
+    while ($row = $resData->fetch_assoc()) {
+      $vals = array_map(function ($v) use ($db) {
+        return isset($v) ? "'" . $db->link->real_escape_string((string)$v) . "'" : "NULL";
+      }, array_values($row));
+
+      $batchRows[] = "(" . implode(", ", $vals) . ")";
+      $count++;
+
+      if ($count % $batchSize === 0) {
+        $sqlDump .= $insertPrefix . implode(",\n", $batchRows) . ";\n";
+        $batchRows = [];
+      }
+    }
+
+    // Ghi nốt batch cuối
+    if (!empty($batchRows)) {
+      $sqlDump .= $insertPrefix . implode(",\n", $batchRows) . ";\n";
+    }
+
+    $sqlDump .= "\n";
+  }
+}
+
+$sqlDump .= "SET FOREIGN_KEY_CHECKS=1;\n";
+
+// Lưu file
+file_put_contents($filePath, $sqlDump);
+
+// ====== Header chống cache ======
+header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
+header('Pragma: no-cache');
+header('Expires: 0');
+
+// ====== Xuất file tải xuống ======
+header('Content-Type: application/sql');
+header('Content-Disposition: attachment; filename="' . $fileName . '"');
+header('Content-Length: ' . filesize($filePath));
+readfile($filePath);
+exit;

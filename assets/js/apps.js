@@ -43,24 +43,6 @@ NN_FRAMEWORK.Lazys = function () {
     });
   }
 };
-$(document).ready(function () {
-  const path = window.location.pathname;
-
-  let currentFile = "";
-  if (path === "/" || path.endsWith("/")) {
-    currentFile = "index";
-  } else {
-    const fileNameWithExtension = path.split("/").pop();
-    if (fileNameWithExtension === "index" || fileNameWithExtension === "") {
-      currentFile = "index";
-    } else {
-      currentFile = fileNameWithExtension.split(".")[0];
-    }
-  }
-  if (currentFile === "index") {
-    $(".menu-bar-left").addClass("index");
-  }
-});
 
 $(document).ready(function () {
   $(".xemthemnd").click(function () {

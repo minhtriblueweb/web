@@ -1,5 +1,5 @@
 <?php
-echo password_hash('fX*%DaY$p', PASSWORD_DEFAULT);
+// echo password_hash('fX*%DaY$p', PASSWORD_DEFAULT);
 ?>
 <div class="login_blueweb blue-wrap-main">
   <div class="login_blueweb_content">

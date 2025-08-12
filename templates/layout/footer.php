@@ -5,8 +5,9 @@ $footer_static = $db->rawQueryOne("SELECT content$lang FROM tbl_static WHERE typ
 $hotrokhachhang = $db->rawQueryOne("SELECT name$lang,content$lang FROM tbl_static WHERE type = ? AND FIND_IN_SET(?, status) LIMIT 1", ['ho-tro-khach-hang', 'hienthi']);
 $dangkynhantin = $db->rawQueryOne("SELECT name$lang,content$lang FROM tbl_static WHERE type = ? AND FIND_IN_SET(?, status) LIMIT 1", ['dang-ky-nhan-tin', 'hienthi']);
 $hotro247 = $db->rawQueryOne("SELECT name$lang,content$lang FROM tbl_static WHERE type = ? AND FIND_IN_SET(?, status) LIMIT 1", ['ho-tro-247', 'hienthi']);
+$background_footer = $db->rawQueryOne("SELECT `file` FROM tbl_photo WHERE type = ? AND FIND_IN_SET('hienthi', status) LIMIT 1", ['background_footer'])['file'] ?? '';
 ?>
-<div class="footer">
+<div class="footer" style="background: #f2f2f2 url('<?= BASE_ADMIN . UPLOADS . $background_footer ?>') no-repeat center;">
   <div class="footer-article">
     <div class="wrap-content d-flex flex-wrap justify-content-between">
       <div class="footer-banner">

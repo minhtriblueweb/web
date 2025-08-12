@@ -23,7 +23,7 @@ foreach ($menu_list as $v_list) {
 ob_start();
 ?>
 <div class="wrap-content d-flex flex-wrap justify-content-between align-items-center">
-  <div class="menu-bar-left">
+  <div class="menu-bar-left <?= $type == 'index' ? 'index' : '' ?>">
     <p class="title">DANH MỤC SẢN PHẨM</p>
     <div class="box-ul-left">
       <ul>

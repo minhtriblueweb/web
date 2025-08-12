@@ -5,7 +5,6 @@ if (!isset($config['seopage']) || empty($config['seopage']['page']) || !array_ke
 
 if ($act === 'update') {
   $seo_data = $db->rawQueryOne("SELECT * FROM $table WHERE type = ? LIMIT 1", [$type]);
-  if (!$seo_data) $fn->transfer(dulieukhongcothuc, $linkMan, false);
   if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['upload'])) {
     $fn->save_data($_POST['data'], $_FILES, $seo_data['id'], [
       'table'      => $table,

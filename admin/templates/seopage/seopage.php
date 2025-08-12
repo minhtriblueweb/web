@@ -23,21 +23,16 @@
         <div class="form-group">
           <div class="upload-file">
             <p><?= uploadhinhanh ?>:</p>
-            <?php
-            $file = $seo_data['file'] ?? ($_POST['file'] ?? '');
-            if (!empty($file)) {
-            ?>
-              <div class="d-flex align-items-center justify-content-center" style="width:300px; height:200px;">
-                <?= $fn->getImage([
-                  'file' => $file,
-                  'class' => 'img-fluid',
-                  'id' => 'preview-image',
-                  'style' => 'max-height:100%; max-width:100%;',
-                  'alt' => $config['seopage']['page'][$type],
-                  'title' => $config['seopage']['page'][$type]
-                ]) ?>
-              </div>
-            <?php } ?>
+            <div class="d-flex align-items-center justify-content-center" style="width:300px; height:200px;">
+              <?= $fn->getImage([
+                'file' => $seo_data['file'] ?? ($_POST['file'] ?? ''),
+                'class' => 'img-fluid',
+                'id' => 'preview-image',
+                'style' => 'max-height:100%; max-width:100%;',
+                'alt' => $config['seopage']['page'][$type],
+                'title' => $config['seopage']['page'][$type]
+              ]) ?>
+            </div>
             <label class="upload-file-label mb-2 mt-3" for="file">
               <div class="custom-file my-custom-file">
                 <input type="file" class="custom-file-input" name="file" id="file" lang="vi">
@@ -80,7 +75,7 @@
         </div>
       </div>
     </div>
-    <input type="hidden" name="type" id="type" value="<?= $type ?>">
+    <input type="hidden" name="data[type]" id="type" value="<?= $type ?>">
     <input type="hidden" name="data[options][width]" value="<?= $config['seopage']['width'] ?>">
     <input type="hidden" name="data[options][height]" value="<?= $config['seopage']['height'] ?>">
     <input type="hidden" name="data[options][zc]" value="<?= substr($config['seopage']['thumb'], -1) ?? 1 ?>">

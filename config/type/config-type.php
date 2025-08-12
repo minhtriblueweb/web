@@ -19,6 +19,7 @@ $config['seopage']['page'] = array(
   "gioi-thieu" => "Giới thiệu",
   "san-pham" => "Sản phẩm",
   "mua-hang" => "Mua hàng",
+  "chinh-sach" => "Chính sách",
   "huong-dan-choi" => "Hướng dẫn chơi ",
   "tin-tuc" => "Tin tức",
   "lien-he" => "Liên hệ"

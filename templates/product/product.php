@@ -43,12 +43,12 @@
       </div>
     </div>
   <?php endif ?>
+
   <!-- TITLE -->
   <div class="title-list-hot text-center mt-3">
     <h2><?= $productCat["name{$lang}"] ?? $productList["name{$lang}"] ?? $productBrand["name{$lang}"] ?? sanpham ?></h2>
     (<?= $total ?> <?= sanpham ?>)
   </div>
-
 
   <!-- DANH SÁCH SẢN PHẨM -->
   <div class="wrap-main wrap-template w-clear" style="margin: 0 auto !important;">
@@ -79,7 +79,6 @@
       } elseif (!empty($productBrand["content{$lang}"])) {
         $content = $productBrand["content{$lang}"];
       }
-
       if (!empty($content)):
       ?>
         <div class="desc-list mt-4 mb-4">
@@ -100,7 +99,6 @@
           </div>
         </div>
       <?php endif; ?>
-
     </div>
   </div>
 </div>

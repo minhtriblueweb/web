@@ -86,12 +86,10 @@
         </ul>
         <div class="desc-pro-detail content-ck"><?= $rowDetail["desc$lang"] ?></div>
         <div class="btn-pro-contact">
-          <a class="" data-id="100" data-action="addnow"><i class="bi bi-basket2"></i><span><?= themvaogiohang ?> </span></a>
-          <a target="_blank" href="tel:<?= str_replace(' ', '', $hotline) ?>"><i><img src="assets/images/icon-t1.png" alt="Hotline"></i><?= $hotline ?></a>
+          <a target="_blank" href=""><i><img src="assets/images/shopping-cart.png" alt="Hotline"></i><?= themvaogiohang ?></a>
           <a target="_blank" href="https://zalo.me/<?= str_replace(' ', '', $hotline) ?>"><i><img src="assets/images/icon-t2.png" alt="Zalo"></i> Chat zalo</a>
         </div>
       </div>
-
       <div class="policy-detail">
         <?php if (!empty($tieuchi)): ?>
           <?php foreach ($tieuchi as $row_tc): ?>

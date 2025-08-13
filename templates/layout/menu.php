@@ -19,35 +19,44 @@ foreach ($menu_list as $v_list) {
     'select'  => "id, file, id_list, slug$lang, name$lang",
     'id_list' => $v_list['id']
   ]);
-
   $v_list['cats'] = $menu_cat;
   $menuData[] = $v_list;
 }
 ?>
 
-<?php
-ob_start();
-?>
+<?php ob_start(); ?>
 <div class="wrap-content d-flex flex-wrap justify-content-between align-items-center">
+
+  <!-- Menu trái -->
   <div class="menu-bar-left <?= ($type == 'index') ? 'index' : '' ?>">
     <p class="title">DANH MỤC SẢN PHẨM</p>
-    <div class="box-ul-left">
+    <div class="box-ul-left w-100">
       <ul>
         <?php foreach ($menuData as $v_list): ?>
           <li>
-            <a href="<?= $v_list["slug$lang"] ?>" title="<?= $v_list["name$lang"] ?>">
+            <a href=" <?= $v_list["slug$lang"] ?>" title="<?= $v_list["name$lang"] ?>">
               <span>
-                <?= $fn->getImageCustom(['file' => $v_list['file'], 'width' => $optsetting_json["san-pham_list_width"], 'height' => $optsetting_json["san-pham_list_height"], 'zc' => $optsetting_json["san-pham_list_zc"], 'alt' => $v_list["name$lang"], 'title' => $v_list["name$lang"], 'lazy' => false]) ?>
+                <?= $fn->getImageCustom([
+                  'file' => $v_list['file'],
+                  'width' => $optsetting_json["san-pham_list_width"],
+                  'height' => $optsetting_json["san-pham_list_height"],
+                  'zc' => $optsetting_json["san-pham_list_zc"],
+                  'alt' => $v_list["name$lang"],
+                  'title' => $v_list["name$lang"],
+                  'class' => 'me-3',
+                  'lazy' => false
+                ]) ?>
               </span>
               <?= $v_list["name$lang"] ?>
               <?= !empty($v_list['cats']) ? '<i class="fa-solid fa-angle-right"></i>' : '' ?>
             </a>
+
             <?php if (!empty($v_list['cats'])): ?>
               <div class="box-menu-cat-left">
                 <ul>
                   <?php foreach ($v_list['cats'] as $v_cat): ?>
                     <li>
-                      <a class="transition" href="<?= $v_cat["slug$lang"] ?>" title="<?= $v_cat["name$lang"] ?>">
+                      <a href="<?= $v_cat["slug$lang"] ?>" title="<?= $v_cat["name$lang"] ?>">
                         <?= $v_cat["name$lang"] ?>
                       </a>
                     </li>
@@ -61,21 +70,23 @@ ob_start();
     </div>
   </div>
 
-  <!-- Menu ngang bên phải -->
+  <!-- Menu ngang -->
   <ul class="menu-bar">
     <li><a class="transition <?= ($type == 'index') ? 'active' : '' ?>" href="./"><span><i class="fa-solid fa-house"></i></span></a></li>
     <li><a class="transition <?= ($type == 'gioi-thieu') ? 'active' : '' ?>" href="gioi-thieu"><span>Giới thiệu</span></a></li>
     <li><a class="transition <?= ($type == 'mua-hang') ? 'active' : '' ?>" href="mua-hang"><span>Mua hàng</span></a></li>
-    <li><a class="transition"><span>Thương hiệu</span></a>
-      <ul>
-        <?php if (!empty($brand_menu)) : ?>
+    <li>
+      <a class="transition"><span>Thương hiệu</span></a>
+      <?php if (!empty($brand_menu)) : ?>
+        <ul>
           <?php foreach ($brand_menu as $b) : ?>
-            <li><a href="<?= htmlspecialchars($b["slug$lang"]) ?>"><?= htmlspecialchars($b["name$lang"]) ?></a></li>
+            <li><a href="<?= $b["slug$lang"] ?>"><?= htmlspecialchars($b["name$lang"]) ?></a></li>
           <?php endforeach; ?>
-        <?php endif; ?>
-      </ul>
+        </ul>
+      <?php endif; ?>
     </li>
-    <li><a class="transition <?= in_array($type, ['tin-tuc', 'huong-dan-choi']) ? 'active' : '' ?>"><span>Blog</span></a>
+    <li>
+      <a class="transition <?= in_array($type, ['tin-tuc', 'huong-dan-choi']) ? 'active' : '' ?>"><span>Blog</span></a>
       <ul>
         <li><a href="tin-tuc">Tin tức</a></li>
         <li><a href="huong-dan-choi">Hướng dẫn chơi</a></li>
@@ -84,6 +95,7 @@ ob_start();
     <li><a class="transition <?= ($type == 'lien-he') ? 'active' : '' ?>" href="lien-he"><span>Liên hệ</span></a></li>
   </ul>
 </div>
+
 <?php $menuHtml = ob_get_clean(); ?>
 <div class="menu"><?= $menuHtml ?></div>
 <div class="menu-fixed"><?= $menuHtml ?></div>

@@ -631,6 +631,40 @@ NN_FRAMEWORK.SlickPage = function () {
       ],
     });
   }
+
+  if (isExist($(".slick-brand"))) {
+    $(".slick-brand").slick({
+      slidesToShow: 8,
+      slidesToScroll: 4,
+      arrows: true,
+      prevArrow: $(".slick-prev-btn"),
+      nextArrow: $(".slick-next-btn"),
+      dots: false,
+      autoplay: true,
+      infinite: true,
+      speed: 500,
+      responsive: [
+        {
+          breakpoint: 992,
+          settings: {
+            slidesToShow: 8
+          }
+        },
+        {
+          breakpoint: 768,
+          settings: {
+            slidesToShow: 4
+          }
+        },
+        {
+          breakpoint: 480,
+          settings: {
+            slidesToShow: 2
+          }
+        }
+      ]
+    });
+  }
   if (isExist($(".slick-pro-detail"))) {
     var slideCount = $(".slick-pro-detail > div").length;
 

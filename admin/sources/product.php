@@ -8,6 +8,7 @@ $perPage = 10;
 $keyword = $_GET['keyword'] ?? '';
 $id_list = $_GET['id_list'] ?? '';
 $id_cat  = $_GET['id_cat'] ?? '';
+$id_brand  = $_GET['id_brand'] ?? '';
 switch ($act) {
   case 'man':
     viewMans();
@@ -22,6 +23,11 @@ switch ($act) {
   case 'man_cat':
     viewCats();
     $template = "product/cat/product_man_cat";
+    break;
+
+  case 'man_brand':
+    viewBrands();
+    $template = "product/brand/product_man_brand";
     break;
 
   case 'form':
@@ -39,6 +45,11 @@ switch ($act) {
     $template = "product/cat/product_form_cat";
     break;
 
+  case 'form_brand':
+    saveBrand();
+    $template = "product/brand/product_form_brand";
+    break;
+
   case 'delete':
     deleteMan();
     break;
@@ -49,6 +60,10 @@ switch ($act) {
 
   case 'delete_cat':
     deleteCat();
+    break;
+
+  case 'delete_brand':
+    deleteBrand();
     break;
 
   case 'delete_multiple':
@@ -63,13 +78,17 @@ switch ($act) {
     deleteMultipleCat();
     break;
 
+  case 'delete_multiple_brand':
+    deleteMultipleBrand();
+    break;
+
   default:
     $fn->transfer(trangkhongtontai, "index.php", false);
     break;
 }
 function viewMans()
 {
-  global $fn, $table, $curPage, $perPage, $lang, $type, $id_list, $id_cat, $keyword, $paging, $show_data;
+  global $fn, $table, $curPage, $perPage, $lang, $type, $id_list, $id_cat, $id_brand, $keyword, $paging, $show_data;
   $table = 'tbl_product';
   $options = [
     'table'       => $table,
@@ -79,6 +98,7 @@ function viewMans()
       LEFT JOIN tbl_product_list c1 ON p.id_list = c1.id",
     'id_list'     => $id_list,
     'id_cat'      => $id_cat,
+    'id_brand'      => $id_brand,
     'select'      => "p.*, c1.name{$lang} AS name_list, c2.name{$lang} AS name_cat",
     'keyword'     => $keyword,
     'pagination'  => [$perPage, $curPage]
@@ -108,6 +128,20 @@ function viewCats()
   $options = [
     'table' => $table,
     'id_list' => $id_list,
+    'keyword' => $keyword,
+    'pagination'  => [$perPage, $curPage]
+  ];
+  $total = $fn->count_data($options);
+  $show_data = $fn->show_data($options);
+  $paging = $fn->pagination($total, $perPage, $curPage);
+}
+
+function viewBrands()
+{
+  global $fn, $table, $curPage, $perPage, $keyword, $paging, $show_data;
+  $table = 'tbl_product_brand';
+  $options = [
+    'table' => $table,
     'keyword' => $keyword,
     'pagination'  => [$perPage, $curPage]
   ];
@@ -196,6 +230,33 @@ function saveCat()
     $seo_data = $db->rawQueryOne("SELECT * FROM tbl_seo WHERE `id_parent` = ? AND `type` = ? AND `act` = ?", [$id, $type, $act]);
   }
 }
+
+function saveBrand()
+{
+  global $db, $fn, $table, $linkProduct, $type, $config, $id, $result, $seo_data;
+  $table = 'tbl_product_brand';
+  $act = 'man_brand';
+  $linkMan = "$linkProduct&act=$act";
+  $id = isset($_GET['id']) && is_numeric($_GET['id']) ? (int)$_GET['id'] : null;
+  if ($_SERVER['REQUEST_METHOD'] === 'POST' && (isset($_POST['add']) || isset($_POST['edit']))) {
+    $fn->save_data($_POST['data'] ?? [], $_FILES, $id, [
+      'table'          => $table,
+      'type'           => $type,
+      'act'            => $act,
+      'redirect'       => $linkMan,
+      'convert_webp'   => $config['product'][$type]['convert_webp_brand'],
+      'enable_slug'    => $config['product'][$type]['slug_brand'],
+      'enable_seo'     => $config['product'][$type]['seo_brand'],
+      'enable_gallery' => $config['product'][$type]['gallery_brand']
+    ]);
+  }
+  $result = $seo_data = [];
+  if (!empty($id)) {
+    $result = $db->rawQueryOne("SELECT * FROM `$table` WHERE id = ?", [$id]);
+    if (!$result) $fn->transfer(dulieukhongcothuc, $linkMan, false);
+    $seo_data = $db->rawQueryOne("SELECT * FROM tbl_seo WHERE `id_parent` = ? AND `type` = ? AND `act` = ?", [$id, $type, $act]);
+  }
+}
 function deleteMan()
 {
   global $fn, $linkProduct, $type, $config;
@@ -232,6 +293,19 @@ function deleteCat()
     'delete_gallery' => $config['product'][$type]['gallery_cat']
   ]);
 }
+
+function deleteBrand()
+{
+  global $fn, $linkProduct, $type, $config;
+  $fn->delete_data([
+    'id'             => (int)$_GET['id'],
+    'table'          => 'tbl_product_brand',
+    'type'           => $type,
+    'redirect'       => "$linkProduct&act=man_brand",
+    'delete_seo'     => $config['product'][$type]['seo_brand'],
+    'delete_gallery' => $config['product'][$type]['gallery_brand']
+  ]);
+}
 function deleteMultipleMan()
 {
   global $fn, $linkProduct, $type, $config;
@@ -266,5 +340,18 @@ function deleteMultipleCat()
     'redirect'       => "$linkProduct&act=man_cat",
     'delete_seo'     => $config['product'][$type]['seo_cat'],
     'delete_gallery' => $config['product'][$type]['gallery_cat']
+  ]);
+}
+
+function deleteMultipleBrand()
+{
+  global $fn, $linkProduct, $type, $config;
+  $fn->deleteMultiple_data([
+    'listid'         => $_GET['listid'],
+    'table'          => 'tbl_product_brand',
+    'type'           => $type,
+    'redirect'       => "$linkProduct&act=man_brand",
+    'delete_seo'     => $config['product'][$type]['seo_brand'],
+    'delete_gallery' => $config['product'][$type]['gallery_brand']
   ]);
 }

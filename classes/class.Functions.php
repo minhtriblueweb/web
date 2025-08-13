@@ -88,6 +88,7 @@ class Functions
       'id'         => '=',
       'id_list'    => '=',
       'id_cat'     => '=',
+      'id_brand'   => '=',
       'id_parent'  => '=',
       'type'       => '=',
       'exclude_id' => '!='
@@ -130,7 +131,7 @@ class Functions
     }
     $result = $this->db->rawQueryArray($sql, $whereData['params']);
     if (!empty($options['limit']) && $options['limit'] == 1) {
-      return $result[0] ?? null;
+      return $result[0] ?? [];
     }
     return $result;
   }
@@ -572,6 +573,7 @@ class Functions
     $params = [];
     $where = ' WHERE 1';
     $name = $id = '';
+
     if (str_contains($table, '_list')) {
       $name = $id = 'id_list';
     } elseif (str_contains($table, '_cat')) {
@@ -588,9 +590,17 @@ class Functions
         $where .= ' AND id_cat = ?';
         $params[] = (int)$id_cat;
       }
+    } elseif (str_contains($table, '_brand')) {
+      $name = $id = 'id_brand';
+      $type = $_REQUEST['type'] ?? '';
+      if ($type !== '') {
+        $where .= ' AND type = ?';
+        $params[] = $type;
+      }
     } else {
       $name = $id = 'id';
     }
+
     $rows = $this->db->rawQuery("SELECT id, namevi FROM `$table` $where ORDER BY numb, id DESC", $params);
     $str = '<select id="' . $id . '" name="data[' . $name . ']" onchange="onchangeCategory($(this))" class="form-control filter-category select2">';
     $str .= '<option value="0">' . htmlspecialchars($title_select) . '</option>';
@@ -605,13 +615,45 @@ class Functions
     $str .= '</select>';
     return $str;
   }
+
   public function getAjaxCategory($table = '', $selectedId = 0, $id_list = null, $id_cat = null, $title_select = chondanhmuc)
   {
     $table = preg_replace('/[^a-zA-Z0-9_]/', '', $table);
     $params = [];
     $where = ' WHERE 1';
     $class = 'form-control select2 select-category';
-    $levels = ['_list' => ['field' => 'id_list', 'data_level' => '0', 'data_table' => 'tbl_product_cat', 'data_child' => 'id_cat', 'filters' => []], '_cat' => ['field' => 'id_cat', 'data_level' => '1', 'data_table' => 'tbl_product_item', 'data_child' => 'id_item', 'filters' => ['id_list' => $id_list]], '_item' => ['field' => 'id_item', 'data_level' => '2', 'data_table' => '', 'data_child' => '', 'filters' => ['id_list' => $id_list, 'id_cat' => $id_cat]]];
+
+    $levels = [
+      '_list' => [
+        'field' => 'id_list',
+        'data_level' => '0',
+        'data_table' => 'tbl_product_cat',
+        'data_child' => 'id_cat',
+        'filters' => []
+      ],
+      '_cat' => [
+        'field' => 'id_cat',
+        'data_level' => '1',
+        'data_table' => 'tbl_product_item',
+        'data_child' => 'id_item',
+        'filters' => ['id_list' => $id_list]
+      ],
+      '_item' => [
+        'field' => 'id_item',
+        'data_level' => '2',
+        'data_table' => '',
+        'data_child' => '',
+        'filters' => ['id_list' => $id_list, 'id_cat' => $id_cat]
+      ],
+      '_brand' => [
+        'field' => 'id_brand',
+        'data_level' => '',
+        'data_table' => '',
+        'data_child' => '',
+        'filters' => ['type' => $_REQUEST['type'] ?? '']
+      ]
+    ];
+
     $matched = null;
     foreach ($levels as $key => $conf) {
       if (str_contains($table, $key)) {
@@ -619,21 +661,26 @@ class Functions
         break;
       }
     }
+
     if (!$matched) {
       $field = $name = 'id';
       $data_level = $data_table =  $data_child = '';
     } else {
       $field = $name = $matched['field'];
-      $data_level = 'data-level="' . $matched['data_level'] . '"';
-      $data_table = 'data-table="' . $matched['data_table'] . '"';
-      $data_child = 'data-child="' . $matched['data_child'] . '"';
+      $data_level = $matched['data_level'] !== '' ? 'data-level="' . $matched['data_level'] . '"' : '';
+      $data_table = $matched['data_table'] !== '' ? 'data-table="' . $matched['data_table'] . '"' : '';
+      $data_child = $matched['data_child'] !== '' ? 'data-child="' . $matched['data_child'] . '"' : '';
       foreach ($matched['filters'] as $filterField => $filterValue) {
-        if ($filterValue > 0) {
+        if ($filterValue !== '' && $filterValue > 0) {
           $where .= " AND {$filterField} = ?";
+          $params[] = $filterValue;
+        } elseif ($filterField === 'type' && $filterValue !== '') {
+          $where .= " AND type = ?";
           $params[] = $filterValue;
         }
       }
     }
+
     $rows = $this->db->rawQuery("SELECT id, namevi FROM `$table` $where ORDER BY numb, id DESC", $params);
     $str = '<select id="' . $field . '" name="data[' . $name . ']" ' . $data_level . ' ' . $data_table . ' ' . $data_child . ' class="' . $class . '">';
     $str .= '<option value="0">' . htmlspecialchars($title_select) . '</option>';
@@ -648,6 +695,7 @@ class Functions
     $str .= '</select>';
     return $str;
   }
+
 
   public function transfer($msg, $page, $numb = true)
   {

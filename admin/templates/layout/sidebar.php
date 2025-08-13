@@ -34,6 +34,15 @@ $sidebarMenu = [
             ];
           }
 
+          if (!empty($item['title_main_brand'])) {
+            $linkMan = "?page=product&type=$type&act=man_brand";
+            $linkForm = "?page=product&type=$type&act=form_brand";
+            $children[] = [
+              'title'  => $item['title_main_brand'],
+              'active' => [$linkMan, $linkForm]
+            ];
+          }
+
           if (!empty($item['title_main'])) {
             $linkMan = "?page=product&type=$type&act=man";
             $linkForm = "?page=product&type=$type&act=form";

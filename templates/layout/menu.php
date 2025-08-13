@@ -6,6 +6,12 @@ $menu_list = $fn->show_data([
   'select' => "id, file, slug$lang, name$lang"
 ]);
 
+$brand_menu = $fn->show_data([
+  'table'  => 'tbl_product_brand',
+  'status' => 'hienthi',
+  'select' => "id,slug$lang, name$lang"
+]);
+
 foreach ($menu_list as $v_list) {
   $menu_cat = $fn->show_data([
     'table'   => 'tbl_product_cat',
@@ -23,7 +29,7 @@ foreach ($menu_list as $v_list) {
 ob_start();
 ?>
 <div class="wrap-content d-flex flex-wrap justify-content-between align-items-center">
-  <div class="menu-bar-left <?= $type == 'index' ? 'index' : '' ?>">
+  <div class="menu-bar-left <?= ($type == 'index') ? 'index' : '' ?>">
     <p class="title">DANH MỤC SẢN PHẨM</p>
     <div class="box-ul-left">
       <ul>
@@ -60,8 +66,21 @@ ob_start();
     <li><a class="transition <?= ($type == 'index') ? 'active' : '' ?>" href="./"><span><i class="fa-solid fa-house"></i></span></a></li>
     <li><a class="transition <?= ($type == 'gioi-thieu') ? 'active' : '' ?>" href="gioi-thieu"><span>Giới thiệu</span></a></li>
     <li><a class="transition <?= ($type == 'mua-hang') ? 'active' : '' ?>" href="mua-hang"><span>Mua hàng</span></a></li>
-    <li><a class="transition <?= ($type == 'huong-dan-choi') ? 'active' : '' ?>" href="huong-dan-choi"><span>Hướng dẫn chơi</span></a></li>
-    <li><a class="transition <?= ($type == 'tin-tuc') ? 'active' : '' ?>" href="tin-tuc"><span>Tin tức</span></a></li>
+    <li><a class="transition"><span>Thương hiệu</span></a>
+      <ul>
+        <?php if (!empty($brand_menu)) : ?>
+          <?php foreach ($brand_menu as $b) : ?>
+            <li><a href="<?= htmlspecialchars($b["slug$lang"]) ?>"><?= htmlspecialchars($b["name$lang"]) ?></a></li>
+          <?php endforeach; ?>
+        <?php endif; ?>
+      </ul>
+    </li>
+    <li><a class="transition <?= in_array($type, ['tin-tuc', 'huong-dan-choi']) ? 'active' : '' ?>"><span>Blog</span></a>
+      <ul>
+        <li><a href="tin-tuc">Tin tức</a></li>
+        <li><a href="huong-dan-choi">Hướng dẫn chơi</a></li>
+      </ul>
+    </li>
     <li><a class="transition <?= ($type == 'lien-he') ? 'active' : '' ?>" href="lien-he"><span>Liên hệ</span></a></li>
   </ul>
 </div>

@@ -27,6 +27,7 @@ $requick = array(
   array("tbl" => "product", "source" => "product", "type" => "san-pham", "field" => "id"),
   array("tbl" => "product_list", "source" => "product", "type" => "san-pham", "field" => "idl"),
   array("tbl" => "product_cat", "source" => "product", "type" => "san-pham", "field" => "idc"),
+  array("tbl" => "product_brand", "source" => "product", "type" => "san-pham", "slug" => "thuong-hieu", "field" => "idb"),
 
   // News routes
   array("tbl" => "news", "source" => "news", "type" => "tin-tuc", "field" => "id", "slug" => "tin-tuc", "titleMain" => "Tin Tức"),
@@ -93,12 +94,6 @@ switch ($type) {
     $template = "static/static";
     $seo->set('type', 'article');
     $titleMain = $titleMain ?: "Hướng dẫn mua hàng";
-    break;
-
-  case 'thanh-toan':
-    $template = "static/static";
-    $seo->set('type', 'article');
-    $titleMain = $titleMain ?: "Phương thức thanh toán";
     break;
 
   case 'thanh-toan':

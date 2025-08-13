@@ -33,12 +33,21 @@ $linkGalleryForm  = "index.php?page=gallery&act=form&type=$type&id=";
     </div>
   </div>
   <div class="card-footer form-group-category text-sm bg-light row">
-    <div class="form-group col-xl-2 col-lg-3 col-md-4 col-sm-4 mb-2">
-      <?= $fn->getLinkCategory('tbl_product_list',  $_GET['id_list'] ?? '') ?>
-    </div>
-    <div class="form-group col-xl-2 col-lg-3 col-md-4 col-sm-4 mb-2">
-      <?= $fn->getLinkCategory('tbl_product_cat',  $_GET['id_cat'] ?? '') ?>
-    </div>
+    <?php if (!empty($config['product'][$type]['list'])) : ?>
+      <div class="form-group col-xl-2 col-lg-3 col-md-4 col-sm-4 mb-2">
+        <?= $fn->getLinkCategory('tbl_product_list',  $_GET['id_list'] ?? '') ?>
+      </div>
+    <?php endif; ?>
+    <?php if (!empty($config['product'][$type]['cat'])) : ?>
+      <div class="form-group col-xl-2 col-lg-3 col-md-4 col-sm-4 mb-2">
+        <?= $fn->getLinkCategory('tbl_product_cat',  $_GET['id_cat'] ?? '') ?>
+      </div>
+    <?php endif; ?>
+    <?php if (!empty($config['product'][$type]['brand'])) : ?>
+      <div class="form-group col-xl-2 col-lg-3 col-md-4 col-sm-4 mb-2">
+        <?= $fn->getLinkCategory('tbl_product_brand',  $_GET['id_brand'] ?? '', 'Chọn Hãng') ?>
+      </div>
+    <?php endif; ?>
   </div>
   <div class="card card-primary card-outline text-sm mb-0">
     <div class="card-header">

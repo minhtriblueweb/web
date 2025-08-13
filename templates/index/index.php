@@ -99,6 +99,22 @@
   <?php endforeach; ?>
 </div>
 
+<?php if (!empty($brand)): ?>
+  <div class="wrap-brand">
+    <div class="wrap-content">
+      <div class="title-main">
+        <h2>THƯƠNG HIỆU NỔI BẬT</h2>
+      </div>
+      <div class="slick-brand slick-d-none">
+        <?php foreach ($brand as $b) : ?>
+          <a class="scale-img" href="<?= $b["slug$lang"] ?>" title="<?= $b["name$lang"] ?>">
+            <?= $fn->getImageCustom(['file' => $b['file'], 'width' => $optsetting_json["san-pham_brand_width"], 'height' => $optsetting_json["san-pham_brand_height"], 'zc' => $optsetting_json["san-pham_brand_zc"], 'alt' => $b["name$lang"], 'title' => $b["name$lang"], 'lazy' => true]) ?>
+          </a>
+        <?php endforeach; ?>
+      </div>
+    </div>
+  </div>
+<?php endif; ?>
 <?php if (!empty($feedback)): ?>
   <div class="wrap-feedback" data-aos="fade-up" data-aos-duration="500">
     <div class="wrap-content">

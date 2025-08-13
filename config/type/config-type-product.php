@@ -7,7 +7,7 @@ $config['product'][$type]['list'] = true;
 $config['product'][$type]['cat'] = true;
 $config['product'][$type]['item'] = true;
 $config['product'][$type]['sub'] = false;
-$config['product'][$type]['brand'] = false;
+$config['product'][$type]['brand'] = true;
 $config['product'][$type]['color'] = false;
 $config['product'][$type]['size'] = false;
 $config['product'][$type]['tags'] = false;
@@ -130,18 +130,25 @@ $config['product'][$type]['height_sub'] = $config['size-img'][$type]['sub']['hei
 $config['product'][$type]['thumb_sub'] = '100x' . round(100 / ($config['product'][$type]['width_sub'] / $config['product'][$type]['height_sub'])) . 'x1';
 $config['product'][$type]['img_type_sub'] = '.jpg|.gif|.png|.jpeg|.gif';
 $config['size-img'][$type]['sub']['active'] = false;
+
 /* Sản phẩm (Hãng) */
-/*$config['product'][$type]['title_main_brand'] = $config['size-img'][$type]['brand']['title'] = "Hãng sản phẩm";
+$config['product'][$type]['title_main_brand'] = $config['size-img'][$type]['brand']['title'] = "Hãng sản phẩm";
 $config['product'][$type]['images_brand'] = true;
 $config['product'][$type]['show_images_brand'] = true;
 $config['product'][$type]['slug_brand'] = true;
-$config['product'][$type]['check_brand'] = array("noibat" => "Nổi bật", "hienthi" => "Hiển thị");
+$config['product'][$type]['check_brand'] = array("hienthi" => "Hiển thị", "noibat" => "Nổi bật");
+$config['product'][$type]['desc_brand'] = false;
+$config['product'][$type]['desc_cke_brand'] = false;
+$config['product'][$type]['content_brand'] = false;
+$config['product'][$type]['content_cke_brand'] = true;
 $config['product'][$type]['seo_brand'] = true;
 $config['product'][$type]['width_brand'] = $config['size-img'][$type]['brand']['width'] = 150;
 $config['product'][$type]['height_brand'] = $config['size-img'][$type]['brand']['height'] = 150;
 $config['product'][$type]['thumb_brand'] = '100x100x1';
 $config['product'][$type]['img_type_brand'] = '.jpg|.gif|.png|.jpeg|.gif';
-$config['size-img'][$type]['brand']['active'] = false;*/
+$config['size-img'][$type]['brand']['active'] = true;
+
+
 /* Thư viện ảnh */
 // $type = "album";
 // $config['product'][$type]['title_main'] = $config['size-img'][$type]['man']['title'] = "Album";

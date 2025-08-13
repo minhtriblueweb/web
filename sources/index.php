@@ -24,6 +24,11 @@ $banchay = $fn->show_data([
   'select' => "id, file, slug$lang, name$lang, sale_price, regular_price, views",
   'limit' => 10
 ]);
+$brand = $fn->show_data([
+  'table'  => 'tbl_product_brand',
+  'status' => 'hienthi,noibat',
+  'select' => "id,slug$lang,name$lang,file"
+]);
 
 // SEO
 $seo_data = $db->rawQueryOne("SELECT * FROM tbl_seopage WHERE type = ?", ['trang-chu']);

@@ -32,7 +32,7 @@
   <ul>
     <li class="<?= ($type == 'index') ? 'active' : '' ?>"><a href="./">Trang chủ</a></li>
     <li class="<?= ($type == 'gioi-thieu') ? 'active' : '' ?>"><a href="gioi-thieu">Giới thiệu</a></li>
-    <li class="<?= ($type == 'san-pham') ? 'active' : '' ?>">
+    <li class="">
       <a href="san-pham">Sản phẩm</a>
       <?php if (!empty($menuData)): ?>
         <ul>
@@ -46,6 +46,18 @@
                   <?php endforeach; ?>
                 </ul>
               <?php endif; ?>
+            </li>
+          <?php endforeach; ?>
+        </ul>
+      <?php endif; ?>
+    </li>
+    <li class="">
+      <a>Thương hiệu</a>
+      <?php if (!empty($brand_menu)): ?>
+        <ul>
+          <?php foreach ($brand_menu as $b): ?>
+            <li>
+              <a href="<?= $b["slug$lang"] ?>"><?= $b["name$lang"] ?></a>
             </li>
           <?php endforeach; ?>
         </ul>

@@ -967,6 +967,28 @@ img:not([src]) {
 .menu-bar li a.active {
   pointer-events: none;
 }
+.menu-bar li:hover ul {
+  opacity: 1;
+  visibility: visible;
+  transform: perspective(600px) rotateX(0deg);
+}
+
+.menu-bar li ul {
+  max-height: 400px;
+  overflow: auto;
+  position: absolute;
+  min-width: 250px;
+  margin-top: -5px;
+  padding: 0.75rem 0;
+  background-color: #fff;
+  border-radius: 0.25rem;
+  box-shadow: 1px 1px 15px rgb(0 0 0 / 15%);
+  transform-origin: center top 0px;
+  transform: matrix3d(1, 0, 0, 0, 0, 0, 1, 0.008, 0, -1, 0, 0, 0, 0, 0, 1);
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.5s;
+}
 
 .menu-bar-left {
   width: 300px;
@@ -1009,7 +1031,8 @@ img:not([src]) {
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
 }
 
-.box-ul-left ul {
+.box-ul-left ul,
+.menu-bar li ul {
   padding: 0;
   margin: 0;
   background: #fff;
@@ -1045,7 +1068,8 @@ img:not([src]) {
   background: var(--main-color);
 }
 
-.box-ul-left > ul > li a {
+.box-ul-left > ul > li a,
+.menu-bar li ul a {
   display: flex;
   position: relative;
   align-items: center;
@@ -1078,7 +1102,8 @@ img:not([src]) {
 }
 
 .box-ul-left > ul > li:hover i,
-.box-ul-left > ul li:hover > a {
+.box-ul-left > ul li:hover > a,
+.menu-bar ul li:hover a {
   color: var(--main-color);
 }
 

@@ -105,20 +105,32 @@
             </div>
           </div>
           <div class="card-body">
+
             <div class="form-group-category row">
-              <div class="form-group col-xl-6 col-sm-4">
-                <label class="d-block" for="id_list"><?= danhmuccap1 ?>:</label>
-                <?= $fn->getAjaxCategory('tbl_product_list', $_POST['id_list'] ?? $result['id_list'] ?? '') ?>
-              </div>
-              <div class="form-group col-xl-6 col-sm-4">
-                <label class="d-block" for="id_cat"><?= danhmuccap2 ?>:</label>
-                <?= $fn->getAjaxCategory(
-                  'tbl_product_cat',
-                  $_POST['id_cat'] ?? $result['id_cat'] ?? '',
-                  $_POST['id_list'] ?? $result['id_list'] ?? '',
-                ) ?>
-              </div>
+              <?php if (!empty($config['product'][$type]['list'])) : ?>
+                <div class="form-group col-xl-6 col-sm-4">
+                  <label class="d-block" for="id_list"><?= danhmuccap1 ?>:</label>
+                  <?= $fn->getAjaxCategory('tbl_product_list', $_POST['id_list'] ?? $result['id_list'] ?? '') ?>
+                </div>
+              <?php endif; ?>
+              <?php if (!empty($config['product'][$type]['cat'])) : ?>
+                <div class="form-group col-xl-6 col-sm-4">
+                  <label class="d-block" for="id_cat"><?= danhmuccap2 ?>:</label>
+                  <?= $fn->getAjaxCategory(
+                    'tbl_product_cat',
+                    $_POST['id_cat'] ?? $result['id_cat'] ?? '',
+                    $_POST['id_list'] ?? $result['id_list'] ?? ''
+                  ) ?>
+                </div>
+              <?php endif; ?>
+              <?php if (!empty($config['product'][$type]['brand'])) : ?>
+                <div class="form-group col-xl-6 col-sm-4">
+                  <label class="d-block" for="id_brand"><?= danhmuchang ?>:</label>
+                  <?= $fn->getAjaxCategory('tbl_product_brand', $_POST['id_brand'] ?? $result['id_brand'] ?? '') ?>
+                </div>
+              <?php endif; ?>
             </div>
+
           </div>
         </div>
         <div class="card card-primary card-outline text-sm">

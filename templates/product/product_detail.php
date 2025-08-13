@@ -48,6 +48,14 @@
               <div class="attr-content-pro-detail"><?= $rowDetail['code'] ?></div>
             </li>
           <?php endif; ?>
+          <?php if (!empty($productBrand)): ?>
+            <li>
+              <label class="attr-label-pro-detail">Thương hiệu:</label>
+              <div class="attr-content-pro-detail">
+                <a href="<?= $productBrand["slug$lang"] ?>"> <?= $fn->getImageCustom(['file' => $productBrand['file'], 'width' => 30, 'height' => 30, 'zc' => 2, 'alt' => $productBrand["name$lang"], 'title' => $productBrand["name$lang"], 'lazy' => false]) ?></a>
+              </div>
+            </li>
+          <?php endif; ?>
           <li>
             <label class="attr-label-pro-detail"><?= luotxem ?>:</label>
             <div class="attr-content-pro-detail"><?= $rowDetail['views'] ?></div>
@@ -65,9 +73,20 @@
               <?php endif; ?>
             </div>
           </li>
+          <li class="d-flex flex-wrap align-items-center mt-3 mb-3">
+            <label class="attr-label-pro-detail d-block me-2 mb-0">Số lượng:</label>
+            <div class="attr-content-pro-detail d-flex flex-wrap align-items-center justify-content-between">
+              <div class="quantity-pro-detail">
+                <span class="quantity-minus-pro-detail">-</span>
+                <input type="number" class="qty-pro" min="1" value="1" readonly="" fdprocessedid="x3n3no">
+                <span class="quantity-plus-pro-detail">+</span>
+              </div>
+            </div>
+          </li>
         </ul>
         <div class="desc-pro-detail content-ck"><?= $rowDetail["desc$lang"] ?></div>
         <div class="btn-pro-contact">
+          <a class="" data-id="100" data-action="addnow"><i class="bi bi-basket2"></i><span><?= themvaogiohang ?> </span></a>
           <a target="_blank" href="tel:<?= str_replace(' ', '', $hotline) ?>"><i><img src="assets/images/icon-t1.png" alt="Hotline"></i><?= $hotline ?></a>
           <a target="_blank" href="https://zalo.me/<?= str_replace(' ', '', $hotline) ?>"><i><img src="assets/images/icon-t2.png" alt="Zalo"></i> Chat zalo</a>
         </div>
@@ -107,7 +126,9 @@
       </ul>
       <div class="tab-content" id="tabsProDetailContent">
         <div class="tab-pane fade show active" id="info-pro-detail" role="tabpanel">
-          <div class="content-main content-ck" id="toc-content"><?= $fn->decodeHtmlChars($rowDetail["content$lang"]) ?></div>
+          <div class="content-main content-ck" id="toc-content">
+            <?= $fn->decodeHtmlChars($rowDetail["content$lang"]) ?>
+          </div>
         </div>
         <div class="tab-pane fade" id="commentfb-pro-detail" role="tabpanel"></div>
       </div>

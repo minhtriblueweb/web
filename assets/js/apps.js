@@ -44,19 +44,45 @@ NN_FRAMEWORK.Lazys = function () {
   }
 };
 
-$(document).ready(function () {
-  $(".xemthemnd").click(function () {
-    $(".noidung_anhien").addClass("noidung_anhien_active");
-    $(".xemthemnd").hide();
-    $(".anbot").show();
+/* Xem thêm , ẩn bớt nội dung */
+
+$(function () {
+  const collapsedHeight = 300;
+
+  $(".content-toggle").each(function () {
+    const $container = $(this);
+    const $body = $container.find(".content-toggle__body");
+    const $btn = $container.find(".content-toggle__button");
+    const $text = $btn.find(".text");
+
+    if (!$body.length) return;
+
+    const fullHeight = $body[0].scrollHeight;
+
+    if (fullHeight > collapsedHeight) {
+      $body.css({
+        "max-height": collapsedHeight + "px",
+        "overflow": "hidden",
+        "transition": "max-height 0.4s ease"
+      }).append('<div class="content-toggle__fade"></div>');
+
+      $btn.on("click", function () {
+        if ($container.hasClass("content-toggle--active")) {
+          $body.css("max-height", collapsedHeight + "px");
+          $container.removeClass("content-toggle--active");
+          $text.text("Đọc tiếp bài viết");
+        } else {
+          $body.css("max-height", fullHeight + "px");
+          $container.addClass("content-toggle--active");
+          $text.text("Rút gọn");
+        }
+      });
+    } else {
+      $btn.hide();
+    }
   });
-  $(".anbot").click(function () {
-    $(".noidung_anhien").removeClass("noidung_anhien_active");
-    $(".xemthemnd").show();
-    $(".anbot").hide();
-  });
-  $(".anbot").hide();
 });
+
 
 /* Back to top */
 NN_FRAMEWORK.GoTop = function () {

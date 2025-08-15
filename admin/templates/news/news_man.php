@@ -78,7 +78,7 @@ $linkMulti  = "$linkNews&act=delete_multiple";
                       <?= $fn->getImage([
                         'file' => $row['file'],
                         'class' => 'rounded img-preview',
-                        'alt' => $row["name$lang"],
+                        'alt' => $row["name$lang"]
                       ]) ?>
                     </a>
                   </td>

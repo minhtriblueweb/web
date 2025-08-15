@@ -20,7 +20,7 @@
           <?php foreach ($list as $k => $v): ?>
             <div class="item-list-noindex <?= ($v["slug$lang"] === $activeSlug ? 'active' : '') ?>">
               <a title="<?= $v["name$lang"] ?>" href="<?= $v["slug$lang"] ?>">
-                <h3 class="m-0"><?= htmlspecialchars($v["name$lang"]) ?></h3>
+                <h3 class="m-0 text-capitalize"><?= htmlspecialchars($v["name$lang"]) ?></h3>
               </a>
             </div>
           <?php endforeach; ?>
@@ -81,22 +81,16 @@
       }
       if (!empty($content)):
       ?>
-        <div class="desc-list mt-4 mb-4">
-          <div class="noidung_anhien">
-            <div class="wrap-toc">
-              <div class="meta-toc2">
-                <a class="mucluc-dropdown-list_button">Mục Lục</a>
-                <div class="box-readmore">
-                  <ul class="toc-list" data-toc="article" data-toc-headings="h1, h2, h3"></ul>
-                </div>
-              </div>
-            </div>
-            <div class="content-main content-ck pro_tpl" id="toc-content">
+        <div class="content-toggle mt-3 mb-3 .shadow-sm">
+          <div class="content-toggle__body-wrapper">
+            <div class="content-toggle__body content-main content-ck pro_tpl" id="toc-content">
               <?= $fn->decodeHtmlChars($content) ?>
             </div>
-            <p class="anhien xemthemnd">Xem thêm nội dung</p>
-            <p class="anhien anbot">Ẩn bớt nội dung</p>
           </div>
+          <p class="content-toggle__button">
+            <span class="text">Đọc tiếp bài viết</span>
+            <i class="fas fa-chevron-down"></i>
+          </p>
         </div>
       <?php endif; ?>
     </div>

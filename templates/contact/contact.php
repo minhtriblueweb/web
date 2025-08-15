@@ -14,42 +14,53 @@
             <div class="social">
               <p class="text-uppercase"><?= dangkynhantin ?></p>
             </div>
-            <div class="form-row">
-              <div class="contact-input col-sm-6">
-                <input type="text" class="form-control text-sm" id="fullname-contact" name="dataContact[fullname]"
-                  placeholder="Họ tên" value="" required="">
-                <div class="invalid-feedback">Vui lòng nhập họ và tên</div>
+            <div class="row-20 row">
+              <div class="contact-input col-sm-6 col-20">
+                <div class="form-floating form-floating-cus">
+                  <input type="text" name="dataContact[fullname]" class="form-control text-sm" id="fullname-contact" placeholder="<?= hoten ?>" value="" required="" fdprocessedid="f1s2yo">
+                  <label for="fullname-contact"><?= hoten ?></label>
+                </div>
+                <div class="invalid-feedback"><?= vuilongnhaphoten ?></div>
               </div>
-              <div class="contact-input col-sm-6">
-                <input type="number" class="form-control text-sm" id="phone-contact" name="dataContact[phone]"
-                  placeholder="Số điện thoại" value="" required="">
-                <div class="invalid-feedback">Vui lòng nhập số điện thoại</div>
+              <div class="contact-input col-sm-6 col-20">
+                <div class="form-floating form-floating-cus">
+                  <input type="number" name="dataContact[phone]" class="form-control text-sm" id="phone-contact" placeholder="<?= dienthoai ?>" value="" required="" fdprocessedid="82xoo">
+                  <label for="phone-contact"><?= dienthoai ?></label>
+                </div>
+                <div class="invalid-feedback"><?= vuilongnhapsodienthoai ?></div>
+              </div>
+              <div class="contact-input col-sm-6 col-20">
+                <div class="form-floating form-floating-cus">
+                  <input type="text" class="form-control text-sm" id="address-contact" name="dataContact[address]" placeholder="<?= diachi ?>" value="" required="" data-gtm-form-interact-field-id="0" fdprocessedid="660gi">
+                  <label for="address-contact"><?= diachi ?></label>
+                </div>
+                <div class="invalid-feedback"><?= vuilongnhapdiachi ?></div>
+              </div>
+              <div class="contact-input col-sm-6 col-20">
+                <div class="form-floating form-floating-cus">
+                  <input type="email" class="form-control text-sm" id="email-contact" name="dataContact[email]" placeholder="Email" value="" required="" fdprocessedid="dwej1">
+                  <label for="email-contact">Email</label>
+                </div>
+                <div class="invalid-feedback"><?= vuilongnhapdiachiemail ?></div>
               </div>
             </div>
-            <div class="form-row">
-              <div class="contact-input col-sm-6">
-                <input type="text" class="form-control text-sm" id="address-contact" name="dataContact[address]"
-                  placeholder="Địa chỉ" value="" required="">
-                <div class="invalid-feedback">Vui lòng nhập địa chỉ</div>
+
+            <div class="contact-input">
+              <div class="form-floating form-floating-cus">
+                <input type="text" class="form-control text-sm" id="subject-contact" name="dataContact[subject]" placeholder="<?= chude ?>" value="" required="" fdprocessedid="v2fyar">
+                <label for="subject-contact"><?= chude ?></label>
               </div>
-              <div class="contact-input col-sm-6">
-                <input type="email" class="form-control text-sm" id="email-contact" name="dataContact[email]"
-                  placeholder="Email" value="" required="">
-                <div class="invalid-feedback">Vui lòng nhập địa chỉ email</div>
-              </div>
+              <div class="invalid-feedback"><?= vuilongnhapchude ?></div>
             </div>
             <div class="contact-input">
-              <input type="text" class="form-control text-sm" id="subject-contact" name="dataContact[subject]"
-                placeholder="Chủ đề" value="" required="">
-              <div class="invalid-feedback">Vui lòng nhập chủ đề</div>
+              <div class="form-floating form-floating-cus">
+                <textarea class="form-control text-sm" id="content-contact" name="dataContact[content]" placeholder="<?= noidung ?>" required=""></textarea>
+                <label for="content-contact"><?= noidung ?></label>
+              </div>
+              <div class="invalid-feedback"><?= vuilongnhapnoidung ?></div>
             </div>
-            <div class="contact-input">
-              <textarea class="form-control text-sm" id="content-contact" name="dataContact[content]"
-                placeholder="Nội dung" required=""></textarea>
-              <div class="invalid-feedback">Vui lòng nhập nội dung</div>
-            </div>
-            <input type="submit" class="btn btn-primary mr-2" name="submit-contact" value="Gửi">
-            <input type="reset" class="btn btn-secondary" value="Nhập lại">
+            <input type="submit" class="btn btn-primary mr-2" name="submit-contact" value="<?= gui ?>">
+            <input type="reset" class="btn btn-secondary" value="<?= nhaplai ?>">
           </form>
         </div>
         <div class="contact-map"><?= $coords_iframe ?></div>

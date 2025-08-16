@@ -86,7 +86,7 @@
         </ul>
         <div class="desc-pro-detail content-ck"><?= $rowDetail["desc$lang"] ?></div>
         <div class="btn-pro-contact">
-          <a target="_blank" href=""><i><img src="assets/images/shopping-cart.png" alt="Hotline"></i><?= themvaogiohang ?></a>
+          <a target="_blank" href=""><i><img class="brightness" src="assets/images/shopping-cart.png"></i><?= themvaogiohang ?></a>
           <a target="_blank" href="https://zalo.me/<?= str_replace(' ', '', $hotline) ?>"><i><img src="assets/images/icon-t2.png" alt="Zalo"></i> Chat zalo</a>
         </div>
       </div>

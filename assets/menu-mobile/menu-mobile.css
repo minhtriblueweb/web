@@ -114,7 +114,7 @@
 
 #menu ul li ul li a {
   padding-left: 30px;
-  text-transform: none;
+  text-transform: capitalize;
   font-weight: normal;
 }
 
@@ -122,7 +122,7 @@
   padding-left: 45px;
 }
 
-/* === Active item giống Gmail === */
+/* === Active item === */
 #menu ul li.active {
   background: #f5f5f5;
   position: relative;

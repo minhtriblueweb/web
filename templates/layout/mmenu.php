@@ -39,10 +39,19 @@
           <?php foreach ($menuData as $v_list): ?>
             <li>
               <a href="<?= $v_list["slug$lang"] ?>"><?= $v_list["name$lang"] ?></a>
-              <?php if (!empty($v_list['cats'])): ?>
+              <?php if (!empty($v_list['cat'])): ?>
                 <ul>
-                  <?php foreach ($v_list['cats'] as $v_cat): ?>
-                    <li><a href="<?= $v_cat["slug$lang"] ?>"><?= $v_cat["name$lang"] ?></a></li>
+                  <?php foreach ($v_list['cat'] as $v_cat): ?>
+                    <li>
+                      <a href="<?= $v_cat["slug$lang"] ?>"><?= $v_cat["name$lang"] ?></a>
+                      <?php if (!empty($v_cat['item'])): ?>
+                        <ul>
+                          <?php foreach ($v_cat['item'] as $v_item): ?>
+                            <li><a href="<?= $v_item["slug$lang"] ?>"><?= $v_item["name$lang"] ?></a></li>
+                          <?php endforeach; ?>
+                        </ul>
+                      <?php endif; ?>
+                    </li>
                   <?php endforeach; ?>
                 </ul>
               <?php endif; ?>

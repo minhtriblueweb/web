@@ -88,6 +88,7 @@ class Functions
       'id'         => '=',
       'id_list'    => '=',
       'id_cat'     => '=',
+      'id_item'     => '=',
       'id_brand'   => '=',
       'id_parent'  => '=',
       'type'       => '=',

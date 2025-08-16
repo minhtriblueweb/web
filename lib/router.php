@@ -27,6 +27,7 @@ $requick = array(
   array("tbl" => "product", "source" => "product", "type" => "san-pham", "field" => "id"),
   array("tbl" => "product_list", "source" => "product", "type" => "san-pham", "field" => "idl"),
   array("tbl" => "product_cat", "source" => "product", "type" => "san-pham", "field" => "idc"),
+  array("tbl" => "product_item", "source" => "product", "type" => "san-pham", "field" => "idi"),
   array("tbl" => "product_brand", "source" => "product", "type" => "san-pham", "slug" => "thuong-hieu", "field" => "idb"),
 
   // News routes

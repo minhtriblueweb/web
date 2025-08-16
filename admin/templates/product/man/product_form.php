@@ -105,7 +105,6 @@
             </div>
           </div>
           <div class="card-body">
-
             <div class="form-group-category row">
               <?php if (!empty($config['product'][$type]['list'])) : ?>
                 <div class="form-group col-xl-6 col-sm-4">
@@ -123,6 +122,17 @@
                   ) ?>
                 </div>
               <?php endif; ?>
+              <?php if (!empty($config['product'][$type]['item'])) : ?>
+                <div class="form-group col-xl-6 col-sm-4">
+                  <label class="d-block" for="id_item"><?= danhmuccap3 ?>:</label>
+                  <?= $fn->getAjaxCategory(
+                    'tbl_product_item',
+                    $_POST['id_item'] ?? $result['id_item'] ?? '',
+                    $_POST['id_cat'] ?? $result['id_cat'] ?? '',
+                    $_POST['id_list'] ?? $result['id_list'] ?? ''
+                  ) ?>
+                </div>
+              <?php endif; ?>
               <?php if (!empty($config['product'][$type]['brand'])) : ?>
                 <div class="form-group col-xl-6 col-sm-4">
                   <label class="d-block" for="id_brand"><?= danhmuchang ?>:</label>
@@ -130,7 +140,6 @@
                 </div>
               <?php endif; ?>
             </div>
-
           </div>
         </div>
         <div class="card card-primary card-outline text-sm">

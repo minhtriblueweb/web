@@ -13,40 +13,36 @@
       $activeSlug = $productCat["slug$lang"] ?? '';
     }
   }
-  if (!empty($list)): ?>
+  if ((!empty($list) && empty($idi)) || !empty($idb)) : ?>
     <div class="wrap-product-list">
       <div class="wrap-content">
         <div class="grid-list-no-index">
-          <?php foreach ($list as $k => $v): ?>
-            <div class="item-list-noindex <?= ($v["slug$lang"] === $activeSlug ? 'active' : '') ?>">
-              <a title="<?= $v["name$lang"] ?>" href="<?= $v["slug$lang"] ?>">
-                <h3 class="m-0 text-capitalize"><?= htmlspecialchars($v["name$lang"]) ?></h3>
-              </a>
-            </div>
-          <?php endforeach; ?>
+          <?php if (!empty($list) && empty($idi)) : ?>
+            <?php foreach ($list as $v): ?>
+              <div class="item-list-noindex <?= ($v["slug$lang"] === $activeSlug ? 'active' : '') ?>">
+                <a title="<?= $v["name$lang"] ?>" href="<?= $v["slug$lang"] ?>">
+                  <h3 class="m-0 text-capitalize"><?= htmlspecialchars($v["name$lang"]) ?></h3>
+                </a>
+              </div>
+            <?php endforeach; ?>
+          <?php elseif (!empty($idb) && !empty($brandAll)) : ?>
+            <?php foreach ($brandAll as $b): ?>
+              <div class="item-list-noindex <?= ($b["slug$lang"] === $productBrand["slug$lang"] ? 'active' : '') ?>">
+                <a class="scale-img" href="<?= $b["slug$lang"] ?>" title="<?= $b["name$lang"] ?>">
+                  <?= $fn->getImageCustom(['file' => $b['file'], 'width' => 100, 'height' => 100, 'zc' => 2, 'alt' => $b["name$lang"], 'title' => $b["name$lang"], 'lazy' => false]) ?>
+                </a>
+              </div>
+            <?php endforeach; ?>
+          <?php endif; ?>
         </div>
       </div>
     </div>
   <?php endif; ?>
-  <?php if (!empty($idb)) : ?>
-    <div class="wrap-product-list">
-      <div class="wrap-content">
-        <div class="grid-list-no-index">
-          <?php foreach ($Brand as $b) : ?>
-            <div class="item-list-noindex <?= ($b["slug$lang"] ===  $productBrand["slug$lang"] ? 'active' : '') ?>">
-              <a class="scale-img" href="<?= $b["slug$lang"] ?>" title="<?= $b["name$lang"] ?>">
-                <?= $fn->getImageCustom(['file' => $b['file'], 'width' => 100, 'height' => 100, 'zc' => 2, 'alt' => $b["name$lang"], 'title' => $b["name$lang"], 'lazy' => false]) ?>
-              </a>
-            </div>
-          <?php endforeach; ?>
-        </div>
-      </div>
-    </div>
-  <?php endif ?>
+
 
   <!-- TITLE -->
   <div class="title-list-hot text-center mt-3">
-    <h2><?= $productCat["name{$lang}"] ?? $productList["name{$lang}"] ?? $productBrand["name{$lang}"] ?? sanpham ?></h2>
+    <h2><?= htmlspecialchars(!empty($titleCate) ? $titleCate : sanpham) ?></h2>
     (<?= $total ?> <?= sanpham ?>)
   </div>
 
@@ -72,12 +68,14 @@
 
       <?php
       $content = '';
-      if (!empty($productList["content{$lang}"])) {
-        $content = $productList["content{$lang}"];
-      } elseif (!empty($productCat["content{$lang}"])) {
-        $content = $productCat["content{$lang}"];
-      } elseif (!empty($productBrand["content{$lang}"])) {
-        $content = $productBrand["content{$lang}"];
+      if (!empty($productList["content$lang"])) {
+        $content = $productList["content$lang"];
+      } elseif (!empty($productCat["content$lang"])) {
+        $content = $productCat["content$lang"];
+      } elseif (!empty($productItem["content$lang"])) {
+        $content = $productItem["content$lang"];
+      } elseif (!empty($productBrand["content$lang"])) {
+        $content = $productBrand["content$lang"];
       }
       if (!empty($content)):
       ?>

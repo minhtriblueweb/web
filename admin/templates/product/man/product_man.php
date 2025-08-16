@@ -43,6 +43,11 @@ $linkGalleryForm  = "index.php?page=gallery&act=form&type=$type&id=";
         <?= $fn->getLinkCategory('tbl_product_cat',  $_GET['id_cat'] ?? '') ?>
       </div>
     <?php endif; ?>
+    <?php if (!empty($config['product'][$type]['item'])) : ?>
+      <div class="form-group col-xl-2 col-lg-3 col-md-4 col-sm-4 mb-2">
+        <?= $fn->getLinkCategory('tbl_product_item',  $_GET['id_item'] ?? '') ?>
+      </div>
+    <?php endif; ?>
     <?php if (!empty($config['product'][$type]['brand'])) : ?>
       <div class="form-group col-xl-2 col-lg-3 col-md-4 col-sm-4 mb-2">
         <?= $fn->getLinkCategory('tbl_product_brand',  $_GET['id_brand'] ?? '', 'Chọn Hãng') ?>
@@ -69,8 +74,6 @@ $linkGalleryForm  = "index.php?page=gallery&act=form&type=$type&id=";
             <?php if (!empty($config['product'][$type]['gallery'])): ?>
               <th class="align-middle">Gallery</th>
             <?php endif; ?>
-            <th class="align-middle"><?= danhmuccap1 ?></th>
-            <th class="align-middle"><?= danhmuccap2 ?></th>
             <?php foreach ($config['product'][$type]['check'] as $attr => $label): ?>
               <th class="align-middle text-center"><?= defined($attr) ? constant($attr) : $attr ?></th>
             <?php endforeach; ?>
@@ -138,12 +141,6 @@ $linkGalleryForm  = "index.php?page=gallery&act=form&type=$type&id=";
                       </div>
                     </td>
                   <?php endif; ?>
-
-                  <!-- Danh mục cấp 1 -->
-                  <td class="align-middle"><?= $row['name_list'] ?? '' ?></td>
-
-                  <!-- Danh mục cấp 2 -->
-                  <td class="align-middle"><?= $row['name_cat'] ?? '' ?></td>
 
                   <?php foreach ($config['product'][$type]['check'] as $attr => $label): ?>
                     <td class="align-middle text-center">

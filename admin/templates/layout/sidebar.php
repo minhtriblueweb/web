@@ -10,55 +10,31 @@ $sidebarMenu = [
     'icon' => 'fas fa-boxes',
     'children' => (function () use ($config) {
       $children = [];
-
       if (!empty($config['product']) && is_array($config['product'])) {
         foreach ($config['product'] as $type => $item) {
-
-          if (!empty($item['title_main_list'])) {
-            $linkListMan  = "?page=product&type=$type&act=man_list";
-            $linkListForm = "?page=product&type=$type&act=form_list";
-
-            $children[] = [
-              'title'  => $item['title_main_list'],
-              'active' => [$linkListMan, $linkListForm]
-            ];
+          foreach (['list', 'cat', 'item', 'sub', 'brand'] as $key) {
+            if (!empty($item[$key])) {
+              $children[] = [
+                'title'  => $item["title_main_$key"],
+                'active' => [
+                  "?page=product&type=$type&act=man_$key",
+                  "?page=product&type=$type&act=form_$key"
+                ]
+              ];
+            }
           }
-
-          if (!empty($item['title_main_cat'])) {
-            $linkCatMan  = "?page=product&type=$type&act=man_cat";
-            $linkCatForm = "?page=product&type=$type&act=form_cat";
-
-            $children[] = [
-              'title'  => $item['title_main_cat'],
-              'active' => [$linkCatMan, $linkCatForm]
-            ];
-          }
-
-          if (!empty($item['title_main_brand'])) {
-            $linkMan = "?page=product&type=$type&act=man_brand";
-            $linkForm = "?page=product&type=$type&act=form_brand";
-            $children[] = [
-              'title'  => $item['title_main_brand'],
-              'active' => [$linkMan, $linkForm]
-            ];
-          }
-
-          if (!empty($item['title_main'])) {
-            $linkMan = "?page=product&type=$type&act=man";
-            $linkForm = "?page=product&type=$type&act=form";
-            $linkGalleryMan = "?page=gallery&type=$type&act=man";
-            $linkGalleryForm = "?page=gallery&type=$type&act=form";
-            $children[] = [
-              'title'  => $item['title_main'],
-              'active' => [$linkMan, $linkForm, $linkGalleryMan, $linkGalleryForm]
-            ];
-          }
+          $linkMan = "?page=product&type=$type&act=man";
+          $linkForm = "?page=product&type=$type&act=form";
+          $linkGalleryMan = "?page=gallery&type=$type&act=man";
+          $linkGalleryForm = "?page=gallery&type=$type&act=form";
+          $children[] = [
+            'title'  => $item['title_main'],
+            'active' => [$linkMan, $linkForm, $linkGalleryMan, $linkGalleryForm]
+          ];
         }
       }
-
       return $children;
     })()
-
   ],
   [
     'title' => 'Danh sách bài viết',

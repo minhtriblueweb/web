@@ -111,6 +111,7 @@ $config['product'][$type]['show_images_item'] = true;
 $config['product'][$type]['slug_item'] = true;
 $config['product'][$type]['check_item'] = array("hienthi" => "Hiển thị");
 $config['product'][$type]['desc_item'] = false;
+$config['product'][$type]['content_cke_item'] = true;
 $config['product'][$type]['seo_item'] = true;
 $config['product'][$type]['width_item'] = $config['size-img'][$type]['item']['width'] = 100;
 $config['product'][$type]['height_item'] = $config['size-img'][$type]['item']['height'] = 100;

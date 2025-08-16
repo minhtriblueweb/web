@@ -1,5 +1,6 @@
 <?php
 $menuData = [];
+
 $menu_list = $fn->show_data([
   'table'  => 'tbl_product_list',
   'status' => 'hienthi,noibat,menu',
@@ -19,11 +20,19 @@ foreach ($menu_list as $v_list) {
     'select'  => "id, file, id_list, slug$lang, name$lang",
     'id_list' => $v_list['id']
   ]);
+  foreach ($menu_cat as &$v_cat) {
+    $menu_item = $fn->show_data([
+      'table'   => 'tbl_product_item',
+      'status'  => 'hienthi',
+      'select'  => "id, file, id_cat, slug$lang, name$lang",
+      'id_cat'  => $v_cat['id']
+    ]);
+    $v_cat['item'] = $menu_item;
+  }
   $v_list['cat'] = $menu_cat;
   $menuData[] = $v_list;
 }
 ?>
-
 <?php ob_start(); ?>
 <div class="wrap-content d-flex flex-wrap justify-content-between align-items-center">
 
@@ -52,40 +61,34 @@ foreach ($menu_list as $v_list) {
               <?= $v_list["name$lang"] ?>
               <?= !empty($v_list['cat']) ? '<i class="fa-solid fa-angle-right"></i>' : '' ?>
             </a>
-
+            <!-- Menu cấp 2 -->
             <?php if (!empty($v_list['cat'])): ?>
               <div class="menu-bar-left-cat">
-                <div class="mega-menu">
-                  <?php foreach ($v_list['cat'] as $v_cat): ?>
-                    <div class="col">
-                      <!-- Cấp 2 -->
-                      <h3>
-                        <a href="<?= $v_cat["slug$lang"] ?>" title="<?= $v_cat["name$lang"] ?>">
-                          <?= $v_cat["name$lang"] ?>
-                        </a>
-                      </h3>
+                <?php foreach ($v_list['cat'] as $v_cat): ?>
+                  <div class="col">
+                    <!-- Cấp 2 -->
+                    <h3>
+                      <a href="<?= $v_cat["slug$lang"] ?>" title="<?= $v_cat["name$lang"] ?>">
+                        <?= $v_cat["name$lang"] ?>
+                      </a>
+                    </h3>
 
-                      <!-- Cấp 3 -->
-                      <?php // if (!empty($v_cat['cats'])):
-                      $v_cat['cats'] = [["name$lang" => "Cấp 3"]];
-                      ?>
+                    <!-- Cấp 3 -->
+                    <?php if (!empty($v_cat['item'])): ?>
                       <ul>
-                        <?php foreach ($v_cat['cats'] as $v_sub): ?>
+                        <?php foreach ($v_cat['item'] as $v_item): ?>
                           <li>
-                            <a href="" title="<?= $v_sub["name$lang"] ?>">
-                              <?= $v_sub["name$lang"] ?>-<?= $v_cat["name$lang"] ?>
+                            <a href="<?= $v_item["slug$lang"] ?>" title="<?= $v_item["name$lang"] ?>">
+                              <?= $v_item["name$lang"] ?>
                             </a>
                           </li>
                         <?php endforeach; ?>
                       </ul>
-                      <?php // endif;
-                      ?>
-                    </div>
-                  <?php endforeach; ?>
-                </div>
+                    <?php endif; ?>
+                  </div>
+                <?php endforeach; ?>
               </div>
             <?php endif; ?>
-
           </li>
         <?php endforeach; ?>
       </ul>

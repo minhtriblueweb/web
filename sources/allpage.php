@@ -25,3 +25,5 @@ $tieuchi = $fn->show_data([
   'type'   => 'tieu-chi',
   'select' => "file, name{$lang}, desc{$lang}"
 ]);
+
+$show_chinhsach = $fn->show_data(['table' => 'tbl_news', 'status' => 'hienthi', 'type'   => 'chinh-sach', 'select' => "id, slug{$lang}, name{$lang}"]);

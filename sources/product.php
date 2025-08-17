@@ -33,6 +33,11 @@ if ($id != '') {
   // Hình ảnh con
   $rowDetailPhoto = $fn->show_data(['table' => 'tbl_gallery', 'status' => 'hienthi', 'id_parent' => $id, 'select' => "file,name"]);
 
+  // Thông tin tĩnh
+  $khuyenmai = $db->rawQueryOne("SELECT name$lang,content$lang FROM tbl_static WHERE type = ? AND FIND_IN_SET(?, status) LIMIT 1", ['khuyen-mai', 'hienthi']) ?? [];
+  $camket = $db->rawQueryOne("SELECT name$lang,content$lang FROM tbl_static WHERE type = ? AND FIND_IN_SET(?, status) LIMIT 1", ['cam-ket', 'hienthi']) ?? [];
+  $muahang = $db->rawQueryOne("SELECT name$lang,content$lang FROM tbl_static WHERE type = ? AND FIND_IN_SET(?, status) LIMIT 1", ['mua-hang', 'hienthi']) ?? [];
+
   //SEO
   $seo_data = $db->rawQueryOne("SELECT * FROM tbl_seo WHERE `id_parent` = ? AND `type` = ? AND `act` = ? LIMIT 0,1", [$id, $type, 'man']);
   $seo->set('h1', $rowDetail["name$lang"]);
@@ -72,7 +77,8 @@ if ($id != '') {
   $paging = $fn->pagination_tc($total, $perPage, $curPage);
 
   /* SEO */
-  $titleCate = $productList["name$lang"];
+  $titleCate = $productList["name$lang"] ?? [];
+  $contentCate = $productList["content$lang"] ?? [];
   $seo_data = $db->rawQueryOne("SELECT * FROM tbl_seo WHERE `id_parent` = ? AND `type` = ? AND `act` = ? LIMIT 0,1", [$idl, $type, 'man_list']);
   $seo->set('h1', $productList["name$lang"]);
   $seo->set('title', !empty($seo_data["title$lang"]) ? $seo_data["title$lang"] : ($productList["name$lang"] ?? ''));
@@ -111,6 +117,7 @@ if ($id != '') {
 
   /* SEO */
   $titleCate = $productCat["name$lang"];
+  $contentCate = $productCat["content$lang"];
   $seo_data = $db->rawQueryOne("SELECT * FROM tbl_seo WHERE `id_parent` = ? AND `type` = ? AND `act` = ? LIMIT 0,1", [$idc, $type, 'man_cat']);
   $seo->set('h1', $productCat["name$lang"]);
   $seo->set('title', !empty($seo_data["title$lang"]) ? $seo_data["title$lang"] : ($productCat["name$lang"] ?? ''));
@@ -147,7 +154,8 @@ if ($id != '') {
   $paging = $fn->pagination_tc($total, $perPage, $curPage);
 
   /* SEO */
-  $titleCate = $productItem["name$lang"];
+  $titleCate = $productItem["name$lang"] ?? [];
+  $contentCate = $productItem["content$lang"] ?? [];
   $seo_data = $db->rawQueryOne("SELECT * FROM tbl_seo WHERE `id_parent` = ? AND `type` = ? AND `act` = ? LIMIT 0,1", [$idc, $type, 'man_item']);
   $seo->set('h1', $productItem["name$lang"]);
   $seo->set('title', !empty($seo_data["title$lang"]) ? $seo_data["title$lang"] : ($productItem["name$lang"] ?? ''));
@@ -181,7 +189,8 @@ if ($id != '') {
   $paging = $fn->pagination_tc($total, $perPage, $curPage);
 
   /* SEO */
-  $titleCate = $productBrand["name$lang"];
+  $titleCate = $productBrand["name$lang"] ?? [];
+  $contentCate = $productBrand["content$lang"] ?? [];
   $seo_data = $db->rawQueryOne("SELECT * FROM tbl_seo WHERE `id_parent` = ? AND `type` = ? AND `act` = ? LIMIT 0,1", [$idb, $type, 'man_brand']);
   $seo->set('h1', $productBrand["name$lang"]);
   $seo->set('title', !empty($seo_data["title$lang"]) ? $seo_data["title$lang"] : ($productBrand["name$lang"] ?? ''));

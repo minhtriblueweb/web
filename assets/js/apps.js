@@ -48,7 +48,6 @@ NN_FRAMEWORK.Lazys = function () {
 
 $(function () {
   const collapsedHeight = 300;
-
   $(".content-toggle").each(function () {
     const $container = $(this);
     const $body = $container.find(".content-toggle__body");
@@ -82,7 +81,6 @@ $(function () {
     }
   });
 });
-
 
 /* Back to top */
 NN_FRAMEWORK.GoTop = function () {

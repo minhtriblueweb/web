@@ -1,5 +1,4 @@
 <?php
-$show_chinhsach = $fn->show_data(['table' => 'tbl_news', 'status' => 'hienthi', 'type'   => 'chinh-sach', 'select' => "id, slug{$lang}, name{$lang}"]);
 $payment = $fn->show_data(['table' => 'tbl_photo', 'type'  => 'payment', 'status' => 'hienthi', 'select' => "id, file,name{$lang}"]);
 $footer_static = $db->rawQueryOne("SELECT content$lang FROM tbl_static WHERE type = ? AND FIND_IN_SET(?, status) LIMIT 1", ['footer', 'hienthi']);
 $hotrokhachhang = $db->rawQueryOne("SELECT name$lang,content$lang FROM tbl_static WHERE type = ? AND FIND_IN_SET(?, status) LIMIT 1", ['ho-tro-khach-hang', 'hienthi']);
@@ -27,7 +26,7 @@ $background_footer = $db->rawQueryOne("SELECT `file` FROM tbl_photo WHERE type =
           <?php if (!empty($show_social)): ?>
             <?php foreach ($show_social as $row): ?>
               <a class="hvr-icon-rotate me-2" href="<?= $row['link'] ?>" target="_blank" rel="noopener noreferrer">
-                <?= $fn->getImageCustom(['width' => 40, 'height' => 40, 'zc' => 1, 'file'   => $row['file'], 'class'  => 'hvr-icon', 'alt' => $row['name' . $lang], 'title' => $row['name' . $lang], 'lazy' => true]) ?>
+                <?= $fn->getImageCustom(['width' => 40, 'height' => 40, 'zc' => 1, 'file'   => $row['file'], 'class'  => 'hvr-icon', 'alt' => $row["name$lang"], 'title' => $row["name$lang"], 'lazy' => true]) ?>
               </a>
             <?php endforeach; ?>
           <?php endif; ?>
@@ -41,7 +40,7 @@ $background_footer = $db->rawQueryOne("SELECT `file` FROM tbl_photo WHERE type =
               <ul class="footer-ul">
                 <?php foreach ($show_chinhsach as $row): ?>
                   <li>
-                    <a class="transition" href="<?= $row['slug' . $lang] ?>" title="<?= $row['name' . $lang] ?>"><?= $row['name' . $lang] ?></a>
+                    <a class="transition" href="<?= $row["slug$lang"] ?>" title="<?= $row["name$lang"] ?>"><?= $row["name$lang"] ?></a>
                   </li>
                 <?php endforeach; ?>
               </ul>
@@ -55,7 +54,7 @@ $background_footer = $db->rawQueryOne("SELECT `file` FROM tbl_photo WHERE type =
               <?php if (!empty($payment)): ?>
                 <?php foreach ($payment as $row): ?>
                   <span class="ibank scale-img">
-                    <?= $fn->getImageCustom(['file' =>  $row['file'], 'width' => 72, 'height' => 40, 'zc' => 2, 'alt' => $row['name' . $lang], 'title' => $row['name' . $lang], 'lazy' => true]) ?>
+                    <?= $fn->getImageCustom(['file' =>  $row['file'], 'width' => 72, 'height' => 40, 'zc' => 2, 'alt' => $row["name$lang"], 'title' => $row["name$lang"], 'lazy' => true]) ?>
                   </span>
                 <?php endforeach; ?>
               <?php endif; ?>

@@ -54,6 +54,20 @@ $config['static'][$type]['title_main'] = "Đăng ký nhận tin";
 $config['static'][$type]['check'] = array("hienthi" => "Hiển thị");
 $config['static'][$type]['name'] = true;
 $config['static'][$type]['content'] = true;
+
+/*Khuyến mãi */
+$type = "khuyen-mai";
+$config['static'][$type]['title_main'] = "Khuyến mãi";
+$config['static'][$type]['check'] = array("hienthi" => "Hiển thị");
+$config['static'][$type]['name'] = true;
+$config['static'][$type]['content_cke'] = true;
+
+/*Cam kết */
+$type = "cam-ket";
+$config['static'][$type]['title_main'] = "Cam kết";
+$config['static'][$type]['check'] = array("hienthi" => "Hiển thị");
+$config['static'][$type]['name'] = true;
+$config['static'][$type]['content_cke'] = true;
 /* Giới thiệu */
 // $type = "slide-info";
 // $config['static'][$type]['title_main'] = "Thông tin slide";

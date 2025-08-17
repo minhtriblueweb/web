@@ -125,7 +125,7 @@
         <?php
         $type = "danh-gia";
         foreach ($feedback as $k => $v): ?>
-          <div class="item-feedback">
+          <div class="item-feedback transition">
             <p class="text-split"><?= $v["desc$lang"] ?></p>
             <div class="content">
               <a class="scale-img hover-glass text-decoration-none"

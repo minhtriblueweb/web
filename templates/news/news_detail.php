@@ -5,7 +5,7 @@
         <div class="title-list-hot p-2">
           <h2 class="text-start"><?= $rowDetail["name$lang"] ?></h2>
         </div>
-        <div class="wrap-main wrap-template w-clear" style="margin: 0 auto !important;">
+        <div class="wrap-main wrap-template content-ck w-clear" style="margin: 0 auto !important;">
           <div class="wrap-toc">
             <div class="meta-toc2">
               <a class="mucluc-dropdown-list_button">Mục Lục</a>
@@ -32,9 +32,38 @@
       </div>
       <?php if (!empty($relatedNews)): ?>
         <div class="col-lg-3">
-          <div class="share othernews mb-3">
-            <b>Tin liên quan:</b>
-            <div class="fix__row__news">
+          <div class="othernews">
+            <h2 class="titleSide"><span>Danh mục bài viết</span></h2>
+            <div class="frame-left">
+              <div class="box-left-menu">
+                <ul class="list-btn-position show">
+                  <li><a href="tin-tuc" title="Tin tức">Tin tức</a></li>
+                  <li><a href="gioi-thieu" title="Giới thiệu">Về chúng tôi</a>
+                  <li><a href="huong-dan-choi" title="Hướng dẫn chơi">Hướng Dẫn Chơi</a>
+                  <li><a href="mua-hang" title="Mua hàng">Mua hàng</a></li>
+                  <li><a href="thanh-toan" title="Phương thức thanh toán">Phương thức thanh toán</a></li>
+                  <?php if ($show_chinhsach): ?>
+                    <li>
+                      <a title="Chính sách" data-bs-toggle="collapse" href="#show-chinh-sach" role="button" aria-expanded="false" aria-controls="show-chinh-sach">
+                        Chính sách
+                      </a>
+                      <i class="fas fa-chevron-down" data-bs-toggle="collapse" href="#show-chinh-sach"></i>
+                      <ul class="collapse" id="show-chinh-sach">
+                        <?php foreach ($show_chinhsach as $cs): ?>
+                          <li>
+                            <a href="<?= $cs["slug$lang"] ?>" title="<?= $cs["name$lang"] ?>">
+                              <?= $cs["name$lang"] ?>
+                            </a>
+                          </li>
+                        <?php endforeach; ?>
+                      </ul>
+                    </li>
+                  <?php endif; ?>
+                </ul>
+              </div>
+            </div>
+            <h2 class="titleSide"><span><?= tinlienquan ?>:</span></h2>
+            <div class="frame-left">
               <div class="row">
                 <?php foreach ($relatedNews as $v): ?>
                   <div class="col-lg-12 col-md-6">

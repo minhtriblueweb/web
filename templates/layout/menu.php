@@ -122,5 +122,5 @@ foreach ($menu_list as $v_list) {
 </div>
 
 <?php $menuHtml = ob_get_clean(); ?>
-<div class="menu"><?= $menuHtml ?></div>
-<div class="menu-fixed"><?= $menuHtml ?></div>
+<div class="menu bg-main"><?= $menuHtml ?></div>
+<div class="menu-fixed bg-main"><?= $menuHtml ?></div>

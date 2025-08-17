@@ -66,31 +66,18 @@
       <!-- PHÂN TRANG -->
       <?php if ($paging): ?><div class="mt-3 mb-3 pagination-home w-100"><?= $paging ?></div><?php endif; ?>
 
-      <?php
-      $content = '';
-      if (!empty($productList["content$lang"])) {
-        $content = $productList["content$lang"];
-      } elseif (!empty($productCat["content$lang"])) {
-        $content = $productCat["content$lang"];
-      } elseif (!empty($productItem["content$lang"])) {
-        $content = $productItem["content$lang"];
-      } elseif (!empty($productBrand["content$lang"])) {
-        $content = $productBrand["content$lang"];
-      }
-      if (!empty($content)):
-      ?>
-        <div class="content-toggle mt-3 mb-3 .shadow-sm">
-          <div class="content-toggle__body-wrapper">
-            <div class="content-toggle__body content-main content-ck pro_tpl" id="toc-content">
-              <?= $fn->decodeHtmlChars($content) ?>
-            </div>
+      <!-- BÀI VIẾT -->
+      <div class="content-toggle mt-3 mb-3">
+        <div class="content-toggle__body-wrapper">
+          <div class="content-toggle__body content-main content-ck pro_tpl" id="toc-content">
+            <?= $fn->decodeHtmlChars(!empty($contentCate) ? $contentCate : '') ?>
           </div>
-          <p class="content-toggle__button">
-            <span class="text">Đọc tiếp bài viết</span>
-            <i class="fas fa-chevron-down"></i>
-          </p>
         </div>
-      <?php endif; ?>
+        <p class="content-toggle__button">
+          <span class="text">Đọc tiếp bài viết</span>
+          <i class="fas fa-chevron-down"></i>
+        </p>
+      </div>
     </div>
   </div>
 </div>

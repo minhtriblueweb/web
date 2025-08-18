@@ -1057,31 +1057,26 @@ content: '';
   cursor: pointer;
 }
 
-/* Menu cấp 1 ở trang chủ */
-.menu-bar-left.index .menu-bar-left-list {
-  display: block;
-}
-.menu.fix_head .menu-bar-left-list,
-.menu-fixed.show .menu-bar-left-list {
-  display: none;
-}
-.menu-bar-left:hover .menu-bar-left-list {
-  display: block !important;
-}
+/* Menu cấp 1 luôn đóng, chỉ hiện ở trang chủ */
+.menu-bar-left.index .menu-bar-left-list {transform: scaleY(1)}
+.menu.fix_head .menu-bar-left-list,.menu-fixed.show .menu-bar-left-list {transform: scaleY(0)}
+.menu-bar-left:hover .menu-bar-left-list {transform: scaleY(1)}
 
 /* Menu cấp 1 */
 .menu-bar-left-list {
-  display:none;
+  transform: scaleY(0);
+  transform-origin: top;
+  transition: transform 0.2s ease;
   position: absolute;
+    background: #fff;
   border-bottom-left-radius: 6px;
   border-bottom-right-radius: 6px;
-  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+  box-shadow:0px 0px 10px rgba(0, 0, 0, 0.2);
 }
 
 .menu-bar-left-list ul {
   padding: 0;
   margin: 0;
-  background: #fff;
   max-height: 450px;
   overflow: auto;
 }
@@ -1117,7 +1112,6 @@ content: '';
   display: flex;
   position: relative;
   align-items: center;
-  justify-content: flex-start;
   padding: 10px 20px 14px 10px;
   font-size: 16px;
   text-transform: capitalize;
@@ -1143,6 +1137,7 @@ content: '';
 .menu-bar-left-list > ul li:hover > a,
 .menu-bar ul li:hover a {
   color: var(--main-color);
+
 }
 
 /* Menu cấp 2 */
@@ -1155,9 +1150,10 @@ content: '';
   background: #fff;
   border-radius: 0 0 4px 4px;
   max-height: 450px;
+  height: 450px;
   text-align: left;
   overflow-y: auto;
-  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+  box-shadow:0px 0px 10px rgba(0, 0, 0, 0.2);
 
   /* Hiệu ứng */
   opacity: 1;
@@ -1169,7 +1165,7 @@ content: '';
   /* Masonry bằng CSS columns */
   column-count: 3;
   column-gap: 30px;
-  padding: 15px;
+  padding: 0px 15px;
 }
 
 .menu-bar-left-list ul li:hover .menu-bar-left-cat {
@@ -1181,8 +1177,6 @@ content: '';
 .menu-bar-left-cat .col {
   display: inline-block;
   width: 100%;
-  margin: 0 0 15px;
-  break-inside: avoid;
 }
 
 .menu-bar-left-cat .col h3 {
@@ -1190,20 +1184,19 @@ content: '';
   font-weight: bold;
   margin-bottom: 8px;
 }
-.menu-bar-left-cat .col h3 a {
-  color: var(--main-color);
-  text-decoration: none;
+.menu-bar-left-cat .col h3 a:hover {
+color: var(--main-color);
 }
 .menu-bar-left-cat .col ul li {
-  margin-bottom: 5px;
-  overflow: hidden;
+  margin: 0 0 5px 20px;
+overflow: hidden;
 }
 .menu-bar-left-cat .col ul li a {
   border-bottom: none !important;
   color: #333;
   font-size: 14px;
-  padding-top: 0px;
-  padding-bottom: 0px;
+  font-weight: 500;
+  padding: 0px;
   transition: all 0.2s ease;
 }
 

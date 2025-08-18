@@ -67,7 +67,7 @@ foreach ($menu_list as $v_list) {
                 <?php foreach ($v_list['cat'] as $v_cat): ?>
                   <div class="col">
                     <!-- Cấp 2 -->
-                    <h3>
+                    <h3 class="m-0">
                       <a href="<?= $v_cat["slug$lang"] ?>" title="<?= $v_cat["name$lang"] ?>">
                         <?= $v_cat["name$lang"] ?>
                       </a>

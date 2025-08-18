@@ -115,12 +115,25 @@
           <!-- Thông tin sản phẩm -->
           <div class="tabs-pro-detail">
             <ul class="nav nav-tabs" id="tabsProDetail" role="tablist">
-              <li class="nav-item"><a class="nav-link active" id="info-pro-detail-tab" data-bs-toggle="tab" href="#info-pro-detail" role="tab"><?= thongtinsanpham ?></a></li>
+              <li class="nav-item">
+                <a class="nav-link active" id="info-pro-detail-tab" data-bs-toggle="tab" href="#info-pro-detail" role="tab">
+                  <?= thongtinsanpham ?>
+                </a>
+              </li>
               <?php if ($muahang): ?>
-                <li class="nav-item"><a class="nav-link" id="muahang-pro-detail-tab" data-bs-toggle="tab" href="#muahang-pro-detail" role="tab"><?= $muahang["name$lang"] ?></a></li>
+                <li class="nav-item">
+                  <a class="nav-link" id="muahang-pro-detail-tab" data-bs-toggle="tab" href="#muahang-pro-detail" role="tab">
+                    <?= $muahang["name$lang"] ?>
+                  </a>
+                </li>
               <?php endif ?>
-              <li class="nav-item"><a class="nav-link" id="commentfb-pro-detail-tab" data-bs-toggle="tab" href="#commentfb-pro-detail" role="tab"><?= binhluan ?></a></li>
+              <li class="nav-item">
+                <a class="nav-link" id="commentfb-pro-detail-tab" data-bs-toggle="tab" href="#commentfb-pro-detail" role="tab">
+                  <?= binhluan ?>
+                </a>
+              </li>
             </ul>
+
             <div class="tab-content" id="tabsProDetailContent">
               <div class="tab-pane fade show active" id="info-pro-detail" role="tabpanel">
                 <div class="content-main content-ck content-text" id="toc-content">
@@ -132,7 +145,9 @@
                   <?= $muahang["content$lang"] ?>
                 </div>
               <?php endif ?>
-              <div class="tab-pane fade" id="commentfb-pro-detail" role="tabpanel"></div>
+              <div class="tab-pane fade" id="commentfb-pro-detail" role="tabpanel">
+                <div class="fb-comments" data-href="<?= $fn->getCurrentPageURL() ?>" data-numposts="3" data-colorscheme="light" data-width="100%"></div>
+              </div>
             </div>
           </div>
         </div>

@@ -999,16 +999,10 @@ img:not([src]) {
   transform-origin: center;
   transition: transform 0.4s ease, background-color 0.3s;
 }
-.menu-bar li:hover a:not(.active) span::after {
+.menu-bar li:hover a:not(.active) span::after,.menu-bar li a.active span::after  {
   transform: scaleX(1);
 }
-.menu-bar li a.active span::after {
-  transform: scaleX(1);
-  transition: none;
-}
-.menu-bar li a.active {
-  pointer-events: none;
-}
+/* .menu-bar li a.active { pointer-events: none; }*/
 .menu-bar li ul {
   position: absolute;
   padding: 0;
@@ -3593,28 +3587,39 @@ box-shadow: 3px 0 15px 0 color-mix(in srgb, var(--main-color) 25%, transparent);
   margin: 5px 5px 0px 0px;
 }
 
-.tabs-pro-detail {
-  margin-top: 2rem;
+/* Vùng tabs */
+#tabsProDetail {
+  display: flex;
+  position: relative;
+  border-bottom: 0px solid #dee2e6;
 }
 
-.tabs-pro-detail .nav-item {
-  margin-right: 2px;
+#tabsProDetail .nav-link {
+  border: none;
+border-bottom: 1px solid #dee2e6;
+  font-size: 15px;
+  font-weight: 600;
+  color: #555;
+  padding: 10px 20px;
+  position: relative;
+  transition: color 0.25s ease;
 }
 
-.tabs-pro-detail .nav-tabs .nav-link {
-  border-top-width: 3px;
-  font-size: 13px;
-  color: #333;
-  text-transform: uppercase;
-  font-weight: 500;
-  background: #fff;
+/* Highlight line */
+#tabsProDetail::after {
+  content: "";
+  position: absolute;
+  bottom: -2px;
+  height: 3px;
+  background: var(--main-color);
+  border-radius: 3px;
+  transition: all 0.3s ease;
 }
 
-.tabs-pro-detail .nav-tabs .nav-link.active,
-.tabs-pro-detail .nav-tabs .nav-item.show .nav-link,
-.tabs-pro-detail .nav-tabs .nav-link:hover {
-  border-top-color: var(--main-color);
-  color: var(--main-color);
+
+#tabsProDetailContent {
+  border: 1px solid #dee2e6;
+  padding: 10px;
 }
 
 .btn-pro-contact a {
@@ -3645,17 +3650,6 @@ box-shadow: 3px 0 15px 0 color-mix(in srgb, var(--main-color) 25%, transparent);
 
 .btn-pro-contact a:hover {
   background: #a3100d;
-}
-
-#tabsProDetail {
-  margin-bottom: -1px;
-}
-
-#tabsProDetailContent {
-  border: 1px solid #dee2e6;
-  padding: 10px;
-  border-top: 0;
-  background: #fff;
 }
 
 .news {

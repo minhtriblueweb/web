@@ -44,8 +44,61 @@ NN_FRAMEWORK.Lazys = function () {
   }
 };
 
-/* Xem thêm , ẩn bớt nội dung */
+/* menu-bar */
+$(function () {
+  var $menu = $(".menu-bar");
+  var $links = $menu.find("a.transition");
+  var $activeReal = $links.filter(".active");
+  $menu.on("mouseenter", "li", function () {
+    var $link = $(this).children("a.transition");
+    if ($link.length) {
+      $links.removeClass("active");
+      $link.addClass("active");
+    }
+  });
+  $menu.on("mouseleave", function () {
+    $links.removeClass("active");
+    if ($activeReal.length) {
+      $activeReal.addClass("active");
+    }
+  });
+});
 
+/* tabsProDetail */
+$(function () {
+  var $tabs = $("#tabsProDetail .nav-link");
+  var $indicator = $("#tabsProDetail");
+  function moveIndicator($el) {
+    var left = $el.position().left;
+    var width = $el.outerWidth();
+    $indicator.css("--indicator-left", left + "px");
+    $indicator.css("--indicator-width", width + "px");
+  }
+  $("<style>")
+    .prop("type", "text/css")
+    .html(`
+      #tabsProDetail::after {
+        left: var(--indicator-left, 0);
+        width: var(--indicator-width, 0);
+      }
+    `)
+    .appendTo("head");
+  var $active = $("#tabsProDetail .nav-link.active");
+  if ($active.length) moveIndicator($active);
+  $tabs.on("mouseenter", function () {
+    moveIndicator($(this));
+  });
+  $tabs.on("click", function () {
+    $tabs.removeClass("active");
+    $(this).addClass("active");
+    moveIndicator($(this));
+  });
+  $("#tabsProDetail").on("mouseleave", function () {
+    moveIndicator($("#tabsProDetail .nav-link.active"));
+  });
+});
+
+/* Xem thêm , ẩn bớt nội dung */
 $(function () {
   const collapsedHeight = 300;
   $(".content-toggle").each(function () {
@@ -53,18 +106,14 @@ $(function () {
     const $body = $container.find(".content-toggle__body");
     const $btn = $container.find(".content-toggle__button");
     const $text = $btn.find(".text");
-
     if (!$body.length) return;
-
     const fullHeight = $body[0].scrollHeight;
-
     if (fullHeight > collapsedHeight) {
       $body.css({
         "max-height": collapsedHeight + "px",
         "overflow": "hidden",
         "transition": "max-height 0.4s ease"
       }).append('<div class="content-toggle__fade"></div>');
-
       $btn.on("click", function () {
         if ($container.hasClass("content-toggle--active")) {
           $body.css("max-height", collapsedHeight + "px");
@@ -119,6 +168,7 @@ NN_FRAMEWORK.GoTop = function () {
     return false;
   });
 };
+
 /* Alt images */
 NN_FRAMEWORK.AltImg = function () {
   $("img").each(function (index, element) {
@@ -134,21 +184,18 @@ NN_FRAMEWORK.Menu = function () {
   if (isExist($(".menu"))) {
     $(".menu ul li a").each(function () {
       $this = $(this);
-
       if (!isExist($this.next("ul").find("li"))) {
         $this.next("ul").remove();
         $this.removeClass("has-child");
       }
     });
   }
-
   $(".menu-bar li ul li").hover(function () {
     var vitri = $(this).position().top;
     $(this)
       .children(".sub_menu")
       .css({ top: vitri + "px" });
   });
-
   /* Mmenu */
   if (isExist($("nav#menu"))) {
     menuMobile({ search: false, lang: false });
@@ -163,11 +210,9 @@ NN_FRAMEWORK.MenuFixed = function () {
   const $menuFixed = $(".menu-fixed, .menu-mobile-fixed");
   const $logoFixed = $(".menu-mobile-fixed .logo-mobile");
   const $logoOrigin = $(".menu-mobile .logo-mobile");
-
   $win.on("scroll", function () {
     const scrollTop = $win.scrollTop();
     const headerHeight = $(".header").outerHeight();
-
     if (scrollTop > headerHeight && !isFixed) {
       $menuFixed.addClass("animate show");
       $logoFixed.addClass("shrink");
@@ -739,7 +784,7 @@ NN_FRAMEWORK.SlickPage = function () {
       nextArrow:
         "<span class='slick-arr-product_list slick-product-next arr-next'><i class='fa-solid fa-chevron-right'></i></span>",
       autoplay: false,
-      infinite: false, // để xử lý đầu/cuối giống Shopee
+      infinite: false,
       slidesToShow: 7,
       slidesToScroll: 2,
       rows: 2,

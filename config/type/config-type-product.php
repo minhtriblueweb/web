@@ -135,6 +135,7 @@ $config['size-img'][$type]['sub']['active'] = false;
 /* Sản phẩm (Hãng) */
 $config['product'][$type]['title_main_brand'] = $config['size-img'][$type]['brand']['title'] = "Hãng sản phẩm";
 $config['product'][$type]['images_brand'] = true;
+$config['product'][$type]['icon_brand'] = true;
 $config['product'][$type]['show_images_brand'] = true;
 $config['product'][$type]['slug_brand'] = true;
 $config['product'][$type]['check_brand'] = array("hienthi" => "Hiển thị", "noibat" => "Nổi bật");

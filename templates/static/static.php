@@ -5,7 +5,7 @@
         <h2><?= !empty($static["name"]) ? $static["name"] : $titleMain ?></h2>
         <div class="animate-border bg-animate-border mt-1"></div>
       </div>
-      <div class="wrap-content">
+      <div class="wrap-content content-ck">
         <div class="row">
           <div class="col-12">
             <?= $fn->decodeHtmlChars($static["content"] ?? '') ?>

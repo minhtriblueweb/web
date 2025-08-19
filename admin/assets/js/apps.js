@@ -328,29 +328,27 @@ function confirmDialog(
     content: text,
     backgroundDismiss: true,
     animationSpeed: 600,
-    animation: 'zoom',
-    closeAnimation: 'scale',
+    animation: "zoom",
+    closeAnimation: "scale",
     typeAnimated: true,
     animateFromElement: false,
-    autoClose: 'cancel|3000',
-    escapeKey: 'cancel',
+    escapeKey: "cancel",
     buttons: {
       confirm: {
         text: '<i class="fas fa-check mr-2"></i>' + LANG["dongy"],
         btnClass: "btn-blue btn-sm bg-gradient-primary",
         action: function () {
           switch (action) {
+            case "delete-photo": deletePhoto(value); break;
+            case "delete-photoicon": deletePhotoicon(value); break;
             case "create-seo": seoCreate(); break;
             case "push-onesignal": pushOneSignal(value); break;
             case "send-email": sendEmail(); break;
-            case "delete-temp-filer":
-              deleteTempFiler(value);
-              break;
+            case "delete-temp-filer": deleteTempFiler(value); break;
             case "delete-filer": deleteFiler(value); break;
             case "delete-all-filer": deleteAllFiler(value); break;
             case "delete-item": deleteItem(value); break;
             case "delete-all": deleteAll(value); break;
-            case "delete-photo": deletePhoto(value); break;
           }
         },
       },
@@ -361,6 +359,7 @@ function confirmDialog(
     },
   });
 }
+
 function deleteFiler(id) {
   $('.jFiler-item').each(function () {
     const $item = $(this);
@@ -393,32 +392,14 @@ function deleteAllFiler() {
   });
   $(".deleted-images").val(deletedAll);
 }
-
-$(document).on('change', 'input[type="file"][name="file"]', function () {
-  const input = $(this);
-  const file = this.files[0];
-  const zone = input.closest(".photoUpload-zone");
-  if (!file || !zone.length) return;
-  const reader = new FileReader();
-  reader.onload = function (e) {
-    zone.find(".photoUpload-detail").remove();
-    const previewHtml = `<div class="photoUpload-detail" id="photoUpload-preview"><img src="${e.target.result}" class="img-preview rounded" /><div class="delete-photo"><a href="javascript:void(0)" title="Xoá hình ảnh"><i class="far fa-trash-alt"></i></a></div></div>`;
-    $(previewHtml).insertBefore(zone.find(".photoUpload-file"));
-    zone.find("#photo-deleted-flag").remove();
-  };
-  reader.readAsDataURL(file);
-});
-
-// xoá hình ảnh đại diện
-$(document).on("click", ".delete-photo a", function (e) {
-  e.preventDefault();
-  const _this = $(this);
-});
 function deletePhoto(_root) {
   const form = _root.closest("form");
   const zone = _root.closest(".photoUpload-zone");
+  const inputFile = zone.find('input[type="file"][name="file"]');
+
   _root.closest(".photoUpload-detail").remove();
-  zone.find('input[type="file"]').val("");
+  inputFile.val("");
+
   if ($("#photo-deleted-flag").length === 0) {
     $("<input>", {
       type: "hidden",
@@ -428,6 +409,55 @@ function deletePhoto(_root) {
     }).appendTo(form);
   }
 }
+function deletePhotoicon(_root) {
+  const form = _root.closest("form");
+  const zone = _root.closest(".photoUpload-zone");
+  const inputFile = zone.find('input[type="file"][name="fileicon"]');
+
+  _root.closest(".photoUpload-detail").remove();
+  inputFile.val("");
+
+  if ($("#photoicon-deleted-flag").length === 0) {
+    $("<input>", {
+      type: "hidden",
+      id: "photoicon-deleted-flag",
+      name: "data[photoicon_deleted]",
+      value: "1",
+    }).appendTo(form);
+  }
+}
+// xoá hình ảnh (confirm trước)
+$("body").on("click", ".delete-photo a", function (event) {
+  confirmDialog("delete-photo", LANG["banmuonxoahinhanhnay"], $(this));
+});
+$("body").on("click", ".delete-photoicon a", function (event) {
+  confirmDialog("delete-photoicon", LANG["banmuonxoahinhanhnay"], $(this));
+});
+$(document).on("change", 'input[type="file"]', function () {
+  const input = $(this);
+  const file = this.files[0];
+  const zone = input.closest(".photoUpload-zone");
+  if (!file || !zone.length) return;
+
+  const reader = new FileReader();
+  reader.onload = function (e) {
+    zone.find(".photoUpload-detail").remove();
+    const previewHtml = `
+      <div class="photoUpload-detail">
+        <img src="${e.target.result}" class="img-preview rounded" />
+        <div class="delete-photo">
+          <a href="javascript:void(0)" data-name="${input.attr("name")}" title="${LANG["xoa"]}">
+            <i class="far fa-trash-alt"></i>
+          </a>
+        </div>
+      </div>`;
+    $(previewHtml).insertBefore(zone.find(".photoUpload-file"));
+    zone.find("#photo-deleted-flag, #photoicon-deleted-flag").remove();
+  };
+  reader.readAsDataURL(file);
+});
+
+
 /* Rounde number */
 function roundNumber(rnum, rlength) {
   return Math.round(rnum * Math.pow(10, rlength)) / Math.pow(10, rlength);
@@ -725,7 +755,10 @@ function slugPreview(title, lang, focus = false) {
   $(`#slugurlpreview${lang} strong`).text(slug);
   $(`#seourlpreview${lang} strong`).text(slug);
 }
-
+$(document).on("keyup input paste", "#namevi", function () {
+  const title = $(this).val();
+  slugPreview(title, "vi", true);
+});
 function slugPreviewTitleSeo(title, lang) {
   const $title = $(`#title${lang}`);
   if ($title.length && !$title.val()) {
@@ -1056,10 +1089,6 @@ $(document).on("change", ".file_upload_video", function (evt) {
 });
 $(document).ready(function () {
   Fancybox.bind("[data-fancybox]", {});
-
-  $("body").on("click", ".delete-photo a", function (event) {
-    confirmDialog("delete-photo", LANG["banmuonxoahinhanhnay"], $(this));
-  });
   /* Loader */
   if ($(".loader-wrapper").length) {
     setTimeout(function () {
@@ -1277,21 +1306,10 @@ $(document).ready(function () {
   }
 
   /* PhotoZone */
-  if ($("#photo-zone").length) {
-    photoZone("#photo-zone", "#file-zone", "#photoUpload-preview img");
-  }
-  /* PhotoZone1 */
-  if ($("#photo-zone1").length) {
-    photoZone("#photo-zone1", "#file-zone1", "#photoUpload-preview1 img");
-  }
-
-  // Lặp qua các phần tử có id bắt đầu bằng "photo-zone"
   $("[id^='photo-zone']").each(function (index) {
-    var zoneId = "#photo-zone" + index; // ID của khu vực photo-zone
-    var fileInputId = "#file-zone" + index; // ID của input file
-    var previewImgId = "#photoUpload-preview" + index + " img"; // ID của ảnh xem trước
-
-    // Gọi hàm photoZone cho mỗi vùng photo-zone
+    var zoneId = "#photo-zone" + index;
+    var fileInputId = "#file-zone" + index;
+    var previewImgId = "#photoUpload-preview" + index + " img";
     photoZone(zoneId, fileInputId, previewImgId);
   });
 
@@ -1567,7 +1585,6 @@ $(document).ready(function () {
       lastChecked = this;
     });
   }
-
   /* Check all */
   $(document).ready(function () {
     $("body").on("click", "#selectall-checkbox", function () {

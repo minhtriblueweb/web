@@ -117,6 +117,24 @@
             </div>
           </div>
         <?php endif; ?>
+        <?php if (!empty($config['product'][$type]['icon_brand'])): ?>
+          <div class="card card-primary card-outline text-sm">
+            <div class="card-header">
+              <h3 class="card-title">Banner <?= $config['product'][$type]['title_main_brand'] ?></h3>
+              <div class="card-tools">
+                <button type="button" class="btn btn-tool" data-card-widget="collapse"><i
+                    class="fas fa-minus"></i></button>
+              </div>
+            </div>
+            <div class="card-body">
+              <?php
+              $photoDetail = array();
+              $photoDetail['image'] = $result['fileicon'] ?? '';
+              $photoDetail['dimension'] = "Width: " . $config['product'][$type]['width_brand'] . " px - Height: " . $config['product'][$type]['height_brand'] . " px (" . $config['product'][$type]['img_type_brand'] . ")";
+              include TEMPLATE . LAYOUT . "icon.php"; ?>
+            </div>
+          </div>
+        <?php endif; ?>
         <div class="card card-primary card-outline text-sm">
           <div class="card-header">
             <h3 class="card-title"><?= thongtin ?></h3>

@@ -137,9 +137,9 @@ input[type='number']::-webkit-inner-spin-button {
 }
 
 /* Custom nội dung bài viết */
-.content-ck {
+/* .content-ck {
   line-height: 2em;
-}
+} */
 .content-ck * {
   max-width: 100% !important;
 }
@@ -238,7 +238,7 @@ input[type='number']::-webkit-inner-spin-button {
     left: 0;
     width: 100%;
     height: 100px;
-    background-image: linear-gradient(rgba(255, 255, 255, 0.05), rgb(242, 242, 242));
+   background: linear-gradient(to top, #ffffff, transparent);
     pointer-events: none;
 }
 

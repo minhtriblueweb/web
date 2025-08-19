@@ -292,14 +292,22 @@ class Functions
     }
 
     $thumb_filename = $old_filename = '';
-    $has_file_column = is_array($files) && isset($files['file']) && is_uploaded_file($files['file']['tmp_name']);
+    $icon_filename = $old_icon = '';
+    $has_file_main = is_array($files) && isset($files['file']) && is_uploaded_file($files['file']['tmp_name']);
+    $has_file_icon = is_array($files) && isset($files['fileicon']) && is_uploaded_file($files['fileicon']['tmp_name']);
 
-    if ((!empty($id) && ($has_file_column || (!empty($data['photo_deleted']) && $data['photo_deleted'] == '1')))) {
-      $old = $this->db->rawQueryOne("SELECT file FROM $table WHERE id = ?", [(int)$id]);
-      $old_filename = $old['file'] ?? '';
+    if (!empty($id)) {
+      if ($has_file_main || (!empty($data['photo_deleted']) && $data['photo_deleted'] == '1')) {
+        $old = $this->db->rawQueryOne("SELECT file FROM $table WHERE id = ?", [(int)$id]);
+        $old_filename = $old['file'] ?? '';
+      }
+      if ($has_file_icon || (!empty($data['photoicon_deleted']) && $data['photoicon_deleted'] == '1')) {
+        $old = $this->db->rawQueryOne("SELECT fileicon FROM $table WHERE id = ?", [(int)$id]);
+        $old_icon = $old['fileicon'] ?? '';
+      }
     }
 
-    if ($has_file_column) {
+    if ($has_file_main) {
       $thumb_filename = $this->uploadImage([
         'file' => $files['file'],
         'custom_name' => $data_prepared['namevi'] ?? ($data_prepared['type'] ?? ''),
@@ -314,16 +322,37 @@ class Functions
       $thumb_filename = '';
     }
 
+    if ($has_file_icon) {
+      $icon_filename = $this->uploadImage([
+        'file' => $files['fileicon'],
+        'custom_name' => $data_prepared['namevi'] ?? ($data_prepared['type'] ?? ''),
+        'old_file_path' => UPLOADS . $old_icon,
+        'convert_webp' => $convert_webp,
+        'background' => $options['background'] ?? [255, 255, 255, 0]
+      ]);
+    } elseif (!empty($data['photoicon_deleted']) && $data['photoicon_deleted'] == '1') {
+      if (!empty($old_icon)) {
+        $this->deleteFile($old_icon);
+      }
+      $icon_filename = '';
+    }
+
     if (!empty($id)) {
       $fields = $params = [];
       foreach ($data_prepared as $key => $val) {
         $fields[] = "`$key` = ?";
         $params[] = $val;
       }
-      if ($has_file_column || (!empty($data['photo_deleted']) && $data['photo_deleted'] == '1')) {
+      if ($has_file_main || (!empty($data['photo_deleted']) && $data['photo_deleted'] == '1')) {
         if (in_array('file', $columns)) {
           $fields[] = "`file` = ?";
           $params[] = $thumb_filename;
+        }
+      }
+      if ($has_file_icon || (!empty($data['photoicon_deleted']) && $data['photoicon_deleted'] == '1')) {
+        if (in_array('fileicon', $columns)) {
+          $fields[] = "`fileicon` = ?";
+          $params[] = $icon_filename;
         }
       }
       $params[] = (int)$id;
@@ -364,10 +393,15 @@ class Functions
       $columns_insert = array_keys($data_prepared);
       $placeholders = array_fill(0, count($columns_insert), '?');
       $params = array_values($data_prepared);
-      if ($has_file_column && in_array('file', $columns)) {
+      if ($has_file_main && in_array('file', $columns)) {
         $columns_insert[] = 'file';
         $placeholders[] = '?';
         $params[] = $thumb_filename;
+      }
+      if ($has_file_icon && in_array('fileicon', $columns)) {
+        $columns_insert[] = 'fileicon';
+        $placeholders[] = '?';
+        $params[] = $icon_filename;
       }
       $inserted = $this->db->execute("INSERT INTO $table (" . implode(', ', $columns_insert) . ") VALUES (" . implode(', ', $placeholders) . ")", $params);
       $insert_id = $inserted ? $this->db->getInsertId() : 0;

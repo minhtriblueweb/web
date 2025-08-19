@@ -26,13 +26,11 @@
               </div>
             <?php endforeach; ?>
           <?php elseif (!empty($idb) && !empty($brandAll)) : ?>
-            <?php foreach ($brandAll as $b): ?>
-              <div class="item-list-noindex <?= ($b["slug$lang"] === $productBrand["slug$lang"] ? 'active' : '') ?>">
-                <a class="scale-img" href="<?= $b["slug$lang"] ?>" title="<?= $b["name$lang"] ?>">
-                  <?= $fn->getImageCustom(['file' => $b['file'], 'width' => 100, 'height' => 100, 'zc' => 2, 'alt' => $b["name$lang"], 'title' => $b["name$lang"], 'lazy' => false]) ?>
-                </a>
+            <?php if ($productBrand['fileicon']) : ?>
+              <div class="m-auto mt-3" style="width: 1000px">
+                <?= $fn->getImage(['file' => $productBrand['fileicon'], 'class' => 'w-100', 'alt' => $productBrand["name$lang"], 'title' => $productBrand["name$lang"]]) ?>
               </div>
-            <?php endforeach; ?>
+            <?php endif; ?>
           <?php endif; ?>
         </div>
       </div>
@@ -67,17 +65,19 @@
       <?php if ($paging): ?><div class="mt-3 mb-3 pagination-home w-100"><?= $paging ?></div><?php endif; ?>
 
       <!-- BÀI VIẾT -->
-      <div class="content-toggle mt-3 mb-3">
-        <div class="content-toggle__body-wrapper">
-          <div class="content-toggle__body content-main content-ck pro_tpl" id="toc-content">
-            <?= $fn->decodeHtmlChars(!empty($contentCate) ? $contentCate : '') ?>
+      <?php if ($contentCate): ?>
+        <div class="content-toggle mt-3 mb-3">
+          <div class="content-toggle__body-wrapper">
+            <div class="content-toggle__body content-main content-ck pro_tpl" id="toc-content">
+              <?= $fn->decodeHtmlChars($contentCate) ?>
+            </div>
           </div>
+          <p class="content-toggle__button">
+            <span class="text">Đọc tiếp bài viết</span>
+            <i class="fas fa-chevron-down"></i>
+          </p>
         </div>
-        <p class="content-toggle__button">
-          <span class="text">Đọc tiếp bài viết</span>
-          <i class="fas fa-chevron-down"></i>
-        </p>
-      </div>
+      <?php endif; ?>
     </div>
   </div>
 </div>

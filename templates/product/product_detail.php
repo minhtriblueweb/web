@@ -142,7 +142,9 @@
               </div>
               <?php if ($muahang): ?>
                 <div class="tab-pane fade" id="muahang-pro-detail" role="tabpanel">
-                  <?= $muahang["content$lang"] ?>
+                  <div class="content-main content-ck content-text">
+                    <?= $fn->decodeHtmlChars($muahang["content$lang"]) ?>
+                  </div>
                 </div>
               <?php endif ?>
               <div class="tab-pane fade" id="commentfb-pro-detail" role="tabpanel">

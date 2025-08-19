@@ -179,7 +179,7 @@ if ($id != '') {
   $curPage =  max(1, isset($_GET['page']) ? (int)$_GET['page'] : 1);
   $perPage = 10;
   $brandAll = $fn->show_data(['table' => 'tbl_product_brand', 'status' => 'hienthi', 'type' => $type, 'select' => "id, name{$lang}, slug{$lang},content{$lang},file"]);
-  $productBrand = $fn->show_data(['table' => 'tbl_product_brand', 'status' => 'hienthi', 'type' => $type, 'id' => $idb, 'limit' => 1, 'select' => "id,fileicon, name{$lang}, slug{$lang},content{$lang}"]);
+  $productBrand = $fn->show_data(['table' => 'tbl_product_brand', 'status' => 'hienthi', 'type' => $type, 'id' => $idb, 'limit' => 1, 'select' => "id,icon, name{$lang}, slug{$lang},content{$lang}"]);
   $options = ['table' => 'tbl_product', 'status' => 'hienthi', 'type' => $type, 'id_brand' => $idb, 'select' => "id, name{$lang}, slug{$lang}, file, regular_price, sale_price, views", 'pagination' => [$perPage, $curPage]];
   $total = $fn->count_data($options);
   $product = $fn->show_data($options);

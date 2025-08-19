@@ -129,8 +129,8 @@
             <div class="card-body">
               <?php
               $photoDetail = array();
-              $photoDetail['image'] = $result['fileicon'] ?? '';
-              $photoDetail['dimension'] = "Width: " . $config['product'][$type]['width_brand'] . " px - Height: " . $config['product'][$type]['height_brand'] . " px (" . $config['product'][$type]['img_type_brand'] . ")";
+              $photoDetail['image'] = $result['icon'] ?? '';
+              $photoDetail['dimension'] = "Width: " . $config['product'][$type]['width_brand_icon'] . " px - Height: " . $config['product'][$type]['height_brand_icon'] . " px (" . $config['product'][$type]['img_type_brand'] . ")";
               include TEMPLATE . LAYOUT . "icon.php"; ?>
             </div>
           </div>

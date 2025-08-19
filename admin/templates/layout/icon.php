@@ -1,8 +1,1 @@
-<div class="photoUpload-zone">
-  <div class="photoUpload-detail" id="photoUpload-preview1"><?= $fn->getImage(['file' => $photoDetail['image'], 'class' => 'img-preview rounded']) ?><?php if (!empty($photoDetail['image'])): ?><div class="delete-photoicon"><a href="javascript:void(0)" title="<?= xoa ?>"><i class="far fa-trash-alt"></i></a></div><?php endif; ?></div><label class="photoUpload-file" id="photo-zone1" for="file-zone1"><input type="file" name="fileicon" id="file-zone1" /><i class="fas fa-cloud-upload-alt"></i>
-    <p class="photoUpload-drop"><?= keovathahinhvaoday ?></p>
-    <p class="photoUpload-or"><?= hoac ?></p>
-    <p class="photoUpload-choose btn btn-sm bg-gradient-success"><?= chonhinh ?></p>
-  </label>
-  <div class="photoUpload-dimension"><?= $photoDetail['dimension'] ?></div>
-</div>
+<div class="photoUpload-zone"><div class="photoUpload-detail" id="photoUpload-preview1"><?= $fn->getImage(['file' => $photoDetail['image'], 'class' => 'img-preview rounded']) ?><?php if (!empty($photoDetail['image'])): ?><div class="delete-photoicon"><a href="javascript:void(0)" title="<?= xoa ?>"><i class="far fa-trash-alt"></i></a></div><?php endif; ?></div><label class="photoUpload-file" id="photo-zone1" for="file-zone1"><input type="file" name="icon" id="file-zone1" /><i class="fas fa-cloud-upload-alt"></i><p class="photoUpload-drop"><?= keovathahinhvaoday ?></p><p class="photoUpload-or"><?= hoac ?></p><p class="photoUpload-choose btn btn-sm bg-gradient-success"><?= chonhinh ?></p></label><div class="photoUpload-dimension"><?= $photoDetail['dimension'] ?></div></div>

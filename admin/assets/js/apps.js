@@ -677,7 +677,59 @@ let lastSlug = {};
 let lastSlugStatus = {};
 let slugVersion = {};
 let debounceTimers = {};
-
+$(document).ready(function () {
+  let originalSlug = {};
+  sluglang.split(',').forEach(lang => {
+    lastSlug[lang] = '';
+    lastSlugStatus[lang] = false;
+    slugVersion[lang] = 0;
+    originalSlug[lang] = $(`#slug${lang}`).val();
+  });
+  slugPress();
+  if ($("#slugchange").length) {
+    $("body").on("change", "#slugchange", function () {
+      if ($(this).prop("checked")) {
+        sluglang.split(',').forEach(function (lang) {
+          const title = $(`#name${lang}`).val();
+          if (title) {
+            slugPreview(title, lang);
+            slugPreviewTitleSeo(title, lang);
+          }
+        });
+      } else {
+        sluglang.split(',').forEach(function (lang) {
+          const slug = originalSlug[lang] || "";
+          $(`#slug${lang}`).val(slug);
+          $(`#slugurlpreview${lang} strong`).text(slug);
+        });
+      }
+    });
+  }
+  sluglang.split(',').forEach(function (lang) {
+    const $nameInput = $(`#name${lang}`);
+    const $slugInput = $(`#slug${lang}`);
+    if ($nameInput.length) {
+      $nameInput.on('input', function () {
+        const title = $(this).val();
+        if ($("#slugchange").length) {
+          if ($("#slugchange").prop("checked")) {
+            slugPreview(title, lang);
+          }
+          slugPreviewTitleSeo(title, lang);
+          return;
+        }
+        slugPreview(title, lang);
+        slugPreviewTitleSeo(title, lang);
+      });
+    }
+    if ($slugInput.length) {
+      $slugInput.on('input', function () {
+        const slug = $(this).val();
+        slugPreview(slug, lang, true);
+      });
+    }
+  });
+});
 function slugPress() {
   sluglang.split(',').forEach(lang => {
     const slug = $(`#slug${lang}`).val();
@@ -687,55 +739,6 @@ function slugPress() {
     }
   });
 }
-
-$(document).ready(function () {
-  sluglang.split(',').forEach(lang => {
-    lastSlug[lang] = '';
-    lastSlugStatus[lang] = false;
-    slugVersion[lang] = 0;
-  });
-  slugPress();
-  if ($("#slugchange").length) {
-    $("body").on("click", "#slugchange", function () {
-      slugChange($(this));
-    });
-  }
-  sluglang.split(',').forEach(function (lang) {
-    const $nameInput = $(`#name${lang}`);
-    const $slugInput = $(`#slug${lang}`);
-    if ($nameInput.length) {
-      $nameInput.on('input', function () {
-        const title = $(this).val();
-        const slug = slugConvert(title);
-        const oldSlug = $slugInput.val();
-        if (slug !== oldSlug) {
-          $slugInput.val(slug);
-        }
-        slugPreviewTitleSeo(title, lang);
-        clearTimeout(debounceTimers[lang]);
-        debounceTimers[lang] = setTimeout(() => {
-          if (lastSlug[lang] !== slug) {
-            lastSlug[lang] = slug;
-            slugCheck(lang);
-          }
-        }, 400);
-      });
-    }
-    if ($slugInput.length) {
-      $slugInput.on('input', function () {
-        const slug = $(this).val();
-        clearTimeout(debounceTimers[lang]);
-        debounceTimers[lang] = setTimeout(() => {
-          if (lastSlug[lang] !== slug) {
-            lastSlug[lang] = slug;
-            slugCheck(lang);
-          }
-        }, 400);
-      });
-    }
-  });
-});
-
 function slugConvert(slug, focus = false) {
   slug = slug.toLowerCase();
   slug = slug.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
@@ -750,15 +753,19 @@ function slugConvert(slug, focus = false) {
 }
 
 function slugPreview(title, lang, focus = false) {
-  const slug = slugConvert(title, focus);
-  $(`#slug${lang}`).val(slug);
-  $(`#slugurlpreview${lang} strong`).text(slug);
-  $(`#seourlpreview${lang} strong`).text(slug);
+  var slug = slugConvert(title, focus);
+  $('#slug' + lang).val(slug);
+  $('#slugurlpreview' + lang + ' strong').text(slug);
+  $('#seourlpreview' + lang + ' strong').text(slug);
+  clearTimeout(debounceTimers[lang]);
+  debounceTimers[lang] = setTimeout(() => {
+    if (lastSlug[lang] !== slug) {
+      lastSlug[lang] = slug;
+      slugCheck(lang);
+    }
+  }, 400);
 }
-$(document).on("keyup input paste", "#namevi", function () {
-  const title = $(this).val();
-  slugPreview(title, "vi", true);
-});
+
 function slugPreviewTitleSeo(title, lang) {
   const $title = $(`#title${lang}`);
   if ($title.length && !$title.val()) {
@@ -827,7 +834,7 @@ function slugCheck(lang) {
 /* Reader image */
 function readImage(inputFile, elementPhoto) {
   if (inputFile[0].files[0]) {
-    if (inputFile[0].files[0].name.match(/.(jpg|jpeg|png|gif|webp)$/i)) {
+    if (inputFile[0].files[0].name.match(/.(jpg|jpeg|png|gif|webp|avif)$/i)) {
       var size = parseInt(inputFile[0].files[0].size) / 1024;
 
       if (size <= 4096) {

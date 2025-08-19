@@ -147,6 +147,8 @@ $config['product'][$type]['seo_brand'] = true;
 $config['product'][$type]['width_brand'] = $config['size-img'][$type]['brand']['width'] = 150;
 $config['product'][$type]['height_brand'] = $config['size-img'][$type]['brand']['height'] = 150;
 $config['product'][$type]['thumb_brand'] = '100x100x1';
+$config['product'][$type]['width_brand_icon'] = 1000;
+$config['product'][$type]['height_brand_icon'] = 400;
 $config['product'][$type]['img_type_brand'] = '.jpg|.gif|.png|.jpeg|.gif';
 $config['size-img'][$type]['brand']['active'] = true;
 

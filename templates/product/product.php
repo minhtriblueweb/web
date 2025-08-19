@@ -26,9 +26,9 @@
               </div>
             <?php endforeach; ?>
           <?php elseif (!empty($idb) && !empty($brandAll)) : ?>
-            <?php if ($productBrand['fileicon']) : ?>
+            <?php if ($productBrand['icon']) : ?>
               <div class="m-auto mt-3" style="width: 1000px">
-                <?= $fn->getImage(['file' => $productBrand['fileicon'], 'class' => 'w-100', 'alt' => $productBrand["name$lang"], 'title' => $productBrand["name$lang"]]) ?>
+                <?= $fn->getImage(['file' => $productBrand['icon'], 'class' => 'w-100', 'alt' => $productBrand["name$lang"], 'title' => $productBrand["name$lang"], 'lazy' => false]) ?>
               </div>
             <?php endif; ?>
           <?php endif; ?>

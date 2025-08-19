@@ -268,8 +268,17 @@ class Functions
     $data_prepared = [];
     foreach ($data as $key => $val) {
       if ($key === 'options') continue;
+
+      // không tự ý tạo thêm cột chưa có
       if (!in_array($key, $columns)) continue;
       $data_prepared[$key] = $val;
+
+      // nếu chưa có cột thì tạo thêm
+      // if (!in_array($key, $columns)) {
+      //   $this->ensureColumnExists($table, $key, "TEXT");
+      //   $columns[] = $key;
+      // }
+      // $data_prepared[$key] = $val;
     }
     if (!empty($data['options']) && is_array($data['options']) && in_array('options', $columns)) {
       $data_prepared['options'] = json_encode($data['options'], JSON_UNESCAPED_UNICODE);
@@ -294,7 +303,7 @@ class Functions
     $thumb_filename = $old_filename = '';
     $icon_filename = $old_icon = '';
     $has_file_main = is_array($files) && isset($files['file']) && is_uploaded_file($files['file']['tmp_name']);
-    $has_file_icon = is_array($files) && isset($files['fileicon']) && is_uploaded_file($files['fileicon']['tmp_name']);
+    $has_file_icon = is_array($files) && isset($files['icon']) && is_uploaded_file($files['icon']['tmp_name']);
 
     if (!empty($id)) {
       if ($has_file_main || (!empty($data['photo_deleted']) && $data['photo_deleted'] == '1')) {
@@ -302,8 +311,8 @@ class Functions
         $old_filename = $old['file'] ?? '';
       }
       if ($has_file_icon || (!empty($data['photoicon_deleted']) && $data['photoicon_deleted'] == '1')) {
-        $old = $this->db->rawQueryOne("SELECT fileicon FROM $table WHERE id = ?", [(int)$id]);
-        $old_icon = $old['fileicon'] ?? '';
+        $old = $this->db->rawQueryOne("SELECT icon FROM $table WHERE id = ?", [(int)$id]);
+        $old_icon = $old['icon'] ?? '';
       }
     }
 
@@ -324,7 +333,7 @@ class Functions
 
     if ($has_file_icon) {
       $icon_filename = $this->uploadImage([
-        'file' => $files['fileicon'],
+        'file' => $files['icon'],
         'custom_name' => $data_prepared['namevi'] ?? ($data_prepared['type'] ?? ''),
         'old_file_path' => UPLOADS . $old_icon,
         'convert_webp' => $convert_webp,
@@ -350,8 +359,8 @@ class Functions
         }
       }
       if ($has_file_icon || (!empty($data['photoicon_deleted']) && $data['photoicon_deleted'] == '1')) {
-        if (in_array('fileicon', $columns)) {
-          $fields[] = "`fileicon` = ?";
+        if (in_array('icon', $columns)) {
+          $fields[] = "`icon` = ?";
           $params[] = $icon_filename;
         }
       }
@@ -398,8 +407,8 @@ class Functions
         $placeholders[] = '?';
         $params[] = $thumb_filename;
       }
-      if ($has_file_icon && in_array('fileicon', $columns)) {
-        $columns_insert[] = 'fileicon';
+      if ($has_file_icon && in_array('icon', $columns)) {
+        $columns_insert[] = 'icon';
         $placeholders[] = '?';
         $params[] = $icon_filename;
       }
@@ -418,24 +427,17 @@ class Functions
     $this->transfer($msg, $redirect, !empty($id) ? $result : $inserted);
   }
 
-
   // Hàm lấy tên cột bảng
   public function getColumnNames($table)
   {
     $result = $this->db->rawQueryArray("SHOW COLUMNS FROM `$table`");
     return array_column($result, 'Field');
   }
-  private function ensureLangColumns($table, $baseFields, $langs)
+  private function ensureColumnExists($table, $column, $type = "TEXT")
   {
     $columns = $this->getColumnNames($table);
-
-    foreach ($langs as $lang) {
-      foreach ($baseFields as $field) {
-        $colName = $field . $lang;
-        if (!in_array($colName, $columns)) {
-          $this->db->execute("ALTER TABLE `$table` ADD `$colName` TEXT NULL");
-        }
-      }
+    if (!in_array($column, $columns)) {
+      $this->db->execute("ALTER TABLE `$table` ADD `$column` $type NULL");
     }
   }
 

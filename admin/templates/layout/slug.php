@@ -1,1 +1,36 @@
-<div class="card card-primary card-outline text-sm"><div class="card-header"><h3 class="card-title"><?= duongdan ?></h3><span class="pl-2 text-danger">(<?= vuilongkhongnhaptrungtieude ?>)</span></div><div class="card-body card-slug"><?php if(!empty($id)):?><label for="slugchange" class="d-inline-block align-middle text-info mb-2 mr-2"><?= thaydoiduongdantheotieudemoi ?>:</label><div class="custom-control custom-checkbox d-inline-block align-middle mb-2"><input type="checkbox" class="custom-control-input" name="slugchange" id="slugchange"><label for="slugchange" class="custom-control-label"></label></div><?php endif;?><div class="card card-primary card-outline card-outline-tabs"><div class="card-header p-0 border-bottom-0"><ul class="nav nav-tabs" role="tablist" id="custom-tabs-three-tab-lang"><?php foreach($config['website']['lang'] as $k=>$v){?><li class="nav-item"><a class="nav-link <?=($k==$lang)?'active':''?>" id="tabs-lang-<?= $k ?>" data-toggle="pill" href="#tabs-sluglang-<?= $k ?>" role="tab" aria-controls="tabs-sluglang-<?= $k ?>" aria-selected="<?=($k==$lang)?'true':'false'?>"><?= $v ?></a></li><?php }?></ul></div><div class="card-body"><div class="tab-content" id="custom-tabs-three-tabContent-lang"><input type="hidden" class="slug-id" value="<?=!empty($id)?$id:''?>"/><input type="hidden" class="slug-table" value="<?= $table ?>"/><input type="hidden" class="slug-copy" value=""/><?php foreach($config['website']['lang'] as $k=>$v){?><div class="tab-pane fade show <?=($k==$lang)?'active':''?>" id="tabs-sluglang-<?= $k ?>" role="tabpanel" aria-labelledby="tabs-lang-<?= $k ?>"><div class="form-group mb-0"><label class="d-block"><?= duongdanmau ?> (<?= $k ?>):<span class="pl-2 font-weight-normal check-seo" id="slugurlpreview<?= $k ?>"><?= BASE ?><?php if(!empty($id)):?><strong class="text-info"><?= $result['slug'.$k]; ?></strong><?php endif;?></span></label><input type="text" class="form-control slug-input no-validate text-sm for-seo" name="data[slug<?= $k ?>]" id="slug<?= $k ?>" placeholder="<?= duongdan ?> (<?= $k ?>)" value="<?= $_POST['slug'.$k]??($result['slug'.$k]??"") ?>" <?=($k==$lang)?'required':''?>/><input type="hidden" id="slug-default<?= $k ?>" value="<?= $_POST['slug'.$k]??($result['slug'.$k]??"") ?>"><div id="slug-alert-wrapper" class="mt-2" style="min-height:20px;"><p id="alert-slug-danger<?= $k ?>" class="alert-slug text-danger mb-0 d-none"><i class="fas fa-exclamation-triangle mr-1"></i><span><?= duongdandatontaiduongdantruycapmucnaycothebitrunglap ?>.</span></p><p id="alert-slug-success<?= $k ?>" class="alert-slug text-success mb-0 d-none"><i class="fa-solid fa-circle-check mr-1"></i><span><?= duongdanhople ?>.</span></p></div><?php if(!empty($message)):?><p class="alert-slug text-danger mt-2 mb-0" id="alert-slug-dangervi"><i class="fas fa-exclamation-triangle mr-1"></i><span><?= $message ?></span></p><?php endif;?></div></div><?php }?></div></div></div></div></div>
+<div class="card card-primary card-outline text-sm">
+  <div class="card-header">
+    <h3 class="card-title"><?= duongdan ?></h3><span class="pl-2 text-danger">(<?= vuilongkhongnhaptrungtieude ?>)</span>
+  </div>
+  <div class="card-body card-slug">
+    <?php if (!empty($id)): ?>
+      <label for="slugchange" class="d-inline-block align-middle text-info mb-2 mr-2"><?= thaydoiduongdantheotieudemoi ?>:</label>
+      <div class="custom-control custom-checkbox d-inline-block align-middle mb-2">
+        <input type="checkbox" class="custom-control-input" name="slugchange" id="slugchange"><label for="slugchange" class="custom-control-label"></label>
+      </div>
+    <?php endif; ?>
+
+    <div class="card card-primary card-outline card-outline-tabs">
+      <div class="card-header p-0 border-bottom-0">
+        <ul class="nav nav-tabs" role="tablist" id="custom-tabs-three-tab-lang"><?php foreach ($config['website']['lang'] as $k => $v) { ?><li class="nav-item"><a class="nav-link <?= ($k == $lang) ? 'active' : '' ?>" id="tabs-lang-<?= $k ?>" data-toggle="pill" href="#tabs-sluglang-<?= $k ?>" role="tab" aria-controls="tabs-sluglang-<?= $k ?>" aria-selected="<?= ($k == $lang) ? 'true' : 'false' ?>"><?= $v ?></a></li><?php } ?></ul>
+      </div>
+      <div class="card-body">
+        <div class="tab-content" id="custom-tabs-three-tabContent-lang"><input type="hidden" class="slug-id" value="<?= !empty($id) ? $id : '' ?>" /><input type="hidden" class="slug-table" value="<?= $table ?>" /><input type="hidden" class="slug-copy" value="" /><?php foreach ($config['website']['lang'] as $k => $v) { ?><div class="tab-pane fade show <?= ($k == $lang) ? 'active' : '' ?>" id="tabs-sluglang-<?= $k ?>" role="tabpanel" aria-labelledby="tabs-lang-<?= $k ?>">
+              <div class="form-group mb-0">
+                <label class="d-block">
+                  <?= duongdanmau ?> (<?= $k ?>):
+                  <span class="pl-2 font-weight-normal check-seo" id="slugurlpreview<?= $k ?>">
+                    <?= BASE ?><strong class="text-info"><?= $result["slug$k"] ?? '' ?></strong>
+                  </span>
+                </label>
+                <input type="text" class="form-control slug-input no-validate text-sm for-seo" name="data[slug<?= $k ?>]" id="slug<?= $k ?>" placeholder="<?= duongdan ?> (<?= $k ?>)" value="<?= $_POST["slug$k"] ?? ($result["slug$k"] ?? "") ?>" <?= ($k == $lang) ? 'required' : '' ?> /><input type="hidden" id="slug-default<?= $k ?>" value="<?= $_POST["slug$k"] ?? ($result["slug$k"] ?? "") ?>">
+                <div id="slug-alert-wrapper" class="mt-2" style="min-height:20px;">
+                  <p id="alert-slug-danger<?= $k ?>" class="alert-slug text-danger mb-0 d-none"><i class="fas fa-exclamation-triangle mr-1"></i><span><?= duongdandatontaiduongdantruycapmucnaycothebitrunglap ?>.</span></p>
+                  <p id="alert-slug-success<?= $k ?>" class="alert-slug text-success mb-0 d-none"><i class="fa-solid fa-circle-check mr-1"></i><span><?= duongdanhople ?>.</span></p>
+                </div><?php if (!empty($message)): ?><p class="alert-slug text-danger mt-2 mb-0" id="alert-slug-dangervi"><i class="fas fa-exclamation-triangle mr-1"></i><span><?= $message ?></span></p><?php endif; ?>
+              </div>
+            </div><?php } ?></div>
+      </div>
+    </div>
+  </div>
+</div>

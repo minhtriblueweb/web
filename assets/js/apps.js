@@ -452,44 +452,6 @@ NN_FRAMEWORK.DomChange = function () {
 
 /* Slick */
 NN_FRAMEWORK.SlickPage = function () {
-  if (isExist($(".slick-criterion"))) {
-    $(".slick-criterion").slick({
-      dots: false,
-      arrows: false,
-      autoplay: true,
-      infinite: true,
-      verticalSwiping: false,
-      slidesToShow: 5,
-      slidesToScroll: 1,
-      centerMode: false,
-      vertical: false,
-      swipeToSlide: true,
-      responsive: [
-        {
-          breakpoint: 770,
-          settings: {
-            arrows: false,
-            slidesToShow: 3,
-          },
-        },
-        {
-          breakpoint: 655,
-          settings: {
-            arrows: false,
-            slidesToShow: 2,
-          },
-        },
-        {
-          breakpoint: 425,
-          settings: {
-            arrows: false,
-            slidesToShow: 1,
-          },
-        },
-      ],
-    });
-  }
-
   if (isExist($(".slick-product"))) {
     $(".slick-product").slick({
       dots: false,
@@ -527,38 +489,6 @@ NN_FRAMEWORK.SlickPage = function () {
       ],
     });
   }
-
-  if (isExist($(".slick-banner"))) {
-    $(".slick-banner").slick({
-      dots: false,
-      arrows: false,
-      autoplay: true,
-      infinite: true,
-      verticalSwiping: false,
-      slidesToShow: 3,
-      slidesToScroll: 1,
-      centerMode: false,
-      vertical: false,
-      swipeToSlide: true,
-      responsive: [
-        {
-          breakpoint: 655,
-          settings: {
-            arrows: false,
-            slidesToShow: 2,
-          },
-        },
-        {
-          breakpoint: 425,
-          settings: {
-            arrows: false,
-            slidesToShow: 1,
-          },
-        },
-      ],
-    });
-  }
-
   if (isExist($(".slick-slideshow"))) {
     $('.slick-slideshow').slick({
       slidesToShow: 1,
@@ -574,8 +504,6 @@ NN_FRAMEWORK.SlickPage = function () {
       fade: true
     });
   }
-
-
   if (isExist($(".slick-service"))) {
     $(".slick-service").slick({
       dots: false,
@@ -613,7 +541,6 @@ NN_FRAMEWORK.SlickPage = function () {
       ],
     });
   }
-
   if (isExist($(".slick-feedback"))) {
     $(".slick-feedback").slick({
       dots: false,
@@ -641,7 +568,7 @@ NN_FRAMEWORK.SlickPage = function () {
           breakpoint: 655,
           settings: {
             arrows: false,
-            slidesToShow: 1,
+            slidesToShow: 1, fade: true,
           },
         },
       ],
@@ -734,7 +661,6 @@ NN_FRAMEWORK.SlickPage = function () {
 
   if (isExist($(".slick-pro-detail"))) {
     var slideCount = $(".slick-pro-detail > div").length;
-
     $(".slick-pro-detail").slick({
       slidesToShow: 4,
       slidesToScroll: 1,
@@ -742,7 +668,7 @@ NN_FRAMEWORK.SlickPage = function () {
       prevArrow: $(".slick-prev-btn"),
       nextArrow: $(".slick-next-btn"),
       dots: false,
-      infinite: false,
+      infinite: true,
       speed: 500,
       responsive: [
         {

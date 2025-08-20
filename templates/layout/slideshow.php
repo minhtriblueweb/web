@@ -9,7 +9,6 @@
             $height = isset($opts['height']) ? (int)$opts['height'] : '';
             $zc     = isset($opts['zc']) ? (int)$opts['zc'] : 1;
           ?>
-
             <div class="slideshow-item">
               <a class="slideshow-image" href="<?= !empty($slide['link']) ? $slide['link'] : 'javascript:void(0)' ?>" target="_blank" title="<?= $slide["name$lang"] ?>">
                 <?= $fn->getImageCustom([

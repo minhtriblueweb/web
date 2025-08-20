@@ -101,7 +101,7 @@ foreach ($menu_list as $v_list) {
     <li><a class="transition <?= ($type == 'gioi-thieu') ? 'active' : '' ?>" href="gioi-thieu"><span>Giới thiệu</span></a></li>
     <li><a class="transition <?= ($type == 'mua-hang') ? 'active' : '' ?>" href="mua-hang"><span>Mua hàng</span></a></li>
     <li>
-      <a class="transition <?= ($idb) ? 'active' : '' ?>"><span>Thương hiệu</span></a>
+      <a class="transition <?= (!empty($idb)) ? 'active' : '' ?>"><span>Thương hiệu</span></a>
       <?php if (!empty($brand_menu)) : ?>
         <ul>
           <?php foreach ($brand_menu as $b) : ?>

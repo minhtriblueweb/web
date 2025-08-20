@@ -207,7 +207,7 @@
       <div class="title-main mt-4" data-aos="fade-up" data-aos-duration="500">
         <h2><?= sanphamcungloai ?></h2>
       </div>
-      <div class="slick-product slick-d-none" data-aos="fade-up" data-aos-duration="500">
+      <div class="slick-product slick-d-none border-0" data-aos="fade-up" data-aos-duration="500">
         <?php foreach ($product as $k => $v): ?>
           <?php include TEMPLATE . LAYOUT . 'item-product.php'; ?>
         <?php endforeach; ?>

@@ -94,7 +94,7 @@ $config['news'][$type]['images'] = true;
 $config['news'][$type]['show_images'] = true;
 $config['news'][$type]['gallery'] = array();
 $config['news'][$type]['desc'] = true;
-$config['news'][$type]['content'] = false;
+$config['news'][$type]['content'] = true;
 $config['news'][$type]['content_cke'] = false;
 $config['news'][$type]['seo'] = false;
 $config['news'][$type]['width'] = $config['size-img'][$type]['man']['width'] = 100;

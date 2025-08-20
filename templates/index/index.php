@@ -107,7 +107,7 @@
       </div>
       <div class="slick-brand slick-d-none">
         <?php foreach ($brand as $b) : ?>
-          <a class="scale-img" href="<?= $b["slug$lang"] ?>" title="<?= $b["name$lang"] ?>">
+          <a class=".scale-img hover-glass" href="<?= $b["slug$lang"] ?>" title="<?= $b["name$lang"] ?>">
             <?= $fn->getImageCustom(['file' => $b['file'], 'width' => $optsetting_json["san-pham_brand_width"], 'height' => $optsetting_json["san-pham_brand_height"], 'zc' => $optsetting_json["san-pham_brand_zc"], 'alt' => $b["name$lang"], 'title' => $b["name$lang"], 'lazy' => true]) ?>
           </a>
         <?php endforeach; ?>

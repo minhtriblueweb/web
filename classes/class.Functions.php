@@ -1654,4 +1654,17 @@ class Functions
     $b = max(0, min(255, $b - ($b * $percent / 100)));
     return sprintf("%02x%02x%02x", $r, $g, $b);
   }
+  /* Lấy date */
+  public function makeDate($time = 0, $dot = '.', $lang = 'vi', $f = false)
+  {
+    $str = ($lang == 'vi') ? date("d{$dot}m{$dot}Y", $time) : date("m{$dot}d{$dot}Y", $time);
+
+    if ($f == true) {
+      $thu['vi'] = array('Chủ nhật', 'Thứ hai', 'Thứ ba', 'Thứ tư', 'Thứ năm', 'Thứ sáu', 'Thứ bảy');
+      $thu['en'] = array('Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday');
+      $str = $thu[$lang][date('w', $time)] . ', ' . $str;
+    }
+
+    return $str;
+  }
 }

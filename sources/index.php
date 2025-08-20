@@ -9,7 +9,7 @@ $tintuc = $fn->show_data([
   'table' => 'tbl_news',
   'status' => 'hienthi,noibat',
   'type'   => 'tin-tuc',
-  'select' => "file, name$lang, desc$lang, slug$lang",
+  'select' => "file, name$lang, desc$lang, slug$lang,updated_at",
   'limit'  => 8
 ]);
 $feedback = $fn->show_data([

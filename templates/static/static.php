@@ -3,7 +3,7 @@
     <?php if (!empty($static["content"])) { ?>
       <div class="title-list-hot mt-4">
         <h2><?= !empty($static["name"]) ? $static["name"] : $titleMain ?></h2>
-        <div class="animate-border bg-animate-border mt-1"></div>
+        <!-- <div class="animate-border bg-animate-border mt-1"></div> -->
       </div>
       <div class="wrap-content content-ck">
         <div class="row">

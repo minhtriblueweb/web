@@ -575,18 +575,30 @@ NN_FRAMEWORK.SlickPage = function () {
     });
   }
 
-  if (isExist($(".slick-news"))) {
-    $(".slick-news").slick({
-      dots: false,
-      arrows: false,
-      autoplay: true,
-      infinite: true,
-      verticalSwiping: true,
-      slidesToShow: 3,
+  if (isExist($(".slick-tab-cat"))) {
+    $(".slick-tab-cat").slick({
+      slidesToShow: 5,
       slidesToScroll: 1,
-      centerMode: false,
-      vertical: true,
-      swipeToSlide: true,
+      infinite: false, autoplay: true, speed: 1000,
+      arrows: true,
+      prevArrow: '<button type="button" class="slick-tab-cat-prev"><i class="fa fa-angle-left"></i></button>',
+      nextArrow: '<button type="button" class="slick-tab-cat-next"><i class="fa fa-angle-right"></i></button>',
+      dots: false,
+      variableWidth: true,
+      responsive: [
+        {
+          breakpoint: 768,
+          settings: {
+            slidesToShow: 3
+          }
+        },
+        {
+          breakpoint: 480,
+          settings: {
+            slidesToShow: 2
+          }
+        }
+      ]
     });
   }
 
@@ -660,7 +672,6 @@ NN_FRAMEWORK.SlickPage = function () {
   }
 
   if (isExist($(".slick-pro-detail"))) {
-    var slideCount = $(".slick-pro-detail > div").length;
     $(".slick-pro-detail").slick({
       slidesToShow: 4,
       slidesToScroll: 1,
@@ -691,11 +702,6 @@ NN_FRAMEWORK.SlickPage = function () {
         }
       ]
     });
-
-    // Ẩn nút điều hướng nếu ảnh ≤ 4
-    if (slideCount <= 4) {
-      $(".slick-arrow-control").hide();
-    }
   }
 
   if (isExist($(".slick_product_list"))) {

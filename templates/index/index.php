@@ -50,7 +50,7 @@
       <div class="title-list">
         <h2><span class="text-split"><?= $v_list["name$lang"] ?></span></h2>
         <div class="box-tab-cat">
-          <ul class="tab-cat" data-aos="fade-left" data-aos-duration="500">
+          <ul class="slick-tab-cat" data-aos="fade-left" data-aos-duration="500">
             <li><a href="#" class="tab-cat-link active" data-tab="tab-all-<?= $v_list['id'] ?>">Tất cả</a></li>
             <?php foreach ($productCat as $v_cat): ?>
               <li>

@@ -8,7 +8,7 @@
         <div class="wrap-main wrap-template content-ck w-clear" style="margin: 0 auto !important;">
           <div class="pucblisher d-flex justify-content-center mt-2">
             <p class="me-3 mb-0"><i class="fa-regular fa-calendar me-2"></i><?= $fn->makeDate(strtotime($rowDetail["updated_at"]), '/', $lang, true); ?></p>
-            <p class="mb-0"><i class="fa-solid fa-eye me-2"></i><?= $rowDetail["views"] ?></p>
+            <p class="mb-0"><i class="fa-solid fa-eye me-2"></i><?= $rowDetail["views"] ?> <?= luotxem ?></p>
           </div>
           <?php if ($rowDetail["desc$lang"]): ?>
             <div class="content-main">

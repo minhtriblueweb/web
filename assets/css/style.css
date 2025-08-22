@@ -607,6 +607,9 @@ input[type='number']::-webkit-inner-spin-button {
 .pucblisher {
   color: #8d8d8d;
 }
+.pucblisher p {
+  font-size: 14px;
+}
 
 .mucluc-dropdown-list_button {
   font-size: 15px;
@@ -2106,7 +2109,7 @@ img:not([src]) {
   margin: 0;
   border-left: 4px solid #fff;
   padding-left: 15px;
-  max-width: 40%;
+  width: 40%;
   display: flex;
   align-items: center;
 }
@@ -2120,9 +2123,8 @@ img:not([src]) {
 }
 .box-tab-cat {
   width: 60%;
-  overflow: hidden; /* ẩn phần tràn ra */
-  position: relative;
   display: flex;
+  justify-content: space-between;
 }
 .box-tab-cat .slick-tab-cat {
   display: flex;
@@ -3340,7 +3342,6 @@ img:not([src]) {
   border-radius: 4px;
   cursor: pointer;
 }
-
 .slick-prev-btn {
   left: 10px;
 }
@@ -5951,23 +5952,6 @@ coccocgrammar {
   .grid-product {
     grid-template-columns: repeat(2, 1fr);
   }
-
-  .box-tab-cat {
-    position: relative;
-    width: 100%;
-    max-width: 100%;
-    justify-content: flex-start;
-    margin-top: 15px;
-  }
-
-  .box-tab-cat .tab-cat {
-    width: 100%;
-  }
-
-  .title-list h2 {
-    max-width: 90%;
-  }
-
   .wrap-product-hot .wrap-content {
     border-radius: 20px 20px 10px 10px;
   }
@@ -6169,12 +6153,6 @@ coccocgrammar {
     width: calc(100% - 120px);
     padding-right: 0px;
   }
-  .box-tab-cat .slick-tab-cat {
-    width: 100%;
-  }
-  .box-tab-cat .slick-tab-cat li {
-    font-size: 13px;
-  }
 }
 
 @media (max-width: 375px) {
@@ -6189,6 +6167,29 @@ coccocgrammar {
 
   .footer-policy {
     width: 100%;
+  }
+  .title-list {
+    display: block;
+  }
+  .title-list h2 {
+    width: 100%;
+  }
+  .box-tab-cat {
+    width: 100%;
+    margin-top: 15px;
+  }
+
+  .box-tab-cat .slick-tab-cat {
+    width: 100%;
+  }
+  .box-tab-cat .slick-tab-cat li {
+    font-size: 13px;
+  }
+  .slick-tab-cat-prev {
+    left: -20px;
+  }
+  .slick-tab-cat-next {
+    right: -20px;
   }
 }
 

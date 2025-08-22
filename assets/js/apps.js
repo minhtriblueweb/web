@@ -578,7 +578,7 @@ NN_FRAMEWORK.SlickPage = function () {
   if (isExist($(".slick-tab-cat"))) {
     $(".slick-tab-cat").slick({
       slidesToShow: 5,
-      slidesToScroll: 1,
+      slidesToScroll: 5,
       infinite: false, autoplay: true, speed: 1000,
       arrows: true,
       prevArrow: '<button type="button" class="slick-tab-cat-prev"><i class="fa fa-angle-left"></i></button>',

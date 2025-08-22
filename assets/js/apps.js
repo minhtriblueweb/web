@@ -575,32 +575,35 @@ NN_FRAMEWORK.SlickPage = function () {
     });
   }
 
-  if (isExist($(".slick-tab-cat"))) {
-    $(".slick-tab-cat").slick({
-      slidesToShow: 5,
-      slidesToScroll: 5,
-      infinite: false, autoplay: true, speed: 1000,
-      arrows: true,
-      prevArrow: '<button type="button" class="slick-tab-cat-prev"><i class="fa fa-angle-left"></i></button>',
-      nextArrow: '<button type="button" class="slick-tab-cat-next"><i class="fa fa-angle-right"></i></button>',
-      dots: false,
-      variableWidth: true,
-      responsive: [
-        {
-          breakpoint: 768,
-          settings: {
-            slidesToShow: 3
-          }
-        },
-        {
-          breakpoint: 480,
-          settings: {
-            slidesToShow: 2
-          }
+  $(".slick-tab-cat").slick({
+    slidesToShow: 4,
+    slidesToScroll: 4,
+    infinite: false,
+    autoplay: false,
+    speed: 1000,
+    arrows: true,
+    prevArrow: '<button type="button" class="slick-tab-cat-prev"><i class="fa fa-angle-left"></i></button>',
+    nextArrow: '<button type="button" class="slick-tab-cat-next"><i class="fa fa-angle-right"></i></button>',
+    dots: false,
+    variableWidth: false,
+    responsive: [
+      {
+        breakpoint: 768,
+        settings: {
+          slidesToShow: 3,
+          slidesToScroll: 3
         }
-      ]
-    });
-  }
+      },
+      {
+        breakpoint: 480,
+        settings: {
+          slidesToShow: 2,
+          slidesToScroll: 2
+        }
+      }
+    ]
+  });
+
 
   if (isExist($(".slick-col-right"))) {
     $(".slick-col-right").slick({
@@ -804,101 +807,101 @@ function goToByScroll(id) {
   if ($el.length) {
     $("html, body").animate(
       {
-        scrollTop: $el.offset().top - 90, // trừ khoảng top nếu có header
+        scrollTop: $el.offset().top - 90,
       },
       500
     );
   }
 }
 
-NN_FRAMEWORK.aweOwlPage = function () {
-  var owl = $(".owl-carousel.in-page");
-  owl.each(function () {
-    var xs_item = $(this).attr("data-xs-items");
-    var md_item = $(this).attr("data-md-items");
-    var lg_item = $(this).attr("data-lg-items");
-    var sm_item = $(this).attr("data-sm-items");
-    var margin = $(this).attr("data-margin");
-    var dot = $(this).attr("data-dot");
-    var nav = $(this).attr("data-nav");
-    var height = $(this).attr("data-height");
-    var play = $(this).attr("data-play");
-    var loop = $(this).attr("data-loop");
+// NN_FRAMEWORK.aweOwlPage = function () {
+//   var owl = $(".owl-carousel.in-page");
+//   owl.each(function () {
+//     var xs_item = $(this).attr("data-xs-items");
+//     var md_item = $(this).attr("data-md-items");
+//     var lg_item = $(this).attr("data-lg-items");
+//     var sm_item = $(this).attr("data-sm-items");
+//     var margin = $(this).attr("data-margin");
+//     var dot = $(this).attr("data-dot");
+//     var nav = $(this).attr("data-nav");
+//     var height = $(this).attr("data-height");
+//     var play = $(this).attr("data-play");
+//     var loop = $(this).attr("data-loop");
 
-    if (typeof margin !== typeof undefined && margin !== false) {
-    } else {
-      margin = 30;
-    }
-    if (typeof xs_item !== typeof undefined && xs_item !== false) {
-    } else {
-      xs_item = 1;
-    }
-    if (typeof sm_item !== typeof undefined && sm_item !== false) {
-    } else {
-      sm_item = 3;
-    }
-    if (typeof md_item !== typeof undefined && md_item !== false) {
-    } else {
-      md_item = 3;
-    }
-    if (typeof lg_item !== typeof undefined && lg_item !== false) {
-    } else {
-      lg_item = 3;
-    }
+//     if (typeof margin !== typeof undefined && margin !== false) {
+//     } else {
+//       margin = 30;
+//     }
+//     if (typeof xs_item !== typeof undefined && xs_item !== false) {
+//     } else {
+//       xs_item = 1;
+//     }
+//     if (typeof sm_item !== typeof undefined && sm_item !== false) {
+//     } else {
+//       sm_item = 3;
+//     }
+//     if (typeof md_item !== typeof undefined && md_item !== false) {
+//     } else {
+//       md_item = 3;
+//     }
+//     if (typeof lg_item !== typeof undefined && lg_item !== false) {
+//     } else {
+//       lg_item = 3;
+//     }
 
-    if (loop == 1) {
-      loop = true;
-    } else {
-      loop = false;
-    }
-    if (dot == 1) {
-      dot = true;
-    } else {
-      dot = false;
-    }
-    if (nav == 1) {
-      nav = true;
-    } else {
-      nav = false;
-    }
-    if (play == 1) {
-      play = true;
-    } else {
-      play = false;
-    }
+//     if (loop == 1) {
+//       loop = true;
+//     } else {
+//       loop = false;
+//     }
+//     if (dot == 1) {
+//       dot = true;
+//     } else {
+//       dot = false;
+//     }
+//     if (nav == 1) {
+//       nav = true;
+//     } else {
+//       nav = false;
+//     }
+//     if (play == 1) {
+//       play = true;
+//     } else {
+//       play = false;
+//     }
 
-    $(this).owlCarousel({
-      loop: loop,
-      margin: Number(margin),
-      responsiveClass: true,
-      dots: dot,
-      nav: nav,
-      navText: [
-        '<div class="owlleft"><svg viewBox="0 0 16000 16000" style="position:absolute;top:0;left:0;width:100%;height:100%;"><polyline class="a" points="11040,1920 4960,8000 11040,14080 "></polyline></svg></div>',
-        '<div class="owlright"><svg viewBox="0 0 16000 16000" style="position:absolute;top:0;left:0;width:100%;height:100%;"><polyline class="a" points="4960,1920 11040,8000 4960,14080 "></polyline></svg></div>',
-      ],
-      autoplay: play,
-      autoplayTimeout: 4000,
-      smartSpeed: 3000,
-      autoplayHoverPause: true,
-      autoHeight: false,
-      responsive: {
-        0: {
-          items: Number(xs_item),
-        },
-        600: {
-          items: Number(sm_item),
-        },
-        1000: {
-          items: Number(md_item),
-        },
-        1200: {
-          items: Number(lg_item),
-        },
-      },
-    });
-  });
-};
+//     $(this).owlCarousel({
+//       loop: loop,
+//       margin: Number(margin),
+//       responsiveClass: true,
+//       dots: dot,
+//       nav: nav,
+//       navText: [
+//         '<div class="owlleft"><svg viewBox="0 0 16000 16000" style="position:absolute;top:0;left:0;width:100%;height:100%;"><polyline class="a" points="11040,1920 4960,8000 11040,14080 "></polyline></svg></div>',
+//         '<div class="owlright"><svg viewBox="0 0 16000 16000" style="position:absolute;top:0;left:0;width:100%;height:100%;"><polyline class="a" points="4960,1920 11040,8000 4960,14080 "></polyline></svg></div>',
+//       ],
+//       autoplay: play,
+//       autoplayTimeout: 4000,
+//       smartSpeed: 3000,
+//       autoplayHoverPause: true,
+//       autoHeight: false,
+//       responsive: {
+//         0: {
+//           items: Number(xs_item),
+//         },
+//         600: {
+//           items: Number(sm_item),
+//         },
+//         1000: {
+//           items: Number(md_item),
+//         },
+//         1200: {
+//           items: Number(lg_item),
+//         },
+//       },
+//     });
+//   });
+// };
 
 /* Tools */
 NN_FRAMEWORK.Toolbar = function () {
@@ -1042,11 +1045,11 @@ $(document).ready(function () {
   NN_FRAMEWORK.GoTop();
   NN_FRAMEWORK.Menu();
   NN_FRAMEWORK.MenuFixed();
-  NN_FRAMEWORK.OwlPage();
+  // NN_FRAMEWORK.OwlPage();
   NN_FRAMEWORK.Pagings();
   NN_FRAMEWORK.Videos();
   NN_FRAMEWORK.Photobox();
   NN_FRAMEWORK.DomChange();
   NN_FRAMEWORK.Toc();
-  NN_FRAMEWORK.Toolbar();
+  // NN_FRAMEWORK.Toolbar();
 });

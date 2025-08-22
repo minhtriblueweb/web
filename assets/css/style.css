@@ -2125,41 +2125,39 @@ img:not([src]) {
   width: 60%;
   display: flex;
   justify-content: space-between;
+  align-items: center;
 }
 .box-tab-cat .slick-tab-cat {
-  display: flex;
-  align-items: center;
-  margin: 0;
-  padding: 0;
-  list-style: none;
   width: 80%;
+  position: relative;
 }
-
-.box-tab-cat .slick-tab-cat li {
-  display: inline-flex; /* căn giữa text trong li */
+.box-tab-cat .slick-tab-cat-item {
   align-items: center;
-  cursor: pointer;
-  font-size: 16px;
   border-right: 1px dashed #fff;
-  padding: 0 13px;
   text-align: center;
 }
 
-.box-tab-cat .slick-tab-cat li a {
+.box-tab-cat .tab-cat-link {
   color: #fff;
+  font-size: 16px;
+}
+.box-tab-cat .slick-track {
+  display: flex !important;
+  flex-wrap: nowrap !important;
 }
 
-.box-tab-cat .slick-tab-cat li:first-child {
+.box-tab-cat .slick-tab-cat-item:first-child {
   padding-left: 0;
+  padding: 0 13px;
 }
 
-.box-tab-cat .slick-tab-cat li:last-child {
+.box-tab-cat .slick-tab-cat-item:last-child {
   border: 0;
   padding-right: 0;
 }
-.box-tab-cat .slick-tab-cat li.active,
-.box-tab-cat .slick-tab-cat li:hover,
-.box-tab-cat .slick-tab-cat li a:hover,
+.box-tab-cat .slick-tab-cat-item.active,
+.box-tab-cat .slick-tab-cat-item:hover,
+.box-tab-cat .tab-cat-link:hover,
 .tab-cat-link.active,
 .viewlist:hover,
 .slick-tab-cat-prev:hover,
@@ -2184,13 +2182,12 @@ img:not([src]) {
 .slick-tab-cat-next {
   right: -30px;
 }
-
 .paging-product-list {
   padding: 10px;
 }
-
 .viewlist {
   color: #fff;
+  flex-shrink: 0;
   font-weight: 600;
   text-decoration: underline;
   margin-left: 25px;
@@ -4592,6 +4589,15 @@ coccocgrammar {
   -webkit-transition: all 400ms linear;
   -o-transition: all 400ms linear;
   transition: all 400ms linear;
+}
+
+.text-split-1 {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+  overflow: hidden;
+  word-break: break-word;
+  margin: 0;
 }
 
 .text-split {

@@ -50,16 +50,16 @@
       <div class="title-list">
         <h2><span class="text-split"><?= $v_list["name$lang"] ?></span></h2>
         <div class="box-tab-cat">
-          <ul class="slick-tab-cat" data-aos="fade-left" data-aos-duration="500">
-            <li><a href="#" class="tab-cat-link active" data-tab="tab-all-<?= $v_list['id'] ?>">Tất cả</a></li>
+          <div class="slick-tab-cat" data-aos="fade-left" data-aos-duration="500">
+            <div class="slick-tab-cat-item"><a href="#" class="tab-cat-link active" data-tab="tab-all-<?= $v_list['id'] ?>">Tất cả</a></div>
             <?php foreach ($productCat as $v_cat): ?>
-              <li>
-                <a href="#" class="tab-cat-link text-capitalize" data-tab="tab-<?= $v_cat['id'] ?>">
+              <div class="slick-tab-cat-item">
+                <a href="#" class="tab-cat-link text-capitalize text-split-1" data-tab="tab-<?= $v_cat['id'] ?>">
                   <?= $v_cat["name$lang"] ?>
                 </a>
-              </li>
+              </div>
             <?php endforeach; ?>
-          </ul>
+          </div>
           <a class="viewlist" href="<?= $v_list["slug$lang"] ?>"><?= xemthem ?></a>
         </div>
       </div>

@@ -18,6 +18,22 @@ NN_FRAMEWORK.Common = function () {
   });
 };
 
+/* tab-cat-scroll */
+$(document).ready(function () {
+  const $scrollBox = $(".tab-cat-scroll");
+
+  if ($scrollBox.length) {
+    $scrollBox.on("wheel", function (e) {
+      if (e.originalEvent.deltaY !== 0) {
+        e.preventDefault(); // chặn cuộn dọc
+        this.scrollLeft += e.originalEvent.deltaY; // cuộn ngang như mặc định
+      }
+    });
+  }
+});
+
+
+/* tab-cat-link */
 $(document).ready(function () {
   $('.tab-cat-link').on('click', function (e) {
     e.preventDefault();
@@ -206,12 +222,11 @@ NN_FRAMEWORK.Menu = function () {
 /* MenuFixed */
 NN_FRAMEWORK.MenuFixed = function () {
   let isFixed = false;
-  const $win = $(window);
   const $menuFixed = $(".menu-fixed, .menu-mobile-fixed");
   const $logoFixed = $(".menu-mobile-fixed .logo-mobile");
   const $logoOrigin = $(".menu-mobile .logo-mobile");
-  $win.on("scroll", function () {
-    const scrollTop = $win.scrollTop();
+  $(window).on("scroll", function () {
+    const scrollTop = $(window).scrollTop();
     const headerHeight = $(".header").outerHeight();
     if (scrollTop > headerHeight && !isFixed) {
       $menuFixed.addClass("animate show");
@@ -222,9 +237,6 @@ NN_FRAMEWORK.MenuFixed = function () {
       $menuFixed.removeClass("show");
       $logoFixed.removeClass("shrink");
       $logoOrigin.removeClass("shrink");
-      setTimeout(() => {
-        $menuFixed.removeClass("animate");
-      }, 10);
       isFixed = false;
     }
   });
@@ -248,150 +260,150 @@ NN_FRAMEWORK.Videos = function () {
 };
 
 /* Owl Data */
-NN_FRAMEWORK.OwlData = function (obj) {
-  if (!isExist(obj)) return false;
-  var items = obj.attr("data-items");
-  var rewind = Number(obj.attr("data-rewind")) ? true : false;
-  var autoplay = Number(obj.attr("data-autoplay")) ? true : false;
-  var loop = Number(obj.attr("data-loop")) ? true : false;
-  var lazyLoad = Number(obj.attr("data-lazyload")) ? true : false;
-  var mouseDrag = Number(obj.attr("data-mousedrag")) ? true : false;
-  var touchDrag = Number(obj.attr("data-touchdrag")) ? true : false;
-  var animations = obj.attr("data-animations") || false;
-  var smartSpeed = Number(obj.attr("data-smartspeed")) || 800;
-  var autoplaySpeed = Number(obj.attr("data-autoplayspeed")) || 800;
-  var autoplayTimeout = Number(obj.attr("data-autoplaytimeout")) || 5000;
-  var dots = Number(obj.attr("data-dots")) ? true : false;
-  var responsive = {};
-  var responsiveClass = true;
-  var responsiveRefreshRate = 200;
-  var nav = Number(obj.attr("data-nav")) ? true : false;
-  var navContainer = obj.attr("data-navcontainer") || false;
-  var navTextTemp =
-    "<svg xmlns='http://www.w3.org/2000/svg' class='icon icon-tabler icon-tabler-chevron-left' width='44' height='45' viewBox='0 0 24 24' stroke-width='1.5' stroke='#2c3e50' fill='none' stroke-linecap='round' stroke-linejoin='round'><path stroke='none' d='M0 0h24v24H0z' fill='none'/><polyline points='15 6 9 12 15 18' /></svg>|<svg xmlns='http://www.w3.org/2000/svg' class='icon icon-tabler icon-tabler-chevron-right' width='44' height='45' viewBox='0 0 24 24' stroke-width='1.5' stroke='#2c3e50' fill='none' stroke-linecap='round' stroke-linejoin='round'><path stroke='none' d='M0 0h24v24H0z' fill='none'/><polyline points='9 6 15 12 9 18' /></svg>";
-  var navText = obj.attr("data-navtext");
-  navText =
-    nav &&
-    navContainer &&
-    (((navText === undefined || Number(navText)) && navTextTemp) ||
-      (isNaN(Number(navText)) && navText) ||
-      (Number(navText) === 0 && false));
+// NN_FRAMEWORK.OwlData = function (obj) {
+//   if (!isExist(obj)) return false;
+//   var items = obj.attr("data-items");
+//   var rewind = Number(obj.attr("data-rewind")) ? true : false;
+//   var autoplay = Number(obj.attr("data-autoplay")) ? true : false;
+//   var loop = Number(obj.attr("data-loop")) ? true : false;
+//   var lazyLoad = Number(obj.attr("data-lazyload")) ? true : false;
+//   var mouseDrag = Number(obj.attr("data-mousedrag")) ? true : false;
+//   var touchDrag = Number(obj.attr("data-touchdrag")) ? true : false;
+//   var animations = obj.attr("data-animations") || false;
+//   var smartSpeed = Number(obj.attr("data-smartspeed")) || 800;
+//   var autoplaySpeed = Number(obj.attr("data-autoplayspeed")) || 800;
+//   var autoplayTimeout = Number(obj.attr("data-autoplaytimeout")) || 5000;
+//   var dots = Number(obj.attr("data-dots")) ? true : false;
+//   var responsive = {};
+//   var responsiveClass = true;
+//   var responsiveRefreshRate = 200;
+//   var nav = Number(obj.attr("data-nav")) ? true : false;
+//   var navContainer = obj.attr("data-navcontainer") || false;
+//   var navTextTemp =
+//     "<svg xmlns='http://www.w3.org/2000/svg' class='icon icon-tabler icon-tabler-chevron-left' width='44' height='45' viewBox='0 0 24 24' stroke-width='1.5' stroke='#2c3e50' fill='none' stroke-linecap='round' stroke-linejoin='round'><path stroke='none' d='M0 0h24v24H0z' fill='none'/><polyline points='15 6 9 12 15 18' /></svg>|<svg xmlns='http://www.w3.org/2000/svg' class='icon icon-tabler icon-tabler-chevron-right' width='44' height='45' viewBox='0 0 24 24' stroke-width='1.5' stroke='#2c3e50' fill='none' stroke-linecap='round' stroke-linejoin='round'><path stroke='none' d='M0 0h24v24H0z' fill='none'/><polyline points='9 6 15 12 9 18' /></svg>";
+//   var navText = obj.attr("data-navtext");
+//   navText =
+//     nav &&
+//     navContainer &&
+//     (((navText === undefined || Number(navText)) && navTextTemp) ||
+//       (isNaN(Number(navText)) && navText) ||
+//       (Number(navText) === 0 && false));
 
-  if (items) {
-    items = items.split(",");
+//   if (items) {
+//     items = items.split(",");
 
-    if (items.length) {
-      var itemsCount = items.length;
+//     if (items.length) {
+//       var itemsCount = items.length;
 
-      for (var i = 0; i < itemsCount; i++) {
-        var options = items[i].split("|"),
-          optionsCount = options.length,
-          responsiveKey;
+//       for (var i = 0; i < itemsCount; i++) {
+//         var options = items[i].split("|"),
+//           optionsCount = options.length,
+//           responsiveKey;
 
-        for (var j = 0; j < optionsCount; j++) {
-          const attr = options[j].indexOf(":")
-            ? options[j].split(":")
-            : options[j];
+//         for (var j = 0; j < optionsCount; j++) {
+//           const attr = options[j].indexOf(":")
+//             ? options[j].split(":")
+//             : options[j];
 
-          if (attr[0] === "screen") {
-            responsiveKey = Number(attr[1]);
-          } else if (Number(responsiveKey) >= 0) {
-            responsive[responsiveKey] = {
-              ...responsive[responsiveKey],
-              [attr[0]]: (isNumeric(attr[1]) && Number(attr[1])) ?? attr[1],
-            };
-          }
-        }
-      }
-    }
-  }
+//           if (attr[0] === "screen") {
+//             responsiveKey = Number(attr[1]);
+//           } else if (Number(responsiveKey) >= 0) {
+//             responsive[responsiveKey] = {
+//               ...responsive[responsiveKey],
+//               [attr[0]]: (isNumeric(attr[1]) && Number(attr[1])) ?? attr[1],
+//             };
+//           }
+//         }
+//       }
+//     }
+//   }
 
-  if (nav && navText) {
-    navText =
-      navText.indexOf("|") > 0 ? navText.split("|") : navText.split(":");
-    navText = [navText[0], navText[1]];
-  }
+//   if (nav && navText) {
+//     navText =
+//       navText.indexOf("|") > 0 ? navText.split("|") : navText.split(":");
+//     navText = [navText[0], navText[1]];
+//   }
 
-  obj.owlCarousel({
-    rewind,
-    autoplay,
-    loop,
-    lazyLoad,
-    mouseDrag,
-    touchDrag,
-    smartSpeed,
-    autoplaySpeed,
-    autoplayTimeout,
-    dots,
-    nav,
-    navText,
-    navContainer: nav && navText && navContainer,
-    responsiveClass,
-    responsiveRefreshRate,
-    responsive,
-  });
+//   obj.owlCarousel({
+//     rewind,
+//     autoplay,
+//     loop,
+//     lazyLoad,
+//     mouseDrag,
+//     touchDrag,
+//     smartSpeed,
+//     autoplaySpeed,
+//     autoplayTimeout,
+//     dots,
+//     nav,
+//     navText,
+//     navContainer: nav && navText && navContainer,
+//     responsiveClass,
+//     responsiveRefreshRate,
+//     responsive,
+//   });
 
-  if (autoplay) {
-    obj.on("translate.owl.carousel", function (event) {
-      obj.trigger("stop.owl.autoplay");
-    });
+//   if (autoplay) {
+//     obj.on("translate.owl.carousel", function (event) {
+//       obj.trigger("stop.owl.autoplay");
+//     });
 
-    obj.on("translated.owl.carousel", function (event) {
-      obj.trigger("play.owl.autoplay", [autoplayTimeout]);
-    });
-  }
+//     obj.on("translated.owl.carousel", function (event) {
+//       obj.trigger("play.owl.autoplay", [autoplayTimeout]);
+//     });
+//   }
 
-  if (animations && isExist(obj.find("[owl-item-animation]"))) {
-    var animation_now = "";
-    var animation_count = 0;
-    var animations_excuted = [];
-    var animations_list = animations.indexOf(",")
-      ? animations.split(",")
-      : animations;
+//   if (animations && isExist(obj.find("[owl-item-animation]"))) {
+//     var animation_now = "";
+//     var animation_count = 0;
+//     var animations_excuted = [];
+//     var animations_list = animations.indexOf(",")
+//       ? animations.split(",")
+//       : animations;
 
-    obj.on("changed.owl.carousel", function (event) {
-      $(this)
-        .find(".owl-item.active")
-        .find("[owl-item-animation]")
-        .removeClass(animation_now);
-    });
+//     obj.on("changed.owl.carousel", function (event) {
+//       $(this)
+//         .find(".owl-item.active")
+//         .find("[owl-item-animation]")
+//         .removeClass(animation_now);
+//     });
 
-    obj.on("translate.owl.carousel", function (event) {
-      var item = event.item.index;
+//     obj.on("translate.owl.carousel", function (event) {
+//       var item = event.item.index;
 
-      if (Array.isArray(animations_list)) {
-        var animation_trim = animations_list[animation_count].trim();
+//       if (Array.isArray(animations_list)) {
+//         var animation_trim = animations_list[animation_count].trim();
 
-        if (!animations_excuted.includes(animation_trim)) {
-          animation_now = "animate__animated " + animation_trim;
-          animations_excuted.push(animation_trim);
-          animation_count++;
-        }
+//         if (!animations_excuted.includes(animation_trim)) {
+//           animation_now = "animate__animated " + animation_trim;
+//           animations_excuted.push(animation_trim);
+//           animation_count++;
+//         }
 
-        if (animations_excuted.length == animations_list.length) {
-          animation_count = 0;
-          animations_excuted = [];
-        }
-      } else {
-        animation_now = "animate__animated " + animations_list.trim();
-      }
-      $(this)
-        .find(".owl-item")
-        .eq(item)
-        .find("[owl-item-animation]")
-        .addClass(animation_now);
-    });
-  }
-};
+//         if (animations_excuted.length == animations_list.length) {
+//           animation_count = 0;
+//           animations_excuted = [];
+//         }
+//       } else {
+//         animation_now = "animate__animated " + animations_list.trim();
+//       }
+//       $(this)
+//         .find(".owl-item")
+//         .eq(item)
+//         .find("[owl-item-animation]")
+//         .addClass(animation_now);
+//     });
+//   }
+// };
 
 /* Owl Page */
-NN_FRAMEWORK.OwlPage = function () {
-  if (isExist($(".owl-page"))) {
-    $(".owl-page").each(function () {
-      NN_FRAMEWORK.OwlData($(this));
-    });
-  }
-};
+// NN_FRAMEWORK.OwlPage = function () {
+//   if (isExist($(".owl-page"))) {
+//     $(".owl-page").each(function () {
+//       NN_FRAMEWORK.OwlData($(this));
+//     });
+//   }
+// };
 
 /* Dom Change */
 NN_FRAMEWORK.DomChange = function () {
@@ -574,37 +586,6 @@ NN_FRAMEWORK.SlickPage = function () {
       ],
     });
   }
-
-  $(".slick-tab-cat").slick({
-    slidesToShow: 4,
-    slidesToScroll: 4,
-    infinite: false,
-    autoplay: false,
-    speed: 1000,
-    arrows: true,
-    prevArrow: '<button type="button" class="slick-tab-cat-prev"><i class="fa fa-angle-left"></i></button>',
-    nextArrow: '<button type="button" class="slick-tab-cat-next"><i class="fa fa-angle-right"></i></button>',
-    dots: false,
-    variableWidth: false,
-    responsive: [
-      {
-        breakpoint: 768,
-        settings: {
-          slidesToShow: 3,
-          slidesToScroll: 3
-        }
-      },
-      {
-        breakpoint: 480,
-        settings: {
-          slidesToShow: 2,
-          slidesToScroll: 2
-        }
-      }
-    ]
-  });
-
-
   if (isExist($(".slick-col-right"))) {
     $(".slick-col-right").slick({
       dots: false,

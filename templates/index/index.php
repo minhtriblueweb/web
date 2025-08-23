@@ -48,12 +48,14 @@
   ?>
     <div class="box-list" data-aos="fade-up" data-aos-duration="500">
       <div class="title-list">
-        <h2><span class="text-split"><?= $v_list["name$lang"] ?></span></h2>
+        <h2><span class="text-split-1"><?= $v_list["name$lang"] ?></span></h2>
         <div class="box-tab-cat">
-          <div class="slick-tab-cat" data-aos="fade-left" data-aos-duration="500">
-            <div class="slick-tab-cat-item"><a href="#" class="tab-cat-link active" data-tab="tab-all-<?= $v_list['id'] ?>">Tất cả</a></div>
+          <div class="tab-cat-scroll" data-aos="fade-left" data-aos-duration="500">
+            <div class="tab-cat-item">
+              <a href="#" class="tab-cat-link active" data-tab="tab-all-<?= $v_list['id'] ?>">Tất cả</a>
+            </div>
             <?php foreach ($productCat as $v_cat): ?>
-              <div class="slick-tab-cat-item">
+              <div class="tab-cat-item">
                 <a href="#" class="tab-cat-link text-capitalize text-split-1" data-tab="tab-<?= $v_cat['id'] ?>">
                   <?= $v_cat["name$lang"] ?>
                 </a>

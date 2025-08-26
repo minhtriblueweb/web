@@ -2,7 +2,7 @@
 session_start();
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
   http_response_code(403);
-  exit('Forbidden');
+  exit;
 }
 require_once __DIR__ . '/../init.php';
 $db = new Database();

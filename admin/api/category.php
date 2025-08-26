@@ -1,5 +1,9 @@
 <?php
 session_start();
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+  http_response_code(403);
+  exit;
+}
 require_once __DIR__ . '/../init.php';
 $db = new Database();
 $str = '<option value="0">Chọn danh mục</option>';

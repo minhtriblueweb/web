@@ -29,7 +29,12 @@ $brand = $fn->show_data([
   'status' => 'hienthi,noibat',
   'select' => "id,slug$lang,name$lang,file"
 ]);
-
+$productList = $fn->show_data([
+  'table'  => 'tbl_product_list',
+  'status' => 'hienthi,noibat',
+  'select' => "id, slug$lang, name$lang"
+]);
+$background_bc = $db->rawQueryOne("SELECT `file` FROM tbl_photo WHERE type = ? AND FIND_IN_SET('hienthi', status) LIMIT 1", ['background_bc'])['file'] ?? '';
 // SEO
 $seo_data = $db->rawQueryOne("SELECT * FROM tbl_seopage WHERE type = ?", ['trang-chu']);
 $seo->set('h1', $seo_data["title$lang" ?? $optsetting["name$lang"] ?? '']);

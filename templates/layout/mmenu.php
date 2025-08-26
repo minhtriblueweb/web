@@ -29,6 +29,12 @@
 <div class="menu-mobile"><?= $menuMobileHtml ?></div>
 <div class="menu-mobile-fixed"><?= $menuMobileHtml ?></div>
 <nav id="menu">
+  <div class="box-menu-mobile-search">
+    <div class="menu-mobile-search">
+      <input type="text" id="keyword-mb" placeholder="Nhập từ khóa tìm kiếm...." onkeypress="doEnter(event,'keyword-mb');" />
+      <span onclick="onSearch('keyword-mb');"><i class="fa fa-search"></i></span>
+    </div>
+  </div>
   <ul>
     <li class="<?= ($type == 'index') ? 'active' : '' ?>"><a href="./">Trang chủ</a></li>
     <li class="<?= ($type == 'gioi-thieu') ? 'active' : '' ?>"><a href="gioi-thieu">Giới thiệu</a></li>

@@ -2,9 +2,6 @@
 <?php if (!empty($banchay)): ?>
   <div class="wrap-product-hot">
     <div class="wrap-content" data-aos="fade-up" data-aos-duration="500">
-      <?php
-      $background_bc = $db->rawQueryOne("SELECT `file` FROM tbl_photo WHERE type = ? AND FIND_IN_SET('hienthi', status) LIMIT 1", ['background_bc'])['file'] ?? '';
-      ?>
       <div class="title-product-hot" style="background: url('<?= BASE_ADMIN . UPLOADS . $background_bc ?>') no-repeat center center / 100% 100%;">
         <h2>SẢN PHẨM BÁN CHẠY</h2>
       </div>
@@ -21,12 +18,6 @@
 <?php include TEMPLATE . LAYOUT . 'danhmuc.php'; ?>
 <div class="wrap-content">
   <?php
-  $productList = $fn->show_data([
-    'table'  => 'tbl_product_list',
-    'status' => 'hienthi,noibat',
-    'select' => "id, slug$lang, name$lang"
-  ]);
-
   foreach ($productList as $v_list):
     // Danh mục cấp 2 theo từng danh sách
     $productCat = $fn->show_data([
@@ -35,7 +26,6 @@
       'id_list' => $v_list['id'],
       'select'  => "id, slug$lang, name$lang"
     ]);
-
     // Sản phẩm "Tất cả" theo id_list
     $productsAll = $fn->show_data([
       'table'   => 'tbl_product',
@@ -46,21 +36,23 @@
     ]);
     if (empty($productsAll)) continue;
   ?>
-    <div class="box-list" data-aos="fade-up" data-aos-duration="500">
+    <div class="box-list" .data-aos="fade-up" .data-aos-duration="500">
       <div class="title-list">
         <h2><span class="text-split-1"><?= $v_list["name$lang"] ?></span></h2>
         <div class="box-tab-cat">
-          <div class="tab-cat-scroll" data-aos="fade-left" data-aos-duration="500">
+          <div class="tab-cat-scroll" .data-aos="fade-left" .data-aos-duration="500">
             <div class="tab-cat-item">
               <a href="#" class="tab-cat-link active" data-tab="tab-all-<?= $v_list['id'] ?>">Tất cả</a>
             </div>
-            <?php foreach ($productCat as $v_cat): ?>
-              <div class="tab-cat-item">
-                <a href="#" class="tab-cat-link text-capitalize text-split-1" data-tab="tab-<?= $v_cat['id'] ?>">
-                  <?= $v_cat["name$lang"] ?>
-                </a>
-              </div>
-            <?php endforeach; ?>
+            <?php if (!empty($productCat)): ?>
+              <?php foreach ($productCat as $v_cat): ?>
+                <div class="tab-cat-item">
+                  <a href="#" class="tab-cat-link text-capitalize text-split-1" data-tab="tab-<?= $v_cat['id'] ?>">
+                    <?= $v_cat["name$lang"] ?>
+                  </a>
+                </div>
+              <?php endforeach; ?>
+            <?php endif; ?>
           </div>
           <a class="viewlist" href="<?= $v_list["slug$lang"] ?>"><?= xemthem ?></a>
         </div>
@@ -100,7 +92,6 @@
     </div>
   <?php endforeach; ?>
 </div>
-
 <?php if (!empty($brand)): ?>
   <div class="wrap-brand">
     <div class="wrap-content">

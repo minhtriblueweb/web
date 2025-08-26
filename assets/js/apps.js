@@ -3,6 +3,50 @@ validateForm("validation-newsletter");
 validateForm("validation-cart");
 validateForm("validation-user");
 validateForm("validation-contact");
+$(function () {
+  let $input = $("#keyword");
+  let $suggestBox = $("#suggestions");
+  $input.on("keyup", function () {
+    let keyword = $(this).val().trim();
+    if (keyword.length > 0) {
+      $.ajax({
+        url: "api/search.php",
+        method: "GET",
+        data: { keyword: keyword },
+        dataType: "json", cache: false,
+        success: function (data) {
+          let html = "";
+          if (data.length > 0) {
+            data.forEach(function (item) {
+              html += `<a class="suggestion-item" href="${item.slug}">${item.img}<span>${item.name}</span></a>`;
+            });
+            $("#suggestions").html(html).addClass("show");
+          } else {
+            $suggestBox.removeClass("show").html("");
+          }
+        },
+        error: function () {
+          $suggestBox.removeClass("show").html("");
+        }
+      });
+    } else {
+      $suggestBox.removeClass("show").html("");
+    }
+  });
+
+  $input.on("focus", function () {
+    if ($suggestBox.html().trim() !== "") {
+      $suggestBox.addClass("show");
+    }
+  });
+
+  $(document).on("click", function (e) {
+    if (!$(e.target).closest(".search").length) {
+      $suggestBox.removeClass("show");
+    }
+  });
+});
+
 AOS.init({
   offset: window.innerWidth <= 768 ? 60 : 120,
   duration: 600,
@@ -21,17 +65,15 @@ NN_FRAMEWORK.Common = function () {
 /* tab-cat-scroll */
 $(document).ready(function () {
   const $scrollBox = $(".tab-cat-scroll");
-
   if ($scrollBox.length) {
     $scrollBox.on("wheel", function (e) {
       if (e.originalEvent.deltaY !== 0) {
-        e.preventDefault(); // chặn cuộn dọc
-        this.scrollLeft += e.originalEvent.deltaY; // cuộn ngang như mặc định
+        e.preventDefault();
+        this.scrollLeft += e.originalEvent.deltaY;
       }
     });
   }
 });
-
 
 /* tab-cat-link */
 $(document).ready(function () {
@@ -50,15 +92,6 @@ $(document).ready(function () {
     }, 20);
   });
 });
-
-/* Lazys */
-NN_FRAMEWORK.Lazys = function () {
-  if (isExist($(".lazy"))) {
-    var lazyLoadInstance = new LazyLoad({
-      elements_selector: ".lazy",
-    });
-  }
-};
 
 /* menu-bar */
 $(function () {
@@ -218,7 +251,6 @@ NN_FRAMEWORK.Menu = function () {
   }
 };
 
-
 /* MenuFixed */
 NN_FRAMEWORK.MenuFixed = function () {
   let isFixed = false;
@@ -228,7 +260,7 @@ NN_FRAMEWORK.MenuFixed = function () {
   $(window).on("scroll", function () {
     const scrollTop = $(window).scrollTop();
     const headerHeight = $(".header").outerHeight();
-    if (scrollTop > headerHeight && !isFixed) {
+    if (scrollTop > headerHeight + 200 && !isFixed) {
       $menuFixed.addClass("animate show");
       $logoFixed.addClass("shrink");
       $logoOrigin.addClass("shrink");
@@ -464,6 +496,45 @@ NN_FRAMEWORK.DomChange = function () {
 
 /* Slick */
 NN_FRAMEWORK.SlickPage = function () {
+  // Tiêu chí
+  if (isExist($(".slick-criterion"))) {
+    $(".slick-criterion").slick({
+      dots: false,
+      arrows: false,
+      autoplay: true,
+      infinite: true,
+      verticalSwiping: false,
+      slidesToShow: 5,
+      slidesToScroll: 1,
+      centerMode: false,
+      vertical: false,
+      swipeToSlide: true,
+      responsive: [
+        {
+          breakpoint: 770,
+          settings: {
+            arrows: false,
+            slidesToShow: 3,
+          },
+        },
+        {
+          breakpoint: 655,
+          settings: {
+            arrows: false,
+            slidesToShow: 2,
+          },
+        },
+        {
+          breakpoint: 425,
+          settings: {
+            arrows: false,
+            slidesToShow: 1,
+          },
+        },
+      ],
+    });
+  }
+  // Sản phẩm
   if (isExist($(".slick-product"))) {
     $(".slick-product").slick({
       dots: false,
@@ -501,6 +572,7 @@ NN_FRAMEWORK.SlickPage = function () {
       ],
     });
   }
+  // Slideshow
   if (isExist($(".slick-slideshow"))) {
     $('.slick-slideshow').slick({
       slidesToShow: 1,
@@ -516,6 +588,7 @@ NN_FRAMEWORK.SlickPage = function () {
       fade: true
     });
   }
+  // Tin Tức
   if (isExist($(".slick-service"))) {
     $(".slick-service").slick({
       dots: false,
@@ -553,6 +626,7 @@ NN_FRAMEWORK.SlickPage = function () {
       ],
     });
   }
+  // Đánh giá khách hàng
   if (isExist($(".slick-feedback"))) {
     $(".slick-feedback").slick({
       dots: false,
@@ -623,6 +697,7 @@ NN_FRAMEWORK.SlickPage = function () {
       ],
     });
   }
+  // Thương hiệu
   if (isExist($(".slick-brand"))) {
     $(".slick-brand").slick({
       slidesToShow: 6,
@@ -654,7 +729,7 @@ NN_FRAMEWORK.SlickPage = function () {
       ]
     });
   }
-
+// sản phẩm con
   if (isExist($(".slick-pro-detail"))) {
     $(".slick-pro-detail").slick({
       slidesToShow: 4,
@@ -687,7 +762,7 @@ NN_FRAMEWORK.SlickPage = function () {
       ]
     });
   }
-
+// danh mục cấp 2
   if (isExist($(".slick_product_list"))) {
     var $slider = $('.slick_product_list');
     $slider.slick({
@@ -1020,7 +1095,7 @@ $("table").addClass("table table-hover");
 $(document).ready(function () {
   NN_FRAMEWORK.Common();
   NN_FRAMEWORK.SlickPage();
-  NN_FRAMEWORK.Lazys();
+  // NN_FRAMEWORK.Lazys();
   NN_FRAMEWORK.Wows();
   NN_FRAMEWORK.AltImg();
   NN_FRAMEWORK.GoTop();

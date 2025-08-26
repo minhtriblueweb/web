@@ -14,13 +14,11 @@
             <?php endforeach; ?>
           </div>
         <?php endif; ?>
-
       </div>
     </div>
   </div>
   <div class="header-banner">
     <div class="wrap-content d-flex flex-wrap justify-content-between align-items-center">
-
       <div class="logo">
         <?php if ($logo) : ?>
           <a href="./">
@@ -28,15 +26,12 @@
           </a>
         <?php endif ?>
       </div>
-
-
       <div class="search">
-        <input type="text" id="keyword" placeholder="Nhập từ khóa tìm kiếm...."
-          onkeypress="doEnter(event,'keyword');" />
-        <p onclick="onSearch('keyword');">
-          <i class="fa-solid fa-magnifying-glass"></i>
-        </p>
+        <input autocomplete="off" type="text" id="keyword" placeholder="Tìm kiếm sản phẩm..." onkeypress="doEnter(event,'keyword');" />
+        <p onclick="onSearch('keyword');" class="search-btn"><i class="fa-solid fa-magnifying-glass"></i></p>
+        <div id="suggestions" class="suggestions"></div>
       </div>
+
       <div class="box-hotline">
         <div class="hotline">
           <div class="icon-hottline">

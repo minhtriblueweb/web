@@ -73,7 +73,7 @@
                 </ul>
               </div>
             </div>
-            <h2 class="titleSide"><span><?= tinlienquan ?>:</span></h2>
+            <h2 class="titleSide"><span><?= baivietkhac ?></span></h2>
             <div class="frame-left">
               <div class="row">
                 <?php foreach ($relatedNews as $v): ?>

@@ -1,22 +1,8 @@
 :root {
-  --color-red: #ec2d3f;
-  --color-medium-red: #cc2c32;
-  --color-dark-red: #c31829;
-  --color-green: #28a745;
-  --color-dark-green: #207d36;
-  --color-black: #212529;
-  --color-gray: #6c757d;
-  --background-static: #3fa07e;
-  --background-hover: #eceb1b;
-  --color-static: #000;
-  --color-hover: #ec2d3f;
-  --menu-border: rgb(255 255 255 / 20%);
-  --menu-color: #000;
-  --color-second: #ebbd17;
   --box-shadow-main: 3px 0 15px 0
     color-mix(in srgb, var(--main-color) 15%, transparent);
   --box-shadow-main-hover: 3px 0 15px 0
-    color-mix(in srgb, var(--main-color) 25%, transparent);
+    color-mix(in srgb, var(--main-color) 35%, transparent);
   --color-gradient: linear-gradient(
     0deg,
     rgba(233, 161, 38, 1) 0%,
@@ -83,12 +69,6 @@ input[type='number']::-webkit-inner-spin-button {
 }
 .border-main {
   border: solid 1px var(--main-color);
-}
-.circle-img {
-  width: 100px;
-  height: 100px;
-  object-fit: cover;
-  border-radius: 50%;
 }
 .w-clear:after {
   display: block;
@@ -581,9 +561,8 @@ input[type='number']::-webkit-inner-spin-button {
 .box-readmore ul {
   list-style-type: none;
   counter-reset: item;
-  margin-bottom: 0px;
   padding-left: 0px !important;
-  margin-top: 8px;
+  margin: 0;
 }
 
 .box-readmore ul li {
@@ -599,10 +578,9 @@ input[type='number']::-webkit-inner-spin-button {
 }
 
 .box-readmore ul li a {
-  color: #000 !important;
+  color: #000;
   cursor: pointer;
-  font-weight: 500;
-  font-size: 14px;
+  font-size: 12px;
 }
 
 .box-readmore ul li a:hover {
@@ -2422,13 +2400,10 @@ img:not([src]) {
 .slick-feedback .slick-slide {
   margin: 10px 20px;
   box-shadow: var(--box-shadow-main);
+  cursor:pointer
 }
 .slick-feedback .slick-slide:hover {
   box-shadow: var(--box-shadow-main-hover);
-}
-.item-feedback .scale-img {
-  display: table;
-  border-radius: 50%;
 }
 
 .item-feedback .quote {

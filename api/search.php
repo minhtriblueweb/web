@@ -8,8 +8,12 @@ if ($keyword !== '') {
     $result[] = [
       "name" => $row["name$lang"],
       "slug" => $row["slug$lang"],
-      "img"  => $fn->getImageCustom(['file'=> $row['file'],'width'=> 500,'height' => 500,'zc'=> 1,'alt'=> $row["name$lang"],'title'=> $row["name$lang"],'lazy'=> false])];
+      "img"  => $fn->getImageCustom(['file'=> $row['file'],'width'=> 36,'height' => 36,'zc'=> 1,'alt'=> $row["name$lang"],'title'=> $row["name$lang"],'lazy'=> false])];
   }
 }
+if (empty($result)) {
+  $result[] = ["message" => khongtimthayketqua];
+}
+
 echo json_encode($result, JSON_UNESCAPED_UNICODE);
 exit;

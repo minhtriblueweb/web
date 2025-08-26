@@ -118,13 +118,9 @@
         <?php
         $type = "danh-gia";
         foreach ($feedback as $k => $v): ?>
-          <div class="item-feedback transition">
+          <div class="item-feedback transition border-">
             <p class="text-split"><?= $v["desc$lang"] ?></p>
-            <div class="content">
-              <a class="scale-img hover-glass text-decoration-none"
-                title="<?= $v["name$lang"] ?>" style="width: 100px; height: 100px;">
-                <?= $fn->getImageCustom(['file' => $v['file'], 'width' => $optsetting_json["danh-gia_man_width"], 'height' => $optsetting_json["danh-gia_man_height"], 'zc' => $optsetting_json["danh-gia_man_zc"], 'alt' => $v["name$lang"], 'title' => $v["name$lang"], 'lazy' => true]) ?>
-              </a>
+            <div class="content"><?= $fn->getImageCustom(['file' => $v['file'], 'width' => $optsetting_json["danh-gia_man_width"], 'height' => $optsetting_json["danh-gia_man_height"], 'zc' => $optsetting_json["danh-gia_man_zc"], 'alt' => $v["name$lang"], 'title' => $v["name$lang"],'class'=> 'rounded-circle', 'lazy' => true]) ?>
               <div class="title">
                 <h3 class="text-split"><?= $v["name$lang"] ?></h3>
                 <span class="text-split"><?= $v["content$lang"] ?></span>

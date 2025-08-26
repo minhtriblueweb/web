@@ -3,6 +3,8 @@ validateForm("validation-newsletter");
 validateForm("validation-cart");
 validateForm("validation-user");
 validateForm("validation-contact");
+
+// Gợi ý tìm kiếm
 $(function () {
   let $input = $("#keyword");
   let $suggestBox = $("#suggestions");
@@ -13,12 +15,13 @@ $(function () {
         url: "api/search.php",
         method: "GET",
         data: { keyword: keyword },
-        dataType: "json", cache: false,
+        dataType: "json",
+        cache: false,
         success: function (data) {
           let html = "";
           if (data.length > 0) {
             data.forEach(function (item) {
-              html += `<a class="suggestion-item" href="${item.slug}">${item.img}<span>${item.name}</span></a>`;
+              html += `<a title="${item.name}" class="suggestion-item" href="${item.slug}">${item.img}<span>${item.name}</span></a>`;
             });
             $("#suggestions").html(html).addClass("show");
           } else {
@@ -729,7 +732,7 @@ NN_FRAMEWORK.SlickPage = function () {
       ]
     });
   }
-// sản phẩm con
+  // sản phẩm con
   if (isExist($(".slick-pro-detail"))) {
     $(".slick-pro-detail").slick({
       slidesToShow: 4,
@@ -762,7 +765,7 @@ NN_FRAMEWORK.SlickPage = function () {
       ]
     });
   }
-// danh mục cấp 2
+  // danh mục cấp 2
   if (isExist($(".slick_product_list"))) {
     var $slider = $('.slick_product_list');
     $slider.slick({

@@ -18,9 +18,7 @@ $background_footer = $db->rawQueryOne("SELECT `file` FROM tbl_photo WHERE type =
           <?php endif ?>
         </div>
         <p class="footer-company"><?= $web_name ?></p>
-        <div class="footer-info content-ck">
-          <p><span><?= $footer_static["content$lang"] ?? '' ?></span></p>
-        </div>
+        <div class="footer-info content-ck"><?= $footer_static["content$lang"] ?? '' ?></div>
         <div class="social">
           <p>KẾT NỐI VỚI CHÚNG TÔI</p>
           <?php if (!empty($show_social)): ?>

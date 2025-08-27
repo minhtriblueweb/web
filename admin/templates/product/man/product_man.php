@@ -70,7 +70,7 @@ $linkGalleryForm  = "index.php?page=gallery&act=form&type=$type&id=";
             </th>
             <th class="align-middle text-center" style="width: 10%">STT</th>
             <th class="align-middle"><?= hinh ?></th>
-            <th class="align-middle" style="width: 20%"><?= tieude ?></th>
+            <th class="align-middle" style="width: 30%"><?= tieude ?></th>
             <?php if (!empty($config['product'][$type]['gallery'])): ?>
               <th class="align-middle">Gallery</th>
             <?php endif; ?>
@@ -114,12 +114,23 @@ $linkGalleryForm  = "index.php?page=gallery&act=form&type=$type&id=";
                       <?= $row["name{$lang}"] ?>
                     </a>
                     <div class="tool-action mt-2 w-clear">
-                      <a class="text-primary mr-3" href="<?= BASE . $row['slug' . $lang] ?>" target="_blank" title="Xem">
-                        <i class="far fa-eye mr-1"></i>View
-                      </a>
+                      <?php if (!empty($config['product'][$type]['view'])): ?>
+                        <a class="text-primary mr-3" href="<?= BASE . $row['slug' . $lang] ?>" target="_blank" title="Xem">
+                          <i class="far fa-eye mr-1"></i>View
+                        </a>
+                      <?php endif; ?>
                       <a class="text-info mr-3" href="<?= $linkEdit . $row['id'] ?>" title="Chỉnh sửa">
                         <i class="far fa-edit mr-1"></i>Edit
                       </a>
+                      <?php if (!empty($config['product'][$type]['copy'])): ?>
+                        <div class="dropdown">
+                          <a id="dropdownCopy" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-link dropdown-toggle text-success p-0 pr-3"><i class="far fa-clone mr-1"></i>Copy</a>
+                          <ul aria-labelledby="dropdownCopy" class="dropdown-menu border-0 shadow">
+                            <li><a href="#" class="dropdown-item copy-now" data-id="<?= $row['id'] ?>" data-table="tbl_product"><i class="far fa-caret-square-right text-secondary mr-2"></i><?= saochepngay ?></a></li>
+                            <li><a href="<?= $linkCopy ?>&id_copy=<?= $row['id'] ?>" class="dropdown-item"><i class="far fa-caret-square-right text-secondary mr-2"></i><?= chinhsuathongtin ?></a></li>
+                          </ul>
+                        </div>
+                      <?php endif; ?>
                       <a class="text-danger" id="delete-item" data-url="<?= $linkDelete . $row['id'] ?>" title="Xóa">
                         <i class="far fa-trash-alt mr-1"></i>Delete
                       </a>

@@ -65,7 +65,7 @@
       <?php if ($paging): ?><div class="mt-3 mb-3 pagination-home w-100"><?= $paging ?></div><?php endif; ?>
 
       <!-- BÀI VIẾT -->
-      <?php if ($contentCate): ?>
+      <?php if (!empty($contentCate)): ?>
         <div class="content-toggle mt-3 mb-3">
           <div class="content-toggle__body-wrapper">
             <div class="content-toggle__body content-main content-ck pro_tpl" id="toc-content">

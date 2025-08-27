@@ -1,12 +1,12 @@
 <?php
 $sidebarMenu = [
   [
-    'title' => 'Bảng điều khiển',
+    'title' => dashboard,
     'icon' => 'fas fa-tachometer-alt',
     'active' => [''],
   ],
   [
-    'title' => 'Sản phẩm',
+    'title' => sanpham,
     'icon' => 'fas fa-boxes',
     'children' => (function () use ($config) {
       $children = [];
@@ -37,7 +37,7 @@ $sidebarMenu = [
     })()
   ],
   [
-    'title' => 'Danh sách bài viết',
+    'title' => danhsachbaiviet,
     'icon' => 'far fa-newspaper',
     'children' => (function () use ($config) {
       $children = [];
@@ -73,14 +73,14 @@ $sidebarMenu = [
     })()
   ],
   [
-    'title' => 'Quản lý hình ảnh - video',
+    'title' => quanlyhinhanhvideo,
     'icon'  => 'fas fa-photo-video',
     'children' => array_merge(
       (function () use ($config) {
         $children = [];
-        foreach ($config['photo']['photo_static'] as $type => $cfg) {
+        foreach ($config['photo']['photo_static'] as $type => $item) {
           $children[] = [
-            'title' => $cfg['title_main_photo'] ?? ucfirst($type),
+            'title' => $item['title_main_photo'] ?? ucfirst($type),
             'active' => [
               "?page=photo&act=photo_static&type={$type}",
               "?page=photo&act=photo_form&type={$type}"
@@ -91,9 +91,9 @@ $sidebarMenu = [
       })(),
       (function () use ($config) {
         $children = [];
-        foreach ($config['photo']['photo_man'] as $type => $cfg) {
+        foreach ($config['photo']['photo_man'] as $type => $item) {
           $children[] = [
-            'title' => $cfg['title_main_photo'] ?? ucfirst($type),
+            'title' => $item['title_main_photo'] ?? ucfirst($type),
             'active' => [
               "?page=photo&act=photo_man&type={$type}",
               "?page=photo&act=photo_form&type={$type}"
@@ -105,7 +105,7 @@ $sidebarMenu = [
     )
   ],
   [
-    'title' => 'Quản lý SEO page',
+    'title' => quanlyseopage,
     'icon'  => 'fas fa-share-alt',
     'children' => (function () use ($config) {
       $children = [];
@@ -121,7 +121,7 @@ $sidebarMenu = [
     })()
   ],
   [
-    'title' => 'Thiết lập thông tin',
+    'title' => thietlapthongtin,
     'icon' => 'fas fa-cogs',
     'active' => ['?page=setting&act=update']
   ]

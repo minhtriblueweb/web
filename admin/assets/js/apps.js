@@ -1766,32 +1766,29 @@ $(document).ready(function () {
   }
 
   /* Copy */
-  // if ($(".copy-now").length) {
-  //   $("body").on("click", ".copy-now", function () {
-  //     var id = $(this).attr("data-id");
-  //     var table = $(this).attr("data-table");
-  //     var copyimg = $(this).attr("data-copyimg");
-
-  //     holdonOpen();
-
-  //     $.ajax({
-  //       url: "api/copy.php",
-  //       type: "POST",
-  //       dataType: "html",
-  //       async: false,
-  //       data: {
-  //         id: id,
-  //         table: table,
-  //         copyimg: copyimg,
-  //       },
-  //       success: function () {
-  //         holdonClose();
-  //       },
-  //     });
-
-  //     window.location.reload(true);
-  //   });
-  // }
+  $(function () {
+    $('body').on('click', '.copy-now', function (e) {
+      e.preventDefault();
+      var id = $(this).data('id');
+      var table = $(this).data('table');
+      holdonOpen();
+      $.ajax({
+        url: 'api/copy.php',
+        type: 'POST',
+        dataType: 'json',
+        data: { id: id, table: table },
+        success: function (res) {
+          holdonClose();
+          location.reload(true);
+        },
+        error: function () {
+          holdonClose();
+          alert('Có lỗi xảy ra, vui lòng thử lại.');
+          location.reload(true);
+        }
+      });
+    });
+  });
 
   /* Sort filer */
   if (ACTIVE_GALLERY) {

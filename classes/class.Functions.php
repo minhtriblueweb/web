@@ -153,12 +153,8 @@ class Functions
     $id_parent = (int)$id_parent;
     $table = 'tbl_gallery';
     $result = false;
-
-    // Lấy tên cha
     $parent = $this->db->rawQueryOne("SELECT namevi FROM tbl_product WHERE id = ? LIMIT 1", [$id_parent]);
     $parent_name = $parent['namevi'] ?? 'gallery';
-
-    // Cập nhật gallery có sẵn
     if (!empty($data['id-filer'])) {
       foreach ($data['id-filer'] as $i => $gid) {
         $gid  = (int)$gid;
@@ -167,8 +163,6 @@ class Functions
         $this->db->execute("UPDATE $table SET numb = ?, name = ? WHERE id = ?", [$numb, $name, $gid]);
       }
     }
-
-    // Upload ảnh mới
     $total = count($files['files']['name'] ?? []);
     for ($i = 0; $i < $total; $i++) {
       if (!empty($files['files']['name'][$i]) && $files['files']['error'][$i] === 0) {
@@ -179,7 +173,6 @@ class Functions
           'error'    => $files['files']['error'][$i],
           'size'     => $files['files']['size'][$i]
         ];
-
         $thumb_filename = $this->uploadImage([
           'file'          => $file,
           'custom_name'   => $parent_name,
@@ -187,12 +180,9 @@ class Functions
           'watermark'     => true,
           'convert_webp'  => true
         ]);
-
         if (!empty($thumb_filename)) {
-          // Dùng index $i của file upload mới để lấy name/numb tương ứng
           $numb = (int)($data['numb-filer'][$i] ?? 0);
           $name = trim($data['name-filer'][$i] ?? '');
-
           $fields = ['id_parent', 'type', 'file', 'numb', 'name', 'status'];
           $params = [
             $id_parent,
@@ -202,7 +192,6 @@ class Functions
             $name,
             !empty($data['hienthi_all']) ? 'hienthi' : ''
           ];
-
           $result = $this->db->execute(
             "INSERT INTO `$table` (" . implode(', ', $fields) . ") VALUES (" . implode(', ', array_fill(0, count($fields), '?')) . ")",
             $params
@@ -210,12 +199,9 @@ class Functions
         }
       }
     }
-
-    // Redirect nếu cần
     if (!empty($redirect_url)) {
       $this->transfer($result ? capnhathinhanhthanhcong : capnhathinhanhthatbai, $redirect_url, $result);
     }
-
     return $result;
   }
 
@@ -264,7 +250,6 @@ class Functions
     $enable_slug = $options['enable_slug'] ?? false;
     $convert_webp = $options['convert_webp'] ?? false;
     $columns = $this->getColumnNames($table);
-
     $data_prepared = [];
     foreach ($data as $key => $val) {
       if ($key === 'options') continue;
@@ -299,12 +284,10 @@ class Functions
         }
       }
     }
-
     $thumb_filename = $old_filename = '';
     $icon_filename = $old_icon = '';
     $has_file_main = is_array($files) && isset($files['file']) && is_uploaded_file($files['file']['tmp_name']);
     $has_file_icon = is_array($files) && isset($files['icon']) && is_uploaded_file($files['icon']['tmp_name']);
-
     if (!empty($id)) {
       if ($has_file_main || (!empty($data['photo_deleted']) && $data['photo_deleted'] == '1')) {
         $old = $this->db->rawQueryOne("SELECT file FROM $table WHERE id = ?", [(int)$id]);
@@ -315,7 +298,6 @@ class Functions
         $old_icon = $old['icon'] ?? '';
       }
     }
-
     if ($has_file_main) {
       $thumb_filename = $this->uploadImage([
         'file' => $files['file'],
@@ -330,7 +312,6 @@ class Functions
       }
       $thumb_filename = '';
     }
-
     if ($has_file_icon) {
       $icon_filename = $this->uploadImage([
         'file' => $files['icon'],
@@ -345,7 +326,6 @@ class Functions
       }
       $icon_filename = '';
     }
-
     if (!empty($id)) {
       $fields = $params = [];
       foreach ($data_prepared as $key => $val) {
@@ -366,11 +346,9 @@ class Functions
       }
       $params[] = (int)$id;
       $result = $this->db->execute("UPDATE $table SET " . implode(', ', $fields) . " WHERE id = ?", $params);
-
       if ($enable_seo && $result) {
         $this->save_seo($data_prepared['type'] ?? '', (int)$id, $data, $options['act'] ?? '');
       }
-
       if ($enable_gallery && !empty($data['deleted_images'])) {
         foreach (explode('|', $data['deleted_images']) as $gid) {
           $gid = (int)$gid;
@@ -396,7 +374,6 @@ class Functions
       if ($enable_gallery && !empty($files['files']['name'][0])) {
         $this->save_gallery($data, $files, $id, $data_prepared['type'] ?? '', false);
       }
-
       $msg = $result ? capnhatdulieuthanhcong : capnhatdulieubiloi;
     } else {
       $columns_insert = array_keys($data_prepared);
@@ -414,7 +391,6 @@ class Functions
       }
       $inserted = $this->db->execute("INSERT INTO $table (" . implode(', ', $columns_insert) . ") VALUES (" . implode(', ', $placeholders) . ")", $params);
       $insert_id = $inserted ? $this->db->getInsertId() : 0;
-
       if ($enable_seo && $insert_id) {
         $this->save_seo($data_prepared['type'] ?? '', $insert_id, $data, $options['act'] ?? '');
       }
@@ -423,7 +399,6 @@ class Functions
       }
       $msg = $inserted ? capnhatdulieuthanhcong : capnhatdulieubiloi;
     }
-
     $this->transfer($msg, $redirect, !empty($id) ? $result : $inserted);
   }
 
@@ -503,8 +478,6 @@ class Functions
       }
       $this->db->execute("DELETE FROM tbl_gallery WHERE id_parent = ?", [$id]);
     }
-
-    // Xoá SEO nếu có
     if ($delete_seo) {
       if ($type) {
         $this->db->execute("DELETE FROM tbl_seo WHERE id_parent = ? AND `type` = ?", [$id, $type]);
@@ -512,9 +485,7 @@ class Functions
         $this->db->execute("DELETE FROM tbl_seo WHERE id_parent = ?", [$id]);
       }
     }
-
     $deleted = $this->db->execute("DELETE FROM `$table` WHERE id = ?", [$id]);
-
     $this->transfer($deleted ? xoadulieuthanhcong : xoadulieubiloi, $redirect, $deleted);
   }
   public function deleteMultiple_data(array $options = [])
@@ -572,10 +543,8 @@ class Functions
   function isItemActive(array $activeList, string $currentPage, string $currentType): bool
   {
     $currentAct = $_GET['act'] ?? '';
-
     foreach ($activeList as $activeItem) {
       parse_str(ltrim($activeItem, '?'), $activeParams);
-
       if (
         ($activeParams['page'] ?? '') === $currentPage &&
         ($activeParams['type'] ?? '') === $currentType &&
@@ -584,7 +553,6 @@ class Functions
         return true;
       }
     }
-
     return false;
   }
   /* Alert */
@@ -610,7 +578,6 @@ class Functions
     $params = [];
     $where = ' WHERE 1';
     $name = $id = '';
-
     if (str_contains($table, '_list')) {
       $name = $id = 'id_list';
     } elseif (str_contains($table, '_cat')) {
@@ -637,7 +604,6 @@ class Functions
     } else {
       $name = $id = 'id';
     }
-
     $rows = $this->db->rawQuery("SELECT id, namevi FROM `$table` $where ORDER BY numb, id DESC", $params);
     $str = '<select id="' . $id . '" name="data[' . $name . ']" onchange="onchangeCategory($(this))" class="form-control filter-category select2">';
     $str .= '<option value="0">' . htmlspecialchars($title_select) . '</option>';
@@ -659,7 +625,6 @@ class Functions
     $params = [];
     $where = ' WHERE 1';
     $class = 'form-control select2 select-category';
-
     $levels = [
       '_list' => [
         'field' => 'id_list',
@@ -690,7 +655,6 @@ class Functions
         'filters' => ['type' => $_REQUEST['type'] ?? '']
       ]
     ];
-
     $matched = null;
     foreach ($levels as $key => $conf) {
       if (str_contains($table, $key)) {
@@ -698,7 +662,6 @@ class Functions
         break;
       }
     }
-
     if (!$matched) {
       $field = $name = 'id';
       $data_level = $data_table =  $data_child = '';
@@ -717,7 +680,6 @@ class Functions
         }
       }
     }
-
     $rows = $this->db->rawQuery("SELECT id, namevi FROM `$table` $where ORDER BY numb, id DESC", $params);
     $str = '<select id="' . $field . '" name="data[' . $name . ']" ' . $data_level . ' ' . $data_table . ' ' . $data_child . ' class="' . $class . '">';
     $str .= '<option value="0">' . htmlspecialchars($title_select) . '</option>';
@@ -1354,6 +1316,21 @@ class Functions
     }
     return basename($target_path);
   }
+  public function copyImage($imageName, $uploadDir)
+  {
+    if (empty($imageName)) return '';
+    $oldPath = rtrim($uploadDir, '/') . '/' . $imageName;
+    if (!file_exists($oldPath)) return '';
+    $ext = pathinfo($imageName, PATHINFO_EXTENSION);
+    $baseName = pathinfo($imageName, PATHINFO_FILENAME);
+    $newName = $baseName . '_' . substr(md5(uniqid()), 0, 6) . '.' . $ext;
+    $newPath = rtrim($uploadDir, '/') . '/' . $newName;
+    if (copy($oldPath, $newPath)) {
+      return $newName;
+    }
+    return '';
+  }
+
   public function getImage(array $data = []): string
   {
     $defaults = [
@@ -1619,6 +1596,45 @@ class Functions
     $string = strtolower($string);
     return $string;
   }
+  /* UTF8 convert */
+  public function utf8Convert($str = '')
+  {
+    if ($str != '') {
+      $utf8 = array(
+        'a' => 'á|à|ả|ã|ạ|ă|ắ|ặ|ằ|ẳ|ẵ|â|ấ|ầ|ẩ|ẫ|ậ|Á|À|Ả|Ã|Ạ|Ă|Ắ|Ặ|Ằ|Ẳ|Ẵ|Â|Ấ|Ầ|Ẩ|Ẫ|Ậ',
+        'd' => 'đ|Đ',
+        'e' => 'é|è|ẻ|ẽ|ẹ|ê|ế|ề|ể|ễ|ệ|É|È|Ẻ|Ẽ|Ẹ|Ê|Ế|Ề|Ể|Ễ|Ệ',
+        'i' => 'í|ì|ỉ|ĩ|ị|Í|Ì|Ỉ|Ĩ|Ị',
+        'o' => 'ó|ò|ỏ|õ|ọ|ô|ố|ồ|ổ|ỗ|ộ|ơ|ớ|ờ|ở|ỡ|ợ|Ó|Ò|Ỏ|Õ|Ọ|Ô|Ố|Ồ|Ổ|Ỗ|Ộ|Ơ|Ớ|Ờ|Ở|Ỡ|Ợ',
+        'u' => 'ú|ù|ủ|ũ|ụ|ư|ứ|ừ|ử|ữ|ự|Ú|Ù|Ủ|Ũ|Ụ|Ư|Ứ|Ừ|Ử|Ữ|Ự',
+        'y' => 'ý|ỳ|ỷ|ỹ|ỵ|Ý|Ỳ|Ỷ|Ỹ|Ỵ',
+        '' => '`|\~|\!|\@|\#|\||\$|\%|\^|\&|\*|\(|\)|\+|\=|\,|\.|\/|\?|\>|\<|\'|\"|\“|\”|\:|\;|_',
+      );
+      foreach ($utf8 as $ascii => $uni) {
+        $str = preg_replace("/($uni)/i", $ascii, $str);
+      }
+    }
+
+    return $str;
+  }
+  /* Change title */
+  public function changeTitle($text = '')
+  {
+    if ($text != '') {
+      $text = strtolower($this->utf8Convert($text));
+      $text = preg_replace("/[^a-z0-9-\s]/", "", $text);
+      $text = preg_replace('/([\s]+)/', '-', $text);
+      $text = str_replace(array('%20', ' '), '-', $text);
+      $text = preg_replace("/\-\-\-\-\-/", "-", $text);
+      $text = preg_replace("/\-\-\-\-/", "-", $text);
+      $text = preg_replace("/\-\-\-/", "-", $text);
+      $text = preg_replace("/\-\-/", "-", $text);
+      $text = '@' . $text . '@';
+      $text = preg_replace('/\@\-|\-\@|\@/', '', $text);
+    }
+
+    return $text;
+  }
   public function isGoogleSpeed()
   {
     if (!isset($_SERVER['HTTP_USER_AGENT']) || stripos($_SERVER['HTTP_USER_AGENT'], 'Lighthouse') === false) {
@@ -1658,13 +1674,11 @@ class Functions
   public function makeDate($time = 0, $dot = '.', $lang = 'vi', $f = false)
   {
     $str = ($lang == 'vi') ? date("d{$dot}m{$dot}Y", $time) : date("m{$dot}d{$dot}Y", $time);
-
     if ($f == true) {
       $thu['vi'] = array('Chủ nhật', 'Thứ hai', 'Thứ ba', 'Thứ tư', 'Thứ năm', 'Thứ sáu', 'Thứ bảy');
       $thu['en'] = array('Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday');
       $str = $thu[$lang][date('w', $time)] . ', ' . $str;
     }
-
     return $str;
   }
 }

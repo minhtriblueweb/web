@@ -172,55 +172,17 @@ function deleteItem(url) {
 /* Delete all */
 function deleteAll(url) {
   var listid = "";
-
   $("input.select-checkbox").each(function () {
     if (this.checked) listid = listid + "," + this.value;
   });
-
   listid = listid.substr(1);
-
   if (listid == "") {
     notifyDialog(LANG["banhaychonitnhat1mucdexoa"]);
     return false;
   }
-
   holdonOpen();
   document.location = url + "&listid=" + listid;
 }
-
-
-/* Create sort filer */
-$(document).ready(function () {
-  $('#filer-gallery').on('change', function () {
-    const files = this.files;
-    const $preview = $('#preview-gallery');
-    const colClass = $('.col-filer').val() || 'col-3';
-
-    $preview.empty(); // Clear preview on every change
-
-    if (!files.length) return;
-
-    Array.from(files).forEach((file, index) => {
-      const allowedExt = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
-      const ext = file.name.split('.').pop().toLowerCase();
-
-      if (!allowedExt.includes(ext)) return;
-
-      const reader = new FileReader();
-      reader.onload = function (e) {
-        const imgHtml = `
-          <div class="${colClass} mb-3">
-            <div class="border p-1 shadow-sm rounded">
-              <img src="${e.target.result}" class="img-fluid" alt="Ảnh ${index + 1}">
-            </div>
-          </div>
-        `;
-        $preview.append(imgHtml);
-      };
-      reader.readAsDataURL(file);
-    });
-  });
-});
 
 /* HoldOn */
 function holdonOpen(
@@ -1223,7 +1185,6 @@ $(document).ready(function () {
       to: ORDER_PRICE_TO,
       type: "double",
       step: 1,
-      // prefix  : 'đ ',
       postfix: " đ",
       prettify: true,
       hasGrid: true,
@@ -1330,14 +1291,6 @@ $(document).ready(function () {
       locale: ["OK", "Cancel", "Select all"],
       //captionFormat: 'Đã chọn {0} mục',
       //captionFormatAllSelected: 'Đã chọn tất cả {0} mục'
-    });
-  }
-
-  /* Ckeditor */
-  if ($(".form-control-ckeditor").length) {
-    $(".form-control-ckeditor").each(function () {
-      var id = $(this).attr("id");
-      CKEDITOR.replace(id);
     });
   }
 
@@ -1965,6 +1918,37 @@ $(document).ready(function () {
   //   return false;
   // });
   /* Filer */
+  // $(document).ready(function () {
+  //   $('#filer-gallery').on('change', function () {
+  //     const files = this.files;
+  //     const $preview = $('#preview-gallery');
+  //     const colClass = $('.col-filer').val() || 'col-3';
+
+  //     $preview.empty(); // Clear preview on every change
+
+  //     if (!files.length) return;
+
+  //     Array.from(files).forEach((file, index) => {
+  //       const allowedExt = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
+  //       const ext = file.name.split('.').pop().toLowerCase();
+
+  //       if (!allowedExt.includes(ext)) return;
+
+  //       const reader = new FileReader();
+  //       reader.onload = function (e) {
+  //         const imgHtml = `
+  //         <div class="${colClass} mb-3">
+  //           <div class="border p-1 shadow-sm rounded">
+  //             <img src="${e.target.result}" class="img-fluid" alt="Ảnh ${index + 1}">
+  //           </div>
+  //         </div>
+  //       `;
+  //         $preview.append(imgHtml);
+  //       };
+  //       reader.readAsDataURL(file);
+  //     });
+  //   });
+  // });
   $(".btn-submit-HoldOn").on("click", function () {
     HoldOn.open({
       theme: "sk-circle",
@@ -2019,7 +2003,6 @@ $(document).ready(function () {
         setTimeout(function () {
           const colClass = $(".col-filer").val();
           let lastOrder = 0;
-
           $(".jFiler-items-list li.jFiler-item").each(function () {
             lastOrder++;
             $(this).find("input[name='data[numb-filer][]']").val(lastOrder);
@@ -2027,7 +2010,6 @@ $(document).ready(function () {
           });
           HoldOn.close();
         }, 50);
-
       },
       removeConfirmation: false,
       templates: {
@@ -2135,6 +2117,12 @@ $(document).ready(function () {
   }
 
   /* Ckeditor */
+  if ($(".form-control-ckeditor").length) {
+    $(".form-control-ckeditor").each(function () {
+      var id = $(this).attr("id");
+      CKEDITOR.replace(id);
+    });
+  }
   if ($(".form-control-ckeditor").length) {
     CKEDITOR.editorConfig = function (config) {
       config.language = "vi";
@@ -2368,6 +2356,47 @@ $(document).ready(function () {
     };
   }
 
+  /* Monaco */
+  if ($('.form-control-monaco').length) {
+    require.config({ paths: { vs: './monaco/min/vs' }});
+    require(['vs/editor/editor.main'], function () {
+      monaco.editor.defineTheme('myDark', {
+        base: 'vs-dark',
+        inherit: true,
+        rules: [
+          { token: 'comment', foreground: '6A9955' },
+          { token: 'string', foreground: 'CE9178' },
+          { token: 'keyword', foreground: 'C586C0' }
+        ],
+        colors: {
+          'editor.background': '#0f172a'
+        }
+      });
+      monaco.editor.setTheme('myDark');
+      document.querySelectorAll('.form-control-monaco').forEach(textarea => {
+        textarea.style.display = 'none';
+        const editorDiv = document.createElement('div');
+        editorDiv.style.cssText = `
+        height:200px;
+        border:1px solid #ccc;
+        margin-bottom:10px
+      `;
+        textarea.after(editorDiv);
+        const editor = monaco.editor.create(editorDiv, {
+          value: textarea.value || '',
+          language: 'html',
+          automaticLayout: true,
+          minimap: { enabled: false }
+        });
+
+        editor.onDidChangeModelContent(() => {
+          textarea.value = editor.getValue();
+        });
+        textarea._monaco = editor;
+      });
+    });
+  }
+
   /* apexMixedChart */
   if ($("#apexMixedChart").length) {
     var apexMixedChart;
@@ -2443,3 +2472,120 @@ $(document).ready(function () {
   }
 
 });
+
+
+//
+// Search
+$(function () {
+  const searchToggler = $('.search-toggler');
+  const searchInputWrapper = $('.search-input-wrapper');
+  const searchInput = $('.search-input');
+  const searchMenu = $('.tt-menu.navbar-search-suggestion');
+  const btnClose = $('.fas.fa-x.search-toggler.cursor-pointer');
+  let searchTimeout = null;
+  /* Mở ô tìm kiếm */
+  searchToggler.on('click', function (e) {
+    e.stopPropagation();
+    searchInputWrapper.removeClass('d-none');
+    searchInput.focus();
+  });
+
+  /* Đóng tìm kiếm */
+  btnClose.on('click', closeSearch);
+
+  /* Click ra ngoài thì đóng */
+  $(document).on('click', function (e) {
+    if (!$(e.target).closest('.search-input-wrapper').length) {
+      closeSearch();
+    }
+  });
+
+  function closeSearch() {
+    searchInputWrapper.addClass('d-none');
+    searchInput.val('');
+    searchMenu.removeClass('tt-open');
+    $('.content-backdrop').removeClass('show');
+  }
+
+  /* Tìm kiếm */
+  searchInput.on('input', function () {
+    const keyword = $(this).val().trim();
+    $('.content-backdrop').addClass('show');
+    clearTimeout(searchTimeout);
+
+    if (!keyword) {
+      searchMenu.removeClass('tt-open');
+      return;
+    }
+
+    searchTimeout = setTimeout(() => {
+      $.ajax({
+        url: 'api/search.php',
+        type: 'POST',
+        dataType: 'json',
+        data: { keyword },
+        success: renderResult,
+        error: renderError
+      });
+    }, 300);
+  });
+
+  function renderResult(res) {
+    if (!res?.success || !res.data?.length) {
+      return renderNotFound();
+    }
+    let html = `
+      <h6 class="suggestions-header text-primary mb-0 mx-3 mt-3 pb-2">
+        Kết quả tìm kiếm
+      </h6>
+    `;
+    res.data.forEach(item => {
+      const link = `index.php?page=${item.page}&act=form&type=${item.type}&id=${item.id}`;
+      html += `
+        <a href="${link}" class="text-decoration-none">
+          <div class="d-flex align-items-center px-3 py-2 gap-2">
+            <i class="bi bi-layout-text-sidebar-reverse"></i>
+            <span>${item.namevi}</span>
+            <small class="text-muted">(Xem chi tiết »)</small>
+          </div>
+        </a>
+      `;
+    });
+
+    searchMenu.html(html).addClass('tt-open');
+  }
+
+  function renderNotFound() {
+    searchMenu.html(`
+      <div class="not-found px-3 py-2">
+        <h6 class="suggestions-header text-primary mb-2">Không tìm thấy</h6>
+        <p class="py-2 mb-0 text-muted">
+          <i class="ti ti-alert-circle ti-xs me-2"></i>
+          Không có kết quả nào
+        </p>
+      </div>
+    `).addClass('tt-open');
+  }
+
+  function renderError() {
+    searchMenu.html(`
+      <div class="not-found px-3 py-2">
+        <h6 class="suggestions-header text-danger mb-2">Lỗi</h6>
+        <p class="py-2 mb-0 text-muted">
+          <i class="ti ti-alert-circle ti-xs me-2"></i>
+          Có lỗi xảy ra khi tìm kiếm
+        </p>
+      </div>
+    `).addClass('tt-open');
+  }
+
+  /* Phím tắt Ctrl + / */
+  $(document).on('keydown', function (e) {
+    if (e.ctrlKey && e.which === 191) {
+      e.preventDefault();
+      searchInputWrapper.removeClass('d-none');
+      searchInput.focus();
+    }
+  });
+});
+

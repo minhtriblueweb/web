@@ -55,6 +55,29 @@ $sidebarMenu = [
     })()
   ],
   [
+    'title' => quanlydonhang,
+    'icon' => 'fas fa-shopping-bag',
+    'active' => ['?page=order&act=man'],
+  ],
+  [
+    'title' => quanlynhantin,
+    'icon' => 'fas fa-envelope',
+    'children' => (function () use ($config) {
+      $children = [];
+      if (!empty($config['newsletter']) && is_array($config['newsletter'])) {
+        foreach ($config['newsletter'] as $type => $item) {
+          if (!empty($item['title_main'])) {
+            $children[] = [
+              'title'  => $item['title_main'],
+              'active' => ["?page=newsletter&act=man&type=$type", "?page=newsletter&act=edit&type=$type"]
+            ];
+          }
+        }
+      }
+      return $children;
+    })()
+  ],
+  [
     'title' => 'Quản lý trang tĩnh',
     'icon' => 'fas fa-bookmark',
     'children' => (function () use ($config) {
@@ -132,7 +155,7 @@ $act  = $_GET['act'] ?? '';
 ?>
 <aside class="main-sidebar sidebar-dark-primary elevation-4 text-sm">
   <a class="brand-link" href="index.php">
-    <img class="brand-image" src="./assets/img/chuky.png" />
+    <?= $fn->getImageCustom(['file' => $logo['file'],'class'=> 'brand-image', 'width'  => 200, 'height'  => 200, 'zc' => 4, 'lazy' => false]) ?>
   </a>
   <div class="sidebar">
     <nav class="mt-3">

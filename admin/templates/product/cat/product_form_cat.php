@@ -16,6 +16,7 @@
         <?= !empty($config['product'][$type]['slug_cat']) ? 'disabled' : '' ?>>
         <i class="far fa-save mr-2"></i><?= luu ?>
       </button>
+      <button type="submit" class="btn btn-sm bg-gradient-success <?= !empty($config['product'][$type]['slug_cat']) ? 'submit-check' : '' ?>" name="save-here"><i class="far fa-save mr-2"></i><?= luutaitrang ?></button>
       <button type="reset" class="btn btn-sm bg-gradient-secondary">
         <i class="fas fa-redo mr-2"></i><?= lamlai ?>
       </button>
@@ -30,8 +31,7 @@
           <div class="card-header">
             <h3 class="card-title"><?= noidung ?> <?= $config['product'][$type]['title_main_cat'] ?></h3>
             <div class="card-tools">
-              <button type="button" class="btn btn-tool" data-card-widget="collapse"><i
-                  class="fas fa-minus"></i></button>
+              <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
             </div>
           </div>
           <div class="card-body">

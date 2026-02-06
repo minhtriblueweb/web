@@ -2,7 +2,7 @@
 <?php
 $cssFiles = [
   "fontawesome611/all.css",
-  "confirm/confirm.css",
+  "confirm/confirm.min.css",
   "select2/select2.css",
   "sumoselect/sumoselect.css",
   "datetimepicker/jquery.datetimepicker.css",
@@ -15,8 +15,8 @@ $cssFiles = [
   "simplenotify/simple-notify.css",
   "comment/comment.css",
   "fancybox5/fancybox.css",
-  "css/adminlte.css",
-  "css/adminlte-style.css",
+  "css/adminlte.min.css",
+  "css/adminlte-style.min.css",
 ];
 
 foreach ($cssFiles as $file) {

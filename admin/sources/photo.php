@@ -47,7 +47,7 @@ function delete()
 }
 function deleteMultiple()
 {
-  global $fn, $table, $type, $config, $linkMan;
+  global $fn, $table, $type, $linkMan;
   if (!empty($_GET['listid'])) {
     $fn->deleteMultiple_data([
       'listid' => $_GET['listid'],

@@ -27,10 +27,19 @@
         <?php endif ?>
       </div>
       <div class="search">
-        <input autocomplete="off" type="text" id="keyword" placeholder="Tìm kiếm sản phẩm..." onkeypress="doEnter(event,'keyword');" />
-        <p onclick="onSearch('keyword');" class="search-btn"><i class="fa-solid fa-magnifying-glass"></i></p>
-        <div id="suggestions" class="suggestions"></div>
+        <input
+          autocomplete="off"
+          type="text"
+          class="js-search-input"
+          placeholder="Tìm kiếm sản phẩm..." />
+
+        <p class="search-btn js-search-btn">
+          <i class="fa-solid fa-magnifying-glass"></i>
+        </p>
+
+        <div class="suggestions"></div>
       </div>
+
 
       <div class="box-hotline">
         <div class="hotline">

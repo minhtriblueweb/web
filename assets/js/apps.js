@@ -6,46 +6,52 @@ validateForm("validation-contact");
 
 // Gợi ý tìm kiếm
 $(function () {
-  let $input = $("#keyword");
-  let $suggestBox = $("#suggestions");
-  $input.on("keyup", function () {
-    let keyword = $(this).val().trim();
-    if (keyword.length > 0) {
-      $.ajax({
-        url: "api/search.php",
-        method: "GET",
-        data: { keyword: keyword },
-        dataType: "json",
-        cache: false,
-        success: function (data) {
-          let html = "";
-          if (data.length > 0) {
-            data.forEach(function (item) {
-              html += `<a title="${item.name}" class="suggestion-item" href="${item.slug}">${item.img}<span>${item.name}</span></a>`;
-            });
-            $("#suggestions").html(html).addClass("show");
-          } else {
-            $suggestBox.removeClass("show").html("");
-          }
-        },
-        error: function () {
-          $suggestBox.removeClass("show").html("");
+  $(document).on('keyup', '.search .js-search-input', function () {
+    var $input = $(this);
+    var keyword = $.trim($input.val());
+    var $wrapper = $input.closest('.search');
+    var $suggestBox = $wrapper.find('.suggestions');
+    if (keyword.length === 0) {
+      $suggestBox.removeClass('show').html('');
+      return;
+    }
+    $.ajax({
+      url: 'api/search.php',
+      method: 'GET',
+      data: { keyword: keyword },
+      dataType: 'json',
+      cache: false,
+      success: function (data) {
+        var html = '';
+        if (data && data.length > 0) {
+          $.each(data, function (i, item) {
+            html +=
+              '<a class="suggestion-item" title="' + item.name + '" href="' + item.slug + '">' +
+              item.img +
+              '<span>' + item.name + '</span>' +
+              '</a>';
+          });
+
+          $suggestBox.html(html).addClass('show');
+        } else {
+          $suggestBox.removeClass('show').html('');
         }
-      });
-    } else {
-      $suggestBox.removeClass("show").html("");
+      },
+      error: function () {
+        $suggestBox.removeClass('show').html('');
+      }
+    });
+  });
+  $(document).on('focus', '.search .js-search-input', function () {
+    var $wrapper = $(this).closest('.search');
+    var $suggestBox = $wrapper.find('.suggestions');
+    if ($suggestBox.html().trim() !== '') {
+      $suggestBox.addClass('show');
     }
   });
-
-  $input.on("focus", function () {
-    if ($suggestBox.html().trim() !== "") {
-      $suggestBox.addClass("show");
-    }
-  });
-
-  $(document).on("click", function (e) {
-    if (!$(e.target).closest(".search").length) {
-      $suggestBox.removeClass("show");
+  $(document).on('click', function (e) {
+    if (!$(e.target).closest('.search').length) {
+      $('.search .suggestions').removeClass('show');
     }
   });
 });
@@ -64,7 +70,14 @@ NN_FRAMEWORK.Common = function () {
     $(this).wrap("<div class='table-responsive'></div>");
   });
 };
-
+/* Lazys */
+NN_FRAMEWORK.Lazys = function () {
+  if (isExist($('.lazy'))) {
+    var lazyLoadInstance = new LazyLoad({
+      elements_selector: '.lazy'
+    });
+  }
+};
 /* tab-cat-scroll */
 $(document).ready(function () {
   const $scrollBox = $(".tab-cat-scroll");
@@ -1092,14 +1105,247 @@ NN_FRAMEWORK.Pagings = function () {
   });
 };
 
-$("table").addClass("table table-hover");
+$(document).ready(function () {
+  $("table").addClass("table table-hover");
+  $('.search-mobile i').on('click', function (e) {
+    e.preventDefault();
+    $('.search-bar-container, .search-overlay').addClass('active');
+    $('.searchinput').focus();
+  });
+  $('.search-overlay').on('click', function () {
+    $('.search-bar-container, .search-overlay').removeClass('active');
+  });
+
+  $(document).on('keydown', function (e) {
+    if (e.key === 'Escape') {
+      $('.search-bar-container, .search-overlay').removeClass('active');
+    }
+  });
+});
+
+// tìm kiếm
+$(document).ready(function () {
+  function onSearch($input) {
+    var keyword = $.trim($input.val());
+    if (keyword === '') {
+      if (typeof notifyDialog === 'function') {
+        notifyDialog(LANG['no_keywords']);
+      }
+      return false;
+    }
+    window.location.href = 'tim-kiem?keyword=' + encodeURI(keyword);
+  }
+  $(document).on('click', '.js-search-btn', function (e) {
+    e.preventDefault();
+    var $wrapper = $(this).closest(
+      'form, .menu-mobile-search, .search'
+    );
+    var $input = $wrapper.find('.js-search-input');
+
+    onSearch($input);
+  });
+  $(document).on('keypress', '.js-search-input', function (e) {
+    if (e.which === 13) {
+      e.preventDefault();
+      onSearch($(this));
+    }
+  });
+});
+
+function showNotifyFromKey(key) {
+  if (!key) return;
+  if (typeof notifyDialog !== 'function') return;
+  var text = key;
+  if (typeof LANG === 'object' && LANG[key]) {
+    text = LANG[key];
+  }
+  notifyDialog(text);
+}
+/* Add */
+if (isExist($('.select-city-cart'))) {
+  fetch(CONFIG_BASE + "assets/jsons/city-group.json", { headers: { "Content-Type": "application/json" } }).then(response => {
+    return response.json();
+  }).then(function (data) {
+    $.each(data.citysCentral, function (index, val) {
+      $('.select-city-cart').append(`<option value="` + val.id + `">` + val.name + `</option>`);
+    });
+  });
+}
+$('body').on('click', '.addcart', function () {
+  var $this = $(this);
+  var $parents = $this.parents('.right-pro-detail');
+
+  var id = $this.data('id');
+  var action = $this.data('action');
+  var quantity = parseInt(
+    $parents.find('.quantity-pro-detail .qty-pro').val(),
+    10
+  ) || 1;
+
+  if (!id) return;
+
+  $.ajax({
+    url: 'api/cart.php',
+    type: 'POST',
+    dataType: 'json',
+    data: {
+      cmd: 'add-cart',
+      id: id,
+      quantity: quantity
+    },
+    beforeSend: function () {
+      holdonOpen();
+    },
+    success: function (result) {
+      if (action === 'addnow') {
+        $('.count-cart').html(result.max);
+        $.ajax({
+          url: 'api/cart.php',
+          type: 'POST',
+          dataType: 'html',
+          data: { cmd: 'popup-cart' },
+          success: function (html) {
+            $('#popup-cart .modal-body').html(html);
+            $('#popup-cart').modal('show');
+            NN_FRAMEWORK.Lazys();
+            holdonClose();
+          },
+          error: function () {
+            holdonClose();
+            alert('Có lỗi xảy ra. Vui lòng thử lại!');
+          }
+        });
+      } else if (action === 'buynow') {
+        holdonClose();
+        window.location = CONFIG_BASE + 'gio-hang';
+      }
+    },
+    error: function () {
+      holdonClose();
+      alert('Có lỗi xảy ra. Vui lòng thử lại!');
+    }
+  });
+});
+
+
+$(".quantity-pro-detail").each(function () {
+  let box = $(this);
+  let minus = box.find(".quantity-minus-pro-detail");
+  let plus = box.find(".quantity-plus-pro-detail");
+  let input = box.find(".qty-pro");
+  function getBasePrice(el) {
+    return parseInt(
+      el.text().replace(/[^\d]/g, ""),
+      10
+    );
+  }
+  function formatPrice(price) {
+    return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + " đ";
+  }
+  let priceNewEl = $(".price-new-pro-detail");
+  let priceOldEl = $(".price-old-pro-detail");
+  if (priceNewEl.length && !priceNewEl.data("base")) {
+    priceNewEl.data("base", getBasePrice(priceNewEl));
+  }
+  if (priceOldEl.length && !priceOldEl.data("base")) {
+    priceOldEl.data("base", getBasePrice(priceOldEl));
+  }
+  function updatePrice() {
+    let qty = parseInt(input.val(), 10);
+    if (priceNewEl.length) {
+      let base = priceNewEl.data("base");
+      priceNewEl.text(formatPrice(base * qty));
+    }
+
+    if (priceOldEl.length) {
+      let base = priceOldEl.data("base");
+      priceOldEl.text(formatPrice(base * qty));
+    }
+  }
+  minus.on("click", function () {
+    let qty = parseInt(input.val(), 10);
+    if (qty > 1) {
+      input.val(qty - 1);
+      updatePrice();
+    }
+  });
+  plus.on("click", function () {
+    let qty = parseInt(input.val(), 10);
+    input.val(qty + 1);
+    updatePrice();
+  });
+});
+/* City */
+if (isExist($('.select-city-cart'))) {
+  $('.select-city-cart').change(function () {
+    var id = $(this).val();
+    loadDistrict(id);
+    loadShip();
+  });
+}
+
+/* District */
+if (isExist($('.select-district-cart'))) {
+  $('.select-district-cart').change(function () {
+    var id = $(this).val();
+    var city = $('.select-city-cart').val();
+    loadWard(city, id);
+    loadShip();
+  });
+}
+
+/* Ward */
+if (isExist($('.select-ward-cart'))) {
+  $('.select-ward-cart').change(function () {
+    var id = $(this).val();
+    loadShip(id);
+  });
+}
+/* Delete */
+$('body').on('click', '.del-procart', function () {
+  confirmDialog('delete-procart', LANG['delete_product_from_cart'], $(this));
+});
+/* Quantity */
+$('body').on('change', 'input.quantity-procart', function () {
+  let quantity = parseInt($(this).val(), 10);
+  if (isNaN(quantity) || quantity < 1) quantity = 1;
+  $(this).val(quantity);
+  let id = $(this).data('pid');
+  let code = $(this).data('code');
+  updateCart(id, code, quantity);
+});
+$('body').on('click', '.counter-procart-plus', function () {
+  let wrap = $(this).closest('.quantity-counter-procart');
+  let input = wrap.find('input.quantity-procart');
+  let quantity = parseInt(input.val(), 10) || 1;
+  quantity++;
+  input.val(quantity).trigger('change');
+});
+$('body').on('click', '.counter-procart-minus', function () {
+  let wrap = $(this).closest('.quantity-counter-procart');
+  let input = wrap.find('input.quantity-procart');
+  let quantity = parseInt(input.val(), 10) || 1;
+  quantity--;
+  if (quantity < 1) quantity = 1;
+  input.val(quantity).trigger('change');
+});
+
+/* Payments */
+if (isExist($('.payments-label'))) {
+  $('.payments-label').click(function () {
+    var payments = $(this).data('payments');
+    $('.payments-cart .payments-label, .payments-info').removeClass('active');
+    $(this).addClass('active');
+    $('.payments-info-' + payments).addClass('active');
+  });
+}
 
 /* Ready */
 $(document).ready(function () {
   NN_FRAMEWORK.Common();
   NN_FRAMEWORK.SlickPage();
-  // NN_FRAMEWORK.Lazys();
-  NN_FRAMEWORK.Wows();
+  NN_FRAMEWORK.Lazys();
+  // NN_FRAMEWORK.Wows();
   NN_FRAMEWORK.AltImg();
   NN_FRAMEWORK.GoTop();
   NN_FRAMEWORK.Menu();

@@ -17,11 +17,11 @@
   var CHARTS = <?= (!empty($charts)) ? json_encode($charts) : '{}' ?>;
   var ADD_OR_EDIT_PERMISSIONS = false;
   var IMPORT_IMAGE_EXCELL = false;
-  var ORDER_ADVANCED_SEARCH = false;
-  var ORDER_MIN_TOTAL = 1;
-  var ORDER_MAX_TOTAL = 1;
-  var ORDER_PRICE_FROM = 1;
-  var ORDER_PRICE_TO = 1;
+  var ORDER_ADVANCED_SEARCH = <?= (!empty($page) && $page == 'order' && !empty($config['order']['search'])) ? 'true' : 'false' ?>;
+  var ORDER_MIN_TOTAL = <?= (!empty($minTotal)) ? $minTotal : 1 ?>;
+  var ORDER_MAX_TOTAL = <?= (!empty($maxTotal)) ? $maxTotal : 1 ?>;
+  var ORDER_PRICE_FROM = <?= (!empty($price_from)) ? $price_from : 1 ?>;
+  var ORDER_PRICE_TO = <?= (!empty($price_to)) ? $price_to : ((!empty($maxTotal)) ? $maxTotal : 1) ?>;
   var LANG = {
     'taithembinhluan': '<?= taithembinhluan ?>',
     'xemthembinhluan': '<?= xemthembinhluan ?>',
@@ -44,6 +44,7 @@
     'duongdankhonghople': '<?= duongdankhonghople ?>',
     'duongdanhople': '<?= duongdanhople ?>',
     'banhaychonitnhat1mucdegui': '<?= banhaychonitnhat1mucdegui ?>',
+    'banhaychonitnhat1mucdexoa': '<?= banhaychonitnhat1mucdexoa ?>',
     'albumhientai': '<?= albumhientai ?>',
     'chontatca': '<?= chontatca ?>',
     'sapxep': '<?= sapxep ?>',
@@ -109,7 +110,7 @@ foreach ($jsFiles as $file) {
   echo '<script src="./assets/' . $file . '?v=' . VERSION . '"></script>' . PHP_EOL;
 }
 ?>
-<script src="ckeditor/ckeditor.js"></script>
+<script src="<?= $page === 'setting' ? 'monaco/min/vs/loader.js' : 'ckeditor/ckeditor.js' ?>"></script>
 <?php if (!empty($_SESSION['notify']) && is_array($_SESSION['notify'])): ?>
   <script>
     $(function() {

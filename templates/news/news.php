@@ -3,8 +3,7 @@
     <div class="title-list-hot mt-4">
       <h2><?= $titleMain ?></h2>
     </div>
-
-    <div class="wrap-content" style="background: unset;">
+    <div class="wrap-content">
       <div class="row">
         <?php if (!empty($show_data)): ?>
           <?php foreach ($show_data as $k => $v): ?>

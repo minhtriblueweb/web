@@ -1,3 +1,4 @@
+<div class="content-backdrop"></div>
 <footer class="main-footer text-center text-sm">
   <p class="mb-1">Minh Trí Web</p>
   <p class="mb-1">

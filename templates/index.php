@@ -10,6 +10,7 @@
     --main-color: #<?= $color ?>;
     --main-color-dark: #<?= $fn->darkenColor($color, 15) ?>;
   }
+  <?= $fn->decodeHtmlChars($optsetting['custom_css']) ?>
 </style>
 
 <body>

@@ -20,6 +20,13 @@ $config['static'][$type]['check'] = array("hienthi" => "Hiển thị");
 $config['static'][$type]['name'] = true;
 $config['static'][$type]['content_cke'] = true;
 
+/* Footer News */
+$type = "footer_news";
+$config['static'][$type]['title_main'] = "Footer_news";
+$config['static'][$type]['check'] = array("hienthi" => "Hiển thị");
+$config['static'][$type]['name'] = false;
+$config['static'][$type]['content_cke'] = true;
+
 /* Mua hàng */
 $type = "mua-hang";
 $config['static'][$type]['title_main'] = "Mua hàng";

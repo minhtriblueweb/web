@@ -1,6 +1,8 @@
 <?php
 $cssFiles = [
   "css/animate.min.css",
+  "holdon/HoldOn.css",
+  "holdon/HoldOn-style.css",
   "bootstrap/bootstrap.css",
   "fontawesome611/css/all.min.css",
   "confirm/confirm.css",

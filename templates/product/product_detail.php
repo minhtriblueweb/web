@@ -96,6 +96,12 @@
                       </div>
                     </div>
                   </li>
+                  <li>
+                    <div class="cart-pro-detail d-flex flex-wrap align-items-center justify-content-between">
+                      <a class="transition buynow addcart text-decoration-none d-flex align-items-center justify-content-center" data-id="<?= $id ?>" data-action="addnow"><i class="fa-solid fa-basket-shopping"></i><span><?= themvaogiohang ?></span></a>
+                      <a class="transition buynow addcart text-decoration-none d-flex align-items-center justify-content-center text-dark" data-id="<?= $id ?>" data-action="buynow"><i class="fa-solid fa-cart-arrow-down"></i><span><?= muangay ?></span></a>
+                    </div>
+                  </li>
                 </ul>
                 <?php if ($rowDetail["desc$lang"]): ?>
                   <div class="box-desc-pro-detail border-main">
@@ -105,10 +111,6 @@
                     <div class="desc-pro-detail content-ck"><?= $rowDetail["desc$lang"] ?></div>
                   </div>
                 <?php endif ?>
-                <div class="btn-pro-contact">
-                  <a target="_blank" href="" class="me-3"><i><img class="filter-white" src="assets/images/shopping-cart.png"></i><?= themvaogiohang ?></a>
-                  <a target="_blank" href="https://zalo.me/<?= str_replace(' ', '', $hotline) ?>"><i><img src="assets/images/icon-t2.png" alt="Zalo"></i> Chat zalo</a>
-                </div>
               </div>
             </div>
           </div>
@@ -127,11 +129,13 @@
                   </a>
                 </li>
               <?php endif ?>
-              <li class="nav-item">
-                <a class="nav-link" id="commentfb-pro-detail-tab" data-bs-toggle="tab" href="#commentfb-pro-detail" role="tab">
-                  <?= binhluan ?>
-                </a>
-              </li>
+              <?php if ($thanhtoan): ?>
+                <li class="nav-item">
+                  <a class="nav-link" id="thanhtoan-pro-detail-tab" data-bs-toggle="tab" href="#thanhtoan-pro-detail" role="tab">
+                    <?= $thanhtoan["name$lang"] ?>
+                  </a>
+                </li>
+              <?php endif ?>
             </ul>
 
             <div class="tab-content" id="tabsProDetailContent">
@@ -147,9 +151,13 @@
                   </div>
                 </div>
               <?php endif ?>
-              <div class="tab-pane fade" id="commentfb-pro-detail" role="tabpanel">
-                <div class="fb-comments" data-href="<?= $fn->getCurrentPageURL() ?>" data-numposts="3" data-colorscheme="light" data-width="100%"></div>
-              </div>
+              <?php if ($thanhtoan): ?>
+                <div class="tab-pane fade" id="thanhtoan-pro-detail" role="tabpanel">
+                  <div class="content-main content-ck content-text">
+                    <?= $fn->decodeHtmlChars($thanhtoan["content$lang"]) ?>
+                  </div>
+                </div>
+              <?php endif ?>
             </div>
           </div>
         </div>

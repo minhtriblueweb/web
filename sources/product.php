@@ -37,7 +37,7 @@ if ($id != '') {
   $khuyenmai = $db->rawQueryOne("SELECT name$lang,content$lang FROM tbl_static WHERE type = ? AND FIND_IN_SET(?, status) LIMIT 1", ['khuyen-mai', 'hienthi']) ?? [];
   $camket = $db->rawQueryOne("SELECT name$lang,content$lang FROM tbl_static WHERE type = ? AND FIND_IN_SET(?, status) LIMIT 1", ['cam-ket', 'hienthi']) ?? [];
   $muahang = $db->rawQueryOne("SELECT name$lang,content$lang FROM tbl_static WHERE type = ? AND FIND_IN_SET(?, status) LIMIT 1", ['mua-hang', 'hienthi']) ?? [];
-
+  $thanhtoan = $db->rawQueryOne("SELECT name$lang,content$lang FROM tbl_static WHERE type = ? AND FIND_IN_SET(?, status) LIMIT 1", ['thanh-toan', 'hienthi']) ?? [];
   //SEO
   $seo_data = $db->rawQueryOne("SELECT * FROM tbl_seo WHERE `id_parent` = ? AND `type` = ? AND `act` = ? LIMIT 0,1", [$id, $type, 'man']);
   $seo->set('h1', $rowDetail["name$lang"]);

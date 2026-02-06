@@ -14,7 +14,12 @@ class Functions
     $this->db = new Database();
     $this->fm = new Format();
   }
-
+  /* Redirect */
+  public function redirect($url = '', $response = null)
+  {
+    header("location:$url", true, $response);
+    exit();
+  }
   /* Markdown */
   public function markdown($path = '', $params = array())
   {
@@ -204,7 +209,6 @@ class Functions
     }
     return $result;
   }
-
   public function save_seo(string $type, int $id_parent, array $data, string $act): void
   {
     $seo_table = 'tbl_seo';
@@ -238,7 +242,6 @@ class Functions
       $this->db->execute("INSERT INTO `$seo_table` (" . implode(',', $cols) . ") VALUES (" . implode(',', $placeholders) . ")", $params);
     }
   }
-
   public function save_data($data, $files = null, $id = null, $options = [])
   {
     global $config;
@@ -398,6 +401,9 @@ class Functions
         $this->save_gallery($data, $files, $insert_id, $data_prepared['type'] ?? '', false);
       }
       $msg = $inserted ? capnhatdulieuthanhcong : capnhatdulieubiloi;
+    }
+    if (!empty($options['skip_redirect'])) {
+      return !empty($id) ? $id : ($insert_id ?? 0);
     }
     $this->transfer($msg, $redirect, !empty($id) ? $result : $inserted);
   }
@@ -695,7 +701,6 @@ class Functions
     return $str;
   }
 
-
   public function transfer($msg, $page, $numb = true)
   {
     $_SESSION['transfer_data'] = ['msg' => $msg, 'page' => $page, 'numb' => $numb];
@@ -703,6 +708,18 @@ class Functions
     header("Location: index.php?page=transfer");
     exit();
   }
+
+  public function transfer_tc($msg = '', $page = '', $numb = true)
+  {
+    global $configBase;
+    $basehref = $configBase;
+    $showtext = $msg;
+    $page_transfer = $page;
+    $numb = $numb;
+    include("./templates/layout/transfer.php");
+    exit();
+  }
+
   public function Notify($msg, $page, $status, $title = thongbao)
   {
     if (!isset($_SESSION['notify']) || !is_array($_SESSION['notify'])) {
@@ -733,7 +750,6 @@ class Functions
   {
     $type = trim($type);
     if ($type === '') return '';
-
     $row = $this->db->rawQueryOne(
       "SELECT langvi FROM tbl_type WHERE lang_define = ? LIMIT 1",
       [$type]
@@ -795,24 +811,17 @@ class Functions
     return $result;
   }
   /* Format money */
-  public function formatMoney($price = 0, $unit = 'đ', $html = false)
+  public function formatMoney($price = 0, $unit = '₫', $html = false)
   {
-    $str = '';
-
-    if ($price) {
-      $str .= number_format($price, 0, ',', '.');
-      if ($unit != '') {
-        if ($html) {
-          $str .= '<span>' . $unit . '</span>';
-        } else {
-          $str .= $unit;
-        }
-      }
+    if ($price === null || $price === '') return '';
+    $price = (float) preg_replace('/[^0-9]/', '', (string)$price);
+    if ($price <= 0) return '';
+    $str = number_format($price, 0, ',', '.');
+    if ($unit !== '') {
+      $str .= $html ? '<span>' . $unit . '</span>' : $unit;
     }
-
     return $str;
   }
-
   /* Is phone */
   public function isPhone($number)
   {
@@ -823,7 +832,6 @@ class Functions
       return false;
     }
   }
-
   /* Format phone */
   public function formatPhone($number, $dash = ' ')
   {
@@ -831,13 +839,11 @@ class Functions
       return $matches[1] . $dash . $matches[2] . $dash . $matches[3];
     }
   }
-
   /* Parse phone */
   public function parsePhone($number)
   {
     return (!empty($number)) ? preg_replace('/[^0-9]/', '', $number) : '';
   }
-
   /* Check letters and nums */
   public function isAlphaNum($str)
   {
@@ -1680,5 +1686,188 @@ class Functions
       $str = $thu[$lang][date('w', $time)] . ', ' . $str;
     }
     return $str;
+  }
+
+  /* Lấy tình trạng nhận tin */
+  public function getStatusNewsletter($confirm_status = 0, $type = '')
+  {
+    global $config;
+    $loai = '';
+    if (!empty($config['newsletter'][$type]['confirm_status'])) {
+      foreach ($config['newsletter'][$type]['confirm_status'] as $key => $value) {
+        if ($key == $confirm_status) {
+          $loai = $value;
+          break;
+        }
+      }
+    }
+    if ($loai == '') $loai = "Đang chờ duyệt...";
+    return $loai;
+  }
+  /* Lấy thông tin chi tiết */
+  public function getInfoDetail($cols = '', $table = '', $id = 0)
+  {
+    $row = array();
+    if (!empty($cols) && !empty($table) && !empty($id)) {
+      $row = $this->db->rawQueryOne("SELECT `$cols` FROM `$table` WHERE id = ? LIMIT 1", [$id]);
+    }
+    return $row;
+  }
+  public function orderStatus($status = 0)
+  {
+    $rows = $this->db->rawQuery("SELECT * FROM `tbl_order_status` ORDER BY id");
+    $str = '<select id="order_status" name="data[order_status]" class="form-control custom-select text-sm">';
+    $str .= '<option value="0">' . chontinhtrang . '</option>';
+    if (!empty($rows)) {
+      foreach ($rows as $v) {
+        $selected = '';
+        if (
+          (isset($_REQUEST['order_status']) && (int)$_REQUEST['order_status'] === (int)$v['id']) ||
+          ((int)$status === (int)$v['id'])
+        ) {
+          $selected = 'selected';
+        }
+        $str .= '<option value="' . $v['id'] . '" ' . $selected . '>' . $v['namevi'] . '</option>';
+      }
+    }
+    $str .= '</select>';
+    return $str;
+  }
+  /* Get payments order */
+  public function orderPayments($payment = 0)
+  {
+    $rows = $this->db->rawQuery("SELECT * FROM `tbl_news` WHERE type = ? ORDER BY numb, id DESC", ["hinh-thuc-thanh-toan"]);
+    $str  = '<select id="order_payment" name="order_payment" class="form-control custom-select text-sm">';
+    $str .= '<option value="0">' . chonhinhthucthanhtoan . '</option>';
+    if (!empty($rows)) {
+      foreach ($rows as $v) {
+        $selected = '';
+        if ((isset($_REQUEST['order_payment']) && (int)$_REQUEST['order_payment'] === (int)$v['id']) || ((int)$payment === (int)$v['id'])
+        ) {
+          $selected = 'selected';
+        }
+        $str .= '<option value="' . $v['id'] . '" ' . $selected . '>' . $v['namevi'] . '</option>';
+      }
+    }
+    $str .= '</select>';
+    return $str;
+  }
+  public function getAjaxPlace($table = '', $title_select = chondanhmuc)
+  {
+    if (empty($table)) return '';
+    $allowTable = ['tbl_city', 'tbl_district', 'tbl_ward'];
+    if (!in_array($table, $allowTable)) {
+      return '';
+    }
+    $where  = '';
+    $params = [0];
+    switch ($table) {
+      case 'tbl_city':
+        $id_parent  = 'id_city';
+        $data_level = 'data-level="0"';
+        $data_table = 'data-table="tbl_district"';
+        $data_child = 'data-child="id_district"';
+        break;
+      case 'tbl_district':
+        $id_parent  = 'id_district';
+        $data_level = 'data-level="1"';
+        $data_table = 'data-table="tbl_ward"';
+        $data_child = 'data-child="id_ward"';
+        $idcity = !empty($_REQUEST['id_city']) ? (int)$_REQUEST['id_city'] : 0;
+        $where .= ' AND id_city = ?';
+        $params[] = $idcity;
+        break;
+      case 'tbl_ward':
+        $id_parent = 'id_ward';
+        $idcity = !empty($_REQUEST['id_city']) ? (int)$_REQUEST['id_city'] : 0;
+        $iddistrict = !empty($_REQUEST['id_district']) ? (int)$_REQUEST['id_district'] : 0;
+        $where .= ' AND id_city = ? AND id_district = ?';
+        $params[] = $idcity;
+        $params[] = $iddistrict;
+        $data_level = '';
+        $data_table = '';
+        $data_child = '';
+        break;
+    }
+    $rows = $this->db->rawQuery("SELECT id, name FROM $table WHERE id <> ? $where ORDER BY id ASC", $params);
+    $str  = '<select id="' . $id_parent . '" name="data[' . $id_parent . ']" ';
+    $str .= $data_level . ' ' . $data_table . ' ' . $data_child;
+    $str .= ' class="form-control select2 select-place">';
+    $str .= '<option value="0">' . $title_select . '</option>';
+    if (!empty($rows)) {
+      foreach ($rows as $v) {
+        $selected = '';
+        if (isset($_REQUEST[$id_parent]) && (int)$_REQUEST[$id_parent] === (int)$v['id']) {
+          $selected = 'selected';
+        }
+        $str .= '<option value="' . $v['id'] . '" ' . $selected . '>' . $v['name'] . '</option>';
+      }
+    }
+    $str .= '</select>';
+    return $str;
+  }
+  /* Kiểm tra dữ liệu nhập vào */
+  public function cleanInput($input = '', $type = '')
+  {
+    $output = '';
+    if ($input != '') {
+      $search = array(
+        'script' => '@<script[^>]*?>.*?</script>@si',
+        'style' => '@<style[^>]*?>.*?</style>@siU',
+        'blank' => '@
+        <![\s\S]*?--[ \t\n\r]*>@',
+        'iframe' => '/<iframe(.*?)<\/iframe>/is',
+        'title' => '/<title(.*?)<\/title>/is',
+        'pre' => '/<pre(.*?)<\/pre>/is',
+        'frame' => '/<frame(.*?)<\/frame>/is',
+        'frameset' => '/<frameset(.*?)<\/frameset>/is',
+        'object' => '/<object(.*?)<\/object>/is',
+        'embed' => '/<embed(.*?)<\/embed>/is',
+        'applet' => '/<applet(.*?)<\/applet>/is',
+        'meta' => '/<meta(.*?)<\/meta>/is',
+        'doctype' => '/<!doctype(.*?)>/is',
+        'link' => '/<link(.*?)>/is',
+        'body' => '/<body(.*?)<\/body>/is',
+        'html' => '/<html(.*?)<\/html>/is',
+        'head' => '/<head(.*?)<\/head>/is',
+        'onclick' => '/onclick="(.*?)"/is',
+        'ondbclick' => '/ondbclick="(.*?)"/is',
+        'onchange' => '/onchange="(.*?)"/is',
+        'onmouseover' => '/onmouseover="(.*?)"/is',
+        'onmouseout' => '/onmouseout="(.*?)"/is',
+        'onmouseenter' => '/onmouseenter="(.*?)"/is',
+        'onmouseleave' => '/onmouseleave="(.*?)"/is',
+        'onmousemove' => '/onmousemove="(.*?)"/is',
+        'onkeydown' => '/onkeydown="(.*?)"/is',
+        'onload' => '/onload="(.*?)"/is',
+        'onunload' => '/onunload="(.*?)"/is',
+        'onkeyup' => '/onkeyup="(.*?)"/is',
+        'onkeypress' => '/onkeypress="(.*?)"/is',
+        'onblur' => '/onblur="(.*?)"/is',
+        'oncopy' => '/oncopy="(.*?)"/is',
+        'oncut' => '/oncut="(.*?)"/is',
+        'onpaste' => '/onpaste="(.*?)"/is',
+        'php-tag' => '/<(\?|\%)\=?(php)?/',
+        'php-short-tag' => '/(\%|\?)>/'
+      );
+      if (!empty($type)) {
+        unset($search[$type]);
+      }
+      $output = preg_replace($search, '', $input);
+    }
+    return $output;
+  }
+
+  /* Kiểm tra dữ liệu nhập vào */
+  public function sanitize($input = '', $type = '')
+  {
+    if (is_array($input)) {
+      foreach ($input as $var => $val) {
+        $output[$var] = $this->sanitize($val, $type);
+      }
+    } else {
+      $output  = $this->cleanInput($input, $type);
+    }
+    return $output;
   }
 }

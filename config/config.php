@@ -1,4 +1,6 @@
 <?php
+/* Timezone */
+date_default_timezone_set('Asia/Ho_Chi_Minh');
 $config = [
   // Base URL
   'base' => 'http://localhost/web/',

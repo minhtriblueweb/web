@@ -41,9 +41,8 @@
   <!-- TITLE -->
   <div class="title-list-hot text-center mt-3">
     <h2><?= htmlspecialchars(!empty($titleCate) ? $titleCate : sanpham) ?></h2>
-    (<?= $total ?> <?= sanpham ?>)
   </div>
-
+  <p class="text-center">(<?= $total ?> <?= sanpham ?>)</p>
   <!-- DANH SÁCH SẢN PHẨM -->
   <div class="wrap-main wrap-template w-clear" style="margin: 0 auto !important;">
     <div class="content-main">

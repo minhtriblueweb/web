@@ -21,6 +21,12 @@
                   <?= duongdanmau ?> (<?= $k ?>):
                   <span class="pl-2 font-weight-normal check-seo" id="slugurlpreview<?= $k ?>">
                     <?= BASE ?><strong class="text-info"><?= $result["slug$k"] ?? '' ?></strong>
+                    <?php if (!empty($result["slug$k"])): ?>
+                      <a href="<?= BASE . $result["slug$k"] ?>" target="_blank" rel="noopener noreferrer" title="Xem chi tiết">
+                        <i class="fas fa-external-link-alt"></i>
+                      </a>
+                    <?php endif; ?>
+
                   </span>
                 </label>
                 <input type="text" class="form-control slug-input no-validate text-sm for-seo" name="data[slug<?= $k ?>]" id="slug<?= $k ?>" placeholder="<?= duongdan ?> (<?= $k ?>)" value="<?= $_POST["slug$k"] ?? ($result["slug$k"] ?? "") ?>" <?= ($k == $lang) ? 'required' : '' ?> /><input type="hidden" id="slug-default<?= $k ?>" value="<?= $_POST["slug$k"] ?? ($result["slug$k"] ?? "") ?>">

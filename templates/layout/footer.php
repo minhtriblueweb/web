@@ -13,12 +13,12 @@ $background_footer = $db->rawQueryOne("SELECT `file` FROM tbl_photo WHERE type =
         <div class="logo-footer">
           <?php if ($logo) : ?>
             <a href="./">
-              <?= $fn->getImageCustom(['file' => $logo['file'], 'alt' => $web_name, 'title' => $web_name, 'width' => 300, 'height' => 120, 'zc' => 1, 'lazy' => true]) ?>
+              <?= $fn->getImageCustom(['file' => $logo['file'], 'width'  => 200, 'height'  => 200, 'zc' => 4, 'alt' => $optsetting["name$lang"], 'title' => $optsetting["name$lang"], 'lazy' => false]) ?>
             </a>
           <?php endif ?>
         </div>
         <p class="footer-company"><?= $web_name ?></p>
-        <div class="footer-info content-ck"><?= $footer_static["content$lang"] ?? '' ?></div>
+        <div class="footer-info .content-ck"><?= $footer_static["content$lang"] ?? '' ?></div>
         <div class="social">
           <p>KẾT NỐI VỚI CHÚNG TÔI</p>
           <?php if (!empty($show_social)): ?>
@@ -70,7 +70,7 @@ $background_footer = $db->rawQueryOne("SELECT `file` FROM tbl_photo WHERE type =
           <?php if ($hotro247) : ?>
             <div class="footer-policy">
               <p class="footer-title"> <?= $hotro247["name$lang"] ?? '' ?></p>
-              <div class="footer-info content-ck">
+              <div class="footer-info">
                 <?= $hotro247["content$lang"] ?? '' ?>
               </div>
             </div>
@@ -106,7 +106,13 @@ $background_footer = $db->rawQueryOne("SELECT `file` FROM tbl_photo WHERE type =
         Copyright © <?= current_year(); ?>
         <span><?= $copyright ?></span>.
       </div>
-      <?php include 'counter.php'; ?>
+      <?php $counter = $statistic->getOnline(); ?>
+      <div class="footer-statistic d-none d-sm-block">
+        <span><?= dangonline ?>: <?= $counter['online'] ?></span>
+        <span>Ngày: <?= $counter['today'] ?></span>
+        <span><?= trongtuan ?>: <?= $counter['week'] ?></span>
+        <span><?= tongtruycap ?>: <?= $counter['total'] ?></span>
+      </div>
     </div>
   </div>
   <div class="progress-wrap cursor-pointer">
@@ -117,6 +123,9 @@ $background_footer = $db->rawQueryOne("SELECT `file` FROM tbl_photo WHERE type =
     </svg>
   </div>
 </div>
+
+<?php
+/*
 <div class="floating-support" data-aos="fade-left" data-aos-anchor="#example-anchor" data-aos-offset="500"
   data-aos-duration="500">
   <?php if (!empty($show_social)): ?>
@@ -135,4 +144,61 @@ $background_footer = $db->rawQueryOne("SELECT `file` FROM tbl_photo WHERE type =
       </a>
     <?php endforeach; ?>
   <?php endif; ?>
+</div>
+*/
+?>
+<div class="support-online">
+  <?php if (!empty($show_social)): ?>
+    <?php
+    $sameAs = [];
+    foreach ($show_social as $v): ?>
+      <?php $sameAs[] = $v['link'] ?>
+      <div class="btn_animation--style">
+        <a
+          title="<?= $v["name$lang"] ?>"
+          href="<?= $v['link'] ?>"
+          <?= ($v['link'] !== BASE.'gio-hang') ? 'target="_blank"' : '' ?>>
+          <?= $fn->getImageCustom([
+            'file'   => $v['file'],
+            'width'  => 30,
+            'height' => 30,
+            'zc'     => 1,
+            'alt'    => $v["name$lang"],
+            'title'  => $v["name$lang"],
+            'lazy'   => true
+          ]) ?>
+          <span><?= $v["name$lang"] ?></span>
+        </a>
+      </div>
+    <?php endforeach; ?>
+  <?php endif; ?>
+</div>
+<!-- Overlay -->
+<div class="search-overlay"></div>
+
+<!-- Search Form -->
+<form class="search-bar-container">
+  <div class="searchbox">
+    <input
+      type="text"
+      class="searchinput js-search-input"
+      placeholder="Nhập từ khóa tìm kiếm"
+      autocomplete="off" />
+    <button type="button" class="search-submit js-search-btn">
+      <i class="fa-solid fa-magnifying-glass"></i>
+    </button>
+  </div>
+</form>
+
+<!-- Modal cart -->
+<div class="modal fade" id="popup-cart" tabindex="-1" aria-labelledby="popup-quickviewLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h6 class="modal-title fs-5" id="popup-quickviewLabel">Giỏ hàng của bạn</h6>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body"></div>
+    </div>
+  </div>
 </div>

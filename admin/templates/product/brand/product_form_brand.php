@@ -15,7 +15,7 @@
         class="btn btn-sm bg-gradient-primary <?= !empty($config['product'][$type]['slug_brand']) ? 'submit-check' : '' ?>"
         <?= !empty($config['product'][$type]['slug_brand']) ? 'disabled' : '' ?>>
         <i class="far fa-save mr-2"></i><?= luu ?>
-      </button>
+      </button> <button type="submit" class="btn btn-sm bg-gradient-success <?= !empty($config['product'][$type]['slug_brand']) ? 'submit-check' : '' ?>" name="save-here"><i class="far fa-save mr-2"></i><?= luutaitrang ?></button>
       <button type="reset" class="btn btn-sm bg-gradient-secondary">
         <i class="fas fa-redo mr-2"></i><?= lamlai ?>
       </button>

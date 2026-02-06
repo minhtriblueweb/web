@@ -9,7 +9,6 @@ define('ROOT', $baseDir);
 
 // 2. Load cấu hình hệ thống
 require_once $baseDir . '/config/config.php';
-
 // 3. Load các file hỗ trợ (dùng trước autoload)
 require_once $baseDir . '/lib/database.php';
 require_once $baseDir . '/lib/session.php';
@@ -29,9 +28,11 @@ $db  = new Database();
 $cache = new Cache($db);
 $fn  = new Functions();
 $fm  = new Format();
+$flash = new Flash();
 $seo = new Seo();
 $breadcr = new breadcrumbs();
-
+$statistic = new Statistic($db);
+$cart = new Cart($db);
 // 6. Định nghĩa các hằng số dùng chung
 define('TEMPLATE', 'templates/');
 define('UPLOADS', 'uploads/');

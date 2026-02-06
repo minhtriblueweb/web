@@ -38,7 +38,7 @@ foreach ($menu_list as $v_list) {
 
   <!-- Menu trái -->
   <div class="menu-bar-left <?= ($type == 'index') ? 'index' : '' ?>">
-    <p>DANH MỤC SẢN PHẨM</p>
+    <p><a href="san-pham">DANH MỤC SẢN PHẨM</a></p>
 
     <!-- Menu cấp 1 -->
     <div class="menu-bar-left-list w-100">

@@ -4,7 +4,6 @@ session_start();
 include_once 'config/autoload.php';
 require_once 'config/type/config-type.php';
 include_once 'lib/router.php';
-
 // SOURCES
 require_once SOURCES . "allpage.php";
 $sources_file = SOURCES . $sources . ".php";

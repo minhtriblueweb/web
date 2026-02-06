@@ -23,7 +23,12 @@
     'dulieukhonghople': '<?= dulieukhonghople ?>',
     'banchiduocchon1hinhanhdeuplen': '<?= banchiduocchon1hinhanhdeuplen ?>',
     'dinhdanghinhanhkhonghople': '<?= dinhdanghinhanhkhonghople ?>',
-    'huy': '<?= huy ?>'
+    'huy': '<?= huy ?>',
+    'vuilongnhapdiachiemail': '<?= vuilongnhapdiachiemail ?>',
+    'emailkhonghople': '<?= emailkhonghople ?>',
+    'email_da_duoc_dang_ky': 'Email này đã được đăng ký!',
+    'dangkynhantinthanhcong': '<?= dangkynhantinthanhcong ?>',
+    'dangkynhantinthatbai': '<?= dangkynhantinthatbai ?>',
   };
 </script>
 <?php

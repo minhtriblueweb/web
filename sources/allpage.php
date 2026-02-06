@@ -27,3 +27,24 @@ $tieuchi = $fn->show_data([
 ]);
 
 $show_chinhsach = $fn->show_data(['table' => 'tbl_news', 'status' => 'hienthi', 'type'   => 'chinh-sach', 'select' => "id, slug{$lang}, name{$lang}"]);
+
+/* Newsletter */
+if (!empty($_POST['submit-newsletter'])) {
+  $data = $_POST['dataNewsletter'] ?? [];
+  $email = trim($data['email'] ?? '');
+  if ($email === '') {
+    $fn->transfer_tc(vuilongnhapdiachiemail, $fn->getCurrentPageURL(), false);
+  }
+  if (!$fn->isEmail($email)) {
+    $fn->transfer_tc(emailkhonghople, $fn->getCurrentPageURL(), false);
+  }
+  $exists = $db->rawQueryOne("SELECT id FROM tbl_newsletter WHERE email = ? LIMIT 1",[$email]);
+  if ($exists) {
+    $fn->transfer_tc("Email đã được đăng ký", $fn->getCurrentPageURL(), false);
+  }
+  $insert = $db->execute(
+    "INSERT INTO tbl_newsletter (email, type, date_created) VALUES (?, ?, NOW())",
+    [$email, 'dang-ky-nhan-tin']
+  );
+  $fn->transfer_tc( $insert ? guilienhethanhcong : guilienhethatbai, BASE, $insert);
+}

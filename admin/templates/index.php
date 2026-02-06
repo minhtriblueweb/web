@@ -1,15 +1,14 @@
 <?php
-date_default_timezone_set('Asia/Ho_Chi_Minh');
 $month = isset($_GET['month']) ? (int)$_GET['month'] : (int)date('m');
 $year  = isset($_GET['year']) ? (int)$_GET['year'] : (int)date('Y');
 $currentMonth = (int)date('m');
 $currentYear  = (int)date('Y');
 if ($year > $currentYear) {
-  $fn->notiToast("Năm không hợp lệ", "index.php", "error");
+  $fn->Notify("Năm không hợp lệ",  "index.php", "error");
   exit;
 }
 if ($year == $currentYear && $month > $currentMonth) {
-  $fn->notiToast("Tháng không hợp lệ", "index.php", "error");
+  $fn->Notify("Tháng không hợp lệ",  "index.php", "error");
   exit;
 }
 $daysInMonth = cal_days_in_month(CAL_GREGORIAN, $month, $year);
@@ -27,49 +26,112 @@ for ($i = 1; $i <= $daysInMonth; $i++) {
   $charts['series'][] = (int)$row['total'];
   $charts['labels'][] = 'D' . $i;
 }
+$counter = $statistic->getOnline();
 ?>
-
 <?php include TEMPLATE . LAYOUT . 'loader.php'; ?>
 <section class="content mb-3">
   <div class="container-fluid">
-    <h5 class="pt-3 pb-2">Bảng điều khiển</h5>
-    <div class="row mb-2 text-sm">
-      <div class="col-12 col-sm-6 col-md-3">
-        <a class="my-info-box info-box" href="index.php?page=setting&act=update" title="<?= cauhinhwebsite ?>">
-          <span class="my-info-box-icon info-box-icon bg-primary"><i class="fas fa-cogs"></i></span>
-          <div class="info-box-content text-dark">
-            <span class="info-box-text text-capitalize"><?= cauhinhwebsite ?></span>
-            <span class="info-box-number"><?= xemthem ?></span>
-          </div>
-        </a>
+    <div class="card">
+      <div class="card-header">
+        <h5 class="mb-0">Bảng điều khiển</h5>
       </div>
-      <div class="col-12 col-sm-6 col-md-3">
-        <a class="my-info-box info-box" href="index.php?page=user&act=info_admin" title="<?= taikhoan ?>">
-          <span class="my-info-box-icon info-box-icon bg-danger"><i class="fas fa-user-cog"></i></span>
-          <div class="info-box-content text-dark">
-            <span class="info-box-text text-capitalize"><?= taikhoan ?></span>
-            <span class="info-box-number"><?= xemthem ?></span>
+      <div class="card-body">
+        <div class="row mb-2 text-sm">
+          <div class="col-12 col-sm-6 col-md-3">
+            <a class="my-info-box info-box" href="index.php?page=setting&act=update" title="<?= cauhinhwebsite ?>">
+              <span class="my-info-box-icon info-box-icon bg-primary"><i class="fas fa-cogs"></i></span>
+              <div class="info-box-content text-dark">
+                <span class="info-box-text text-capitalize"><?= cauhinhwebsite ?></span>
+                <span class="info-box-number"><?= xemthem ?></span>
+              </div>
+            </a>
           </div>
-        </a>
+          <div class="col-12 col-sm-6 col-md-3">
+            <a class="my-info-box info-box" href="index.php?page=user&act=info_admin" title="<?= taikhoan ?>">
+              <span class="my-info-box-icon info-box-icon bg-danger"><i class="fas fa-user-cog"></i></span>
+              <div class="info-box-content text-dark">
+                <span class="info-box-text text-capitalize"><?= taikhoan ?></span>
+                <span class="info-box-number"><?= xemthem ?></span>
+              </div>
+            </a>
+          </div>
+          <div class="clearfix hidden-md-up"></div>
+          <div class="col-12 col-sm-6 col-md-3">
+            <a class="my-info-box info-box" href="index.php?page=user&act=info_admin&changepass=1" title="<?= doimatkhau ?>">
+              <span class="my-info-box-icon info-box-icon bg-success"><i class="fas fa-key"></i></span>
+              <div class="info-box-content text-dark">
+                <span class="info-box-text text-capitalize"><?= doimatkhau ?></span>
+                <span class="info-box-number"><?= xemthem ?></span>
+              </div>
+            </a>
+          </div>
+          <div class="col-12 col-sm-6 col-md-3">
+            <a class="my-info-box info-box" href="index.php?com=contact&act=man" title="<?= thulienhe ?>">
+              <span class="my-info-box-icon info-box-icon bg-info"><i class="fas fa-address-book"></i></span>
+              <div class="info-box-content text-dark">
+                <span class="info-box-text text-capitalize"><?= thulienhe ?></span>
+                <span class="info-box-number"><?= xemthem ?></span>
+              </div>
+            </a>
+          </div>
+        </div>
       </div>
-      <div class="clearfix hidden-md-up"></div>
-      <div class="col-12 col-sm-6 col-md-3">
-        <a class="my-info-box info-box" href="index.php?page=user&act=info_admin&changepass=1" title="<?= doimatkhau ?>">
-          <span class="my-info-box-icon info-box-icon bg-success"><i class="fas fa-key"></i></span>
-          <div class="info-box-content text-dark">
-            <span class="info-box-text text-capitalize"><?= doimatkhau ?></span>
-            <span class="info-box-number"><?= xemthem ?></span>
-          </div>
-        </a>
+    </div>
+  </div>
+</section>
+<section class="content mb-3">
+  <div class="container-fluid">
+    <div class="card">
+      <div class="card-header">
+        <h5 class="mb-0">Thống kê truy cập</h5>
       </div>
-      <div class="col-12 col-sm-6 col-md-3">
-        <a class="my-info-box info-box" href="index.php?com=contact&act=man" title="<?= thulienhe ?>">
-          <span class="my-info-box-icon info-box-icon bg-info"><i class="fas fa-address-book"></i></span>
-          <div class="info-box-content text-dark">
-            <span class="info-box-text text-capitalize"><?= thulienhe ?></span>
-            <span class="info-box-number"><?= xemthem ?></span>
+      <div class="card-body">
+        <div class="row gy-3 chart-online">
+          <div class="col-md-3 col-6">
+            <div class="d-flex align-items-center">
+              <div class="badge rounded-pill bg-label-primary me-3 p-2">
+                <i class="fa-solid fa-chart-line"></i>
+              </div>
+              <div class="card-info">
+                <h5 class="mb-0"><?= $counter['online'] ?></h5>
+                <small>Đang online</small>
+              </div>
+            </div>
           </div>
-        </a>
+          <div class="col-md-3 col-6">
+            <div class="d-flex align-items-center">
+              <div class="badge rounded-pill bg-label-info me-3 p-2">
+                <i class="fa-solid fa-chart-line"></i>
+              </div>
+              <div class="card-info">
+                <h5 class="mb-0"><?= $counter['today'] ?></h5>
+                <small>Trong ngày</small>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3 col-6">
+            <div class="d-flex align-items-center">
+              <div class="badge rounded-pill bg-label-danger me-3 p-2">
+                <i class="fa-solid fa-chart-line"></i>
+              </div>
+              <div class="card-info">
+                <h5 class="mb-0"><?= $counter['week'] ?></h5>
+                <small>Trong tuần</small>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3 col-6">
+            <div class="d-flex align-items-center">
+              <div class="badge rounded-pill bg-label-success me-3 p-2">
+                <i class="fa-solid fa-chart-line"></i>
+              </div>
+              <div class="card-info">
+                <h5 class="mb-0"><?= $counter['month'] ?></h5>
+                <small>Trong tháng</small>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -144,7 +206,6 @@ for ($i = 1; $i <= $daysInMonth; $i++) {
             </div>
           </div>
         </form>
-
         <div id="apexMixedChart"></div>
       </div>
     </div>

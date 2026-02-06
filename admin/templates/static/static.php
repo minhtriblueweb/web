@@ -74,8 +74,7 @@
                   <?php if (!empty($config['static'][$type]['desc']) || !empty($config['static'][$type]['desc_cke'])): ?>
                     <div class="form-group">
                       <label for="desc<?= $k ?>"><?= mota ?> (<?= $k ?>):</label>
-                      <textarea rows="4" class="form-control for-seo text-sm <?= !empty($config['static'][$type]['desc_cke']) ? 'form-control-ckeditor' : '' ?>"
-                        name="data[desc<?= $k ?>]" id="desc<?= $k ?>"
+                      <textarea rows="4" class="form-control for-seo text-sm <?= !empty($config['static'][$type]['desc_cke']) ? 'form-control-ckeditor' : '' ?>" name="data[desc<?= $k ?>]" id="desc<?= $k ?>"
                         placeholder="<?= mota ?> (<?= $k ?>)"><?= $_POST['desc' . $k] ?? ($result['desc' . $k] ?? '') ?></textarea>
                     </div>
                   <?php endif; ?>

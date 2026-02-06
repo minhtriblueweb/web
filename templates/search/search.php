@@ -3,8 +3,8 @@
     <div class="wrap-content" style="background: unset;">
       <div class="title-list-hot text-center">
         <h2><?= ketquatimkiem ?></h2>
-        <p>(<?= $total ?> sản phẩm): <strong><?= htmlspecialchars($keyword) ?></strong></p>
       </div>
+      <p class="text-center">(<?= $total ?> sản phẩm): <strong><?= htmlspecialchars($keyword) ?></strong></p>
     </div>
   </div>
 

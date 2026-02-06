@@ -4,13 +4,16 @@ if (!defined('SOURCES')) die("Error");
 @$id = htmlspecialchars($_GET['id']);
 @$type = htmlspecialchars($_GET['type']);
 if ($id != '') {
-  $rowDetail = $fn->show_data(['table' => 'tbl_news', 'type' => $type, 'status' => 'hienthi', 'id' => $id, 'select' => "id, file, name{$lang}, slug{$lang},desc{$lang},content{$lang},slug{$lang},views,updated_at", 'limit' => 1]);
+  $rowDetail = $fn->show_data(['table' => 'tbl_news', 'type' => $type, 'status' => 'hienthi', 'id' => $id, 'select' => "id, status,file, name{$lang}, slug{$lang},desc{$lang},content{$lang},slug{$lang},views,updated_at", 'limit' => 1]);
 
   /* Cập nhật lượt xem */
   $fn->update_views('tbl_news', $rowDetail["slug$lang"], $lang);
 
   // Tin liên quan
   $relatedNews = $fn->show_data(['table' => 'tbl_news', 'status' => 'hienthi', 'type' => $type, 'exclude_id' =>  $rowDetail['id'], 'select' => "id, name{$lang}, slug{$lang}, file", 'limit' => 10]);
+
+  $footer_news = $db->rawQueryOne("SELECT content$lang FROM tbl_static WHERE type = ? AND FIND_IN_SET(?, status) LIMIT 1", ['footer_news', 'hienthi']);
+  $showFooterNews = $db->rawQueryOne("SELECT 1 FROM tbl_news WHERE id = ? AND FIND_IN_SET('Footernews', status) LIMIT 1",[$id]);
 
   /* SEO */
   $seo_data = $db->rawQueryOne("SELECT * FROM tbl_seo WHERE `id_parent` = ? AND `type` = ? LIMIT 0,1", [$id, $type]);
@@ -52,7 +55,6 @@ if ($id != '') {
     $seo->set('photo:height', $imgJson['height']);
   }
   if (!empty($seo_data['file'])) $seo->set('photo',  $fn->getImageCustom(['file' => $seo_data['file'], 'width' => 600, 'height' => 315, 'zc' => 2, 'src_only' => true]));
-
 
   /* breadCrumbs */
   $breadcr->set($type, $titleMain);

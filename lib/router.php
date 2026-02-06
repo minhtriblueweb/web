@@ -17,10 +17,10 @@ $requick = array(
   // Static pages
   array("tbl" => "", "source" => "index", "type" => "index", "slug" => "trang-chu"),
   array("tbl" => "", "source" => "static", "type" => "gioi-thieu", "slug" => "gioi-thieu"),
-  array("tbl" => "", "source" => "static", "type" => "lien-he", "slug" => "lien-he"),
   array("tbl" => "", "source" => "static", "type" => "mua-hang", "slug" => "mua-hang"),
   array("tbl" => "", "source" => "static", "type" => "thanh-toan", "slug" => "thanh-toan"),
   array("tbl" => "", "source" => "search", "type" => "tim-kiem", "slug" => "tim-kiem"),
+  array("tbl" => "", "source" => "contact", "type" => "lien-he", "slug" => "lien-he"),
 
   // Product routes
   array("tbl" => "", "source" => "product", "type" => "san-pham", "slug" => "san-pham"),
@@ -33,7 +33,10 @@ $requick = array(
   // News routes
   array("tbl" => "news", "source" => "news", "type" => "tin-tuc", "field" => "id", "slug" => "tin-tuc", "titleMain" => "Tin Tức"),
   array("tbl" => "news", "source" => "news", "type" => "chinh-sach", "field" => "id", "slug" => "chinh-sach", "titleMain" => "Chính Sách"),
-  array("tbl" => "news", "source" => "news", "type" => "huong-dan-choi", "field" => "id", "slug" => "huong-dan-choi", "titleMain" => "Hướng Dẫn Chơi")
+  array("tbl" => "news", "source" => "news", "type" => "huong-dan-choi", "field" => "id", "slug" => "huong-dan-choi", "titleMain" => "Hướng Dẫn Chơi"),
+
+  /* Order */
+  array("tbl" => "", "source" => "order", "type" => "gio-hang", "slug" => "gio-hang", "titleMain" => "Giỏ hàng"),
 );
 
 foreach ($requick as $r) {
@@ -66,40 +69,34 @@ foreach ($requick as $r) {
   }
 }
 
-// Sau vòng foreach: xử lý chung theo $type
+// Xử lý chung theo $type
 switch ($type) {
   case 'index':
     $template = "index/index";
-    $seo->set('type', 'website');
     break;
 
   case 'lien-he':
     $template = "contact/contact";
-    $seo->set('type', 'object');
     $titleMain = lienhe;
     break;
 
   case 'san-pham':
     $template = isset($_GET['id']) ? "product/product_detail" : "product/product";
-    $seo->set('type', isset($_GET['id']) ? "article" : "object");
     $titleMain = $titleMain ?: sanpham;
     break;
 
   case 'gioi-thieu':
     $template = "static/static";
-    $seo->set('type', 'article');
     $titleMain = $titleMain ?: gioithieu;
     break;
 
   case 'mua-hang':
     $template = "static/static";
-    $seo->set('type', 'article');
     $titleMain = $titleMain ?: "Hướng dẫn mua hàng";
     break;
 
   case 'thanh-toan':
     $template = "static/static";
-    $seo->set('type', 'article');
     $titleMain = $titleMain ?: "Phương thức thanh toán";
     break;
 
@@ -107,18 +104,22 @@ switch ($type) {
   case 'chinh-sach':
   case 'huong-dan-choi':
     $template = isset($_GET['id']) ? "news/news_detail" : "news/news";
-    $seo->set('type', isset($_GET['id']) ? "article" : "object");
     break;
 
   case 'tim-kiem':
     $template = "search/search";
-    $seo->set('type', 'object');
     $titleMain = "Tìm kiếm";
+    break;
+
+  case 'gio-hang':
+    $source = "order";
+    $template = 'order/order';
+    $titleMain = giohang;
+    $seo->set('type', 'object');
     break;
 
   default:
     $template = $sources . "/" . $sources;
-    $seo->set('type', 'object');
     // $fn->abort_404();
     break;
 }

@@ -6,7 +6,7 @@ $config['news'][$type]['view'] = true;
 $config['news'][$type]['copy'] = true;
 $config['news'][$type]['copy_image'] = true;
 $config['news'][$type]['slug'] = true;
-$config['news'][$type]['check'] = array("noibat" => "Nổi bật", "hienthi" => "Hiển thị");
+$config['news'][$type]['check'] = array("noibat" => "Nổi bật", "hienthi" => "Hiển thị", "Footernews" => "Footernews");
 $config['news'][$type]['images'] = true;
 $config['news'][$type]['desc'] = true;
 $config['news'][$type]['desc_cke'] = false;
@@ -21,7 +21,7 @@ $config['news'][$type]['thumb'] = '100x' . round(100 / ($config['news'][$type]['
 $config['news'][$type]['img_type'] = '.jpg|.gif|.png|.jpeg|.gif';
 $config['size-img'][$type]['man']['active'] = true;
 
-//tiêu chí
+/* Tiêu chí */
 $type = "tieu-chi";
 $config['news'][$type]['title_main'] = $config['size-img'][$type]['man']['title']  = "Tiêu chí";
 $config['news'][$type]['dropdown'] = false;
@@ -46,7 +46,7 @@ $config['news'][$type]['img_type'] = '.jpg|.gif|.png|.jpeg|.gif';
 $config['size-img'][$type]['man']['active'] = true;
 $config['news'][$type]['convert_webp'] = false;
 
-//chính sách
+/* Chính sách */
 $type = "chinh-sach";
 $config['news'][$type]['title_main'] = $config['size-img'][$type]['man']['title']  = "Chính Sách";
 $config['news'][$type]['dropdown'] = false;
@@ -75,7 +75,7 @@ $config['news'][$type]['img_type'] = '.jpg|.gif|.png|.jpeg|.gif';
 $config['size-img'][$type]['man']['active'] = true;
 $config['news'][$type]['convert_webp'] = true;
 
-// đánh giá khách hàng
+/* Đánh giá khách hàng */
 $type = "danh-gia";
 $config['news'][$type]['title_main'] = $config['size-img'][$type]['man']['title']  = "Đánh giá khách hàng";
 $config['news'][$type]['dropdown'] = false;
@@ -104,7 +104,7 @@ $config['news'][$type]['img_type'] = '.jpg|.gif|.png|.jpeg|.gif';
 $config['size-img'][$type]['man']['active'] = true;
 $config['news'][$type]['convert_webp'] = true;
 
-// hướng dẫn chơi
+/* Hướng dẫn chơi */
 $type = "huong-dan-choi";
 $config['news'][$type]['title_main'] = $config['size-img'][$type]['man']['title']  = "Hướng dẫn chơi";
 $config['news'][$type]['dropdown'] = false;
@@ -117,7 +117,7 @@ $config['news'][$type]['view'] = true;
 $config['news'][$type]['copy'] = true;
 $config['news'][$type]['copy_image'] = true;
 $config['news'][$type]['comment'] = false;
-$config['news'][$type]['slug'] = false;
+$config['news'][$type]['slug'] = true;
 $config['news'][$type]['check'] = array("hienthi" => "Hiển thị");
 $config['news'][$type]['images'] = true;
 $config['news'][$type]['show_images'] = true;
@@ -132,6 +132,14 @@ $config['news'][$type]['thumb'] = '100x' . round(100 / ($config['news'][$type]['
 $config['news'][$type]['img_type'] = '.jpg|.gif|.png|.jpeg|.gif';
 $config['size-img'][$type]['man']['active'] = true;
 $config['news'][$type]['convert_webp'] = true;
+
+/* Hình thức thanh toán */
+$type = "hinh-thuc-thanh-toan";
+$config['news'][$type]['title_main'] = $config['size-img'][$type]['man']['title']  = "Hình thức thanh toán";
+$config['news'][$type]['copy'] = true;
+$config['news'][$type]['check'] = array("hienthi" => "Hiển thị");
+$config['news'][$type]['desc'] = true;
+$config['news'][$type]['desc_cke'] = true;
 
 /* Quản lý mục (Không cấp) */
 if (isset($config['news'])) {

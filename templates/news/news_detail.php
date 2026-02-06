@@ -19,7 +19,7 @@
           <?php endif ?>
           <div class="wrap-toc">
             <div class="meta-toc2">
-              <div class="mucluc-dropdown-list_button">Mục Lục</div>
+              <div class="mucluc-dropdown-list_button">Mục Lục bài viết</div>
               <div class="box-readmore">
                 <ul class="toc-list" data-toc="article" data-toc-headings="h1, h2, h3"></ul>
               </div>
@@ -27,6 +27,9 @@
           </div>
           <div class="content-main" id="toc-content">
             <?= $fn->decodeHtmlChars($rowDetail["content$lang"] ?? '') ?>
+            <?php if ($showFooterNews): ?>
+              <?= $footer_news["content$lang"] ?? '' ?>
+            <?php endif; ?>
           </div>
           <div class="share">
             <b><?= chiase ?>:</b>

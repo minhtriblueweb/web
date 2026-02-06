@@ -14,6 +14,7 @@
       <button name="upload" type="submit" class="btn btn-sm bg-gradient-primary .submit-check"><i class="far fa-save mr-2"></i><?= luu ?></button>
       <button type="reset" class="btn btn-sm bg-gradient-secondary"><i class="fas fa-redo mr-2"></i><?= lamlai ?></button>
     </div>
+    <?= $flash->getMessages('admin') ?>
     <div class="card card-primary card-outline text-sm">
       <div class="card-header">
         <h3 class="card-title">Database</h3>
@@ -60,7 +61,6 @@
             <?php endforeach; ?>
           <?php endforeach; ?>
         </div>
-
       </div>
     </div>
 
@@ -101,48 +101,44 @@
           <?php if (!empty($config['setting']['email'])): ?>
             <div class="form-group col-md-4 col-sm-6">
               <label for="email">Email:</label>
-              <input type="email" class="form-control text-sm" name="data[options][email]" id="email" placeholder="Email"
-                value="<?= isset($options['email']) ? htmlspecialchars($options['email']) : ''; ?>">
+              <input type="email" class="form-control text-sm" name="data[options][email]" id="email" placeholder="Email" value="<?= (!empty($flash->has('email'))) ? $flash->get('email') : @$options['email'] ?>">
             </div>
           <?php endif; ?>
           <?php if (!empty($config['setting']['hotline'])): ?>
             <div class="form-group col-md-4 col-sm-6">
               <label for="hotline">Hotline:</label>
-              <input type="text" class="form-control text-sm" name="data[options][hotline]" id="hotline" placeholder="Hotline"
-                value="<?= isset($options['hotline']) ? htmlspecialchars($options['hotline']) : ''; ?>">
+              <input type="text" class="form-control text-sm" name="data[options][hotline]" id="hotline" placeholder="Hotline" value="<?= (!empty($flash->has('hotline'))) ? $flash->get('hotline') : @$options['hotline'] ?>" required>
             </div>
           <?php endif; ?>
           <?php if (!empty($config['setting']['zalo'])): ?>
             <div class="form-group col-md-4 col-sm-6">
               <label for="zalo">Zalo:</label>
-              <input type="text" class="form-control text-sm" name="data[options][zalo]" id="zalo" placeholder="Zalo" value="<?= isset($options['zalo']) ? htmlspecialchars($options['zalo']) : ''; ?>">
+              <input type="text" class="form-control text-sm" name="data[options][zalo]" id="zalo" placeholder="Zalo" value="<?= (!empty($flash->has('zalo'))) ? $flash->get('zalo') : @$options['zalo'] ?>">
             </div>
           <?php endif; ?>
           <?php if (!empty($config['setting']['oaidzalo'])): ?>
             <div class="form-group col-md-4 col-sm-6">
               <label for="oaidzalo">OAID Zalo :</label>
-              <input type="text" class="form-control text-sm" name="data[options][oaidzalo]" id="oaidzalo" placeholder="OAID Zalo" value="<?= isset($options['oaidzalo']) ? htmlspecialchars($options['oaidzalo']) : ''; ?>">
+              <input type="text" class="form-control text-sm" name="data[options][oaidzalo]" id="oaidzalo" placeholder="OAID Zalo" value="<?= (!empty($flash->has('oaidzalo'))) ? $flash->get('oaidzalo') : @$options['oaidzalo'] ?>">
             </div>
           <?php endif; ?>
           <?php if (!empty($config['setting']['website'])): ?>
             <div class="form-group col-md-4 col-sm-6">
               <label for="website">Website:</label>
-              <input type="text" class="form-control text-sm" name="data[options][website]" id="website" placeholder="Website"
-                value="<?= isset($options['website']) ? htmlspecialchars($options['website']) : ''; ?>">
+              <input type="text" class="form-control text-sm" name="data[options][website]" id="website" placeholder="Website" value="<?= (!empty($flash->has('website'))) ? $flash->get('website') : @$options['website'] ?>">
             </div>
           <?php endif; ?>
           <?php if (!empty($config['setting']['fanpage'])): ?>
             <div class="form-group col-md-4 col-sm-6">
               <label for="fanpage">Fanpage:</label>
-              <input type="text" class="form-control text-sm" name="data[options][fanpage]" id="fanpage" placeholder="Fanpage"
-                value="<?= isset($options['fanpage']) ? htmlspecialchars($options['fanpage']) : ''; ?>">
+              <input type="text" class="form-control text-sm" name="data[options][fanpage]" id="fanpage" placeholder="Fanpage" value="<?= (!empty($flash->has('fanpage'))) ? $flash->get('fanpage') : @$options['fanpage'] ?>">
             </div>
           <?php endif; ?>
           <?php if (!empty($config['setting']['copyright'])): ?>
             <div class="form-group col-md-4 col-sm-6">
               <label for="copyright">Copyright:</label>
               <input type="text" class="form-control text-sm" name="data[options][copyright]" id="copyright" placeholder="Copyright"
-                value="<?= isset($options['copyright']) ? htmlspecialchars($options['copyright']) : ''; ?>">
+                value="<?= (!empty($flash->has('copyright'))) ? $flash->get('copyright') : @$options['copyright'] ?>">
             </div>
           <?php endif; ?>
           <?php if (!empty($config['setting']['coords_link'])): ?>
@@ -150,28 +146,28 @@
               <label for="coords_link">Link google maps:</label>
               <input type="text" class="form-control text-sm" name="data[options][coords_link]" id="coords_link"
                 placeholder="Link google maps"
-                value="<?= isset($options['coords_link']) ? htmlspecialchars($options['coords_link']) : ''; ?>">
+                value="<?= (!empty($flash->has('coords_link'))) ? $flash->get('coords_link') : @$options['coords_link'] ?>">
             </div>
           <?php endif; ?>
           <?php if (!empty($config['setting']['coords'])): ?>
             <div class="form-group col-md-4 col-sm-6">
               <label for="coords"><?= toadogooglemap ?>:</label>
               <input type="text" class="form-control text-sm" name="data[options][coords]" id="coords" placeholder="<?= toadogooglemap ?>"
-                value="<?= isset($options['coords']) ? htmlspecialchars($options['coords']) : ''; ?>">
+                value="<?= (!empty($flash->has('coords'))) ? $flash->get('coords') : @$options['coords'] ?>">
             </div>
           <?php endif; ?>
           <?php if (!empty($config['setting']['opendoor'])): ?>
             <div class="form-group col-md-4 col-sm-6">
               <label for="opendoor">Giờ mở cửa:</label>
               <input type="text" class="form-control text-sm" name="data[options][opendoor]" id="opendoor" placeholder="Giờ mở cửa"
-                value="<?= isset($options['opendoor']) ? htmlspecialchars($options['opendoor']) : ''; ?>">
+                value="<?= (!empty($flash->has('opendoor'))) ? $flash->get('opendoor') : @$options['opendoor'] ?>">
             </div>
           <?php endif; ?>
           <?php if (!empty($config['setting']['address'])): ?>
             <div class="form-group col-md-4 col-sm-6">
               <label for="address"><?= diachi ?>:</label>
               <input type="text" class="form-control text-sm" name="data[options][address]" id="address" placeholder="<?= diachi ?>"
-                value="<?= isset($options['address']) ? htmlspecialchars($options['address']) : ''; ?>">
+                value="<?= (!empty($flash->has('address'))) ? $flash->get('address') : @$options['address'] ?>">
             </div>
           <?php endif; ?>
         </div>
@@ -182,28 +178,29 @@
               <a class="text-sm font-weight-normal ml-1" href="https://www.google.com/maps" target="_blank"
                 title="<?= laymanhung ?> google map">(<?= laymanhung ?>)</a>
             </label>
-            <textarea class="form-control text-sm" name="data[options][coords_iframe]" id="coords_iframe" rows="5"
-              placeholder="<?= toadogooglemapiframe ?>"><?= isset($options['coords_iframe']) ? htmlspecialchars($options['coords_iframe']) : ''; ?></textarea>
+            <textarea class="form-control-monaco" name="data[options][coords_iframe]" id="coords_iframe" rows="5" placeholder="<?= toadogooglemapiframe ?>"><?= (!empty($flash->has('coords_iframe'))) ? $flash->get('coords_iframe') : @$options['coords_iframe'] ?></textarea>
           </div>
         <?php endif; ?>
         <div class="form-group">
           <label for="analytics">Google analytics:</label>
-          <textarea class="form-control text-sm" name="data[analytics]" id="analytics" rows="5"
-            placeholder="Google analytics"><?= isset($row['analytics']) ? htmlspecialchars($row['analytics']) : ''; ?></textarea>
+          <textarea class="form-control-monaco" name="data[analytics]" id="analytics" rows="5"
+            placeholder="Google analytics"><?= (!empty($flash->has('analytics'))) ? $flash->get('analytics') : @$row['analytics'] ?></textarea>
         </div>
         <div class="form-group">
           <label for="mastertool">Google Webmaster Tool:</label>
-          <textarea class="form-control text-sm" name="data[mastertool]" id="mastertool" rows="5" placeholder="Google Webmaster Tool"><?= isset($row['mastertool']) ? htmlspecialchars($row['mastertool']) : ''; ?></textarea>
+          <textarea class="form-control-monaco" name="data[mastertool]" id="mastertool"><?= (!empty($flash->has('mastertool'))) ? $flash->get('mastertool') : @$row['mastertool'] ?></textarea>
         </div>
         <div class="form-group">
           <label for="headjs">Head JS:</label>
-          <textarea class="form-control text-sm" name="data[headjs]" id="headjs" rows="6"
-            placeholder="Head JS"><?= isset($row['headjs']) ? htmlspecialchars($row['headjs']) : ''; ?></textarea>
+          <textarea class="form-control-monaco" name="data[headjs]"><?= (!empty($flash->has('headjs'))) ? $flash->get('headjs') : @$row['headjs'] ?></textarea>
         </div>
         <div class="form-group">
           <label for="bodyjs">Body JS:</label>
-          <textarea class="form-control text-sm" name="data[bodyjs]" id="bodyjs" rows="6"
-            placeholder="Body JS"><?= isset($row['bodyjs']) ? htmlspecialchars($row['bodyjs']) : ''; ?></textarea>
+          <textarea class="form-control-monaco" name="data[bodyjs]"><?= (!empty($flash->has('bodyjs'))) ? $flash->get('bodyjs') : @$row['bodyjs'] ?></textarea>
+        </div>
+        <div class="form-group">
+          <label for="custom_css">Custom CSS:</label>
+          <textarea class="form-control-monaco" name="data[custom_css]" id="custom_css"><?= (!empty($flash->has('custom_css'))) ? $flash->get('custom_css') : @$row['custom_css'] ?></textarea>
         </div>
         <div class="card card-primary card-outline card-outline-tabs">
           <div class="card-header p-0 border-bottom-0">
@@ -261,6 +258,10 @@
           </div>
         </div>
       </div>
+    </div>
+    <div class="card-footer text-sm sticky-top">
+      <button name="upload" type="submit" class="btn btn-sm bg-gradient-primary .submit-check"><i class="far fa-save mr-2"></i><?= luu ?></button>
+      <button type="reset" class="btn btn-sm bg-gradient-secondary"><i class="fas fa-redo mr-2"></i><?= lamlai ?></button>
     </div>
   </form>
 </section>

@@ -48,10 +48,6 @@
                     class="switch-input custom-control-input"
                     id="hienthi_all-checkbox"
                     value="hienthi" checked>
-                  <span class="switch-toggle-slider">
-                    <span class="switch-on"><i class="fa-solid fa-check"></i></span>
-                    <span class="switch-off"><i class="fa-solid fa-xmark"></i></span>
-                  </span>
                 </label>
               </div>
               <?php

@@ -1,40 +1,45 @@
 <?php ob_start(); ?>
-<div class="wrap-content">
+<div class="wrap-content w-100">
   <div class="d-flex flex-wrap justify-content-between align-items-center">
-    <!-- <div class="search-mobile">
-      <input type="text" id="keyword-res" placeholder="Nhập từ khóa tìm kiếm..." onkeypress="doEnterMobile(event,'keyword-res');" />
-      <p onclick="onSearchMobile('keyword-res');">
-        <i class="fa-solid fa-magnifying-glass"></i>
-      </p>
-    </div> -->
+    <div class="header-mobile-right">
+      <a id="toggle_menu" href="javascript:void(0)" title="Menu"><span></span></a>
+    </div>
     <div class="logo-mobile">
       <a href="./">
         <?= $fn->getImageCustom([
           'file'  => $logo['file'],
           'alt'   => $optsetting["name$lang"],
           'title' => $optsetting["name$lang"],
-          'width' => 120,
-          'height' => 60,
-          'zc'    => 3,
+          'width' => 100,
+          'height' => 100,
+          'zc'    => 4,
           'lazy'  => false
         ]) ?>
       </a>
     </div>
-    <div class="header-mobile-right">
-      <a id="toggle_menu" href="javascript:void(0)" title="Menu"><span></span></a>
+
+    <div class="search-mobile">
+      <i class=" fa-solid fa-magnifying-glass"></i>
     </div>
   </div>
 </div>
 <?php $menuMobileHtml = ob_get_clean(); ?>
-<div class="menu-mobile"><?= $menuMobileHtml ?></div>
+<div class="menu-mobile position-relative"><?= $menuMobileHtml ?>
+</div>
 <div class="menu-mobile-fixed"><?= $menuMobileHtml ?></div>
 <nav id="menu">
   <div class="box-menu-mobile-search">
     <div class="menu-mobile-search">
-      <input type="text" id="keyword-mb" placeholder="Nhập từ khóa tìm kiếm...." onkeypress="doEnter(event,'keyword-mb');" />
-      <span onclick="onSearch('keyword-mb');"><i class="fa fa-search"></i></span>
+      <input
+        type="text"
+        class="js-search-input"
+        placeholder="Nhập từ khóa tìm kiếm..." />
+      <span class="js-search-btn">
+        <i class="fa fa-search"></i>
+      </span>
     </div>
   </div>
+
   <ul>
     <li class="<?= ($type == 'index') ? 'active' : '' ?>"><a href="./">Trang chủ</a></li>
     <li class="<?= ($type == 'gioi-thieu') ? 'active' : '' ?>"><a href="gioi-thieu">Giới thiệu</a></li>

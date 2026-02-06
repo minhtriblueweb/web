@@ -182,136 +182,250 @@ function viewBrands()
 function saveMan()
 {
   global $db, $fn, $table, $linkProduct, $type, $config, $id, $result, $seo_data, $gallery;
-  $table = 'tbl_product';
-  $act = 'man';
+  $table   = 'tbl_product';
+  $act     = 'man';
   $linkMan = "$linkProduct&act=$act";
+
   $id = isset($_GET['id']) && is_numeric($_GET['id']) ? (int)$_GET['id'] : null;
-  if ($_SERVER['REQUEST_METHOD'] === 'POST' && (isset($_POST['add']) || isset($_POST['edit']))) {
-    $fn->save_data($_POST['data'] ?? [], $_FILES, $id, [
+
+  if (
+    $_SERVER['REQUEST_METHOD'] === 'POST'
+    && (isset($_POST['add']) || isset($_POST['edit']) || isset($_POST['save-here']))
+  ) {
+
+    $isSaveHere = isset($_POST['save-here']);
+    $redirect   = $linkMan;
+
+    if ($isSaveHere && !empty($id)) {
+      $redirect = "index.php?page=product&type=$type&act=form&id=$id";
+    }
+
+    $newId = $fn->save_data($_POST['data'] ?? [], $_FILES, $id, [
       'table'          => $table,
       'type'           => $type,
       'act'            => $act,
-      'redirect'       => $linkMan,
+      'redirect'       => $redirect,
       'convert_webp'   => $config['product'][$type]['convert_webp'],
       'enable_slug'    => $config['product'][$type]['slug'],
       'enable_seo'     => $config['product'][$type]['seo'],
-      'enable_gallery' => $config['product'][$type]['gallery']
+      'enable_gallery' => $config['product'][$type]['gallery'],
+      'skip_redirect'  => $isSaveHere && empty($id),
     ]);
+
+    // THÊM MỚI + LƯU TẠI TRANG
+    if ($isSaveHere && empty($id) && $newId > 0) {
+      $fn->transfer(
+        capnhatdulieuthanhcong,
+        "index.php?page=product&type=$type&act=form&id=$newId",
+        true
+      );
+    }
   }
 
   $result = $seo_data = [];
+  $gallery = [];
+
   if (!empty($id)) {
-    $result = $db->rawQueryOne("SELECT * FROM `$table` WHERE id = ?", [$id,]);
-    if (!$result) $fn->transfer(dulieukhongcothuc, $linkMan, false);
-    $seo_data = $db->rawQueryOne("SELECT * FROM tbl_seo WHERE `id_parent` = ? AND `type` = ? AND `act` = ?", [$id, $type, $act]);
-    $gallery = $db->rawQuery("SELECT * FROM tbl_gallery WHERE id_parent = ? AND type = ? ORDER BY numb, id DESC", [$id, $type]);
+    $result = $db->rawQueryOne(
+      "SELECT * FROM `$table` WHERE id = ?",
+      [$id]
+    );
+
+    if (!$result) {
+      $fn->transfer(dulieukhongcothuc, $linkMan, false);
+    }
+
+    $seo_data = $db->rawQueryOne(
+      "SELECT * FROM tbl_seo WHERE id_parent = ? AND type = ? AND act = ?",
+      [$id, $type, $act]
+    );
+
+    $gallery = $db->rawQuery(
+      "SELECT * FROM tbl_gallery WHERE id_parent = ? AND type = ? ORDER BY numb, id DESC",
+      [$id, $type]
+    );
   }
 }
+
 function saveList()
 {
   global $db, $fn, $table, $linkProduct, $type, $config, $id, $result, $seo_data;
   $table = 'tbl_product_list';
-  $act = 'man_list';
+  $act   = 'man_list';
   $linkMan = "$linkProduct&act=$act";
   $id = isset($_GET['id']) && is_numeric($_GET['id']) ? (int)$_GET['id'] : null;
-  if ($_SERVER['REQUEST_METHOD'] === 'POST' && (isset($_POST['add']) || isset($_POST['edit']))) {
-    $fn->save_data($_POST['data'] ?? [], $_FILES, $id, [
+  if (
+    $_SERVER['REQUEST_METHOD'] === 'POST'
+    && (isset($_POST['add']) || isset($_POST['edit']) || isset($_POST['save-here']))
+  ) {
+    $isSaveHere = isset($_POST['save-here']);
+    $redirect = $linkMan;
+    if ($isSaveHere && !empty($id)) {
+      $redirect = "index.php?page=product&type=$type&act=form_list&id=$id";
+    }
+    $newId = $fn->save_data($_POST['data'] ?? [], $_FILES, $id, [
       'table'          => $table,
       'type'           => $type,
       'act'            => $act,
-      'redirect'       => $linkMan,
+      'redirect'       => $redirect,
       'convert_webp'   => $config['product'][$type]['convert_webp_list'],
       'enable_slug'    => $config['product'][$type]['slug_list'],
       'enable_seo'     => $config['product'][$type]['seo_list'],
       'enable_gallery' => $config['product'][$type]['gallery_list'],
+      'skip_redirect'  => $isSaveHere && empty($id),
     ]);
+    if ($isSaveHere && empty($id) && $newId > 0) {
+      $fn->transfer(
+        capnhatdulieuthanhcong,
+        "index.php?page=product&type=$type&act=form_list&id=$newId",
+        true
+      );
+    }
   }
-
   $result = $seo_data = [];
   if (!empty($id)) {
     $result = $db->rawQueryOne("SELECT * FROM `$table` WHERE id = ?", [$id]);
     if (!$result) $fn->transfer(dulieukhongcothuc, $linkMan, false);
-    $seo_data = $db->rawQueryOne("SELECT * FROM tbl_seo WHERE `id_parent` = ? AND `type` = ? AND `act` = ?", [$id, $type, $act]);
+    $seo_data = $db->rawQueryOne(
+      "SELECT * FROM tbl_seo WHERE id_parent = ? AND type = ? AND act = ?",
+      [$id, $type, $act]
+    );
   }
 }
 function saveCat()
 {
   global $db, $fn, $table, $linkProduct, $type, $config, $id, $result, $seo_data;
   $table = 'tbl_product_cat';
-  $act = 'man_cat';
+  $act   = 'man_cat';
   $linkMan = "$linkProduct&act=$act";
   $id = isset($_GET['id']) && is_numeric($_GET['id']) ? (int)$_GET['id'] : null;
-  if ($_SERVER['REQUEST_METHOD'] === 'POST' && (isset($_POST['add']) || isset($_POST['edit']))) {
-    $fn->save_data($_POST['data'] ?? [], $_FILES, $id, [
+  if (
+    $_SERVER['REQUEST_METHOD'] === 'POST' &&
+    (isset($_POST['add']) || isset($_POST['edit']) || isset($_POST['save-here']))
+  ) {
+    $isSaveHere = isset($_POST['save-here']);
+    $redirect = $linkMan;
+    if ($isSaveHere && !empty($id)) {
+      $redirect = "index.php?page=product&type=$type&act=form_cat&id=$id";
+    }
+    $newId = $fn->save_data($_POST['data'] ?? [], $_FILES, $id, [
       'table'          => $table,
       'type'           => $type,
       'act'            => $act,
-      'redirect'       => $linkMan,
+      'redirect'       => $redirect,
       'convert_webp'   => $config['product'][$type]['convert_webp_cat'],
       'enable_slug'    => $config['product'][$type]['slug_cat'],
       'enable_seo'     => $config['product'][$type]['seo_cat'],
-      'enable_gallery' => $config['product'][$type]['gallery_cat']
+      'enable_gallery' => $config['product'][$type]['gallery_cat'],
+      'skip_redirect'  => $isSaveHere && empty($id),
     ]);
+    if ($isSaveHere && empty($id) && $newId > 0) {
+      $fn->transfer(
+        capnhatdulieuthanhcong,
+        "index.php?page=product&type=$type&act=form_cat&id=$newId",
+        true
+      );
+    }
   }
   $result = $seo_data = [];
   if (!empty($id)) {
     $result = $db->rawQueryOne("SELECT * FROM `$table` WHERE id = ?", [$id]);
     if (!$result) $fn->transfer(dulieukhongcothuc, $linkMan, false);
-    $seo_data = $db->rawQueryOne("SELECT * FROM tbl_seo WHERE `id_parent` = ? AND `type` = ? AND `act` = ?", [$id, $type, $act]);
+    $seo_data = $db->rawQueryOne(
+      "SELECT * FROM tbl_seo WHERE id_parent = ? AND type = ? AND act = ?",
+      [$id, $type, $act]
+    );
   }
 }
-
 function saveItem()
 {
   global $db, $fn, $table, $linkProduct, $type, $config, $id, $result, $seo_data;
   $table = 'tbl_product_item';
-  $act = 'man_item';
+  $act   = 'man_item';
   $linkMan = "$linkProduct&act=$act";
   $id = isset($_GET['id']) && is_numeric($_GET['id']) ? (int)$_GET['id'] : null;
-  if ($_SERVER['REQUEST_METHOD'] === 'POST' && (isset($_POST['add']) || isset($_POST['edit']))) {
-    $fn->save_data($_POST['data'] ?? [], $_FILES, $id, [
+  if (
+    $_SERVER['REQUEST_METHOD'] === 'POST' &&
+    (isset($_POST['add']) || isset($_POST['edit']) || isset($_POST['save-here']))
+  ) {
+    $isSaveHere = isset($_POST['save-here']);
+    $redirect = $linkMan;
+    if ($isSaveHere && !empty($id)) {
+      $redirect = "index.php?page=product&type=$type&act=form_item&id=$id";
+    }
+    $newId = $fn->save_data($_POST['data'] ?? [], $_FILES, $id, [
       'table'          => $table,
       'type'           => $type,
       'act'            => $act,
-      'redirect'       => $linkMan,
+      'redirect'       => $redirect,
       'convert_webp'   => $config['product'][$type]['convert_webp_item'],
       'enable_slug'    => $config['product'][$type]['slug_item'],
       'enable_seo'     => $config['product'][$type]['seo_item'],
-      'enable_gallery' => $config['product'][$type]['gallery_item']
+      'enable_gallery' => $config['product'][$type]['gallery_item'],
+      'skip_redirect'  => $isSaveHere && empty($id),
     ]);
+    if ($isSaveHere && empty($id) && $newId > 0) {
+      $fn->transfer(
+        capnhatdulieuthanhcong,
+        "index.php?page=product&type=$type&act=form_item&id=$newId",
+        true
+      );
+    }
   }
   $result = $seo_data = [];
   if (!empty($id)) {
     $result = $db->rawQueryOne("SELECT * FROM `$table` WHERE id = ?", [$id]);
     if (!$result) $fn->transfer(dulieukhongcothuc, $linkMan, false);
-    $seo_data = $db->rawQueryOne("SELECT * FROM tbl_seo WHERE `id_parent` = ? AND `type` = ? AND `act` = ?", [$id, $type, $act]);
+    $seo_data = $db->rawQueryOne(
+      "SELECT * FROM tbl_seo WHERE id_parent = ? AND type = ? AND act = ?",
+      [$id, $type, $act]
+    );
   }
 }
-
 function saveBrand()
 {
   global $db, $fn, $table, $linkProduct, $type, $config, $id, $result, $seo_data;
   $table = 'tbl_product_brand';
-  $act = 'man_brand';
+  $act   = 'man_brand';
   $linkMan = "$linkProduct&act=$act";
   $id = isset($_GET['id']) && is_numeric($_GET['id']) ? (int)$_GET['id'] : null;
-  if ($_SERVER['REQUEST_METHOD'] === 'POST' && (isset($_POST['add']) || isset($_POST['edit']))) {
-    $fn->save_data($_POST['data'] ?? [], $_FILES, $id, [
+  if (
+    $_SERVER['REQUEST_METHOD'] === 'POST' &&
+    (isset($_POST['add']) || isset($_POST['edit']) || isset($_POST['save-here']))
+  ) {
+    $isSaveHere = isset($_POST['save-here']);
+    $redirect = $linkMan;
+    if ($isSaveHere && !empty($id)) {
+      $redirect = "index.php?page=product&type=$type&act=form_brand&id=$id";
+    }
+    $newId = $fn->save_data($_POST['data'] ?? [], $_FILES, $id, [
       'table'          => $table,
       'type'           => $type,
       'act'            => $act,
-      'redirect'       => $linkMan,
+      'redirect'       => $redirect,
       'convert_webp'   => $config['product'][$type]['convert_webp_brand'],
       'enable_slug'    => $config['product'][$type]['slug_brand'],
       'enable_seo'     => $config['product'][$type]['seo_brand'],
-      'enable_gallery' => $config['product'][$type]['gallery_brand']
+      'enable_gallery' => $config['product'][$type]['gallery_brand'],
+      'skip_redirect'  => $isSaveHere && empty($id),
     ]);
+    if ($isSaveHere && empty($id) && $newId > 0) {
+      $fn->transfer(
+        capnhatdulieuthanhcong,
+        "index.php?page=product&type=$type&act=form_brand&id=$newId",
+        true
+      );
+    }
   }
   $result = $seo_data = [];
   if (!empty($id)) {
     $result = $db->rawQueryOne("SELECT * FROM `$table` WHERE id = ?", [$id]);
     if (!$result) $fn->transfer(dulieukhongcothuc, $linkMan, false);
-    $seo_data = $db->rawQueryOne("SELECT * FROM tbl_seo WHERE `id_parent` = ? AND `type` = ? AND `act` = ?", [$id, $type, $act]);
+
+    $seo_data = $db->rawQueryOne(
+      "SELECT * FROM tbl_seo WHERE id_parent = ? AND type = ? AND act = ?",
+      [$id, $type, $act]
+    );
   }
 }
 function deleteMan()

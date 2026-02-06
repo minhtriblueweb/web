@@ -14,7 +14,8 @@ class Database
 
   public $link;
   public $error;
-
+  private $where = [];
+  private $whereParams = [];
   public function __construct()
   {
     global $config;
@@ -47,21 +48,20 @@ class Database
     return ($result->num_rows > 0) ? $result : false;
   }
 
-  public function insert($query)
+  public function insert($table, array $data)
   {
-    $insert_row = $this->link->query($query);
-    if ($insert_row) {
-      return $this->link->insert_id;
-    } else {
-      error_log("Insert Error: " . $this->link->error . " | Query: $query");
-      return false;
+    if (empty($data)) return false;
+    $fields = array_keys($data);
+    $params = array_values($data);
+    $placeholders = implode(', ', array_fill(0, count($fields), '?'));
+    $sql = "INSERT INTO {$table} (" . implode(', ', $fields) . ") VALUES ($placeholders)";
+    $stmt = $this->link->prepare($sql);
+    if (!$stmt) {
+      throw new Exception('Prepare failed: ' . $this->link->error);
     }
-  }
-
-  public function update($query)
-  {
-    $update_row = $this->link->query($query) or die($this->link->error . __LINE__);
-    return $update_row ?: false;
+    $types = str_repeat('s', count($params));
+    $stmt->bind_param($types, ...$params);
+    return $stmt->execute() ? $this->link->insert_id : false;
   }
 
   public function delete($query)
@@ -174,5 +174,44 @@ class Database
 
     $stmt->close();
     return $value;
+  }
+
+  public function where($field, $value, $operator = '=')
+  {
+    $this->where[] = "`$field` $operator ?";
+    $this->whereParams[] = $value;
+    return $this;
+  }
+  private function buildWhere()
+  {
+    if (empty($this->where)) return '';
+    return ' WHERE ' . implode(' AND ', $this->where);
+  }
+  private function resetQuery()
+  {
+    $this->where = [];
+    $this->whereParams = [];
+  }
+  public function update($table, $data)
+  {
+    if (empty($this->where)) {
+      throw new Exception('Update without WHERE is not allowed');
+    }
+    $fields = [];
+    $params = [];
+    foreach ($data as $key => $value) {
+      $fields[] = "`$key` = ?";
+      $params[] = $value;
+    }
+    $sql = "UPDATE {$table} SET " . implode(', ', $fields);
+    $sql .= $this->buildWhere();
+    $params = array_merge($params, $this->whereParams);
+    $stmt = $this->link->prepare($sql);
+    if (!$stmt) return false;
+    $types = str_repeat('s', count($params));
+    $stmt->bind_param($types, ...$params);
+    $result = $stmt->execute();
+    $this->resetQuery();
+    return $result;
   }
 }

@@ -1,6 +1,6 @@
 <?php
 if (!defined('SOURCES')) die("Error");
-if (!isset($config['news'][$type])) $fn->transfer("Trang không tồn tại!", "index.php", false);
+if (!isset($config['news'][$type])) $fn->transfer(trangkhongtontai, "index.php", false);
 
 $table = 'tbl_news';
 $linkNews = "index.php?page=news&type=$type";
@@ -50,24 +50,43 @@ function save()
   global $db, $fn, $table, $linkMan, $type, $config, $id, $result, $seo_data;
   $id = isset($_GET['id']) && is_numeric($_GET['id']) ? (int)$_GET['id'] : null;
   $result = $seo_data = [];
-  if ($id !== null) {
-    $result = $db->rawQueryOne("SELECT * FROM `$table` WHERE id = ? LIMIT 1", [$id]);
-    if (!$result) $fn->transfer(dulieukhongcothuc, $linkMan, false);
-    $seo_data = $db->rawQueryOne("SELECT * FROM tbl_seo WHERE `id_parent` = ? AND `type` = ?", [$id, $type]);
+  if (!empty($id)) {
+    $result = $db->rawQueryOne(
+      "SELECT * FROM `$table` WHERE id = ? LIMIT 1",
+      [$id]
+    );
+    if (!$result) {
+      $fn->transfer(dulieukhongcothuc, $linkMan, false);
+    }
+    $seo_data = $db->rawQueryOne(
+      "SELECT * FROM tbl_seo WHERE id_parent = ? AND type = ?",
+      [$id, $type]
+    );
   }
-
-  if ($_SERVER['REQUEST_METHOD'] === 'POST' && (isset($_POST['add']) || isset($_POST['edit']))) {
-    $options = [
+  if (
+    $_SERVER['REQUEST_METHOD'] === 'POST'
+    && (isset($_POST['add']) || isset($_POST['edit']) || isset($_POST['save-here']))
+  ) {
+    $isSaveHere = isset($_POST['save-here']);
+    $redirect   = $linkMan;
+    if ($isSaveHere && !empty($id)) {
+      $redirect = "index.php?page=news&type=$type&act=form&id=$id";
+    }
+    $newId = $fn->save_data($_POST['data'] ?? [], $_FILES, $id, [
       'table'          => $table,
       'convert_webp'   => $config['news'][$type]['convert_webp'],
       'enable_slug'    => $config['news'][$type]['slug'],
       'enable_seo'     => $config['news'][$type]['seo'],
       'enable_gallery' => $config['news'][$type]['gallery'],
-      'redirect'  => $linkMan
-    ];
-    $fn->save_data($_POST['data'] ?? [], $_FILES, $id, $options);
+      'redirect'       => $redirect,
+      'skip_redirect'  => $isSaveHere && empty($id),
+    ]);
+    if ($isSaveHere && empty($id) && $newId > 0) {
+      $fn->transfer(capnhatdulieuthanhcong,"index.php?page=news&type=$type&act=form&id=$newId",true);
+    }
   }
 }
+
 function delete()
 {
   global $fn, $table, $type, $config, $linkMan;

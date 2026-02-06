@@ -1,25 +1,4 @@
 <?php
-/* Background */
-// $type = "background";
-// $config['photo']['photo_static'][$type]['title_main'] = "Background";
-// $config['photo']['photo_static'][$type]['status'] = array("hienthi" => "Hiển thị");
-// $config['photo']['photo_static'][$type]['images'] = true;
-// $config['photo']['photo_static'][$type]['background'] = true;
-// $config['photo']['photo_static'][$type]['width'] = 900;
-// $config['photo']['photo_static'][$type]['height'] = 300;
-// $config['photo']['photo_static'][$type]['thumb'] = '900x300x1';
-// $config['photo']['photo_static'][$type]['img_type'] = '.jpg|.gif|.png|.jpeg|.gif';
-
-/* Banner */
-// $type = "banner";
-// $config['photo']['photo_static'][$type]['title_main'] = "Banner";
-// $config['photo']['photo_static'][$type]['status'] = array("hienthi" => "Hiển thị");
-// $config['photo']['photo_static'][$type]['images'] = true;
-// $config['photo']['photo_static'][$type]['width'] = 730;
-// $config['photo']['photo_static'][$type]['height'] = 120;
-// $config['photo']['photo_static'][$type]['thumb'] = '730x120x1';
-// $config['photo']['photo_static'][$type]['img_type'] = '.jpg|.gif|.png|.jpeg|.gif';
-
 /* Logo */
 $type = "logo";
 $config['photo']['photo_static'][$type]['title_main'] = "Logo";
@@ -92,7 +71,7 @@ $config['photo']['photo_man'][$type]['title_main_photo'] = "Social";
 $config['photo']['photo_man'][$type]['status_photo'] = array("hienthi" => "Hiển thị");
 $config['photo']['photo_man'][$type]['number_photo'] = 1;
 $config['photo']['photo_man'][$type]['images_photo'] = true;
-$config['photo']['photo_man'][$type]['convert_webp'] = true;
+$config['photo']['photo_man'][$type]['convert_webp'] = false;
 $config['photo']['photo_man'][$type]['avatar_photo'] = true;
 $config['photo']['photo_man'][$type]['link_photo'] = true;
 $config['photo']['photo_man'][$type]['name_photo'] = true;

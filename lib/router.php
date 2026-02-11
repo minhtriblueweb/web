@@ -28,12 +28,14 @@ $requick = array(
   array("tbl" => "product_list", "source" => "product", "type" => "san-pham", "field" => "idl"),
   array("tbl" => "product_cat", "source" => "product", "type" => "san-pham", "field" => "idc"),
   array("tbl" => "product_item", "source" => "product", "type" => "san-pham", "field" => "idi"),
+  array("tbl" => "product_sub", "source" => "product", "type" => "san-pham", "field" => "ids"),
   array("tbl" => "product_brand", "source" => "product", "type" => "san-pham", "slug" => "thuong-hieu", "field" => "idb"),
 
   // News routes
-  array("tbl" => "news", "source" => "news", "type" => "tin-tuc", "field" => "id", "slug" => "tin-tuc", "titleMain" => "Tin Tức"),
+  array("tbl" => "news", "source" => "news", "type" => "tin-tuc", "field" => "id", "slug" => "blog", "titleMain" => "BLOG"),
+  array("tbl" => "news_list", "source" => "news", "type" => "tin-tuc", "field" => "idl"),
   array("tbl" => "news", "source" => "news", "type" => "chinh-sach", "field" => "id", "slug" => "chinh-sach", "titleMain" => "Chính Sách"),
-  array("tbl" => "news", "source" => "news", "type" => "huong-dan-choi", "field" => "id", "slug" => "huong-dan-choi", "titleMain" => "Hướng Dẫn Chơi"),
+  // array("tbl" => "news", "source" => "news", "type" => "huong-dan-choi", "field" => "id", "slug" => "huong-dan-choi", "titleMain" => "Hướng Dẫn Chơi"),
 
   /* Order */
   array("tbl" => "", "source" => "order", "type" => "gio-hang", "slug" => "gio-hang", "titleMain" => "Giỏ hàng"),
@@ -58,7 +60,7 @@ foreach ($requick as $r) {
 
   // Match route động
   if (!empty($r['tbl'])) {
-    $row = $db->rawQueryOne("SELECT id, type FROM tbl_{$r['tbl']} WHERE slug{$lang} = ? AND type = ? AND FIND_IN_SET('hienthi', status) LIMIT 1", [$slug, $r['type']]);
+    $row = $db->rawQueryOne("SELECT id, type FROM {$db->prefix}{$r['tbl']} WHERE slug{$lang} = ? AND type = ? AND FIND_IN_SET('hienthi', status) LIMIT 1", [$slug, $r['type']]);
     if ($row) {
       $_GET[$r['field']] = $row['id'];
       $type = $_GET['type'] = $row['type'];
@@ -100,10 +102,22 @@ switch ($type) {
     $titleMain = $titleMain ?: "Phương thức thanh toán";
     break;
 
-  case 'tin-tuc':
   case 'chinh-sach':
-  case 'huong-dan-choi':
     $template = isset($_GET['id']) ? "news/news_detail" : "news/news";
+    $seo->set('type', 'article');
+    $titleMain = "Chính Sách";
+    break;
+
+  case 'tin-tuc':
+    if (isset($_GET['id'])) {
+      $template = "news/news_detail";
+    } elseif (isset($_GET['idl'])) {
+      $template = "news/news_list";
+    } else {
+      $template = "news/news";
+    }
+    $seo->set('type', 'article');
+    $titleMain = $titleMain ?: tintuc;
     break;
 
   case 'tim-kiem':
@@ -120,7 +134,7 @@ switch ($type) {
 
   default:
     $template = $sources . "/" . $sources;
-    // $fn->abort_404();
+    $fn->abort_404();
     break;
 }
 

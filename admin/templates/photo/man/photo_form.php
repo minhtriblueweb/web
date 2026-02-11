@@ -1,3 +1,12 @@
+<?php
+if ((isset($config['photo']['photo_man'][$type]['images_photo']) && $config['photo']['photo_man'][$type]['images_photo'] == true)) {
+  $colLeft = "col-xl-8";
+  $colRight = "col-xl-4";
+} else {
+  $colLeft = "col-12";
+  $colRight = "d-none";
+}
+?>
 <section class="content-header text-sm">
   <div class="container-fluid">
     <div class="row">
@@ -21,7 +30,7 @@
       <a class="btn btn-sm bg-gradient-danger" href="<?= $linkMan ?>" title="<?= thoat ?>"><i class="fas fa-sign-out-alt mr-2"></i><?= thoat ?></a>
     </div>
     <div class="row">
-      <div class="col-xl-8">
+      <div class="<?= $colLeft ?>">
         <div class="card card-primary card-outline text-sm">
           <div class="card-header">
             <h3 class="card-title"><?= noidung ?> <?= $config['photo']['photo_man'][$type]['title_main_photo'] ?></h3>
@@ -49,7 +58,6 @@
                   <?php foreach ($config['website']['lang'] as $k => $v) { ?>
                     <div class="tab-pane fade show <?= ($k == $lang) ? 'active' : '' ?>" id="tabs-content-article-<?= $k ?>"
                       role="tabpanel" aria-labelledby="tabs-lang-article-<?= $k ?>">
-
                       <?php if (!empty($config['photo']['photo_man'][$type]['name_photo'])): ?>
                         <div class="form-group">
                           <label for="name<?= $k ?>"><?= tieude ?> (<?= $k ?>):</label>
@@ -60,7 +68,6 @@
                             value="<?= $_POST['name' . $k] ?? ($result['name' . $k] ?? '') ?>" />
                         </div>
                       <?php endif; ?>
-
                       <?php if (!empty($config['photo']['photo_man'][$type]['desc_photo'])): ?>
                         <div class="form-group">
                           <label for="desc<?= $k ?>"><?= mota ?> (<?= $k ?>):</label>
@@ -99,7 +106,6 @@
                   value="<?= $_POST['link'] ?? $result['link'] ?? '' ?>">
               </div>
             <?php endif; ?>
-
             <div class="form-group">
               <?php foreach ($config['photo']['photo_man'][$type]['status_photo'] as $check => $label): ?>
                 <div class="form-group d-inline-block mb-2 mr-5">
@@ -113,7 +119,6 @@
                 </div>
               <?php endforeach; ?>
             </div>
-
             <div class="form-group">
               <label for="numb" class="d-inline-block align-middle mb-0 mr-2"><?= sothutu ?>:</label>
               <input type="number" class="form-control form-control-mini d-inline-block align-middle text-sm" min="0"
@@ -124,22 +129,24 @@
         </div>
       </div>
 
-      <div class="col-xl-4">
-        <div class="card card-primary card-outline text-sm">
-          <div class="card-header">
-            <h3 class="card-title"><?= hinhanh ?></h3>
-            <div class="card-tools">
-              <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
+      <div class="<?= $colRight ?>">
+        <?php if (!empty($config['photo']['photo_man'][$type]['images_photo'])): ?>
+          <div class="card card-primary card-outline text-sm">
+            <div class="card-header">
+              <h3 class="card-title"><?= hinhanh ?></h3>
+              <div class="card-tools">
+                <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
+              </div>
+            </div>
+            <div class="card-body">
+              <?php
+              $photoDetail = array();
+              $photoDetail['image'] = $result['file'] ?? '';
+              $photoDetail['dimension'] = "Width: " . ($config['photo']['photo_man'][$type]['width_photo'] ?? 0) . " px - Height: " . ($config['photo']['photo_man'][$type]['height_photo'] ?? 0) . " px (" . ($config['photo']['photo_man'][$type]['img_type_photo'] ?? '.jpg|.png') . ")";
+              include TEMPLATE . LAYOUT . "image.php"; ?>
             </div>
           </div>
-          <div class="card-body">
-            <?php
-            $photoDetail = array();
-            $photoDetail['image'] = $result['file'] ?? '';
-            $photoDetail['dimension'] = "Width: " . ($config['photo']['photo_man'][$type]['width_photo'] ?? 0) . " px - Height: " . ($config['photo']['photo_man'][$type]['height_photo'] ?? 0) . " px (" . ($config['photo']['photo_man'][$type]['img_type_photo'] ?? '.jpg|.png') . ")";
-            include TEMPLATE . LAYOUT . "image.php"; ?>
-          </div>
-        </div>
+        <?php endif; ?>
       </div>
     </div>
 

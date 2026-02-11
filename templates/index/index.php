@@ -32,7 +32,7 @@
       'status'  => 'hienthi',
       'id_list' => $v_list['id'],
       'limit'   => 10,
-      'select'  => "id, file, slug$lang, name$lang, sale_price, regular_price, views, id_list, id_cat"
+      'select'  => "id, file, slug$lang, name$lang, sale_price, regular_price, views, id_list, id_cat,discount"
     ]);
     if (empty($productsAll)) continue;
   ?>

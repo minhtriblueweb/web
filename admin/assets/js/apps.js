@@ -1300,43 +1300,45 @@ $(document).ready(function () {
       url: "api/comment.php",
     });
   }
-
   /* Ajax category */
-  if ($(".select-category")) {
-    $("body").on("change", ".select-category", function () {
+  if ($('.select-category')) {
+    $('body').on('change', '.select-category', function () {
       var id = $(this).val();
-      var child = $(this).data("child");
-      var level = parseInt($(this).data("level"));
-      var table = $(this).data("table");
-      if ($("#" + child).length) {
+      var child = $(this).data('child');
+      var level = parseInt($(this).data('level'));
+      var table = $(this).data('table');
+      var type = $(this).data('type');
+
+      if ($('#' + child).length) {
         $.ajax({
-          url: "api/category.php",
-          type: "POST",
+          url: 'api/category.php',
+          type: 'POST',
           data: {
             level: level,
             id: id,
             table: table,
+            type: type
           },
           success: function (result) {
-            var op = "<option value='0'>" + LANG["chondanhmuc"] + "</option>";
+            var op = "<option value='0'>" + LANG['chondanhmuc'] + "</option>";
             if (level == 0) {
-              $("#id_cat").html(op);
-              $("#id_item").html(op);
-              $("#id_sub").html(op);
+              $('#id_cat').html(op);
+              $('#id_item').html(op);
+              $('#id_sub').html(op);
             } else if (level == 1) {
-              $("#id_item").html(op);
-              $("#id_sub").html(op);
+              $('#id_item').html(op);
+              $('#id_sub').html(op);
             } else if (level == 2) {
-              $("#id_sub").html(op);
+              $('#id_sub').html(op);
             }
-            $("#" + child).html(result);
-          },
+            $('#' + child).html(result);
+          }
         });
+
         return false;
       }
     });
   }
-  /* Ajax filter-table-category */
 
   /* Ajax place */
   if ($(".select-place").length) {
@@ -2540,12 +2542,18 @@ $(function () {
       </h6>
     `;
     res.data.forEach(item => {
-      const link = `index.php?page=${item.page}&act=form&type=${item.type}&id=${item.id}`;
+      let params = '';
+      if (item.ids) {
+        Object.entries(item.ids).forEach(([k, v]) => {
+          if (v) params += `&${k}=${v}`;
+        });
+      }
+      const link = `index.php?page=${item.page}&act=form&type=${item.type}${params}&id=${item.id}`;
       html += `
         <a href="${link}" class="text-decoration-none">
           <div class="d-flex align-items-center px-3 py-2 gap-2">
             <i class="bi bi-layout-text-sidebar-reverse"></i>
-            <span>${item.namevi}</span>
+            <span>${item.name}</span>
             <small class="text-muted">(Xem chi tiết »)</small>
           </div>
         </a>

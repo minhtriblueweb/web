@@ -44,7 +44,9 @@ $linkMulti  = "index.php?page=photo&act=delete_multiple&type=$type";
               </div>
             </th>
             <th class="align-middle text-center" width="10%">STT</th>
-            <th class="align-middle"><?= hinh ?></th>
+            <?php if (!empty($config['photo']['photo_man'][$type]['images_photo'])): ?>
+              <th class="align-middle"><?= hinh ?></th>
+            <?php endif; ?>
             <th class="align-middle" style="width: 30%"><?= tieude ?></th>
             <?php if (!empty($config['photo']['photo_man'][$type]['link_photo'])): ?>
               <th class="align-middle">Link</th>
@@ -74,17 +76,18 @@ $linkMulti  = "index.php?page=photo&act=delete_multiple&type=$type";
                 </td>
 
                 <!-- Hình ảnh -->
-                <td class="align-middle">
-                  <a href="<?= $linkEdit . $row['id'] ?>" title="<?= $row["name$lang"] ?>">
-                    <?= $fn->getImage([
-                      'file' => $row['file'],
-                      'class' => 'rounded img-preview',
-                      'alt' => $row["name$lang"],
-                      'title' => $row["name$lang"],
-                    ]) ?>
-                  </a>
-                </td>
-
+                <?php if (!empty($config['photo']['photo_man'][$type]['images_photo'])): ?>
+                  <td class="align-middle">
+                    <a href="<?= $linkEdit . $row['id'] ?>" title="<?= $row["name$lang"] ?>">
+                      <?= $fn->getImage([
+                        'file' => $row['file'],
+                        'class' => 'rounded img-preview',
+                        'alt' => $row["name$lang"],
+                        'title' => $row["name$lang"],
+                      ]) ?>
+                    </a>
+                  </td>
+                <?php endif; ?>
                 <!-- Tên -->
                 <td class="align-middle">
                   <a class="text-dark text-break" href="<?= $linkEdit . $row['id'] ?>" title="<?= $row["name$lang"] ?>">

@@ -109,34 +109,31 @@
               <?php if (!empty($config['product'][$type]['list'])) : ?>
                 <div class="form-group col-xl-6 col-sm-4">
                   <label class="d-block" for="id_list"><?= danhmuccap1 ?>:</label>
-                  <?= $fn->getAjaxCategory('tbl_product_list', $_POST['id_list'] ?? $result['id_list'] ?? '') ?>
+                  <?= $fn->getAjaxCategory('product', 'list', $type) ?>
                 </div>
               <?php endif; ?>
               <?php if (!empty($config['product'][$type]['cat'])) : ?>
                 <div class="form-group col-xl-6 col-sm-4">
                   <label class="d-block" for="id_cat"><?= danhmuccap2 ?>:</label>
-                  <?= $fn->getAjaxCategory(
-                    'tbl_product_cat',
-                    $_POST['id_cat'] ?? $result['id_cat'] ?? '',
-                    $_POST['id_list'] ?? $result['id_list'] ?? ''
-                  ) ?>
+                  <?= $fn->getAjaxCategory('product', 'cat', $type) ?>
                 </div>
               <?php endif; ?>
               <?php if (!empty($config['product'][$type]['item'])) : ?>
                 <div class="form-group col-xl-6 col-sm-4">
                   <label class="d-block" for="id_item"><?= danhmuccap3 ?>:</label>
-                  <?= $fn->getAjaxCategory(
-                    'tbl_product_item',
-                    $_POST['id_item'] ?? $result['id_item'] ?? '',
-                    $_POST['id_cat'] ?? $result['id_cat'] ?? '',
-                    $_POST['id_list'] ?? $result['id_list'] ?? ''
-                  ) ?>
+                  <?= $fn->getAjaxCategory('product', 'item', $type) ?>
+                </div>
+              <?php endif; ?>
+              <?php if (!empty($config['product'][$type]['sub'])) : ?>
+                <div class="form-group col-xl-6 col-sm-4">
+                  <label class="d-block" for="id_sub"><?= danhmuccap4 ?>:</label>
+                  <?= $fn->getAjaxCategory('product', 'sub', $type) ?>
                 </div>
               <?php endif; ?>
               <?php if (!empty($config['product'][$type]['brand'])) : ?>
                 <div class="form-group col-xl-6 col-sm-4">
                   <label class="d-block" for="id_brand"><?= danhmuchang ?>:</label>
-                  <?= $fn->getAjaxCategory('tbl_product_brand', $_POST['id_brand'] ?? $result['id_brand'] ?? '') ?>
+                  <?= $fn->getAjaxCategory('product', 'brand', $type) ?>
                 </div>
               <?php endif; ?>
             </div>

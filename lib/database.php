@@ -35,7 +35,7 @@ class Database
   private function connectDB()
   {
     $this->link = new mysqli($this->host, $this->user, $this->pass, $this->dbname);
-    mysqli_set_charset($this->link, 'UTF8');
+    mysqli_set_charset($this->link, $this->charset);
     if (!$this->link) {
       $this->error = "Connection failed: " . $this->link->connect_error;
       return false;

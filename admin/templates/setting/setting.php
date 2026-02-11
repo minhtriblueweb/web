@@ -44,17 +44,11 @@
                 <div class="form-group col-md-2 col-sm-2">
                   <label><?= $val['title'] ?> :</label>
                   <div class="d-flex align-items-center">
-                    <input step="1" min="1" pattern="[0-9]+" type="number" class="form-control text-center text-sm p-1"
-                      name="data[options][<?= "{$k}_{$i}_width" ?>]"
-                      value="<?= $options["{$k}_{$i}_width"] ?? $val['width'] ?>" placeholder="W">
+                    <input step="1" min="1" pattern="[0-9]+" type="number" class="form-control text-center text-sm p-1" name="data[options][<?= "{$k}_{$i}_width" ?>]" value="<?= $options["{$k}_{$i}_width"] ?? $val['width'] ?>" placeholder="W">
                     <span style="width: 30px; text-align: center;">x</span>
-                    <input step="1" min="1" pattern="[0-9]+" type="number" class="form-control text-center text-sm p-1"
-                      name="data[options][<?= "{$k}_{$i}_height" ?>]"
-                      value="<?= $options["{$k}_{$i}_height"] ?? $val['height'] ?>" placeholder="H">
+                    <input step="1" min="1" pattern="[0-9]+" type="number" class="form-control text-center text-sm p-1" name="data[options][<?= "{$k}_{$i}_height" ?>]" value="<?= $options["{$k}_{$i}_height"] ?? $val['height'] ?>" placeholder="H">
                     <span style="width: 30px; text-align: center;">x</span>
-                    <input step="1" min="1" max="3" type="number" class="form-control text-center text-sm p-1"
-                      name="data[options][<?= "{$k}_{$i}_zc" ?>]"
-                      value="<?= $options["{$k}_{$i}_zc"] ?? 1 ?>" placeholder="Zc">
+                    <input step="1" min="1" max="3" type="number" class="form-control text-center text-sm p-1" name="data[options][<?= "{$k}_{$i}_zc" ?>]" value="<?= $options["{$k}_{$i}_zc"] ?? 1 ?>" placeholder="Zc">
                   </div>
                 </div>
               <?php endif; ?>

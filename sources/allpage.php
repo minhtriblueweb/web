@@ -26,7 +26,24 @@ $tieuchi = $fn->show_data([
   'select' => "file, name{$lang}, desc{$lang}"
 ]);
 
+/* Lấy brand*/
+$brand = $db->rawQuery("select id,slug{$lang},name{$lang} from `tbl_product_brand` where find_in_set('hienthi',status) order by numb, id desc");
+
+/* Lấy tin tức cấp 1 */
+$news_list = $db->rawQuery("select id,slug{$lang},name{$lang} from `tbl_news_list` where type = 'tin-tuc' and find_in_set('hienthi',status) order by numb, id desc");
+
+// Chính sách
 $show_chinhsach = $fn->show_data(['table' => 'tbl_news', 'status' => 'hienthi', 'type'   => 'chinh-sach', 'select' => "id, slug{$lang}, name{$lang}"]);
+
+// Bài viết mới
+$news_new = $fn->show_data([
+  'table'    => 'tbl_news',
+  'status'   => 'hienthi',
+  'type'     => 'tin-tuc',
+  'select'   => "id, file, slug{$lang}, name{$lang}",
+  'order_by' => 'id DESC',
+  'limit'    => 5
+]);
 
 /* Newsletter */
 if (!empty($_POST['submit-newsletter'])) {

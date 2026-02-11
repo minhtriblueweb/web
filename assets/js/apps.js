@@ -1339,7 +1339,14 @@ if (isExist($('.payments-label'))) {
     $('.payments-info-' + payments).addClass('active');
   });
 }
-
+$(function () {
+  if ($('#menuBlog a.active').length) {
+    $('#menuBlog').collapse('show');
+  }
+  if ($('#menuPolicy a.active').length) {
+    $('#menuPolicy').collapse('show');
+  }
+});
 /* Ready */
 $(document).ready(function () {
   NN_FRAMEWORK.Common();

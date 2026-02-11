@@ -5,10 +5,13 @@
         <h2><?= !empty($static["name"]) ? $static["name"] : $titleMain ?></h2>
         <!-- <div class="animate-border bg-animate-border mt-1"></div> -->
       </div>
-      <div class="wrap-content content-ck">
+      <div class="wrap-content">
         <div class="row">
-          <div class="col-12">
+          <div class="col-lg-9 col-12 content-ck">
             <?= $fn->decodeHtmlChars($static["content"] ?? '') ?>
+          </div>
+          <div class="col-lg-3 col-12">
+            <?php include TEMPLATE . LAYOUT . 'othernews.php' ?>
           </div>
         </div>
         <div class="share">

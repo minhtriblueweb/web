@@ -1,9 +1,9 @@
 <?php
+$linkProduct = "index.php?page=product&type=" . $type;
 $linkMan = "$linkProduct&act=man_item";
 $linkForm  = "$linkProduct&act=form_item";
-$linkEdit  = "$linkForm&id=";
-$linkDelete = "$linkProduct&act=delete_item&id=";
-$linkMulti  = "$linkProduct&act=delete_multiple_item";
+$linkEdit = "index.php?page=product&act=form_item&type=" . $type;
+$linkDelete = "index.php?page=product&act=delete_item&type=" . $type;
 ?>
 <section class="content-header text-sm">
   <div class="container-fluid">
@@ -18,7 +18,7 @@ $linkMulti  = "$linkProduct&act=delete_multiple_item";
 <section class="content">
   <div class="card-footer text-sm sticky-top">
     <a class="btn btn-sm bg-gradient-primary text-white" href="<?= $linkForm ?>" title="<?= themmoi ?>"><i class="fas fa-plus mr-2"></i><?= themmoi ?></a>
-    <a class="btn btn-sm bg-gradient-danger text-white" id="delete-all" data-url="<?= $linkMulti ?>" title="<?= xoatatca ?>"><i class="far fa-trash-alt mr-2"></i><?= xoatatca ?></a>
+    <a class="btn btn-sm bg-gradient-danger text-white" id="delete-all" data-url="<?= $linkDelete ?>" title="<?= xoatatca ?>"><i class="far fa-trash-alt mr-2"></i><?= xoatatca ?></a>
     <div class="form-inline form-search d-inline-block align-middle ml-3">
       <div class="input-group input-group-sm">
         <input class="form-control form-control-navbar text-sm" type="search" id="keyword" placeholder="<?= timkiem ?>" aria-label="<?= timkiem ?>" value="<?= $keyword ?>" onkeypress="doEnter(event,'keyword','<?= $linkMan ?>')">
@@ -33,12 +33,12 @@ $linkMulti  = "$linkProduct&act=delete_multiple_item";
   <div class="card-footer form-group-category text-sm bg-light row">
     <?php if (!empty($config['product'][$type]['list'])) : ?>
       <div class="form-group col-xl-2 col-lg-3 col-md-4 col-sm-4 mb-2">
-        <?= $fn->getLinkCategory('tbl_product_list',  $_GET['id_list'] ?? '') ?>
+        <?= $fn->getLinkCategory('product', 'list', $type) ?>
       </div>
     <?php endif; ?>
     <?php if (!empty($config['product'][$type]['cat'])) : ?>
       <div class="form-group col-xl-2 col-lg-3 col-md-4 col-sm-4 mb-2">
-        <?= $fn->getLinkCategory('tbl_product_cat',  $_GET['id_cat'] ?? '') ?>
+        <?= $fn->getLinkCategory('product', 'cat', $type) ?>
       </div>
     <?php endif; ?>
   </div>
@@ -58,7 +58,9 @@ $linkMulti  = "$linkProduct&act=delete_multiple_item";
                 </div>
               </th>
               <th class="align-middle text-center" width="10%">STT</th>
-              <th class="align-middle"><?= hinh ?></th>
+              <?php if (!empty($config['product'][$type]['show_images_item'])): ?>
+                <th class="align-middle"><?= hinh ?></th>
+              <?php endif; ?>
               <th class="align-middle" style="width: 30%"><?= tieude ?></th>
               <?php foreach ($config['product'][$type]['check_item'] as $attr => $label): ?>
                 <th class="align-middle text-center"><?= defined($attr) ? constant($attr) : $attr ?></th>
@@ -68,7 +70,11 @@ $linkMulti  = "$linkProduct&act=delete_multiple_item";
           </thead>
           <tbody>
             <?php if (!empty($show_data)): ?>
-              <?php foreach ($show_data as $row): ?>
+              <?php foreach ($show_data as $row):
+                $linkID = "";
+                if ($row['id_list']) $linkID .= "&id_list=" . $row['id_list'];
+                if ($row['id_cat']) $linkID .= "&id_cat=" . $row['id_cat'];
+              ?>
                 <tr>
                   <!-- Checkbox chọn -->
                   <td class="align-middle">
@@ -86,19 +92,16 @@ $linkMulti  = "$linkProduct&act=delete_multiple_item";
                   </td>
 
                   <!-- Ảnh -->
-                  <td class="align-middle">
-                    <a href="<?= $linkEdit . $row['id'] ?>" title="<?= $row["name$lang"] ?>">
-                      <?= $fn->getImage([
-                        'file' => $row['file'],
-                        'class' => 'rounded img-preview',
-                        'alt' => $row["name$lang"],
-                      ]) ?>
-                    </a>
-                  </td>
-
+                  <?php if (!empty($config['product'][$type]['show_images_item'])): ?>
+                    <td class="align-middle">
+                      <a href="<?= $linkEdit . $linkID ?>&id=<?= $row['id'] ?>" title="<?= $row["name$lang"] ?>">
+                        <?= $fn->getImage(['file' => $row['file'], 'class' => 'rounded img-preview', 'alt' => $row["name$lang"]]) ?>
+                      </a>
+                    </td>
+                  <?php endif; ?>
                   <!-- Tên -->
                   <td class="align-middle">
-                    <a class="text-dark text-break" href="<?= $linkEdit . $row['id'] ?>" title="<?= $row["name$lang"] ?>">
+                    <a class="text-dark text-break" href="<?= $linkEdit . $linkID ?>&id=<?= $row['id'] ?>" title="<?= $row["name$lang"] ?>">
                       <?= $row["name$lang"] ?>
                     </a>
                   </td>
@@ -117,10 +120,10 @@ $linkMulti  = "$linkProduct&act=delete_multiple_item";
 
                   <!-- Hành động -->
                   <td class="align-middle text-center text-md text-nowrap">
-                    <a class="text-primary mr-2" href="<?= $linkEdit . $row['id'] ?>" title="<?= chinhsua ?>">
+                    <a class="text-primary mr-2" href="<?= $linkEdit . $linkID ?>&id=<?= $row['id'] ?>" title="<?= chinhsua ?>">
                       <i class="fas fa-edit"></i>
                     </a>
-                    <a class="text-danger" id="delete-item" data-url="<?= $linkDelete . $row['id'] ?>" title="<?= xoa ?>">
+                    <a class="text-danger" id="delete-item" data-url="<?= $linkDelete ?>&id=<?= $row['id'] ?>" title="<?= xoa ?>">
                       <i class="fas fa-trash-alt"></i>
                     </a>
                   </td>

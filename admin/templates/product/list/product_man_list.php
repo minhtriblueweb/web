@@ -1,9 +1,9 @@
 <?php
+$linkProduct = "index.php?page=product&type=" . $type;
 $linkMan = "$linkProduct&act=man_list";
 $linkForm  = "$linkProduct&act=form_list";
-$linkEdit  = "$linkForm&id=";
-$linkDelete = "$linkProduct&act=delete_list&id=";
-$linkMulti  = "$linkProduct&act=delete_multiple_list";
+$linkEdit  = "$linkProduct&act=form_list&id=";
+$linkDelete = "index.php?page=product&act=delete_list&type=" . $type;
 ?>
 <section class="content-header text-sm">
   <div class="container-fluid">
@@ -18,7 +18,7 @@ $linkMulti  = "$linkProduct&act=delete_multiple_list";
 <section class="content">
   <div class="card-footer text-sm sticky-top">
     <a class="btn btn-sm bg-gradient-primary text-white" href="<?= $linkForm ?>" title="<?= themmoi ?>"><i class="fas fa-plus mr-2"></i><?= themmoi ?></a>
-    <a class="btn btn-sm bg-gradient-danger text-white" id="delete-all" data-url="<?= $linkMulti ?>" title="<?= xoatatca ?>"><i class="far fa-trash-alt mr-2"></i><?= xoatatca ?></a>
+    <a class="btn btn-sm bg-gradient-danger text-white" id="delete-all" data-url="<?= $linkDelete ?>" title="<?= xoatatca ?>"><i class="far fa-trash-alt mr-2"></i><?= xoatatca ?></a>
     <div class="form-inline form-search d-inline-block align-middle ml-3">
       <div class="input-group input-group-sm">
         <input class="form-control form-control-navbar text-sm" type="search" id="keyword" placeholder="<?= timkiem ?>" aria-label="<?= timkiem ?>" value="<?= $keyword ?>" onkeypress="doEnter(event,'keyword','<?= $linkMan ?>')">
@@ -45,7 +45,9 @@ $linkMulti  = "$linkProduct&act=delete_multiple_list";
               </div>
             </th>
             <th class="align-middle text-center" width="10%">STT</th>
-            <th class="align-middle"><?= hinh ?></th>
+            <?php if (!empty($config['product'][$type]['show_images_list'])): ?>
+              <th class="align-middle"><?= hinh ?></th>
+            <?php endif; ?>
             <th class="align-middle" style="width: 30%"><?= tieude ?></th>
             <?php foreach ($config['product'][$type]['check_list'] as $attr => $label): ?>
               <th class="align-middle text-center"><?= defined($attr) ? constant($attr) : $attr ?></th>
@@ -69,18 +71,17 @@ $linkMulti  = "$linkProduct&act=delete_multiple_list";
 
                   <!-- Số thứ tự -->
                   <td class="align-middle">
-                    <input type="number" class="form-control form-control-mini m-auto update-numb"
-                      min="0" value="<?= $row['numb'] ?>"
-                      data-id="<?= $row['id'] ?>" data-table="<?= $table ?>" />
+                    <input type="number" class="form-control form-control-mini m-auto update-numb" min="0" value="<?= $row['numb'] ?>" data-id="<?= $row['id'] ?>" data-table="<?= $table ?>" />
                   </td>
 
                   <!-- Ảnh -->
-                  <td class="align-middle">
-                    <a href="<?= $linkEdit . $row['id'] ?>" title="<?= $row["name$lang"] ?>">
-                      <?= $fn->getImage(['file' => $row['file'], 'class' => 'rounded img-preview', 'alt' => $row["name$lang"]]) ?>
-                    </a>
-                  </td>
-
+                  <?php if (!empty($config['product'][$type]['show_images_list'])): ?>
+                    <td class="align-middle">
+                      <a href="<?= $linkEdit . $row['id'] ?>" title="<?= $row["name$lang"] ?>">
+                        <?= $fn->getImage(['file' => $row['file'], 'class' => 'rounded img-preview', 'alt' => $row["name$lang"]]) ?>
+                      </a>
+                    </td>
+                  <?php endif; ?>
                   <!-- Tên -->
                   <td class="align-middle">
                     <a class="text-dark text-break" href="<?= $linkEdit . $row['id'] ?>" title="<?= $row["name$lang"] ?>">
@@ -105,7 +106,7 @@ $linkMulti  = "$linkProduct&act=delete_multiple_list";
                     <a class="text-primary mr-2" href="<?= $linkEdit . $row['id'] ?>" title="<?= chinhsua ?>">
                       <i class="fas fa-edit"></i>
                     </a>
-                    <a class="text-danger" id="delete-item" data-url="<?= $linkDelete . $row['id'] ?>" title="<?= xoa ?>">
+                    <a class="text-danger" id="delete-item" data-url="<?= $linkDelete ?>&id=<?= $row['id'] ?>" title="<?= xoa ?>">
                       <i class="fas fa-trash-alt"></i>
                     </a>
                   </td>

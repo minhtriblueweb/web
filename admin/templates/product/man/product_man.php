@@ -1,9 +1,9 @@
 <?php
+$linkProduct = "index.php?page=product&type=" . $type;
 $linkMan   = "$linkProduct&act=man";
 $linkForm  = "$linkProduct&act=form";
-$linkEdit  = "$linkForm&id=";
-$linkDelete = "$linkProduct&act=delete&id=";
-$linkMulti  = "$linkProduct&act=delete_multiple";
+$linkEdit = "index.php?page=product&act=form&type=" . $type;
+$linkDelete = "index.php?page=product&act=delete&type=" . $type;
 $linkGalleryMan  = "index.php?page=gallery&act=man&type=$type&id=";
 $linkGalleryForm  = "index.php?page=gallery&act=form&type=$type&id=";
 ?>
@@ -20,7 +20,7 @@ $linkGalleryForm  = "index.php?page=gallery&act=form&type=$type&id=";
 <section class="content">
   <div class="card-footer text-sm sticky-top">
     <a class="btn btn-sm bg-gradient-primary text-white" href="<?= $linkForm ?>" title="<?= themmoi ?>"><i class="fas fa-plus mr-2"></i><?= themmoi ?></a>
-    <a class="btn btn-sm bg-gradient-danger text-white" id="delete-all" data-url="<?= $linkMulti ?>" title="<?= xoatatca ?>"><i class="far fa-trash-alt mr-2"></i><?= xoatatca ?></a>
+    <a class="btn btn-sm bg-gradient-danger text-white" id="delete-all" data-url="<?= $linkDelete ?>" title="<?= xoatatca ?>"><i class="far fa-trash-alt mr-2"></i><?= xoatatca ?></a>
     <div class="form-inline form-search d-inline-block align-middle ml-3">
       <div class="input-group input-group-sm">
         <input class="form-control form-control-navbar text-sm" type="search" id="keyword" placeholder="<?= timkiem ?>" aria-label="<?= timkiem ?>" value="<?= $keyword ?>" onkeypress="doEnter(event,'keyword','<?= $linkMan ?>')">
@@ -33,26 +33,16 @@ $linkGalleryForm  = "index.php?page=gallery&act=form&type=$type&id=";
     </div>
   </div>
   <div class="card-footer form-group-category text-sm bg-light row">
-    <?php if (!empty($config['product'][$type]['list'])) : ?>
-      <div class="form-group col-xl-2 col-lg-3 col-md-4 col-sm-4 mb-2">
-        <?= $fn->getLinkCategory('tbl_product_list',  $_GET['id_list'] ?? '') ?>
-      </div>
-    <?php endif; ?>
-    <?php if (!empty($config['product'][$type]['cat'])) : ?>
-      <div class="form-group col-xl-2 col-lg-3 col-md-4 col-sm-4 mb-2">
-        <?= $fn->getLinkCategory('tbl_product_cat',  $_GET['id_cat'] ?? '') ?>
-      </div>
-    <?php endif; ?>
-    <?php if (!empty($config['product'][$type]['item'])) : ?>
-      <div class="form-group col-xl-2 col-lg-3 col-md-4 col-sm-4 mb-2">
-        <?= $fn->getLinkCategory('tbl_product_item',  $_GET['id_item'] ?? '') ?>
-      </div>
-    <?php endif; ?>
-    <?php if (!empty($config['product'][$type]['brand'])) : ?>
-      <div class="form-group col-xl-2 col-lg-3 col-md-4 col-sm-4 mb-2">
-        <?= $fn->getLinkCategory('tbl_product_brand',  $_GET['id_brand'] ?? '', 'Chọn Hãng') ?>
-      </div>
-    <?php endif; ?>
+    <?php
+    $categories = ['list', 'cat', 'item', 'sub', 'vari', 'brand'];
+    foreach ($categories as $v) {
+      if (!empty($config['product'][$type][$v])) {
+        echo '<div class="form-group col-xl-2 col-lg-3 col-md-4 col-sm-4 mb-2">';
+        echo $fn->getLinkCategory('product', $v, $type);
+        echo '</div>';
+      }
+    }
+    ?>
   </div>
   <div class="card card-primary card-outline text-sm mb-0">
     <div class="card-header">
@@ -69,7 +59,9 @@ $linkGalleryForm  = "index.php?page=gallery&act=form&type=$type&id=";
               </div>
             </th>
             <th class="align-middle text-center" style="width: 10%">STT</th>
-            <th class="align-middle"><?= hinh ?></th>
+            <?php if (!empty($config['product'][$type]['show_images'])): ?>
+              <th class="align-middle"><?= hinh ?></th>
+            <?php endif; ?>
             <th class="align-middle" style="width: 30%"><?= tieude ?></th>
             <?php if (!empty($config['product'][$type]['gallery'])): ?>
               <th class="align-middle">Gallery</th>
@@ -83,7 +75,15 @@ $linkGalleryForm  = "index.php?page=gallery&act=form&type=$type&id=";
         <form action="" method="POST">
           <tbody>
             <?php if (!empty($show_data)): ?>
-              <?php foreach ($show_data as $row): ?>
+              <?php foreach ($show_data as $row):
+                $linkID = "";
+                if ($row['id_list']) $linkID .= "&id_list=" . $row['id_list'];
+                if ($row['id_cat']) $linkID .= "&id_cat=" . $row['id_cat'];
+                if ($row['id_item']) $linkID .= "&id_item=" . $row['id_item'];
+                if ($row['id_sub']) $linkID .= "&id_sub=" . $row['id_sub'];
+                // if ($row['id_vari']) $linkID .= "&id_vari=" . $row['id_vari'];
+                if ($row['id_brand']) $linkID .= "&id_brand=" . $row['id_brand'];
+              ?>
                 <tr>
                   <!-- Checkbox chọn -->
                   <td class="align-middle">
@@ -97,21 +97,19 @@ $linkGalleryForm  = "index.php?page=gallery&act=form&type=$type&id=";
 
                   <!-- Số thứ tự -->
                   <td class="align-middle">
-                    <input type="number" class="form-control form-control-mini m-auto update-numb" min="0"
-                      value="<?= $row['numb'] ?>" data-id="<?= $row['id'] ?>" data-table="<?= $table ?>" />
+                    <input type="number" class="form-control form-control-mini m-auto update-numb" min="0" value="<?= $row['numb'] ?>" data-id="<?= $row['id'] ?>" data-table="<?= $table ?>" />
                   </td>
 
                   <!-- Ảnh sản phẩm -->
-                  <td class="align-middle">
-                    <a href="<?= $linkEdit . $row['id'] ?>" title="<?= $row['name' . $lang] ?>">
-                      <?= $fn->getImage(['file' => $row['file'], 'class' => 'rounded img-preview', 'alt' => $row['name' . $lang]]) ?>
-                    </a>
-                  </td>
-
+                  <?php if (!empty($config['product'][$type]['show_images'])): ?>
+                    <td class="align-middle">
+                      <a href="<?= $linkEdit . $linkID ?>&id=<?= $row['id'] ?>" title="<?= $row["name$lang"] ?>"><?= $fn->getImage(['file' => $row['file'], 'class' => 'rounded img-preview', 'alt' => $row["name$lang"]]) ?></a>
+                    </td>
+                  <?php endif; ?>
                   <!-- Tên sản phẩm -->
                   <td class="align-middle">
-                    <a class="text-dark text-break" href="<?= $linkEdit . $row['id'] ?>" title="<?= $row["name{$lang}"] ?>">
-                      <?= $row["name{$lang}"] ?>
+                    <a class="text-dark text-break" href="<?= $linkEdit . $linkID ?>&id=<?= $row['id'] ?>" title="<?= $row["name$lang"] ?>">
+                      <?= $row["name$lang"] ?>
                     </a>
                     <div class="tool-action mt-2 w-clear">
                       <?php if (!empty($config['product'][$type]['view'])): ?>
@@ -119,7 +117,7 @@ $linkGalleryForm  = "index.php?page=gallery&act=form&type=$type&id=";
                           <i class="far fa-eye mr-1"></i>View
                         </a>
                       <?php endif; ?>
-                      <a class="text-info mr-3" href="<?= $linkEdit . $row['id'] ?>" title="Chỉnh sửa">
+                      <a class="text-info mr-3" href="<?= $linkEdit . $linkID ?>&id=<?= $row['id'] ?>" title="Chỉnh sửa">
                         <i class="far fa-edit mr-1"></i>Edit
                       </a>
                       <?php if (!empty($config['product'][$type]['copy'])): ?>
@@ -131,7 +129,7 @@ $linkGalleryForm  = "index.php?page=gallery&act=form&type=$type&id=";
                           </ul>
                         </div>
                       <?php endif; ?>
-                      <a class="text-danger" id="delete-item" data-url="<?= $linkDelete . $row['id'] ?>" title="Xóa">
+                      <a class="text-danger" id="delete-item" data-url="<?= $linkDelete ?>&id=<?= $row['id'] ?>" title="Xóa">
                         <i class="far fa-trash-alt mr-1"></i>Delete
                       </a>
                     </div>
@@ -165,10 +163,10 @@ $linkGalleryForm  = "index.php?page=gallery&act=form&type=$type&id=";
                   <?php endforeach; ?>
                   <!-- Hành động -->
                   <td class="align-middle text-center text-md text-nowrap">
-                    <a class="text-primary mr-2" href="<?= $linkEdit . $row['id'] ?>" title="<?= chinhsua ?>">
+                    <a class="text-primary mr-2" href="<?= $linkEdit . $linkID ?>&id=<?= $row['id'] ?>" title="<?= chinhsua ?>">
                       <i class="fas fa-edit"></i>
                     </a>
-                    <a class="text-danger" id="delete-item" data-url="<?= $linkDelete . $row['id'] ?>" title="<?= xoa ?>">
+                    <a class="text-danger" id="delete-item" data-url="<?= $linkDelete ?>&id=<?= $row['id'] ?>" title="<?= xoa ?>">
                       <i class="fas fa-trash-alt"></i>
                     </a>
                   </td>

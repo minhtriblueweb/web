@@ -12,9 +12,7 @@
   <form class="validation-form" novalidate method="post" action="" enctype="multipart/form-data">
     <div class="card-footer text-sm sticky-top">
       <button type="submit" name="<?= !empty($id) ? 'edit' : 'add'; ?>"
-        class="btn btn-sm bg-gradient-primary <?= !empty($config['product'][$type]['slug_list']) ? 'submit-check' : '' ?>"
-        <?= !empty($config['product'][$type]['slug_list']) ? 'disabled' : '' ?>>
-        <i class="far fa-save mr-2"></i><?= luu ?>
+        class="btn btn-sm bg-gradient-primary <?= !empty($config['product'][$type]['slug_list']) ? 'submit-check' : '' ?>" <?= !empty($config['product'][$type]['slug_list']) ? 'disabled' : '' ?>><i class="far fa-save mr-2"></i><?= luu ?>
       </button>
       <button type="submit" class="btn btn-sm bg-gradient-success <?= !empty($config['product'][$type]['slug_list']) ? 'submit-check' : '' ?>" name="save-here"><i class="far fa-save mr-2"></i><?= luutaitrang ?></button>
       <button type="reset" class="btn btn-sm bg-gradient-secondary">

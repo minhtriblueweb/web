@@ -8,6 +8,7 @@ $error = null;
 $page = $_GET['page'] ?? 'index';
 $act  = $_GET['act'] ?? '';
 $type  = $_GET['type'] ?? '';
+$kind  = $_GET['kind'] ?? '';
 
 /* ===== SET TEMPLATE */
 if ($page === 'user' && $act === 'login') {
@@ -63,6 +64,45 @@ $page_file = TEMPLATE . $template . ".php";
 if (!file_exists($page_file)) {
   define('IS_404', true);
 }
+
+/* Kiểm tra phân quyền */
+if (!empty($config['permission']['active']) && !empty($_SESSION[$loginAdmin]['active'])) {
+  /* Lấy quyền */
+  $_SESSION[$loginAdmin]['permissions'] = array();
+  if (!empty($_SESSION[$loginAdmin]['id'])) {
+    $id_permission = $d->rawQueryOne("select id_permission from #_user where id = ? and find_in_set('hienthi',status) limit 0,1", array($_SESSION[$loginAdmin]['id']));
+    if (!empty($id_permission['id_permission'])) {
+      $permission = $d->rawQueryOne("select id from #_permission_group where id = ? and find_in_set('hienthi',status) limit 0,1", array($id_permission['id_permission']));
+      if (!empty($permission['id'])) {
+        $user_permission = $d->rawQuery("select permission from #_permission where id_permission_group = ?", array($permission['id']));
+        if (!empty($user_permission)) {
+          foreach ($user_permission as $value) {
+            $_SESSION[$loginAdmin]['permissions'][] = $value['permission'];
+          }
+        }
+      }
+    }
+  }
+
+  /* Kiểm tra quyền */
+  if ($func->checkRole()) {
+    $is_permission = true;
+
+    if (!empty($com) && !in_array($com, ['user', 'index']) && !empty($act) && !in_array($act, ['save', 'save_list', 'save_cat', 'save_item', 'save_sub', 'save_brand', 'save_color', 'save_size', 'saveImages', 'uploadExcel', 'save_static', 'save_photo'])) {
+      $sum_permission = '';
+      $sum_permission .= $com . '_' . $act;
+      $sum_permission .= (!empty($variant)) ? '_' . $variant : '';
+      $sum_permission .= (!empty($type)) ? '_' . $type : '';
+
+      if (isset($_SESSION[$loginAdmin]['permissions'])) {
+        if (!in_array($sum_permission, $_SESSION[$loginAdmin]['permissions'])) {
+          $func->transfer("Bạn không có quyền truy cập vào khu vực này", "index.php", false);
+        }
+      }
+    }
+  }
+}
+
 ?>
 <!DOCTYPE html>
 <html lang="<?= $config['website']['lang-doc'] ?>">

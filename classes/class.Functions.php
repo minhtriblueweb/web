@@ -93,7 +93,8 @@ class Functions
       'id'         => '=',
       'id_list'    => '=',
       'id_cat'     => '=',
-      'id_item'     => '=',
+      'id_item'    => '=',
+      'id_sub'     => '=',
       'id_brand'   => '=',
       'id_parent'  => '=',
       'type'       => '=',
@@ -217,11 +218,15 @@ class Functions
     $has_data = false;
     if (!empty($data['seo']) && is_array($data['seo'])) {
       foreach ($data['seo'] as $key => $value) {
-        if (in_array($key, $columns)) {
-          $data_sql[$key] = $value;
-          if (!$has_data && trim($value) !== '') {
-            $has_data = true;
-          }
+        if (!in_array($key, $columns)) continue;
+        if (in_array($key, ['slug', 'url', 'canonical'])) {
+          $clean = trim($value);
+        } else {
+          $clean = $this->sanitize($value);
+        }
+        $data_sql[$key] = $clean;
+        if (!$has_data && trim((string)$clean) !== '') {
+          $has_data = true;
         }
       }
     }
@@ -259,7 +264,7 @@ class Functions
 
       // không tự ý tạo thêm cột chưa có
       if (!in_array($key, $columns)) continue;
-      $data_prepared[$key] = $val;
+      $data_prepared[$key] = $this->sanitize($val);
 
       // nếu chưa có cột thì tạo thêm
       // if (!in_array($key, $columns)) {
@@ -269,7 +274,7 @@ class Functions
       // $data_prepared[$key] = $val;
     }
     if (!empty($data['options']) && is_array($data['options']) && in_array('options', $columns)) {
-      $data_prepared['options'] = json_encode($data['options'], JSON_UNESCAPED_UNICODE);
+      $data_prepared['options'] = json_encode($this->sanitize($data['options']),JSON_UNESCAPED_UNICODE);
     }
     if (in_array('status', $columns)) {
       if (!empty($data['status']) && is_array($data['status'])) {
@@ -370,7 +375,7 @@ class Functions
           $numb = (int)($data['numb-filer'][$k] ?? 0);
           $name = trim($data['name-filer'][$k] ?? '');
           if ($gid > 0) {
-            $this->db->execute("UPDATE tbl_gallery SET numb = ?, name = ? WHERE id = ?", [$numb, $name, $gid]);
+            $this->db->execute("UPDATE `tbl_gallery` SET numb = ?, name = ? WHERE id = ?", [$numb, $name, $gid]);
           }
         }
       }
@@ -578,129 +583,112 @@ class Functions
     include '404.php';
     exit();
   }
-  public function getLinkCategory($table = '', $selectedId = 0, $title_select = chondanhmuc)
+  /* Get category by ajax */
+  public function getAjaxCategory(string $table = '', string $level = '', string $type = '', string $title_select = chondanhmuc, string $class_select = 'select-category'): string
   {
-    $table = preg_replace('/[^a-zA-Z0-9_]/', '', $table);
-    $params = [];
-    $where = ' WHERE 1';
-    $name = $id = '';
-    if (str_contains($table, '_list')) {
-      $name = $id = 'id_list';
-    } elseif (str_contains($table, '_cat')) {
-      $name = $id = 'id_cat';
-      $id_list = $_REQUEST['id_list'] ?? 0;
-      if ((int)$id_list > 0) {
-        $where .= ' AND id_list = ?';
-        $params[] = (int)$id_list;
-      }
-    } elseif (str_contains($table, '_item')) {
-      $name = $id = 'id_item';
-      $id_cat = $_REQUEST['id_cat'] ?? 0;
-      if ((int)$id_cat > 0) {
-        $where .= ' AND id_cat = ?';
-        $params[] = (int)$id_cat;
-      }
-    } elseif (str_contains($table, '_brand')) {
-      $name = $id = 'id_brand';
-      $type = $_REQUEST['type'] ?? '';
-      if ($type !== '') {
-        $where .= ' AND type = ?';
-        $params[] = $type;
-      }
-    } else {
-      $name = $id = 'id';
-    }
-    $rows = $this->db->rawQuery("SELECT id, namevi FROM `$table` $where ORDER BY numb, id DESC", $params);
-    $str = '<select id="' . $id . '" name="data[' . $name . ']" onchange="onchangeCategory($(this))" class="form-control filter-category select2">';
-    $str .= '<option value="0">' . htmlspecialchars($title_select) . '</option>';
-    if (!empty($rows)) {
-      foreach ($rows as $row) {
-        $selected = ($selectedId == $row['id']) ? 'selected' : '';
-        $str .= '<option value="' . $row['id'] . '" ' . $selected . '>' . htmlspecialchars($row['namevi']) . '</option>';
-      }
-    } else {
-      $str .= '<option disabled>' . khongcodulieu . '</option>';
-    }
-    $str .= '</select>';
-    return $str;
-  }
-
-  public function getAjaxCategory($table = '', $selectedId = 0, $id_list = null, $id_cat = null, $title_select = chondanhmuc)
-  {
-    $table = preg_replace('/[^a-zA-Z0-9_]/', '', $table);
-    $params = [];
-    $where = ' WHERE 1';
-    $class = 'form-control select2 select-category';
-    $levels = [
-      '_list' => [
-        'field' => 'id_list',
-        'data_level' => '0',
-        'data_table' => 'tbl_product_cat',
+    $prefix    = $this->db->prefix;
+    $id_parent = 'id_' . $level;
+    $levelConfig = [
+      'list' => [
+        'data_level' => 0,
+        'data_table' => "{$prefix}{$table}_cat",
         'data_child' => 'id_cat',
-        'filters' => []
+        'parents'    => []
       ],
-      '_cat' => [
-        'field' => 'id_cat',
-        'data_level' => '1',
-        'data_table' => 'tbl_product_item',
+      'cat' => [
+        'data_level' => 1,
+        'data_table' => "{$prefix}{$table}_item",
         'data_child' => 'id_item',
-        'filters' => ['id_list' => $id_list]
+        'parents'    => ['list']
       ],
-      '_item' => [
-        'field' => 'id_item',
-        'data_level' => '2',
-        'data_table' => '',
-        'data_child' => '',
-        'filters' => ['id_list' => $id_list, 'id_cat' => $id_cat]
+      'item' => [
+        'data_level' => 2,
+        'data_table' => "{$prefix}{$table}_sub",
+        'data_child' => 'id_sub',
+        'parents'    => ['list', 'cat']
       ],
-      '_brand' => [
-        'field' => 'id_brand',
-        'data_level' => '',
-        'data_table' => '',
-        'data_child' => '',
-        'filters' => ['type' => $_REQUEST['type'] ?? '']
+      'sub' => [
+        'data_level' => null,
+        'data_table' => null,
+        'data_child' => null,
+        'parents'    => ['list', 'cat', 'item'],
+        'no_ajax'    => true
+      ],
+      'brand' => [
+        'data_level' => null,
+        'data_table' => null,
+        'data_child' => null,
+        'parents'    => [],
+        'no_ajax'    => true
       ]
     ];
-    $matched = null;
-    foreach ($levels as $key => $conf) {
-      if (str_contains($table, $key)) {
-        $matched = $conf;
-        break;
-      }
+    if (!isset($levelConfig[$level])) return '';
+    $cfg = $levelConfig[$level];
+    $where  = '';
+    $params = [$type];
+    foreach ($cfg['parents'] as $parent) {
+      $key = 'id_' . $parent;
+      $val = isset($_REQUEST[$key]) ? (int)$_REQUEST[$key] : 0;
+      $where   .= " AND {$key} = ?";
+      $params[] = $val;
     }
-    if (!$matched) {
-      $field = $name = 'id';
-      $data_level = $data_table =  $data_child = '';
+    $rows = $this->db->rawQuery("SELECT id, namevi FROM {$prefix}{$table}_{$level} WHERE type = ? {$where} ORDER BY numb, id DESC", $params);
+    $attrs = [];
+    if (empty($cfg['no_ajax'])) {
+      $attrs[] = 'data-level="' . $cfg['data_level'] . '"';
+      $attrs[] = 'data-type="' . $type . '"';
+      $attrs[] = 'data-table="' . $cfg['data_table'] . '"';
+      $attrs[] = 'data-child="' . $cfg['data_child'] . '"';
     } else {
-      $field = $name = $matched['field'];
-      $data_level = $matched['data_level'] !== '' ? 'data-level="' . $matched['data_level'] . '"' : '';
-      $data_table = $matched['data_table'] !== '' ? 'data-table="' . $matched['data_table'] . '"' : '';
-      $data_child = $matched['data_child'] !== '' ? 'data-child="' . $matched['data_child'] . '"' : '';
-      foreach ($matched['filters'] as $filterField => $filterValue) {
-        if ($filterValue !== '' && $filterValue > 0) {
-          $where .= " AND {$filterField} = ?";
-          $params[] = $filterValue;
-        } elseif ($filterField === 'type' && $filterValue !== '') {
-          $where .= " AND type = ?";
-          $params[] = $filterValue;
-        }
-      }
+      $class_select = '';
     }
-    $rows = $this->db->rawQuery("SELECT id, namevi FROM `$table` $where ORDER BY numb, id DESC", $params);
-    $str = '<select id="' . $field . '" name="data[' . $name . ']" ' . $data_level . ' ' . $data_table . ' ' . $data_child . ' class="' . $class . '">';
-    $str .= '<option value="0">' . htmlspecialchars($title_select) . '</option>';
+    $attrStr = implode(' ', $attrs);
+    $str = '<select id="' . $id_parent . '" name="data[' . $id_parent . ']"class="form-control select2 ' . $class_select . '" ' . $attrStr . '><option value="0">' . $title_select . '</option>';
     if (!empty($rows)) {
-      foreach ($rows as $row) {
-        $selected = ($selectedId == $row['id']) ? 'selected' : '';
-        $str .= '<option value="' . $row['id'] . '" ' . $selected . '>' . htmlspecialchars($row['namevi']) . '</option>';
+      $current = isset($_REQUEST[$id_parent]) ? (int)$_REQUEST[$id_parent] : 0;
+      foreach ($rows as $v) {
+        $selected = ($v['id'] === $current) ? 'selected' : '';
+        $str .= '<option value="' . $v['id'] . '" ' . $selected . '>' . $v['namevi'] . '</option>';
       }
-    } else {
-      $str .= '<option disabled>' . khongcodulieu . '</option>';
     }
     $str .= '</select>';
     return $str;
   }
 
+  /* Get category by link */
+  public function getLinkCategory(string $table = '', string $level = '', string $type = '', string $title_select = chondanhmuc): string
+  {
+    $prefix    = $this->db->prefix;
+    $id_parent = 'id_' . $level;
+    $parentMap = [
+      'cat'  => ['list'],
+      'item' => ['list', 'cat'],
+      'sub'  => ['list', 'cat', 'item'],
+      'vari' => ['list', 'cat', 'item'],
+      'brand' => []
+    ];
+    $where  = '';
+    $params = [$type];
+    if (!empty($parentMap[$level])) {
+      foreach ($parentMap[$level] as $parent) {
+        $key = 'id_' . $parent;
+        $val = isset($_REQUEST[$key]) ? (int)$_REQUEST[$key] : 0;
+        $where   .= " AND {$key} = ?";
+        $params[] = $val;
+      }
+    }
+    $rows = $this->db->rawQuery("SELECT id, namevi FROM {$prefix}{$table}_{$level} WHERE type = ? {$where} ORDER BY numb, id DESC", $params);
+    $str = '<select id="' . $id_parent . '" name="' . $id_parent . '" onchange="onchangeCategory($(this))" class="form-control filter-category select2"><option value="0">' . $title_select . '</option>';
+    if (!empty($rows)) {
+      $current = isset($_REQUEST[$id_parent]) ? (int)$_REQUEST[$id_parent] : 0;
+      foreach ($rows as $v) {
+        $selected = ($v['id'] == $current) ? 'selected' : '';
+        $str .= '<option value="' . $v['id'] . '" ' . $selected . '>' . $v['namevi'] . '</option>';
+      }
+    }
+    $str .= '</select>';
+    return $str;
+  }
   public function transfer($msg, $page, $numb = true)
   {
     $_SESSION['transfer_data'] = ['msg' => $msg, 'page' => $page, 'numb' => $numb];
@@ -980,8 +968,8 @@ class Functions
     $errorMsg = duongdandatontaiduongdantruycapmucnaycothebitrunglap;
     $reservedSlugs = [
       'lien-he',
+      'gio-hang',
       'tin-tuc',
-      'huong-dan-choi',
       'san-pham',
       'gioi-thieu',
       'chinh-sach',
@@ -1221,62 +1209,116 @@ class Functions
     imagedestroy($watermark);
     return true;
   }
-  public function createThumb(string $source_path, string $thumb_name, bool $background = false, bool $add_watermark = false, bool $convert_webp = false): string|false
-  {
-    if (!file_exists($source_path) || !preg_match('/^(\d+)x(\d+)(x(\d+))?$/', $thumb_name, $m)) return false;
-    $thumb_width  = (int)$m[1];
-    $thumb_height = (int)$m[2];
-    $zoom_crop    = isset($m[4]) ? (int)$m[4] : 1;
-    $image_type = exif_imagetype($source_path);
-    $ext_map = [IMAGETYPE_JPEG => 'jpg', IMAGETYPE_PNG => 'png', IMAGETYPE_WEBP => 'webp'];
-    $create_func = [IMAGETYPE_JPEG => 'imagecreatefromjpeg', IMAGETYPE_PNG => 'imagecreatefrompng', IMAGETYPE_WEBP => 'imagecreatefromwebp'];
-    if (!isset($ext_map[$image_type])) return false;
-    $ext = $ext_map[$image_type];
-    $thumb_ext = ($convert_webp || $ext === 'webp') ? 'webp' : $ext;
-    $filename = pathinfo($source_path, PATHINFO_FILENAME);
-    $base_dir = UPLOADS . THUMB . "{$thumb_width}x{$thumb_height}x{$zoom_crop}/";
-    if ($add_watermark && method_exists($this, 'addWatermark')) {
-      $wm_data = $this->db->rawQueryOne("SELECT file, options, date_updated, status FROM tbl_photo WHERE type = 'watermark' LIMIT 1");
-
-      $use_watermark = (!empty($wm_data) && in_array('hienthi', explode(',', $wm_data['status'] ?? '')));
-
-      if ($use_watermark) {
-        $options = json_decode($wm_data['options'] ?? '', true);
-        $updated = strtotime($wm_data['date_updated'] ?? '') ?: time();
-        $wm_hash = substr(md5(json_encode($options ?? []) . '_' . $updated), 0, 8);
-
-        $wm_dir = rtrim($base_dir, '/') . '/' . trim(WATERMARK, '/');
-        if (!is_dir($wm_dir)) mkdir($wm_dir, 0755, true);
-
-        $pattern = $wm_dir . '/' . $filename . '-*.' . $thumb_ext;
-        foreach (glob($pattern) as $old_file) {
-          if (strpos($old_file, "-$wm_hash.$thumb_ext") === false) {
-            @unlink($old_file);
-          }
-        }
-
-        $wm_path = $wm_dir . '/' . $filename . "-$wm_hash." . $thumb_ext;
-        if (file_exists($wm_path)) return $wm_path;
-
-        $thumb_temp = tempnam(sys_get_temp_dir(), 'thumb_');
-        $thumb_created = $this->generateThumbImage($source_path, $thumb_temp, $thumb_width, $thumb_height, $zoom_crop, $create_func[$image_type], $image_type, $thumb_ext, $background);
-        if (!$thumb_created) return false;
-
-        if (!$this->addWatermark($thumb_temp, $wm_path, $options)) {
-          @unlink($thumb_temp);
-          return false;
-        }
-
-        @unlink($thumb_temp);
-        return $wm_path;
-      }
-      // Nếu không dùng watermark thì tiếp tục tạo ảnh thường
+  public function createThumb(
+    string $source_path,
+    string $thumb_name,
+    bool $background = false,
+    bool $add_watermark = false,
+    bool $convert_webp = false
+  ): string|false {
+    if (
+      !file_exists($source_path) ||
+      !preg_match('/^(\d+)x(\d+)(x(\d+))?$/', $thumb_name, $m)
+    ) {
+      return false;
     }
+    $thumb_width  = (int) $m[1];
+    $thumb_height = (int) $m[2];
+    $zoom_crop    = isset($m[4]) ? (int) $m[4] : 1;
+    $image_type = exif_imagetype($source_path);
+    $ext_map = [
+      IMAGETYPE_JPEG => 'jpg',
+      IMAGETYPE_PNG  => 'png',
+      IMAGETYPE_WEBP => 'webp'
+    ];
+    $create_func = [
+      IMAGETYPE_JPEG => 'imagecreatefromjpeg',
+      IMAGETYPE_PNG  => 'imagecreatefrompng',
+      IMAGETYPE_WEBP => 'imagecreatefromwebp'
+    ];
+    if (!isset($ext_map[$image_type])) return false;
+    $src_ext   = $ext_map[$image_type];
+    $thumb_ext = ($convert_webp || $src_ext === 'webp') ? 'webp' : $src_ext;
+    $filename = pathinfo($source_path, PATHINFO_FILENAME);
+    $base_dir = rtrim(UPLOADS . THUMB . "{$thumb_width}x{$thumb_height}x{$zoom_crop}/", '/');
+    if (!is_dir($base_dir)) {
+      mkdir($base_dir, 0755, true);
+    }
+    $wm_enabled = false;
+    $wm_path = null;
+    $wm_options = [];
 
-    $thumb_path = $base_dir . $filename . '.' . $thumb_ext;
-    if (file_exists($thumb_path)) return $thumb_path;
-    if (!is_dir($base_dir)) mkdir($base_dir, 0755, true);
-    $created = $this->generateThumbImage($source_path, $thumb_path, $thumb_width, $thumb_height, $zoom_crop, $create_func[$image_type], $image_type, $thumb_ext, $background);
+    if ($add_watermark && method_exists($this, 'addWatermark')) {
+      $wm_data = $this->db->rawQueryOne("SELECT file, options, date_updated, status FROM `tbl_photo` WHERE type = 'watermark'LIMIT 1");
+      if (!empty($wm_data)) {
+        $status = explode(',', $wm_data['status'] ?? '');
+        $wm_file = UPLOADS . ($wm_data['file'] ?? '');
+        if (
+          in_array('hienthi', $status, true) &&
+          !empty($wm_data['file']) &&
+          file_exists($wm_file)
+        ) {
+          $wm_enabled = true;
+          $wm_options = json_decode($wm_data['options'] ?? '', true) ?: [];
+        }
+      }
+    }
+    if ($wm_enabled) {
+      $updated = strtotime($wm_data['date_updated'] ?? '') ?: time();
+      $wm_hash = substr(md5(json_encode($wm_options) . '_' . $updated), 0, 8);
+      $wm_dir = $base_dir . '/' . trim(WATERMARK, '/');
+      if (!is_dir($wm_dir)) {
+        mkdir($wm_dir, 0755, true);
+      }
+      foreach (glob($wm_dir . '/' . $filename . '-*.' . $thumb_ext) as $old) {
+        if (strpos($old, "-{$wm_hash}.") === false) {
+          @unlink($old);
+        }
+      }
+      $wm_thumb = "{$wm_dir}/{$filename}-{$wm_hash}.{$thumb_ext}";
+      if (file_exists($wm_thumb)) {
+        return $wm_thumb;
+      }
+      $tmp = tempnam(sys_get_temp_dir(), 'thumb_');
+      if (
+        !$this->generateThumbImage(
+          $source_path,
+          $tmp,
+          $thumb_width,
+          $thumb_height,
+          $zoom_crop,
+          $create_func[$image_type],
+          $image_type,
+          $thumb_ext,
+          $background
+        )
+      ) {
+        @unlink($tmp);
+        return false;
+      }
+      if (!$this->addWatermark($tmp, $wm_thumb, $wm_options)) {
+        @unlink($tmp);
+        return false;
+      }
+      @unlink($tmp);
+      return $wm_thumb;
+    }
+    $thumb_path = "{$base_dir}/{$filename}.{$thumb_ext}";
+    if (file_exists($thumb_path)) {
+      return $thumb_path;
+    }
+    $created = $this->generateThumbImage(
+      $source_path,
+      $thumb_path,
+      $thumb_width,
+      $thumb_height,
+      $zoom_crop,
+      $create_func[$image_type],
+      $image_type,
+      $thumb_ext,
+      $background
+    );
+
     return $created ? $thumb_path : false;
   }
   public function uploadImage(array $options): string
@@ -1869,5 +1911,40 @@ class Functions
       $output  = $this->cleanInput($input, $type);
     }
     return $output;
+  }
+
+  /* Kiểm tra phân quyền menu */
+  public function checkPermission($com = '', $act = '', $type = '', $array = null, $case = '')
+  {
+    global $is_logged_in;
+    $str = $com;
+    if ($act) $str .= '_' . $act;
+    if ($case == 'phrase-1') {
+      if ($type != '') $str .= '_' . $type;
+      if (!in_array($str, $_SESSION[$is_logged_in]['permissions'])) return true;
+      else return false;
+    } else if ($case == 'phrase-2') {
+      $count = 0;
+      if ($array) {
+        foreach ($array as $key => $value) {
+          if (!empty($value['dropdown'])) {
+            unset($array[$key]);
+          }
+        }
+        foreach ($array as $key => $value) {
+          if (!in_array($str . "_" . $key, $_SESSION[$is_logged_in]['permissions'])) $count++;
+        }
+        if ($count == count($array)) return true;
+      } else return false;
+    }
+    return false;
+  }
+
+  /* Kiểm tra phân quyền */
+  public function checkRole()
+  {
+    global $config, $loginAdmin;
+    if ((!empty($_SESSION[$loginAdmin]['role']) && $_SESSION[$loginAdmin]['role'] == 3) || !empty($config['website']['debug-developer'])) return false;
+    else return true;
   }
 }

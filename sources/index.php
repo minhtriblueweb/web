@@ -21,7 +21,7 @@ $feedback = $fn->show_data([
 $banchay = $fn->show_data([
   'table'  => 'tbl_product',
   'status' => 'hienthi,banchay',
-  'select' => "id, file, slug$lang, name$lang, sale_price, regular_price, views",
+  'select' => "id, file, slug$lang, name$lang, sale_price, regular_price, views,discount",
   'limit' => 10
 ]);
 $brand = $fn->show_data([

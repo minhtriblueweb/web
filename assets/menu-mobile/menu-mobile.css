@@ -70,7 +70,6 @@
 
 #menu>ul {
   height: calc(100% - 46px);
-  /* trừ phần title */
   overflow-y: auto;
 }
 

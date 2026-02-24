@@ -18,13 +18,14 @@ $cssFiles = [
   "slick/slick.css",
   "magiczoomplus/magiczoomplus.css",
   "aos/aos.css",
-  "css/style.css"
+  "css/cart.css",
+  "css/style.css",
+  "css/media.css"
 ];
 foreach ($cssFiles as $file) {
   $css->set($file);
 }
 echo $css->get();
-
 ?>
 <?php if (!$fn->isGoogleSpeed()) { ?>
   <!-- Js Google Analytic -->

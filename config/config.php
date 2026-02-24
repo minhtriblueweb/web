@@ -13,8 +13,8 @@ $config = [
       'en' => 'Tiếng Anh'
     ],
     'lang-doc' => 'vi|en',
-    'debug-css' => true,
-    'debug-js' => true,
+    'debug-css' => false,
+    'debug-js' => false,
     'point-srcset' => array(380 => 2, 555 => 2, 768 => 3, 1024 => 4)
   ],
 

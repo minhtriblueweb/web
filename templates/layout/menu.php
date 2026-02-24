@@ -9,8 +9,10 @@
       <div class="menu-bar-left-list">
         <div class="menu-list">
           <?php
-          $listsMenu = $db->rawQuery("select id,name{$lang},slug{$lang},file from tbl_product_list where type = 'san-pham' and find_in_set('hienthi',status) and find_in_set('menu',status) order by numb,id desc");
-          foreach ($listsMenu as $v_list): ?>
+          $listsMenu = $db->rawQuery("select id,name{$lang},slug{$lang},file from tbl_product_list where type = 'san-pham' and find_in_set('hienthi',status) and find_in_set('menu',status) order by numb,id desc limit 10");
+          foreach ($listsMenu as $v_list):
+            $cats = $db->rawQuery("select id,id_list,name{$lang},slug{$lang},file from tbl_product_cat where id_list = ? and find_in_set('hienthi',status) order by numb,id desc", [$v_list['id']]);
+          ?>
             <div class="menu-list-item <?= !empty($cats) ? 'has-cat' : '' ?>">
               <a href="<?= $v_list["slug$lang"] ?>" title="<?= $v_list["name$lang"] ?>">
                 <span class="menu-icon">
@@ -18,9 +20,7 @@
                 </span>
                 <span class="menu-text"><?= $v_list["name$lang"] ?></span>
               </a>
-              <?php
-              $cats = $db->rawQuery("select id,id_list,name{$lang},slug{$lang},file from tbl_product_cat where id_list = ? and find_in_set('hienthi',status) order by numb,id desc", [$v_list['id']]);
-              if (!empty($cats)): ?>
+              <?php if (!empty($cats)): ?>
                 <div class="menu-cat-box shadow">
                   <div class="menu-cat-title"><?= $v_list["name$lang"] ?></div>
                   <div class="menu-cat-grid">

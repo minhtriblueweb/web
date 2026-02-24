@@ -75,13 +75,15 @@ if ($cmd === 'add-cart' && $id > 0) {
       <div class="top-cart border-right-0">
         <div class="list-procart">
           <div class="procart procart-label">
-            <div class="row row-10">
+            <div class="form-row">
+              <div class="pic-procart col-1 col-md-1">STT</div>
               <div class="pic-procart col-3 col-md-2 mg-col-10"><?= hinhanh ?></div>
-              <div class="info-procart col-6 col-md-5 mg-col-10"><?= tensanpham ?></div>
+              <div class="info-procart col-5 col-md-4 mg-col-10"><?= tensanpham ?></div>
               <div class="quantity-procart col-3 col-md-2 mg-col-10">
                 <p><?= soluong ?></p>
+                <p><?= thanhtien ?></p>
               </div>
-              <div class="text-center col-3 col-md-3 mg-col-10"><?= thanhtien ?></div>
+              <div class="price-procart text-center col-3 col-md-3 mg-col-10"><?= thanhtien ?></div>
             </div>
           </div>
           <?php
@@ -99,20 +101,24 @@ if ($cmd === 'add-cart' && $id > 0) {
             $pro_price_new_qty = $pro_price_new * $quantity;
           ?>
             <div class="procart procart-<?= $code ?>">
-              <div class="row row-10">
+              <div class="form-row">
+                <div class="col-1 col-md-1 d-flex align-items-center justify-content-center text-center">
+                  <?= $i + 1 ?>
+                </div>
                 <div class="pic-procart col-3 col-md-2 mg-col-10">
                   <a class="text-decoration-none" href="<?= $proinfo["slug$lang"] ?>" target="_blank" title="<?= $proinfo["name$lang"] ?>">
                     <?= $fn->getImageCustom(['file'  => $proinfo['file'], 'alt' => $proinfo["name$lang"], 'title' => $proinfo["name$lang"], 'width' => 85, 'height' => 85, 'zc' => 2]) ?>
                   </a>
                   <a class="del-procart text-decoration-none" data-code="<?= $code ?>">
-                    <i class="fa fa-times-circle"></i>
-                    <span><?= xoa ?></span>
+                    <i class="fa fa-times-circle"></i><span><?= xoa ?></span>
                   </a>
                 </div>
-                <div class="info-procart col-6 col-md-5 mg-col-10 d-flex align-items-center">
+                <div class="info-procart col-5 col-md-4 mg-col-10 d-flex align-items-center justify-content-center">
                   <h3 class="name-procart"><a class="text-decoration-none" href="<?= $proinfo["slug$lang"] ?>" target="_blank" title="<?= $proinfo["name$lang"] ?>"><?= $proinfo["name$lang"] ?></a></h3>
+                  <div class="properties-procart">
+                  </div>
                 </div>
-                <div class="quantity-procart col-3 col-md-2 mg-col-10 d-flex align-items-center">
+                <div class="quantity-procart col-3 col-md-2 mg-col-10 d-flex align-items-center justify-content-center text-center">
                   <div class="price-procart price-procart-rp">
                     <?php if ($proinfo['sale_price']) { ?>
                       <p class="price-new-cart load-price-new-<?= $code ?>">
@@ -127,16 +133,16 @@ if ($cmd === 'add-cart' && $id > 0) {
                       </p>
                     <?php } ?>
                   </div>
-                  <div class="quantity-counter-procart quantity-counter-procart-<?= $code ?>">
+                  <div class="quantity-counter-procart quantity-counter-procart-<?= $code ?> d-flex align-items-stretch justify-content-between">
                     <span class="counter-procart-minus counter-procart">-</span>
                     <input type="number" class="quantity-procart" min="1" value="<?= $quantity ?>" data-pid="<?= $pid ?>" data-code="<?= $code ?>" />
                     <span class="counter-procart-plus counter-procart">+</span>
                   </div>
                 </div>
-                <div class="text-center d-flex align-items-center col-3 col-md-3 mg-col-10">
-                  <div class="text-center align-items-center w-100">
+                <div class="price-procart col-3 col-md-3 mg-col-10 d-flex align-items-center justify-content-center text-center">
+                  <div>
                     <?php if ($proinfo['sale_price']) { ?>
-                      <p class=" price-new-cart load-price-new-<?= $code ?>">
+                      <p class="price-new-cart load-price-new-<?= $code ?>">
                         <?= $fn->formatMoney($pro_price_new_qty) ?>
                       </p>
                       <p class="price-old-cart load-price-<?= $code ?>">
@@ -154,14 +160,14 @@ if ($cmd === 'add-cart' && $id > 0) {
           <?php } ?>
         </div>
         <div class="money-procart">
-          <div class="total-procart">
+          <div class="total-procart d-flex align-items-center justify-content-between">
             <p><?= tamtinh ?>:</p>
             <p class="total-price load-price-temp">
               <?= $fn->formatMoney($cart->getOrderTotal()) ?>
             </p>
           </div>
         </div>
-        <div class="modal-footer">
+        <div class="modal-footer d-flex align-items-center justify-content-between">
           <a href="san-pham" class="buymore-cart text-decoration-none" title="<?= tieptucmuahang ?>">
             <i class="fa fa-angle-double-left"></i>
             <span><?= tieptucmuahang ?></span>

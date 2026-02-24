@@ -46,23 +46,26 @@
   <div class="wrap-main wrap-template w-clear">
     <div class="content-main">
       <div class="row">
-        <div class="col-lg-3">
+        <div class="col-12 col-sm-3 d-none d-sm-block">
           <div class="othernews">
             <h2 class="titleSide"><span><?= sanpham ?></span></h2>
             <div class="sidebar-menu shadow">
               <ul class="menu-level level-1">
                 <?php
                 $lists = $db->rawQuery("select id,name{$lang},slug{$lang},file from tbl_product_list where type = 'san-pham' and find_in_set('hienthi',status) order by numb,id desc");
-                foreach ($lists as $list): ?>
+                foreach ($lists as $list):
+                  $cats = $db->rawQuery("select id,name{$lang},slug{$lang} from tbl_product_cat where id_list = ? and find_in_set('hienthi',status) order by numb,id desc", [$list['id']]);
+                ?>
                   <li>
-                    <a class="has-child <?= ($slug == $list["slug$lang"]) ? 'active' : '' ?>" href="<?= $list["slug$lang"] ?>"><?= $list["name$lang"] ?></a>
-                    <?php
-                    $cats = $db->rawQuery("select id,name{$lang},slug{$lang} from tbl_product_cat where id_list = ? and find_in_set('hienthi',status) order by numb,id desc", [$list['id']]);
-                    if (!empty($cats)): ?>
+                    <a class="<?= !empty($cats) ? 'has-child' : '' ?> <?= ($slug == $list["slug$lang"]) ? 'active' : '' ?>"
+                      href="<?= $list["slug$lang"] ?>">
+                      <?= $list["name$lang"] ?>
+                    </a>
+                    <?php if (!empty($cats)): ?>
                       <ul class="menu-level level-2">
                         <?php foreach ($cats as $cat): ?>
                           <?php
-                          $items = $db->rawQuery("select id,name{$lang},slug{$lang} from tbl_product_item where id_cat = ? and find_in_set('hienthi',status) order by numb,id desc",[$cat['id']]);
+                          $items = $db->rawQuery("select id,name{$lang},slug{$lang} from tbl_product_item where id_cat = ? and find_in_set('hienthi',status) order by numb,id desc", [$cat['id']]);
                           ?>
                           <li>
                             <a class="<?= !empty($items) ? 'has-child ' : '' ?><?= ($slug == $cat["slug$lang"]) ? 'active' : '' ?>" href="<?= $cat["slug$lang"] ?>">
@@ -72,7 +75,7 @@
                               <ul class="menu-level level-3">
                                 <?php foreach ($items as $item): ?>
                                   <?php
-                                  $subs = $db->rawQuery("select id,name{$lang},slug{$lang} from tbl_product_sub where id_item = ? and find_in_set('hienthi',status) order by numb,id desc",[$item['id']]);
+                                  $subs = $db->rawQuery("select id,name{$lang},slug{$lang} from tbl_product_sub where id_item = ? and find_in_set('hienthi',status) order by numb,id desc", [$item['id']]);
                                   ?>
                                   <li>
                                     <a class="<?= !empty($subs) ? 'has-child ' : '' ?><?= ($slug == $item["slug$lang"]) ? 'active' : '' ?>" href="<?= $item["slug$lang"] ?>">
@@ -89,26 +92,21 @@
                                         <?php endforeach; ?>
                                       </ul>
                                     <?php endif; ?>
-
                                   </li>
                                 <?php endforeach; ?>
-
                               </ul>
                             <?php endif; ?>
-
                           </li>
                         <?php endforeach; ?>
-
                       </ul>
                     <?php endif; ?>
-
                   </li>
                 <?php endforeach; ?>
               </ul>
             </div>
           </div>
         </div>
-        <div class="col-lg-9">
+        <div class="col-12 col-sm-9">
           <?php if (!empty($product)): ?>
             <div class="grid-product no-index">
               <?php foreach ($product as $k => $v): ?>

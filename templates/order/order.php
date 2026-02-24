@@ -9,13 +9,15 @@
               <p class="title-cart"><?= giohangcuaban ?>:</p>
               <div class="list-procart">
                 <div class="procart procart-label">
-                  <div class="row row-10">
+                  <div class="form-row">
+                    <div class="pic-procart col-1 col-md-1">STT</div>
                     <div class="pic-procart col-3 col-md-2 mg-col-10"><?= hinhanh ?></div>
-                    <div class="info-procart col-6 col-md-5 mg-col-10"><?= tensanpham ?></div>
+                    <div class="info-procart col-5 col-md-4 mg-col-10"><?= tensanpham ?></div>
                     <div class="quantity-procart col-3 col-md-2 mg-col-10">
                       <p><?= soluong ?></p>
+                      <p><?= thanhtien ?></p>
                     </div>
-                    <div class="text-center col-3 col-md-3 mg-col-10"><?= thanhtien ?></div>
+                    <div class="price-procart text-center col-3 col-md-3 mg-col-10"><?= thanhtien ?></div>
                   </div>
                 </div>
                 <?php
@@ -33,7 +35,10 @@
                   $pro_price_new_qty = $pro_price_new * $quantity;
                 ?>
                   <div class="procart procart-<?= $code ?>">
-                    <div class="row row-10">
+                    <div class="form-row">
+                      <div class="col-1 col-md-1 d-flex align-items-center justify-content-center text-center">
+                        <?= $i + 1 ?>
+                      </div>
                       <div class="pic-procart col-3 col-md-2 mg-col-10">
                         <a class="text-decoration-none" href="<?= $proinfo["slug$lang"] ?>" target="_blank" title="<?= $proinfo["name$lang"] ?>">
                           <?= $fn->getImageCustom(['file'  => $proinfo['file'], 'alt' => $proinfo["name$lang"], 'title' => $proinfo["name$lang"], 'width' => 85, 'height' => 85, 'zc' => 2]) ?>
@@ -42,12 +47,12 @@
                           <i class="fa fa-times-circle"></i><span><?= xoa ?></span>
                         </a>
                       </div>
-                      <div class="info-procart col-6 col-md-5 mg-col-10 d-flex align-items-center">
+                      <div class="info-procart col-5 col-md-4 mg-col-10 d-flex align-items-center justify-content-center">
                         <h3 class="name-procart"><a class="text-decoration-none" href="<?= $proinfo["slug$lang"] ?>" target="_blank" title="<?= $proinfo["name$lang"] ?>"><?= $proinfo["name$lang"] ?></a></h3>
                         <div class="properties-procart">
                         </div>
                       </div>
-                      <div class="quantity-procart col-3 col-md-2 mg-col-10 d-flex align-items-center">
+                      <div class="quantity-procart col-3 col-md-2 mg-col-10 d-flex align-items-center justify-content-center text-center">
                         <div class="price-procart price-procart-rp">
                           <?php if ($proinfo['sale_price']) { ?>
                             <p class="price-new-cart load-price-new-<?= $code ?>">
@@ -62,26 +67,26 @@
                             </p>
                           <?php } ?>
                         </div>
-                        <div class="quantity-counter-procart quantity-counter-procart-<?= $code ?>">
+                        <div class="quantity-counter-procart quantity-counter-procart-<?= $code ?> d-flex align-items-stretch justify-content-between">
                           <span class="counter-procart-minus counter-procart">-</span>
                           <input type="number" class="quantity-procart" min="1" value="<?= $quantity ?>" data-pid="<?= $pid ?>" data-code="<?= $code ?>" />
                           <span class="counter-procart-plus counter-procart">+</span>
                         </div>
                       </div>
-                      <div class="text-center d-flex align-items-center col-3 col-md-3 mg-col-10">
-                        <div class="text-center align-items-center w-100">
+                      <div class="price-procart col-3 col-md-3 mg-col-10 d-flex align-items-center justify-content-center text-center">
+                        <div>
                           <?php if ($proinfo['sale_price']) { ?>
-                            <p class="price-new-cart load-price-new-<?= $code ?>">
-                              <?= $fn->formatMoney($pro_price_new_qty) ?>
-                            </p>
-                            <p class="price-old-cart load-price-<?= $code ?>">
-                              <?= $fn->formatMoney($pro_price_qty) ?>
-                            </p>
-                          <?php } else { ?>
-                            <p class="price-new-cart load-price-<?= $code ?>">
-                              <?= $fn->formatMoney($pro_price_qty) ?>
-                            </p>
-                          <?php } ?>
+                          <p class="price-new-cart load-price-new-<?= $code ?>">
+                            <?= $fn->formatMoney($pro_price_new_qty) ?>
+                          </p>
+                          <p class="price-old-cart load-price-<?= $code ?>">
+                            <?= $fn->formatMoney($pro_price_qty) ?>
+                          </p>
+                        <?php } else { ?>
+                          <p class="price-new-cart load-price-<?= $code ?>">
+                            <?= $fn->formatMoney($pro_price_qty) ?>
+                          </p>
+                        <?php } ?>
                         </div>
                       </div>
                     </div>
@@ -90,7 +95,7 @@
               </div>
               <div class="money-procart">
                 <?php if ($config['order']['ship']) { ?>
-                  <div class="total-procart">
+                  <div class="total-procart d-flex align-items-center justify-content-between">
                     <p><?= tamtinh ?>:</p>
                     <p class="total-price load-price-temp">
                       <?= $fn->formatMoney($cart->getOrderTotal()) ?>
@@ -98,12 +103,12 @@
                   </div>
                 <?php } ?>
                 <?php if ($config['order']['ship']) { ?>
-                  <div class="total-procart">
+                  <div class="total-procart d-flex align-items-center justify-content-between">
                     <p><?= phivanchuyen ?>:</p>
                     <p class="total-price load-price-ship">0đ</p>
                   </div>
                 <?php } ?>
-                <div class="total-procart">
+                <div class="total-procart d-flex align-items-center justify-content-between">
                   <p><?= tongtien ?>:</p>
                   <p class="total-price load-price-total"><?= $fn->formatMoney($cart->getOrderTotal()) ?></p>
                 </div>
@@ -124,15 +129,15 @@
                 </div>
                 <p class="title-cart"><?= thongtingiaohang ?>:</p>
                 <div class="information-cart">
-                  <div class="row row-10">
-                    <div class="input-cart col-md-6 mg-col-10">
+                  <div class="row .row-10">
+                    <div class="input-cart col-md-6">
                       <div class="form-floating form-floating-cus">
                         <input type="text" class="form-control text-sm" id="fullname" name="dataOrder[fullname]" placeholder="<?= hoten ?>" value="<?= (!empty($flash->has('fullname'))) ? $flash->get('fullname') : '' ?>" .required />
                         <label for="fullname"><?= hoten ?></label>
                       </div>
                       <div class="invalid-feedback"><?= vuilongnhaphoten ?></div>
                     </div>
-                    <div class="input-cart col-md-6 mg-col-10">
+                    <div class="input-cart col-md-6">
                       <div class="form-floating form-floating-cus">
                         <input type="number" class="form-control text-sm" id="phone" name="dataOrder[phone]" placeholder="<?= dienthoai ?>" value="<?= (!empty($flash->has('phone'))) ? $flash->get('phone') : '' ?>" .required />
                         <label for="phone"><?= dienthoai ?></label>

@@ -45,19 +45,25 @@
     <li class="<?= ($type == 'gioi-thieu') ? 'active' : '' ?>"><a href="gioi-thieu">Giới thiệu</a></li>
     <li class="">
       <a href="san-pham">Sản phẩm</a>
-      <?php if (!empty($menuData)): ?>
+      <?php
+      $listsMenuM = $db->rawQuery("select id,name{$lang},slug{$lang},file from tbl_product_list where type = 'san-pham' and find_in_set('hienthi',status) order by numb,id desc");
+      if (!empty($listsMenuM)): ?>
         <ul>
-          <?php foreach ($menuData as $v_list): ?>
+          <?php foreach ($listsMenuM as $v_list): ?>
             <li>
               <a href="<?= $v_list["slug$lang"] ?>"><?= $v_list["name$lang"] ?></a>
-              <?php if (!empty($v_list['cat'])): ?>
+              <?php
+              $cats = $db->rawQuery("select id,name{$lang},slug{$lang} from tbl_product_cat where id_list = ? and find_in_set('hienthi',status) order by numb,id desc", [$v_list['id']]);
+              if (!empty($cats)): ?>
                 <ul>
-                  <?php foreach ($v_list['cat'] as $v_cat): ?>
+                  <?php foreach ($cats as $v_cat):
+                    $items = $db->rawQuery("select id,name{$lang},slug{$lang} from tbl_product_item where id_cat = ? and find_in_set('hienthi',status) order by numb,id desc", [$v_cat['id']]);
+                  ?>
                     <li>
                       <a href="<?= $v_cat["slug$lang"] ?>"><?= $v_cat["name$lang"] ?></a>
-                      <?php if (!empty($v_cat['item'])): ?>
+                      <?php if (!empty($items)): ?>
                         <ul>
-                          <?php foreach ($v_cat['item'] as $v_item): ?>
+                          <?php foreach ($items as $v_item): ?>
                             <li><a href="<?= $v_item["slug$lang"] ?>"><?= $v_item["name$lang"] ?></a></li>
                           <?php endforeach; ?>
                         </ul>
@@ -73,9 +79,9 @@
     </li>
     <li class="">
       <a>Thương hiệu</a>
-      <?php if (!empty($brand_menu)): ?>
+      <?php if (!empty($brand)): ?>
         <ul>
-          <?php foreach ($brand_menu as $b): ?>
+          <?php foreach ($brand as $b): ?>
             <li>
               <a href="<?= $b["slug$lang"] ?>"><?= $b["name$lang"] ?></a>
             </li>
@@ -83,9 +89,19 @@
         </ul>
       <?php endif; ?>
     </li>
-    <li class="<?= ($type == 'huong-dan-choi') ? 'active' : '' ?>"><a href="huong-dan-choi">Hướng dẫn chơi</a></li>
-    <li class="<?= ($type == 'tin-tuc') ? 'active' : '' ?>"><a href="tin-tuc">Tin tức</a></li>
     <li class="<?= ($type == 'mua-hang') ? 'active' : '' ?>"><a href="mua-hang">Mua hàng</a></li>
+    <li class="">
+      <a href="">BLOG</a>
+      <?php if (!empty($news_list)): ?>
+        <ul>
+          <?php foreach ($news_list as $n): ?>
+            <li>
+              <a href="<?= $n["slug$lang"] ?>"><?= $n["name$lang"] ?></a>
+            </li>
+          <?php endforeach; ?>
+        </ul>
+      <?php endif; ?>
+    </li>
     <li class="<?= ($type == 'lien-he') ? 'active' : '' ?>"><a href="lien-he">Liên hệ</a></li>
   </ul>
 </nav>

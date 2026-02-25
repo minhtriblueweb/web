@@ -4,7 +4,7 @@
       <?= $fn->getImageCustom(['width' => $optsetting_json["{$type}_man_width"], 'height' => $optsetting_json["{$type}_man_height"], 'zc' => $optsetting_json["{$type}_man_zc"], 'file' => $v['file'], 'class' => 'w-100', 'alt' => $v["name$lang"], 'title' => $v["name$lang"], 'lazy' => true]) ?>
     </a>
   </div>
-  <div class="time my-2"><i class="fa-regular fa-calendar me-2"></i><?= $fn->makeDate(strtotime($v["updated_at"]), '/', $lang, false); ?> - ADMIN</div>
+  <div class="time my-2"><i class="fa-regular fa-calendar me-2"></i><?= $fn->makeDate(strtotime($v["date_updated"]), '/', $lang, false); ?> - ADMIN</div>
   <a href="<?= $v["slug$lang"] ?>">
     <div class="content">
       <h3 class="text-split"><?= $v["name$lang"] ?></h3>

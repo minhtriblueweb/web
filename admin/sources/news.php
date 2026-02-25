@@ -112,6 +112,15 @@ switch ($act) {
     deleteNews('brand');
     break;
 
+  case "copy":
+    if ($act === 'copy' && !($config['news'][$type]['copy'] ?? false)) {
+      $fn->transfer(trangkhongtontai, "index.php", false);
+      return false;
+    }
+    saveNews('man');
+    $template = "news/man/news_form";
+    break;
+
   default:
     $fn->transfer(trangkhongtontai, "index.php", false);
     break;
@@ -152,7 +161,7 @@ function deleteNews(string $level)
 }
 function saveNews(string $level)
 {
-  global $id, $table, $db, $fn, $type, $config, $strUrl, $gallery, $result, $seo_data;
+  global $id, $id_copy, $table, $db, $fn, $type, $config, $strUrl, $gallery, $result, $seo_data;
 
   $isMan = ($level === 'man');
   $table = $isMan ? 'tbl_news' : "tbl_news_$level";
@@ -161,14 +170,12 @@ function saveNews(string $level)
   $linkMan  = "index.php?page=news&act=$act&type=$type";
   $linkForm = "index.php?page=news&act=form" . ($isMan ? '' : "_$level") . "&type=$type";
 
+  $id_copy = filter_input(INPUT_GET, 'id_copy', FILTER_VALIDATE_INT);
   $id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
   $newsConfig = $config['news'][$type] ?? [];
 
   /* ================== SAVE ================== */
-  if (
-    $_SERVER['REQUEST_METHOD'] === 'POST'
-    && (isset($_POST['add']) || isset($_POST['edit']) || isset($_POST['save-here']))
-  ) {
+  if ((isset($_POST['add']) || isset($_POST['edit']) || isset($_POST['save-here']))) {
     $isSaveHere = isset($_POST['save-here']);
 
     $redirect = $linkMan . $strUrl;
@@ -200,24 +207,19 @@ function saveNews(string $level)
 
   /* ================== EDIT ================== */
   $result = $seo_data = [];
-  if ($id) {
-    $result = $db->rawQueryOne("SELECT * FROM `$table` WHERE id = ?", [$id]);
+  $isId = $id_copy ?: $id;
+  if ($isId) {
+    $result = $db->rawQueryOne("SELECT * FROM `$table` WHERE id = ?", [$isId]);
     if (!$result) {
       $fn->transfer(dulieukhongcothuc, $linkMan, false);
     }
 
     if (!empty($newsConfig["seo_$level"] ?? $newsConfig['seo'] ?? false)) {
-      $seo_data = $db->rawQueryOne(
-        "SELECT * FROM `tbl_seo` WHERE id_parent = ? AND type = ? AND act = ?",
-        [$id, $type, $act]
-      );
+      $seo_data = $db->rawQueryOne("SELECT * FROM `tbl_seo` WHERE id_parent = ? AND type = ? AND act = ?",[$isId, $type, $act]);
     }
 
     if (!empty($newsConfig["gallery_$level"] ?? $newsConfig['gallery'] ?? false)) {
-      $gallery = $db->rawQuery(
-        "SELECT * FROM `tbl_gallery` WHERE id_parent = ? AND type = ? ORDER BY numb, id DESC",
-        [$id, $type]
-      );
+      $gallery = $db->rawQuery("SELECT * FROM `tbl_gallery` WHERE id_parent = ? AND type = ? ORDER BY numb, id DESC",[$isId, $type]);
     }
   }
 }

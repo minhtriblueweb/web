@@ -1,9 +1,41 @@
+<?php
+if (isset($id_copy) && $id_copy > 0) {$breadcrumb = 'Sao chép';}
+elseif ($id > 0) {$breadcrumb = capnhat;}
+else {$breadcrumb = themmoi;}
+/* Check cols */
+if (isset($config['product'][$type]['gallery']) && count($config['product'][$type]['gallery']) > 0) {
+  foreach ($config['product'][$type]['gallery'] as $key => $value) {
+    if ($key == $type) {
+      $keyGallery = $key;
+      $flagGallery = true;
+      break;
+    }
+  }
+}
+
+if (
+  (isset($config['product'][$type]['dropdown']) && $config['product'][$type]['dropdown'] == true) ||
+  (isset($config['product'][$type]['brand']) && $config['product'][$type]['brand'] == true) ||
+  (isset($config['product'][$type]['tags']) && $config['product'][$type]['tags'] == true) ||
+  (isset($config['product'][$type]['color']) && $config['product'][$type]['color'] == true) ||
+  (isset($config['product'][$type]['size']) && $config['product'][$type]['size'] == true) ||
+  (isset($config['product'][$type]['images']) && $config['product'][$type]['images'] == true)
+) {
+  $colLeft = "col-xl-8";
+  $colRight = "col-xl-4";
+} else {
+  $colLeft = "col-12";
+  $colRight = "d-none";
+}
+?>
 <section class="content-header text-sm">
   <div class="container-fluid">
     <div class="row">
       <ol class="breadcrumb float-sm-left">
         <li class="breadcrumb-item"><a href="index.php" title="<?= dashboard ?>"><?= dashboard ?></a></li>
-        <li class="breadcrumb-item active"><?= ($id > 0 ? capnhat : themmoi) . ' ' . ($config['product'][$type]['title_main'] ?? '') ?></li>
+        <li class="breadcrumb-item active">
+          <?= $breadcrumb . ' ' . ($config['product'][$type]['title_main'] ?? '') ?>
+        </li>
       </ol>
     </div>
   </div>
@@ -21,8 +53,9 @@
       </button>
       <a class="btn btn-sm bg-gradient-danger" href="<?= $linkMan ?>" title="<?= thoat ?>"><i class="fas fa-sign-out-alt mr-2"></i><?= thoat ?></a>
     </div>
+    <?= $flash->getMessages('admin') ?>
     <div class="row">
-      <div class="col-xl-8">
+      <div class="<?= $colLeft ?>">
         <?php if (!empty($config['product'][$type]['slug'])): ?>
           <?php include TEMPLATE . LAYOUT . 'slug.php'; ?>
         <?php endif; ?>
@@ -66,9 +99,10 @@
                         <label for="name<?= $k ?>"><?= tieude ?> (<?= $k ?>):</label>
                         <input type="text"
                           class="form-control for-seo text-sm"
-                          name="data[name<?= $k ?>]" id="name<?= $k ?>"
+                          name="data[name<?= $k ?>]"
+                          id="name<?= $k ?>"
                           placeholder="<?= tieude ?> (<?= $k ?>)"
-                          value="<?= $_POST['name' . $k] ?? ($result['name' . $k] ?? '') ?>"
+                          value="<?= (!empty($flash->has('name' . $k))) ? $flash->get('name' . $k) : @$result['name' . $k] ?>"
                           <?= ($k == $lang) ? 'required' : '' ?> />
                       </div>
 
@@ -76,7 +110,7 @@
                       <?php if (!empty($config['product'][$type]['desc_cke']) || !empty($config['product'][$type]['desc'])): ?>
                         <div class="form-group">
                           <label for="desc<?= $k ?>"><?= mota ?> (<?= $k ?>):</label>
-                          <textarea rows="4" class="form-control for-seo text-sm <?= !empty($config['product'][$type]['desc_cke']) ? 'form-control-ckeditor' : '' ?>" name="data[desc<?= $k ?>]" id="desc<?= $k ?>" placeholder="<?= mota ?> (<?= $k ?>)"><?= $_POST['desc' . $k] ?? ($result['desc' . $k] ?? '') ?></textarea>
+                          <textarea rows="4" class="form-control for-seo text-sm <?= !empty($config['product'][$type]['desc_cke']) ? 'form-control-ckeditor' : '' ?>" name="data[desc<?= $k ?>]" id="desc<?= $k ?>" placeholder="<?= mota ?> (<?= $k ?>)"><?= (!empty($flash->has('desc' . $k))) ? $flash->get('desc' . $k) : @$result['desc' . $k] ?></textarea>
                         </div>
                       <?php endif; ?>
 
@@ -84,7 +118,7 @@
                       <?php if (!empty($config['product'][$type]['content_cke']) || !empty($config['product'][$type]['content'])): ?>
                         <div class="form-group">
                           <label for="content<?= $k ?>"><?= mota ?> (<?= $k ?>):</label>
-                          <textarea rows="4" class="form-control for-seo text-sm <?= !empty($config['product'][$type]['content_cke']) ? 'form-control-ckeditor' : '' ?>" name="data[content<?= $k ?>]" id="content<?= $k ?>" placeholder="<?= mota ?> (<?= $k ?>)"><?= $_POST['content' . $k] ?? ($result['content' . $k] ?? '') ?></textarea>
+                          <textarea rows="4" class="form-control for-seo text-sm <?= !empty($config['product'][$type]['content_cke']) ? 'form-control-ckeditor' : '' ?>" name="data[content<?= $k ?>]" id="content<?= $k ?>" placeholder="<?= mota ?> (<?= $k ?>)"><?= (!empty($flash->has('content' . $k))) ? $flash->get('content' . $k) : @$result['content' . $k] ?></textarea>
                         </div>
                       <?php endif; ?>
                     </div>
@@ -95,7 +129,7 @@
           </div>
         </div>
       </div>
-      <div class="col-xl-4">
+      <div class="<?= $colRight ?>">
         <div class="card card-primary card-outline text-sm">
           <div class="card-header">
             <h3 class="card-title"><?= chondanhmuc ?> <?= $config['product'][$type]['title_main'] ?></h3>
@@ -194,7 +228,7 @@
               <?php endif; ?>
             </div>
             <div class="form-group">
-              <?php foreach ($config['product'][$type]['check'] as $check => $label): ?>
+              <?php foreach ($config['product'][$type]['check'] as $check => $breadcrumb): ?>
                 <div class="form-group d-inline-block mb-2 mr-4">
                   <label for="<?= $check ?>-checkbox" class="d-inline-block align-middle mb-0 mr-3 form-label"><?= defined($check) ? constant($check) : $check ?>:</label>
                   <label class="switch switch-success">
@@ -210,8 +244,7 @@
             </div>
             <div class="form-group">
               <label for="numb" class="d-inline-block align-middle mb-0 mr-2"><?= sothutu ?>:</label>
-              <input type="number" class="form-control form-control-mini d-inline-block align-middle text-sm" min="0"
-                name="data[numb]" id="numb" placeholder="Số thứ tự" value="<?= $_POST['numb'] ?? (!empty($id) ? $result['numb'] : '1') ?>" />
+              <input type="number" class="form-control form-control-mini d-inline-block align-middle text-sm" min="0" name="data[numb]" id="numb" placeholder="Số thứ tự" value="<?= $_POST['numb'] ?? (!empty($id) ? $result['numb'] : '1') ?>" />
             </div>
           </div>
         </div>
@@ -227,7 +260,7 @@
             <div class="card-body">
               <?php
               $photoDetail = array();
-              $photoDetail['image'] = $result['file'] ?? '';
+              $photoDetail['image'] = (!empty($result['file']) && $act != 'copy') ? $result['file'] : '';
               $photoDetail['dimension'] = "Width: " . $config['product'][$type]['width'] . " px - Height: " . $config['product'][$type]['height'] . " px (" . $config['product'][$type]['img_type'] . ")";
               include TEMPLATE . LAYOUT . "image.php"; ?>
             </div>

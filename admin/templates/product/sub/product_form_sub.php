@@ -120,7 +120,7 @@
               <?php endif; ?>
               <?php if (!empty($config['product'][$type]['item'])) : ?>
                 <div class="form-group col-xl-6 col-sm-4">
-                  <label class="d-block" for="id_sub"><?= danhmuccap3 ?>:</label>
+                  <label class="d-block" for="id_item"><?= danhmuccap3 ?>:</label>
                   <?= $fn->getAjaxCategory('product', 'item', $type) ?>
                 </div>
               <?php endif; ?>

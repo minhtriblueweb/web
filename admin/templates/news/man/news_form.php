@@ -1,4 +1,12 @@
 <?php
+if (isset($id_copy) && $id_copy > 0) {
+  $breadcrumb = 'Sao chép';
+} elseif ($id > 0) {
+  $breadcrumb = capnhat;
+} else {
+  $breadcrumb = themmoi;
+}
+
 if ((isset($config['news'][$type]['tags']) && $config['news'][$type]['tags'] == true) ||
   (isset($config['news'][$type]['images']) && $config['news'][$type]['images'] == true)
 ) {
@@ -14,7 +22,9 @@ if ((isset($config['news'][$type]['tags']) && $config['news'][$type]['tags'] == 
     <div class="row">
       <ol class="breadcrumb float-sm-left">
         <li class="breadcrumb-item"><a href="index.php" title="<?= dashboard ?>"><?= dashboard ?></a></li>
-        <li class="breadcrumb-item active"><?= ($id > 0 ? capnhat : themmoi) . ' ' . ($config['news'][$type]['title_main'] ?? '') ?></li>
+        <li class="breadcrumb-item active">
+          <?= $breadcrumb . ' ' . ($config['news'][$type]['title_main'] ?? '') ?>
+        </li>
       </ol>
     </div>
   </div>
@@ -165,7 +175,7 @@ if ((isset($config['news'][$type]['tags']) && $config['news'][$type]['tags'] == 
             <div class="card-body">
               <?php
               $photoDetail = array();
-              $photoDetail['image'] = $result['file'] ?? '';
+              $photoDetail['image'] = (!empty($result['file']) && $act != 'copy') ? $result['file'] : '';
               $photoDetail['dimension'] = "Width: " . $config['news'][$type]['width'] . " px - Height: " . $config['news'][$type]['height'] . " px (" . $config['news'][$type]['img_type'] . ")";
               include TEMPLATE . LAYOUT . "image.php"; ?>
             </div>

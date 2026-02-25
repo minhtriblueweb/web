@@ -8,6 +8,7 @@ switch ($act) {
   case 'delete':
     delete();
     break;
+
   case 'delete_multiple':
     deleteMultiple();
     break;

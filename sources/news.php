@@ -14,7 +14,7 @@ if ($id != '') {
   // Trang bài viết detail
 
   /* Lấy bài viết detail */
-  $rowDetail = $db->rawQueryOne("select id, views, created_at, id_list, id_cat, id_item, id_sub, type, name$lang, slug$lang, desc$lang, content$lang, file from tbl_news where id = ? and type = ? and find_in_set('hienthi',status) limit 0,1", array($id, $type));
+  $rowDetail = $db->rawQueryOne("select id, views, date_created, id_list, id_cat, id_item, id_sub, type, name$lang, slug$lang, desc$lang, content$lang, file from tbl_news where id = ? and type = ? and find_in_set('hienthi',status) limit 0,1", array($id, $type));
 
   /* Lấy cấp 1 */
   $newsList = $db->rawQueryOne("select id, name$lang, slug$lang from tbl_news_list where id = ? and type = ? and find_in_set('hienthi',status) limit 0,1", array($rowDetail['id_list'], $type));
@@ -72,7 +72,7 @@ if ($id != '') {
   $perPage = 6;
   $startpoint = ($curPage * $perPage) - $perPage;
   $limit = " limit " . $startpoint . "," . $perPage;
-  $sql = "select id,id_list,file, name{$lang}, slug{$lang}, desc{$lang}, updated_at from tbl_news where $where order by numb,id desc $limit";
+  $sql = "select id,id_list,file, name{$lang}, slug{$lang}, desc{$lang}, date_updated from tbl_news where $where order by numb,id desc $limit";
   $news = $db->rawQuery($sql, $params);
   $sqlNum = "select count(*) as 'num' from tbl_news where $where order by numb,id desc";
   $count = $db->rawQueryOne($sqlNum, $params);
@@ -107,7 +107,7 @@ if ($id != '') {
   /* Trang danh sách  */
   $where  = "type = ? AND FIND_IN_SET('hienthi', status)";
   $params = [$type];
-  $sql = "select id,id_list,file,slug{$lang},name{$lang},desc{$lang},updated_at,views from `tbl_news` where $where order by numb, id desc";
+  $sql = "select id,id_list,file,slug{$lang},name{$lang},desc{$lang},date_updated,views from `tbl_news` where $where order by numb, id desc";
   $news = $db->rawQuery($sql, $params);
 
   // $news_list = $db->rawQuery("SELECT id,slug$lang, name$lang FROM tbl_news_list WHERE type = 'tin-tuc' AND FIND_IN_SET('hienthi', status) ORDER BY numb, id DESC");

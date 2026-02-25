@@ -400,7 +400,6 @@ $(document).on("change", 'input[type="file"]', function () {
   const file = this.files[0];
   const zone = input.closest(".photoUpload-zone");
   if (!file || !zone.length) return;
-
   const reader = new FileReader();
   reader.onload = function (e) {
     zone.find(".photoUpload-detail").remove();
@@ -1308,7 +1307,6 @@ $(document).ready(function () {
       var level = parseInt($(this).data('level'));
       var table = $(this).data('table');
       var type = $(this).data('type');
-
       if ($('#' + child).length) {
         $.ajax({
           url: 'api/category.php',
@@ -1334,7 +1332,6 @@ $(document).ready(function () {
             $('#' + child).html(result);
           }
         });
-
         return false;
       }
     });
@@ -1347,7 +1344,6 @@ $(document).ready(function () {
       var child = $(this).data("child");
       var level = parseInt($(this).data("level"));
       var table = $(this).data("table");
-
       if ($("#" + child).length) {
         $.ajax({
           url: "api/place.php",
@@ -1359,7 +1355,6 @@ $(document).ready(function () {
           },
           success: function (result) {
             var op = "<option value='0'>" + LANG["chondanhmuc"] + "</option>";
-
             if (level == 0) {
               $("#id_district").html(op);
               $("#id_ward").html(op);
@@ -1370,7 +1365,6 @@ $(document).ready(function () {
           },
         });
       }
-
       return false;
     });
   }
@@ -1379,7 +1373,6 @@ $(document).ready(function () {
   if ($(".btn-database").length) {
     $("body").on("click", ".btn-database", function () {
       var action = $(this).data("action");
-
       if (action) {
         holdonOpen();
         $.ajax({
@@ -1418,7 +1411,6 @@ $(document).ready(function () {
                 "</span></div>"
               );
             }
-
             holdonClose();
           },
         });
@@ -1459,13 +1451,10 @@ $(document).ready(function () {
         }, 500);
       } else if (elementsInValid.length) {
         flag = false;
-
-        /* Check elements empty */
         elementsInValid.each(function () {
           $this = $(this);
           cardOffset = $this.parents(".card-body");
           var cardCollapsed = $this.parents(".card.collapsed-card");
-
           if (cardCollapsed.length) {
             cardCollapsed.find(".card-body").show();
             cardCollapsed
@@ -1473,15 +1462,11 @@ $(document).ready(function () {
               .toggleClass("fas fa-plus fas fa-minus");
             cardCollapsed.removeClass("collapsed-card");
           }
-
           var tabPane = $this.parents(".tab-pane");
           var tabPaneID = tabPane.attr("id");
           $('.nav-tabs a[href="#' + tabPaneID + '"]').tab("show");
-
           return false;
         });
-
-        /* Scroll to error */
         if (cardOffset) {
           setTimeout(function () {
             $("html,body").animate(
@@ -1491,17 +1476,12 @@ $(document).ready(function () {
           }, 500);
         }
       }
-
-      /* Holdon close */
       holdonClose();
-
-      /* Check form validated */
       if (!flag) {
         formCheck.addClass("was-validated");
       } else {
         formCheck.removeClass("was-validated");
       }
-
       return flag;
     });
   }
@@ -1529,13 +1509,11 @@ $(document).ready(function () {
   if ($(".select-checkbox").length) {
     var lastChecked = null;
     var $checkboxItem = $(".select-checkbox");
-
     $checkboxItem.click(function (e) {
       if (!lastChecked) {
         lastChecked = this;
         return;
       }
-
       if (e.shiftKey) {
         var start = $checkboxItem.index(this);
         var end = $checkboxItem.index(lastChecked);
@@ -1543,7 +1521,6 @@ $(document).ready(function () {
           .slice(Math.min(start, end), Math.max(start, end) + 1)
           .prop("checked", true);
       }
-
       lastChecked = this;
     });
   }
@@ -1578,39 +1555,30 @@ $(document).ready(function () {
     $(this).siblings("label").html(fileName);
   });
   $(document).ready(function () {
-    // Bắt sự kiện thay đổi file
     $("#file").on("change", function () {
       var input = this;
       if (input.files && input.files[0]) {
         var reader = new FileReader();
-
         reader.onload = function (e) {
-          // Cập nhật src của thẻ img với dữ liệu file ảnh đã chọn
           $("#preview-image").attr("src", e.target.result);
         };
-
-        reader.readAsDataURL(input.files[0]); // Đọc file ảnh
+        reader.readAsDataURL(input.files[0]);
       }
     });
   });
   $(document).ready(function () {
-    // Bắt sự kiện thay đổi file cho mọi input có id bắt đầu bằng 'file'
     $("input[id^='file']").on("change", function () {
       var input = this;
-      var fileName = $(this).val().split("\\").pop(); // Lấy tên file
-      $(this).siblings("label").html(fileName); // Cập nhật tên file vào label
-
+      var fileName = $(this).val().split("\\").pop();
+      $(this).siblings("label").html(fileName);
       if (input.files && input.files[0]) {
         var reader = new FileReader();
-        var inputId = $(this).attr("id"); // Lấy ID của input file
-
+        var inputId = $(this).attr("id");
         reader.onload = function (e) {
-          // Tìm thẻ img tương ứng dựa trên ID của input
-          var previewId = inputId.replace("file", "preview"); // Chuyển đổi id từ file0 -> preview0
-          $("#" + previewId).attr("src", e.target.result); // Cập nhật src của thẻ img tương ứng
+          var previewId = inputId.replace("file", "preview");
+          $("#" + previewId).attr("src", e.target.result);
         };
-
-        reader.readAsDataURL(input.files[0]); // Đọc file ảnh
+        reader.readAsDataURL(input.files[0]);
       }
     });
   });
@@ -1622,7 +1590,6 @@ $(document).ready(function () {
     const table = $checkbox.data("table");
     const attr = $checkbox.data("attr");
     const isChecked = $checkbox.is(":checked");
-
     $.ajax({
       url: "api/status.php",
       type: "POST",
@@ -1656,7 +1623,6 @@ $(document).ready(function () {
       var id = $(this).attr("data-id");
       var table = $(this).attr("data-table");
       var value = $(this).val();
-
       $.ajax({
         url: "api/numb.php",
         type: "POST",
@@ -1667,7 +1633,6 @@ $(document).ready(function () {
           value: value,
         },
       });
-
       return false;
     });
   }
@@ -1677,7 +1642,6 @@ $(document).ready(function () {
     $(".watermark-position label").click(function () {
       if ($(".upload-file-image img").length) {
         var img = $(".upload-file-image img").attr("src");
-
         if (img) {
           $(".watermark-position label img").attr(
             "src",
@@ -1721,29 +1685,29 @@ $(document).ready(function () {
   }
 
   /* Copy */
-  $(function () {
-    $('body').on('click', '.copy-now', function (e) {
-      e.preventDefault();
-      var id = $(this).data('id');
-      var table = $(this).data('table');
+  if ($('.copy-now').length) {
+    $('body').on('click', '.copy-now', function () {
+      var id = $(this).attr('data-id');
+      var table = $(this).attr('data-table');
+      var copyimg = $(this).attr('data-copyimg');
       holdonOpen();
       $.ajax({
         url: 'api/copy.php',
         type: 'POST',
-        dataType: 'json',
-        data: { id: id, table: table },
-        success: function (res) {
-          holdonClose();
-          location.reload(true);
+        dataType: 'html',
+        async: false,
+        data: {
+          id: id,
+          table: table,
+          copyimg: copyimg
         },
-        error: function () {
+        success: function () {
           holdonClose();
-          alert('Có lỗi xảy ra, vui lòng thử lại.');
-          location.reload(true);
         }
       });
+      window.location.reload(true);
     });
-  });
+  }
 
   /* Sort filer */
   if (ACTIVE_GALLERY) {
@@ -1796,50 +1760,6 @@ $(document).ready(function () {
     }
   });
 
-  // $("body").on("click", ".filer-checkbox", function () {
-  //   var input = $(".my-jFiler-items .jFiler-items-list").find(
-  //     "input.filer-checkbox:checked"
-  //   );
-
-  //   if (input.length) $(".sort-filer").attr("disabled", true);
-  //   else $(".sort-filer").attr("disabled", false);
-  // });
-
-  // $("body").on("click", ".sort-filer", function () {
-  //   var jFilerItems = $("#jFilerSortable").find(".my-jFiler-item");
-
-  //   if ($(this).hasClass("active")) {
-  //     sortable.option("disabled", true);
-  //     $(this).removeClass("active");
-  //     $(".alert-sort-filer").hide();
-  //     $(".my-jFiler-item-trash").show();
-  //     jFilerItems.each(function () {
-  //       $(this).find("input").attr("disabled", false);
-  //       $(this).removeClass("moved");
-  //     });
-  //   } else {
-  //     sortable.option("disabled", false);
-  //     $(this).addClass("active");
-  //     $(".alert-sort-filer").show();
-  //     $(".my-jFiler-item-trash").hide();
-  //     jFilerItems.each(function () {
-  //       $(this).find("input").attr("disabled", true);
-  //       $(this).addClass("moved");
-  //     });
-  //   }
-  // });
-
-
-  // $(document).on("click", ".my-jFiler-item-trash", function () {
-  //   const id = $(this).data("id");
-  //   const folder = $(this).data("folder");
-  //   const value = id + "," + folder;
-  //   let deleted = $(".deleted-images").val();
-  //   deleted += deleted ? "|" + value : value;
-  //   $(".deleted-images").val(deleted);
-  //   confirmDialog("delete-filer", LANG["bancochacmuonxoahinhanhnay"], value);
-  // });
-
   $(document).on("click", ".jFiler-item-trash-action", function () {
     const $btn = $(this);
     const $item = $btn.closest(".jFiler-item");
@@ -1859,8 +1779,6 @@ $(document).ready(function () {
     }
   });
 
-
-
   /* Delete all filer */
   $("body").on("click", ".delete-all-filer", function () {
     const folder = $(".folder-filer").val();
@@ -1875,82 +1793,12 @@ $(document).ready(function () {
   $("form.validation-form").append(
     '<input type="hidden" name="hash" value="' + HASH + '" />'
   );
+
+  /* Filer */
   $("#filer-gallery").attr({
     "data-params": BASE64_QUERY_STRING,
     "data-hash": HASH,
   });
-
-  /* Change info filer */
-  // $("body").on("change", ".my-jFiler-item-info", function () {
-  //   var id = $(this).data("id");
-  //   var info = $(this).data("info");
-  //   var value = $(this).val();
-  //   var id_parent = ID;
-  //   var com = COM;
-  //   var kind = ACT;
-  //   var type = TYPE;
-  //   var colfiler = $(".col-filer").val();
-  //   var actfiler = $(".act-filer").val();
-  //   var cmd = "info";
-
-  //   $.ajax({
-  //     type: "POST",
-  //     dataType: "html",
-  //     url: "api/filer.php",
-  //     async: false,
-  //     data: {
-  //       id: id,
-  //       id_parent: id_parent,
-  //       info: info,
-  //       value: value,
-  //       com: com,
-  //       kind: actfiler,
-  //       type: type,
-  //       colfiler: colfiler,
-  //       cmd: cmd,
-  //       hash: HASH,
-  //     },
-  //     success: function (result) {
-  //       destroySortFiler();
-  //       $("#jFilerSortable").html(result);
-  //       createSortFiler();
-  //     },
-  //   });
-
-  //   return false;
-  // });
-  /* Filer */
-  // $(document).ready(function () {
-  //   $('#filer-gallery').on('change', function () {
-  //     const files = this.files;
-  //     const $preview = $('#preview-gallery');
-  //     const colClass = $('.col-filer').val() || 'col-3';
-
-  //     $preview.empty(); // Clear preview on every change
-
-  //     if (!files.length) return;
-
-  //     Array.from(files).forEach((file, index) => {
-  //       const allowedExt = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
-  //       const ext = file.name.split('.').pop().toLowerCase();
-
-  //       if (!allowedExt.includes(ext)) return;
-
-  //       const reader = new FileReader();
-  //       reader.onload = function (e) {
-  //         const imgHtml = `
-  //         <div class="${colClass} mb-3">
-  //           <div class="border p-1 shadow-sm rounded">
-  //             <img src="${e.target.result}" class="img-fluid" alt="Ảnh ${index + 1}">
-  //           </div>
-  //         </div>
-  //       `;
-  //         $preview.append(imgHtml);
-  //       };
-  //       reader.readAsDataURL(file);
-  //     });
-  //   });
-  // });
   $(".btn-submit-HoldOn").on("click", function () {
     HoldOn.open({
       theme: "sk-circle",
@@ -1960,8 +1808,14 @@ $(document).ready(function () {
   if ($("#filer-gallery").length) {
     $("#filer-gallery").filer({
       limit: null,
-      maxSize: null, removeConfirmation: false,
+      maxSize: null,
       extensions: ["jpg", "png", "jpeg", "webp"],
+      theme: "dragdropbox",
+      showThumbs: true,
+      addMore: true,
+      allowDuplicates: false,
+      clipBoardPaste: false,
+      dragDrop: true,
       changeInput:
         '<div class="jFiler-input-dragDrop">' +
         '  <div class="jFiler-input-inner">' +
@@ -2360,7 +2214,7 @@ $(document).ready(function () {
 
   /* Monaco */
   if ($('.form-control-monaco').length) {
-    require.config({ paths: { vs: './monaco/min/vs' }});
+    require.config({ paths: { vs: './monaco/min/vs' } });
     require(['vs/editor/editor.main'], function () {
       monaco.editor.defineTheme('myDark', {
         base: 'vs-dark',
@@ -2491,35 +2345,29 @@ $(function () {
     searchInputWrapper.removeClass('d-none');
     searchInput.focus();
   });
-
   /* Đóng tìm kiếm */
   btnClose.on('click', closeSearch);
-
   /* Click ra ngoài thì đóng */
   $(document).on('click', function (e) {
     if (!$(e.target).closest('.search-input-wrapper').length) {
       closeSearch();
     }
   });
-
   function closeSearch() {
     searchInputWrapper.addClass('d-none');
     searchInput.val('');
     searchMenu.removeClass('tt-open');
     $('.content-backdrop').removeClass('show');
   }
-
   /* Tìm kiếm */
   searchInput.on('input', function () {
     const keyword = $(this).val().trim();
     $('.content-backdrop').addClass('show');
     clearTimeout(searchTimeout);
-
     if (!keyword) {
       searchMenu.removeClass('tt-open');
       return;
     }
-
     searchTimeout = setTimeout(() => {
       $.ajax({
         url: 'api/search.php',
@@ -2531,7 +2379,6 @@ $(function () {
       });
     }, 300);
   });
-
   function renderResult(res) {
     if (!res?.success || !res.data?.length) {
       return renderNotFound();
@@ -2559,10 +2406,8 @@ $(function () {
         </a>
       `;
     });
-
     searchMenu.html(html).addClass('tt-open');
   }
-
   function renderNotFound() {
     searchMenu.html(`
       <div class="not-found px-3 py-2">
@@ -2574,7 +2419,6 @@ $(function () {
       </div>
     `).addClass('tt-open');
   }
-
   function renderError() {
     searchMenu.html(`
       <div class="not-found px-3 py-2">
@@ -2586,7 +2430,6 @@ $(function () {
       </div>
     `).addClass('tt-open');
   }
-
   /* Phím tắt Ctrl + / */
   $(document).on('keydown', function (e) {
     if (e.ctrlKey && e.which === 191) {

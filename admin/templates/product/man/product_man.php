@@ -3,9 +3,11 @@ $linkProduct = "index.php?page=product&type=" . $type;
 $linkMan   = "$linkProduct&act=man";
 $linkForm  = "$linkProduct&act=form";
 $linkEdit = "index.php?page=product&act=form&type=" . $type;
+$linkCopy = "index.php?page=product&act=copy&type=" . $type;
 $linkDelete = "index.php?page=product&act=delete&type=" . $type;
 $linkGalleryMan  = "index.php?page=gallery&act=man&type=$type&id=";
 $linkGalleryForm  = "index.php?page=gallery&act=form&type=$type&id=";
+$copyImg = (isset($config['product'][$type]['copy_image']) && $config['product'][$type]['copy_image'] == true) ? TRUE : FALSE;
 ?>
 <section class="content-header text-sm">
   <div class="container-fluid">
@@ -106,6 +108,7 @@ $linkGalleryForm  = "index.php?page=gallery&act=form&type=$type&id=";
                       <a href="<?= $linkEdit . $linkID ?>&id=<?= $row['id'] ?>" title="<?= $row["name$lang"] ?>"><?= $fn->getImage(['file' => $row['file'], 'class' => 'rounded img-preview', 'alt' => $row["name$lang"]]) ?></a>
                     </td>
                   <?php endif; ?>
+
                   <!-- Tên sản phẩm -->
                   <td class="align-middle">
                     <a class="text-dark text-break" href="<?= $linkEdit . $linkID ?>&id=<?= $row['id'] ?>" title="<?= $row["name$lang"] ?>">
@@ -124,14 +127,12 @@ $linkGalleryForm  = "index.php?page=gallery&act=form&type=$type&id=";
                         <div class="dropdown">
                           <a id="dropdownCopy" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-link dropdown-toggle text-success p-0 pr-3"><i class="far fa-clone mr-1"></i>Copy</a>
                           <ul aria-labelledby="dropdownCopy" class="dropdown-menu border-0 shadow">
-                            <li><a href="#" class="dropdown-item copy-now" data-id="<?= $row['id'] ?>" data-table="tbl_product"><i class="far fa-caret-square-right text-secondary mr-2"></i><?= saochepngay ?></a></li>
-                            <li><a href="<?= $linkCopy ?>&id_copy=<?= $row['id'] ?>" class="dropdown-item"><i class="far fa-caret-square-right text-secondary mr-2"></i><?= chinhsuathongtin ?></a></li>
+                            <li><a href="#" class="dropdown-item copy-now" data-id="<?= $row['id'] ?>" data-table="<?= $table ?>" data-copyimg="<?= $copyImg ?>"><i class=" far fa-caret-square-right text-secondary mr-2"></i><?= saochepngay ?></a></li>
+                            <li><a href="<?= $linkCopy ?><?= $linkID ?>&id_copy=<?= $row['id'] ?>" class="dropdown-item"><i class="far fa-caret-square-right text-secondary mr-2"></i><?= chinhsuathongtin ?></a></li>
                           </ul>
                         </div>
                       <?php endif; ?>
-                      <a class="text-danger" id="delete-item" data-url="<?= $linkDelete ?>&id=<?= $row['id'] ?>" title="Xóa">
-                        <i class="far fa-trash-alt mr-1"></i>Delete
-                      </a>
+                      <a class="text-danger" id="delete-item" data-url="<?= $linkDelete ?>&id=<?= $row['id'] ?>" title="Xóa"><i class="far fa-trash-alt mr-1"></i>Delete</a>
                     </div>
                   </td>
 
@@ -161,8 +162,18 @@ $linkGalleryForm  = "index.php?page=gallery&act=form&type=$type&id=";
                       </label>
                     </td>
                   <?php endforeach; ?>
+
                   <!-- Hành động -->
                   <td class="align-middle text-center text-md text-nowrap">
+                    <?php if (!empty($config['product'][$type]['copy'])): ?>
+                      <div class="dropdown d-inline-block align-middle">
+                        <a id="dropdownCopy" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-link dropdown-toggle text-success p-0 pr-2"><i class="far fa-clone"></i></a>
+                        <ul aria-labelledby="dropdownCopy" class="dropdown-menu border-0 shadow">
+                          <li><a href="#" class="dropdown-item copy-now" data-id="<?= $row['id'] ?>" data-table="<?= $table ?>" data-copyimg="<?= $copyImg ?>"><i class="far fa-caret-square-right text-secondary mr-2"></i><?= saochepngay ?></a></li>
+                          <li><a href="<?= $linkCopy ?><?= $linkID ?>&id_copy=<?= $row['id'] ?>" class="dropdown-item"><i class="far fa-caret-square-right text-secondary mr-2"></i><?= chinhsuathongtin ?></a></li>
+                        </ul>
+                      </div>
+                    <?php endif; ?>
                     <a class="text-primary mr-2" href="<?= $linkEdit . $linkID ?>&id=<?= $row['id'] ?>" title="<?= chinhsua ?>">
                       <i class="fas fa-edit"></i>
                     </a>

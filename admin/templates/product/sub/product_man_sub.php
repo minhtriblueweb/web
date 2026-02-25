@@ -74,6 +74,7 @@ $linkDelete = "index.php?page=product&act=delete_sub&type=" . $type;
                 $linkID = "";
                 if ($row['id_list']) $linkID .= "&id_list=" . $row['id_list'];
                 if ($row['id_cat']) $linkID .= "&id_cat=" . $row['id_cat'];
+                if ($row['id_item']) $linkID .= "&id_item=" . $row['id_item'];
               ?>
                 <tr>
                   <!-- Checkbox chọn -->

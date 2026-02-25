@@ -14,6 +14,26 @@ class Functions
     $this->db = new Database();
     $this->fm = new Format();
   }
+  /* Copy image */
+  public function copyImg($photo = '')
+  {
+    $str = '';
+    if ($photo != '') {
+      $rand = rand(1000, 9999);
+      $name = pathinfo($photo, PATHINFO_FILENAME);
+      $ext = pathinfo($photo, PATHINFO_EXTENSION);
+      $photo_new = $name . '-' . $rand . '.' . $ext;
+      $oldpath = '../' . UPLOADS . $photo;
+      $newpath = '../' . UPLOADS . $photo_new;
+      if (file_exists($oldpath)) {
+        if (copy($oldpath, $newpath)) {
+          $str = $photo_new;
+        }
+      }
+    }
+    return $str;
+  }
+
   /* Redirect */
   public function redirect($url = '', $response = null)
   {
@@ -1085,7 +1105,6 @@ class Functions
   {
     $canvas = imagecreatetruecolor($w, $h);
     $is_transparent = in_array($image_type, [IMAGETYPE_PNG, IMAGETYPE_WEBP]);
-
     if ($is_transparent && $background === false) {
       imagealphablending($canvas, false);
       imagesavealpha($canvas, true);
@@ -1095,7 +1114,6 @@ class Functions
     } else {
       imagefill($canvas, 0, 0, imagecolorallocate($canvas, 255, 255, 255));
     }
-
     return $canvas;
   }
   private function generateThumbImage(string $source, string $dest, int $w, int $h, int $zc, callable $create_func, int $type, string $ext, bool|array $background): bool
@@ -1363,20 +1381,6 @@ class Functions
       }
     }
     return basename($target_path);
-  }
-  public function copyImage($imageName, $uploadDir)
-  {
-    if (empty($imageName)) return '';
-    $oldPath = rtrim($uploadDir, '/') . '/' . $imageName;
-    if (!file_exists($oldPath)) return '';
-    $ext = pathinfo($imageName, PATHINFO_EXTENSION);
-    $baseName = pathinfo($imageName, PATHINFO_FILENAME);
-    $newName = $baseName . '_' . substr(md5(uniqid()), 0, 6) . '.' . $ext;
-    $newPath = rtrim($uploadDir, '/') . '/' . $newName;
-    if (copy($oldPath, $newPath)) {
-      return $newName;
-    }
-    return '';
   }
 
   public function getImage(array $data = []): string

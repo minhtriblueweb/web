@@ -476,7 +476,7 @@
                   if (isset($is_permission) && $is_permission == true) if ($fn->checkPermission('product', 'man', $k, null, 'phrase-1')) $none = "d-none";
                   if (
                     in_array($page, ['product', 'gallery'], true)
-                    && in_array($act, ['man', 'form'], true)
+                    && in_array($act, ['man', 'form','copy'], true)
                     && $type === $k
                   ) {
                     $active = 'active';
@@ -616,7 +616,7 @@
                   $none = "";
                   $active = "";
                   if (isset($is_permission) && $is_permission == true) if ($fn->checkPermission('news', 'man', $k, null, 'phrase-1')) $none = "d-none";
-                  if ($page == 'news' && ($act == 'man' || $act == 'form') && $k == $_GET['type']) $active = "active";
+                  if ($page == 'news' && ($act == 'man' || $act == 'form' || $act == 'copy') && $k == $_GET['type']) $active = "active";
                   ?>
                   <li class="nav-item <?= $none ?>">
                     <a class="nav-link <?= $active ?>" href="index.php?page=news&act=man&type=<?= $k ?>" title="<?= $v['title_main'] ?>"><i class="nav-icon text-sm far fa-caret-square-right"></i>

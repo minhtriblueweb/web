@@ -63,7 +63,28 @@ class Database
     $stmt->bind_param($types, ...$params);
     return $stmt->execute() ? $this->link->insert_id : false;
   }
-
+  public function update($table, $data)
+  {
+    if (empty($this->where)) {
+      throw new Exception('Update without WHERE is not allowed');
+    }
+    $fields = [];
+    $params = [];
+    foreach ($data as $key => $value) {
+      $fields[] = "`$key` = ?";
+      $params[] = $value;
+    }
+    $sql = "UPDATE {$table} SET " . implode(', ', $fields);
+    $sql .= $this->buildWhere();
+    $params = array_merge($params, $this->whereParams);
+    $stmt = $this->link->prepare($sql);
+    if (!$stmt) return false;
+    $types = str_repeat('s', count($params));
+    $stmt->bind_param($types, ...$params);
+    $result = $stmt->execute();
+    $this->resetQuery();
+    return $result;
+  }
   public function delete($query)
   {
     $delete_row = $this->link->query($query) or die($this->link->error . __LINE__);
@@ -79,12 +100,10 @@ class Database
   {
     $stmt = $this->link->prepare($query);
     if (!$stmt) return false;
-
     if (!empty($params)) {
       $types = str_repeat('s', count($params));
       $stmt->bind_param($types, ...$params);
     }
-
     $stmt->execute();
     $result = $stmt->get_result();
 
@@ -114,7 +133,7 @@ class Database
     }
 
     if (!empty($params)) {
-      $types = str_repeat('s', count($params)); // Tự động assume là chuỗi
+      $types = str_repeat('s', count($params));
       $stmt->bind_param($types, ...$params);
     }
 
@@ -128,12 +147,10 @@ class Database
   {
     $stmt = $this->link->prepare($query);
     if (!$stmt) return false;
-
     if (!empty($params)) {
       $types = str_repeat('s', count($params));
       $stmt->bind_param($types, ...$params);
     }
-
     return $stmt->execute();
   }
 
@@ -141,11 +158,11 @@ class Database
   {
     return $this->link->insert_id;
   }
+
   public function rawQueryArray($query, $params = []): array
   {
     $result = $this->rawQuery($query, $params);
     if (!$result || !($result instanceof mysqli_result)) return [];
-
     $rows = [];
     while ($row = $result->fetch_assoc()) {
       $rows[] = $row;
@@ -157,21 +174,17 @@ class Database
   {
     $stmt = $this->link->prepare($sql);
     if (!$stmt) return null;
-
     if (!empty($params)) {
       $types = str_repeat('s', count($params));
       $stmt->bind_param($types, ...$params);
     }
-
     $stmt->execute();
     $stmt->store_result();
-
     $value = null;
     if ($stmt->num_rows > 0) {
       $stmt->bind_result($value);
       $stmt->fetch();
     }
-
     $stmt->close();
     return $value;
   }
@@ -182,36 +195,16 @@ class Database
     $this->whereParams[] = $value;
     return $this;
   }
+
   private function buildWhere()
   {
     if (empty($this->where)) return '';
     return ' WHERE ' . implode(' AND ', $this->where);
   }
+
   private function resetQuery()
   {
     $this->where = [];
     $this->whereParams = [];
-  }
-  public function update($table, $data)
-  {
-    if (empty($this->where)) {
-      throw new Exception('Update without WHERE is not allowed');
-    }
-    $fields = [];
-    $params = [];
-    foreach ($data as $key => $value) {
-      $fields[] = "`$key` = ?";
-      $params[] = $value;
-    }
-    $sql = "UPDATE {$table} SET " . implode(', ', $fields);
-    $sql .= $this->buildWhere();
-    $params = array_merge($params, $this->whereParams);
-    $stmt = $this->link->prepare($sql);
-    if (!$stmt) return false;
-    $types = str_repeat('s', count($params));
-    $stmt->bind_param($types, ...$params);
-    $result = $stmt->execute();
-    $this->resetQuery();
-    return $result;
   }
 }

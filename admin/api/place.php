@@ -29,7 +29,7 @@ if (!empty($_POST['id']) && isset($_POST['table'], $_POST['level'])) {
       echo $str;
       exit;
   }
-  $rows = $db->rawQuery("SELECT id, name FROM `$table` WHERE $parentCol = ? AND FIND_IN_SET(?,status) ORDER BY id ASC",[$id,'hienthi']);
+  $rows = $db->rawQuery("SELECT id, name FROM `$table` WHERE $parentCol = ? AND FIND_IN_SET('hienthi',status) ORDER BY id ASC",[$id]);
   if (!empty($rows)) {
     foreach ($rows as $v) {
       $str .= '<option value="' . $v['id'] . '">' . $v['name'] . '</option>';

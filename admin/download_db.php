@@ -1,7 +1,14 @@
 <?php
 date_default_timezone_set('Asia/Ho_Chi_Minh'); // Giờ VN
-
-require_once 'init.php';
+define('LIBRARIES', '../libraries/');
+define('UPLOADS', 'uploads/');
+define('THUMB', 'thumb/');
+define('WATERMARK', '../watermark');
+require_once LIBRARIES . 'database.php';
+require_once LIBRARIES . 'autoload.php';
+new AutoLoad();
+$d  = new Database();
+$func = new Functions($d);
 
 // ====== Cấu hình ======
 $backupDir = __DIR__ . '/backups';

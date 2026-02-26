@@ -7,7 +7,7 @@
             <div class="item-criterion hvr-icon-rotate">
               <div class="images">
                 <a class="hvr-icon me-2" title="<?= $row["name$lang"] ?>">
-                  <?= $fn->getImageCustom([
+                  <?= $func->getImageCustom([
                     'file' =>  $row['file'],
                     'width' => $optsetting_json["tieu-chi_man_width"],
                     'height' => $optsetting_json["tieu-chi_man_height"],

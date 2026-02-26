@@ -27,10 +27,10 @@ foreach ($cssFiles as $file) {
 }
 echo $css->get();
 ?>
-<?php if (!$fn->isGoogleSpeed()) { ?>
+<?php if (!$func->isGoogleSpeed()) { ?>
   <!-- Js Google Analytic -->
-  <?= $fn->decodeHtmlChars($optsetting['analytics']) ?>
+  <?= $func->decodeHtmlChars($optsetting['analytics']) ?>
 
   <!-- Js Head -->
-  <?= $fn->decodeHtmlChars($optsetting['headjs']) ?>
+  <?= $func->decodeHtmlChars($optsetting['headjs']) ?>
 <?php } ?>

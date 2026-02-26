@@ -28,7 +28,7 @@
             <div class="form-group d-inline-block mb-2 mr-5">
               <label for="<?= $check ?>-checkbox" class="d-inline-block align-middle mb-0 mr-3 form-label"><?= defined($check) ? constant($check) : $check ?>:</label>
               <label class="switch switch-success">
-                <input type="checkbox" name="data[status][<?= $check ?>]" class="switch-input custom-control-input .show-checkbox" id="<?= $check ?>-checkbox" <?= $fn->is_checked($check, $result['status'] ?? '', $result['id'] ?? '') ?>>
+                <input type="checkbox" name="data[status][<?= $check ?>]" class="switch-input custom-control-input .show-checkbox" id="<?= $check ?>-checkbox" <?= $func->is_checked($check, $result['status'] ?? '', $result['id'] ?? '') ?>>
               </label>
             </div>
           <?php endforeach; ?>
@@ -42,7 +42,7 @@
                   <div class="upload-file-image rounded mb-3">
                     <div class="d-flex justify-content-center">
                       <div class="border rounded bg-white d-flex align-items-center justify-content-center">
-                        <?= $fn->getImage(['file' => $result['file'] ?? '', 'class' => 'img-fluid', 'alt' => $config['photo']['photo_static'][$type]['title_main'], 'title' => $config['photo']['photo_static'][$type]['title_main'], 'id' => 'preview-image', 'style' => 'max-height:100%; max-width:100%;']) ?>
+                        <?= $func->getImage(['file' => $result['file'] ?? '', 'class' => 'img-fluid', 'alt' => $config['photo']['photo_static'][$type]['title_main'], 'title' => $config['photo']['photo_static'][$type]['title_main'], 'id' => 'preview-image', 'style' => 'max-height:100%; max-width:100%;']) ?>
                       </div>
                     </div>
                   </div>
@@ -72,7 +72,7 @@
                   <?php for ($i = 1; $i <= 9; $i++): ?>
                     <label class="<?= ($i === $position) ? 'active' : '' ?>">
                       <input type="radio" name="data[options][position]" value="<?= $i ?>" <?= ($i === $position) ? 'checked' : '' ?>>
-                      <?= $fn->getImage([
+                      <?= $func->getImage([
                         'file' => ($i === $position) ? $result['file'] : '',
                         'class' => 'rounded',
                         'alt'   => 'Watermark Position ' . $i,

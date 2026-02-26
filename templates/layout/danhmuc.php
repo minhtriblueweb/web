@@ -1,4 +1,4 @@
-<?php if (!empty($productCat = $fn->show_data(['table' => 'tbl_product_cat', 'status' => 'hienthi,noibat', 'select' => "id, file,id_list, slug$lang, name$lang"]))): ?>
+<?php if (!empty($productCat = $func->show_data(['table' => 'tbl_product_cat', 'status' => 'hienthi,noibat', 'select' => "id, file,id_list, slug$lang, name$lang"]))): ?>
   <div class="wrap-product-list">
     <div class="wrap-content">
       <div class="title-list-hot">
@@ -9,7 +9,7 @@
           <a href="<?= $v["slug$lang"] ?>" title="<?= $v["name$lang"] ?>">
             <div class="item-list">
               <div class="item-list-img">
-                <?= $fn->getImageCustom(['file'  => $v['file'], 'alt' => $v["name$lang"], 'title' => $v["name$lang"], 'width' => $optsetting_json["san-pham_cat_width"], 'height' => $optsetting_json["san-pham_cat_height"], 'zc' => $optsetting_json["san-pham_cat_zc"]]) ?>
+                <?= $func->getImageCustom(['file'  => $v['file'], 'alt' => $v["name$lang"], 'title' => $v["name$lang"], 'width' => $optsetting_json["san-pham_cat_width"], 'height' => $optsetting_json["san-pham_cat_height"], 'zc' => $optsetting_json["san-pham_cat_zc"]]) ?>
               </div>
               <div class="item-list-name">
                 <h3 class="m-0"><?= $v["name$lang"] ?></h3>

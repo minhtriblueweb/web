@@ -1,23 +1,11 @@
 <?php
-session_start();
-if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-  http_response_code(403);
-  exit('Forbidden');
-}
-require_once __DIR__ . '/../init.php';
-$db = new Database();
+include "config.php";
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-  $table = !empty($_POST['table']) ? $_POST['table'] : '';
-  $id = !empty($_POST['id']) ? (int)$_POST['id'] : 0;
-  $value = isset($_POST['value']) ? $_POST['value'] : '';
-
-  if ($table && $id > 0) {
-    $table = preg_replace('/[^a-zA-Z0-9_]/', '', $table);
-    $result = $db->rawQuery("UPDATE `$table` SET numb = ? WHERE id = ?", [$value, $id]);
-    echo $result ? 'success' : 'error';
-  } else {
-    http_response_code(400);
-    echo 'Thiếu dữ liệu';
-  }
+if (!empty($_POST['id'])) {
+  $table = (!empty($_POST['table'])) ? htmlspecialchars($_POST['table']) : '';
+  $id = (!empty($_POST['id'])) ? htmlspecialchars($_POST['id']) : 0;
+  $value = (!empty($_POST['value'])) ? htmlspecialchars($_POST['value']) : 0;
+  $data['numb'] = $value;
+  $d->where('id', $id);
+  $d->update($table, $data);
 }

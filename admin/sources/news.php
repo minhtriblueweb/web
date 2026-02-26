@@ -1,6 +1,6 @@
 <?php
 if (!defined('SOURCES')) die("Error");
-if (!isset($config['news'][$type])) $fn->transfer(trangkhongtontai, "index.php", false);
+if (!isset($config['news'][$type])) $func->transfer(trangkhongtontai, "index.php", false);
 $curPage = max(1, (int)($_GET['p'] ?? 1));
 $perPage = 10;
 $keyword = $_GET['keyword'] ?? '';
@@ -114,7 +114,7 @@ switch ($act) {
 
   case "copy":
     if ($act === 'copy' && !($config['news'][$type]['copy'] ?? false)) {
-      $fn->transfer(trangkhongtontai, "index.php", false);
+      $func->transfer(trangkhongtontai, "index.php", false);
       return false;
     }
     saveNews('man');
@@ -122,22 +122,22 @@ switch ($act) {
     break;
 
   default:
-    $fn->transfer(trangkhongtontai, "index.php", false);
+    $func->transfer(trangkhongtontai, "index.php", false);
     break;
 }
 function deleteNews(string $level)
 {
-  global $fn, $type, $config;
+  global $func, $type, $config;
   $isMan = ($level === 'man');
   $table = $isMan ? 'tbl_news' : "tbl_news_$level";
   $act   = $isMan ? 'man' : "man_$level";
-  $redirect = "index.php?page=news&act=$act&type=$type";
+  $redirect = "index.php?com=news&act=$act&type=$type";
   $newsConfig = $config['news'][$type] ?? [];
   $delete_seo = $newsConfig["seo_$level"] ?? $newsConfig['seo'] ?? false;
   $delete_gallery = $newsConfig["gallery_$level"] ?? $newsConfig['gallery'] ?? false;
   $id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
   if ($id) {
-    $fn->delete_data([
+    $func->delete_data([
       'id'             => $id,
       'table'          => $table,
       'type'           => $type,
@@ -149,7 +149,7 @@ function deleteNews(string $level)
   }
   $listid = $_GET['listid'] ?? '';
   if ($listid) {
-    $fn->deleteMultiple_data([
+    $func->deleteMultiple_data([
       'listid'         => $listid,
       'table'          => $table,
       'type'           => $type,
@@ -161,14 +161,14 @@ function deleteNews(string $level)
 }
 function saveNews(string $level)
 {
-  global $id, $id_copy, $table, $db, $fn, $type, $config, $strUrl, $gallery, $result, $seo_data;
+  global $id, $id_copy, $table, $d, $func, $type, $config, $strUrl, $gallery, $result, $seo_data;
 
   $isMan = ($level === 'man');
   $table = $isMan ? 'tbl_news' : "tbl_news_$level";
   $act   = $isMan ? 'man' : "man_$level";
 
-  $linkMan  = "index.php?page=news&act=$act&type=$type";
-  $linkForm = "index.php?page=news&act=form" . ($isMan ? '' : "_$level") . "&type=$type";
+  $linkMan  = "index.php?com=news&act=$act&type=$type";
+  $linkForm = "index.php?com=news&act=form" . ($isMan ? '' : "_$level") . "&type=$type";
 
   $id_copy = filter_input(INPUT_GET, 'id_copy', FILTER_VALIDATE_INT);
   $id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
@@ -183,7 +183,7 @@ function saveNews(string $level)
       $redirect = $linkForm . $strUrl . '&id=' . $id;
     }
 
-    $newId = $fn->save_data(
+    $newId = $func->save_data(
       $_POST['data'] ?? [],
       $_FILES,
       $id,
@@ -201,7 +201,7 @@ function saveNews(string $level)
     );
 
     if ($isSaveHere && !$id && $newId > 0) {
-      $fn->transfer(capnhatdulieuthanhcong, $linkForm . $strUrl . '&id=' . $newId, true);
+      $func->transfer(capnhatdulieuthanhcong, $linkForm . $strUrl . '&id=' . $newId, true);
     }
   }
 
@@ -209,23 +209,23 @@ function saveNews(string $level)
   $result = $seo_data = [];
   $isId = $id_copy ?: $id;
   if ($isId) {
-    $result = $db->rawQueryOne("SELECT * FROM `$table` WHERE id = ?", [$isId]);
+    $result = $d->rawQueryOne("SELECT * FROM `$table` WHERE id = ?", [$isId]);
     if (!$result) {
-      $fn->transfer(dulieukhongcothuc, $linkMan, false);
+      $func->transfer(dulieukhongcothuc, $linkMan, false);
     }
 
     if (!empty($newsConfig["seo_$level"] ?? $newsConfig['seo'] ?? false)) {
-      $seo_data = $db->rawQueryOne("SELECT * FROM `tbl_seo` WHERE id_parent = ? AND type = ? AND act = ?",[$isId, $type, $act]);
+      $seo_data = $d->rawQueryOne("SELECT * FROM `tbl_seo` WHERE id_parent = ? AND type = ? AND act = ?",[$isId, $type, $act]);
     }
 
     if (!empty($newsConfig["gallery_$level"] ?? $newsConfig['gallery'] ?? false)) {
-      $gallery = $db->rawQuery("SELECT * FROM `tbl_gallery` WHERE id_parent = ? AND type = ? ORDER BY numb, id DESC",[$isId, $type]);
+      $gallery = $d->rawQuery("SELECT * FROM `tbl_gallery` WHERE id_parent = ? AND type = ? ORDER BY numb, id DESC",[$isId, $type]);
     }
   }
 }
 function viewNews(string $level)
 {
-  global $fn, $table, $curPage, $perPage, $type;
+  global $func, $table, $curPage, $perPage, $type;
   global $id_list, $id_cat, $id_item, $id_brand, $id_sub, $keyword;
   global $paging, $show_data;
   $isMan = ($level === 'man');
@@ -249,7 +249,7 @@ function viewNews(string $level)
       $options[$field] = is_numeric($value) ? (int)$value : $value;
     }
   }
-  $total     = $fn->count_data($options);
-  $show_data = $fn->show_data($options);
-  $paging    = $fn->pagination($total, $perPage, $curPage);
+  $total     = $func->count_data($options);
+  $show_data = $func->show_data($options);
+  $paging    = $func->pagination($total, $perPage, $curPage);
 }

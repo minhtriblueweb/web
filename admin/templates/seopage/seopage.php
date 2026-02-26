@@ -24,7 +24,7 @@
           <div class="upload-file">
             <p><?= uploadhinhanh ?>:</p>
             <div class="d-flex align-items-center justify-content-center" style="width:300px; height:200px;">
-              <?= $fn->getImage([
+              <?= $func->getImage([
                 'file' => $seo_data['file'] ?? ($_POST['file'] ?? ''),
                 'class' => 'img-fluid',
                 'id' => 'preview-image',
@@ -59,7 +59,7 @@
                       <div class="label-seo"><label for="description<?= $k ?>">SEO Description (<?= $k ?>):</label><strong class="count-seo"><span>0</span>/160 <?= kytu ?></strong></div><textarea class="form-control check-seo description-seo text-sm" name="data[description<?= $k ?>]" id="description<?= $k ?>" rows="5" placeholder="SEO Description (<?= $k ?>)"><?= $_POST['description' . $k] ?? ($seo_data['description' . $k] ?? '') ?></textarea>
                     </div><label class="label-seo-preview mb-2 d-flex align-items-center"><i class="fa fa-info-circle mr-2 text-primary"></i><strong><?= hienthitrenketquatimkiem ?>:</strong></label>
                     <div class="seo-preview-google">
-                      <div class="d-flex align-items-start mb-1"><?php if (!empty($favicon['file'])): ?><div class="favicon-wrapper mr-2 rounded-circle"><?= $fn->getImage(['file' => $favicon['file'], 'class' => 'favicon rounded-circle border', 'alt' => 'favicon', 'title' => 'favicon']) ?></div><?php else: ?><div class="favicon-wrapper mr-2 rounded-circle" style="background-color:#e5edff;"><svg style="width:20px;height:20px;" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                      <div class="d-flex align-items-start mb-1"><?php if (!empty($favicon['file'])): ?><div class="favicon-wrapper mr-2 rounded-circle"><?= $func->getImage(['file' => $favicon['file'], 'class' => 'favicon rounded-circle border', 'alt' => 'favicon', 'title' => 'favicon']) ?></div><?php else: ?><div class="favicon-wrapper mr-2 rounded-circle" style="background-color:#e5edff;"><svg style="width:20px;height:20px;" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                               <path fill="#4285F4" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z" />
                             </svg></div><?php endif; ?><div>
                           <div class="web-name text-dark fw-bold small"><?= $optsetting["name{$lang}"] ?></div>

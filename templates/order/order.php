@@ -41,7 +41,7 @@
                       </div>
                       <div class="pic-procart col-3 col-md-2 mg-col-10">
                         <a class="text-decoration-none" href="<?= $proinfo["slug$lang"] ?>" target="_blank" title="<?= $proinfo["name$lang"] ?>">
-                          <?= $fn->getImageCustom(['file'  => $proinfo['file'], 'alt' => $proinfo["name$lang"], 'title' => $proinfo["name$lang"], 'width' => 85, 'height' => 85, 'zc' => 2]) ?>
+                          <?= $func->getImageCustom(['file'  => $proinfo['file'], 'alt' => $proinfo["name$lang"], 'title' => $proinfo["name$lang"], 'width' => 85, 'height' => 85, 'zc' => 2]) ?>
                         </a>
                         <a class="del-procart text-decoration-none" data-code="<?= $code ?>">
                           <i class="fa fa-times-circle"></i><span><?= xoa ?></span>
@@ -56,14 +56,14 @@
                         <div class="price-procart price-procart-rp">
                           <?php if ($proinfo['sale_price']) { ?>
                             <p class="price-new-cart load-price-new-<?= $code ?>">
-                              <?= $fn->formatMoney($pro_price_new_qty) ?>
+                              <?= $func->formatMoney($pro_price_new_qty) ?>
                             </p>
                             <p class="price-old-cart load-price-<?= $code ?>">
-                              <?= $fn->formatMoney($pro_price_qty) ?>
+                              <?= $func->formatMoney($pro_price_qty) ?>
                             </p>
                           <?php } else { ?>
                             <p class="price-new-cart load-price-<?= $code ?>">
-                              <?= $fn->formatMoney($pro_price_qty) ?>
+                              <?= $func->formatMoney($pro_price_qty) ?>
                             </p>
                           <?php } ?>
                         </div>
@@ -77,14 +77,14 @@
                         <div>
                           <?php if ($proinfo['sale_price']) { ?>
                           <p class="price-new-cart load-price-new-<?= $code ?>">
-                            <?= $fn->formatMoney($pro_price_new_qty) ?>
+                            <?= $func->formatMoney($pro_price_new_qty) ?>
                           </p>
                           <p class="price-old-cart load-price-<?= $code ?>">
-                            <?= $fn->formatMoney($pro_price_qty) ?>
+                            <?= $func->formatMoney($pro_price_qty) ?>
                           </p>
                         <?php } else { ?>
                           <p class="price-new-cart load-price-<?= $code ?>">
-                            <?= $fn->formatMoney($pro_price_qty) ?>
+                            <?= $func->formatMoney($pro_price_qty) ?>
                           </p>
                         <?php } ?>
                         </div>
@@ -98,7 +98,7 @@
                   <div class="total-procart d-flex align-items-center justify-content-between">
                     <p><?= tamtinh ?>:</p>
                     <p class="total-price load-price-temp">
-                      <?= $fn->formatMoney($cart->getOrderTotal()) ?>
+                      <?= $func->formatMoney($cart->getOrderTotal()) ?>
                     </p>
                   </div>
                 <?php } ?>
@@ -110,7 +110,7 @@
                 <?php } ?>
                 <div class="total-procart d-flex align-items-center justify-content-between">
                   <p><?= tongtien ?>:</p>
-                  <p class="total-price load-price-total"><?= $fn->formatMoney($cart->getOrderTotal()) ?></p>
+                  <p class="total-price load-price-total"><?= $func->formatMoney($cart->getOrderTotal()) ?></p>
                 </div>
               </div>
             </div>

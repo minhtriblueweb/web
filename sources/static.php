@@ -2,10 +2,10 @@
 if (!defined('SOURCES')) die("Error");
 
 /* Lấy bài viết tĩnh */
-$static = $db->rawQueryOne("SELECT id, type, name$lang as name, content$lang as content, file FROM tbl_static WHERE type = ? LIMIT 1", [$type]);
+$static = $d->rawQueryOne("SELECT id, type, name$lang as name, content$lang as content, file FROM tbl_static WHERE type = ? LIMIT 1", [$type]);
 
 //SEO
-$seo_data = $db->rawQueryOne("SELECT * FROM tbl_seopage WHERE type = ?", array($type));
+$seo_data = $d->rawQueryOne("SELECT * FROM tbl_seopage WHERE type = ?", array($type));
 $seo->set('h1', $titleMain);
 $seo->set('title', $seo_data["title$lang"] ?? $titleMain ?? '');
 $seo->set('keywords', !empty($seo_data["keywords$lang"]) ? $seo_data["keywords$lang"] : '');
@@ -16,7 +16,7 @@ if (!empty($imgJson)) {
   $seo->set('photo:width', $imgJson['width']);
   $seo->set('photo:height', $imgJson['height']);
 }
-if (!empty($seo_data['file'])) $seo->set('photo',  $fn->getImageCustom(['file' => $seo_data['file'], 'width' => 600, 'height' => 315, 'zc' => 2, 'src_only' => true]));
+if (!empty($seo_data['file'])) $seo->set('photo',  $func->getImageCustom(['file' => $seo_data['file'], 'width' => 600, 'height' => 315, 'zc' => 2, 'src_only' => true]));
 
 /* breadCrumbs */
 if (!empty($titleMain)) $breadcr->set($slug, $titleMain);

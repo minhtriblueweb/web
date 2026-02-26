@@ -16,7 +16,7 @@
 <link rel="shortcut icon" type="image/x-icon" href="<?= $seo->get('favicon') ?>" />
 
 <!-- Webmaster Tool -->
-<?= $fn->decodeHtmlChars($optsetting['mastertool']) ?>
+<?= $func->decodeHtmlChars($optsetting['mastertool']) ?>
 
 
 <!-- GEO -->
@@ -51,7 +51,7 @@
 <meta name="twitter:image" content="<?= $seo->get('photo') ?>" />
 
 <!-- Canonical -->
-<link rel="canonical" href="<?= $fn->getCurrentPageURL() ?>" />
+<link rel="canonical" href="<?= $func->getCurrentPageURL() ?>" />
 
 <!-- Chống đổi màu trên iOS -->
 <meta name="format-detection" content="telephone=no" />

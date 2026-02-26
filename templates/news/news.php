@@ -20,7 +20,7 @@
           <?php if ($hasIdList && !empty($news_list)): ?>
             <?php foreach ($news_list as $list): ?>
               <?php
-              $list_news = $db->rawQuery("select id,id_list,file,slug{$lang},name{$lang},desc{$lang},date_updated ,views from `tbl_news` where id_list = ? and type = ? and find_in_set('hienthi',status) order by numb, id desc limit 6",array($list['id'], $type));
+              $list_news = $d->rawQuery("select id,id_list,file,slug{$lang},name{$lang},desc{$lang},date_updated ,views from `tbl_news` where id_list = ? and type = ? and find_in_set('hienthi',status) order by numb, id desc limit 6",array($list['id'], $type));
               if (empty($list_news)) continue;
               ?>
               <div class="child__news__title">

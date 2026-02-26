@@ -1,22 +1,10 @@
 <?php
-session_start();
-header('Content-Type: application/json; charset=utf-8');
-
-if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-  http_response_code(403);
-  echo json_encode(['success' => false]);
-  exit;
-}
-
-require_once __DIR__ . '/../init.php';
-
-$db = new Database();
+include "config.php";
 $result = [];
 $keyword = trim($_POST['keyword'] ?? '');
-$lang = $lang ?? 'vi';
 
 if ($keyword !== '') {
-  $products = $db->rawQuery("SELECT id, id_list, id_cat, id_item, id_sub, id_brand, name$lang, type FROM `tbl_product` WHERE name$lang LIKE ? ORDER BY id DESC LIMIT 10",["%$keyword%"]) ?: [];
+  $products = $d->rawQuery("select id, id_list, id_cat, id_item, id_sub, id_brand, name$lang, type from `tbl_product` where name$lang like ? order by id desc limit 10",["%$keyword%"]) ?: [];
 
   foreach ($products as $row) {
     $result[] = [
@@ -34,7 +22,7 @@ if ($keyword !== '') {
     ];
   }
 
-  $news = $db->rawQuery("SELECT id, id_list, id_cat, id_item, id_sub, name$lang, type FROM `tbl_news` WHERE name$lang LIKE ? ORDER BY id DESC LIMIT 10",["%$keyword%"]) ?: [];
+  $news = $d->rawQuery("select id, id_list, id_cat, id_item, id_sub, name$lang, type from `tbl_news` where name$lang like ? order by id desc limit 10", ["%$keyword%"]) ?: [];
 
   foreach ($news as $row) {
     $result[] = [

@@ -7,13 +7,13 @@
         </div>
         <div class="wrap-main wrap-template w-clear" style="margin: 0 auto !important;">
           <div class="pucblisher d-flex justify-content-center mt-2">
-            <p class="me-3 mb-0"><i class="fa-regular fa-calendar me-2"></i><?= $fn->makeDate(strtotime($rowDetail["date_created"]), '/', $lang, true); ?></p>
+            <p class="me-3 mb-0"><i class="fa-regular fa-calendar me-2"></i><?= $func->makeDate(strtotime($rowDetail["date_created"]), '/', $lang, true); ?></p>
             <p class="mb-0"><i class="fa-solid fa-eye me-2"></i><?= $rowDetail["views"] ?> <?= luotxem ?></p>
           </div>
           <?php if ($rowDetail["desc$lang"]): ?>
             <div class="content-main">
               <div class="alert alert-news p-3" role="alert">
-                <?= $fn->decodeHtmlChars($rowDetail["desc$lang"] ?? '') ?>
+                <?= $func->decodeHtmlChars($rowDetail["desc$lang"] ?? '') ?>
               </div>
             </div>
           <?php endif ?>
@@ -26,7 +26,7 @@
             </div>
           </div>
           <div class="content-main content-ck" id="toc-content">
-            <?= $fn->decodeHtmlChars($rowDetail["content$lang"] ?? '') ?>
+            <?= $func->decodeHtmlChars($rowDetail["content$lang"] ?? '') ?>
             <?php if ($showFooterNews): ?>
               <?= $footer_news["content$lang"] ?? '' ?>
             <?php endif; ?>
@@ -37,7 +37,7 @@
               <?php
               $params = array();
               $params['oaidzalo'] = $optsetting_json['oaidzalo'];
-              $params['data-href'] = $fn->getCurrentPageURL();
+              $params['data-href'] = $func->getCurrentPageURL();
               include TEMPLATE . LAYOUT . 'share.php'
               ?>
             </div>

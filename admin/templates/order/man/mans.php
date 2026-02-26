@@ -1,7 +1,7 @@
 <?php
-$linkMan = $linkFilter = "index.php?page=order&act=man";
-$linkEdit = "index.php?page=order&act=edit";
-$linkDelete = "index.php?page=order&act=delete";
+$linkMan = $linkFilter = "index.php?com=order&act=man";
+$linkEdit = "index.php?com=order&act=edit";
+$linkDelete = "index.php?com=order&act=delete";
 $linkExcel = "index.php?com=excelAll";
 $linkWord = "index.php?com=wordAll";
 ?>
@@ -26,7 +26,7 @@ $linkWord = "index.php?com=wordAll";
         <div class="info-box-content">
           <span class="info-box-text text-primary font-weight-bold text-capitalize text-sm"><?= moidat ?></span>
           <p class="info-box-text text-sm mb-0"><?= soluong ?>: <span class="text-danger font-weight-bold"><?= $allNewOrder ?></span></p>
-          <p class="info-box-text text-sm mb-0"><?= tonggia ?>: <span class="text-danger font-weight-bold"><?= $fn->formatMoney($totalNewOrder) ?></span></p>
+          <p class="info-box-text text-sm mb-0"><?= tonggia ?>: <span class="text-danger font-weight-bold"><?= $func->formatMoney($totalNewOrder) ?></span></p>
         </div>
       </div>
     </div>
@@ -36,7 +36,7 @@ $linkWord = "index.php?com=wordAll";
         <div class="info-box-content">
           <span class="info-box-text text-info font-weight-bold text-capitalize text-sm"><?= daxacnhan ?></span>
           <p class="info-box-text text-sm mb-0"><?= soluong ?>: <span class="text-danger font-weight-bold"><?= $allConfirmOrder ?></span></p>
-          <p class="info-box-text text-sm mb-0"><?= tonggia ?>: <span class="text-danger font-weight-bold"><?= $fn->formatMoney($totalConfirmOrder) ?></span></p>
+          <p class="info-box-text text-sm mb-0"><?= tonggia ?>: <span class="text-danger font-weight-bold"><?= $func->formatMoney($totalConfirmOrder) ?></span></p>
         </div>
       </div>
     </div>
@@ -47,7 +47,7 @@ $linkWord = "index.php?com=wordAll";
         <div class="info-box-content">
           <span class="info-box-text text-success font-weight-bold text-capitalize text-sm"><?= dagiao ?></span>
           <p class="info-box-text text-sm mb-0"><?= soluong ?>: <span class="text-danger font-weight-bold"><?= $allDeliveriedOrder ?></span></p>
-          <p class="info-box-text text-sm mb-0"><?= tonggia ?>: <span class="text-danger font-weight-bold"><?= $fn->formatMoney($totalDeliveriedOrder) ?></span></p>
+          <p class="info-box-text text-sm mb-0"><?= tonggia ?>: <span class="text-danger font-weight-bold"><?= $func->formatMoney($totalDeliveriedOrder) ?></span></p>
         </div>
       </div>
     </div>
@@ -57,7 +57,7 @@ $linkWord = "index.php?com=wordAll";
         <div class="info-box-content">
           <span class="info-box-text text-danger font-weight-bold text-capitalize text-sm"><?= dahuy ?></span>
           <p class="info-box-text text-sm mb-0"><?= soluong ?>: <span class="text-danger font-weight-bold"><?= $allCanceledOrder ?></span></p>
-          <p class="info-box-text text-sm mb-0"><?= tonggia ?>: <span class="text-danger font-weight-bold"><?= $fn->formatMoney($totalCanceledOrder) ?></span></p>
+          <p class="info-box-text text-sm mb-0"><?= tonggia ?>: <span class="text-danger font-weight-bold"><?= $func->formatMoney($totalCanceledOrder) ?></span></p>
         </div>
       </div>
     </div>
@@ -92,23 +92,23 @@ $linkWord = "index.php?com=wordAll";
         </div>
         <div class="form-group col-md-3 col-sm-3">
           <label><?= tinhtrang ?>:</label>
-          <?= $fn->orderStatus() ?>
+          <?= $func->orderStatus() ?>
         </div>
         <div class="form-group col-md-3 col-sm-3">
           <label><?= hinhthucthanhtoan ?>:</label>
-          <?= $fn->orderPayments() ?>
+          <?= $func->orderPayments() ?>
         </div>
         <div class="form-group col-md-3 col-sm-3">
           <label><?= tinhthanh ?>:</label>
-          <?= $fn->getAjaxPlace("tbl_city") ?>
+          <?= $func->getAjaxPlace("tbl_city") ?>
         </div>
         <div class="form-group col-md-3 col-sm-3">
           <label><?= quanhuyen ?>:</label>
-          <?= $fn->getAjaxPlace("tbl_district") ?>
+          <?= $func->getAjaxPlace("tbl_district") ?>
         </div>
         <div class="form-group col-md-3 col-sm-3">
           <label><?= phuongxa ?>:</label>
-          <?= $fn->getAjaxPlace("tbl_ward") ?>
+          <?= $func->getAjaxPlace("tbl_ward") ?>
         </div>
         <div class="form-group col-md-6 col-sm-6">
           <label><?= khoanggia ?>:</label>
@@ -186,17 +186,17 @@ $linkWord = "index.php?com=wordAll";
                   </td>
                   <td class="align-middle"><?= date("h:i:s A - d/m/Y", $row['date_created']) ?></td>
                   <td class="align-middle">
-                    <?php $order_payment = $fn->getInfoDetail('namevi', 'tbl_news', $row['order_payment']); ?>
+                    <?php $order_payment = $func->getInfoDetail('namevi', 'tbl_news', $row['order_payment']); ?>
                     <span class="text-info"><?= $order_payment['namevi'] ?></span>
                   </td>
                   <td class="align-middle">
-                    <span class="text-danger font-weight-bold"><?= $fn->formatMoney($row['total_price']) ?></span>
+                    <span class="text-danger font-weight-bold"><?= $func->formatMoney($row['total_price']) ?></span>
                   </td>
                   <td class="align-middle">
                     <?php
                     if (isset($row['order_status']) && $row['order_status'] > 0) {
                       $id_order_status = $row['order_status'];
-                      $order_status = $db->rawQueryOne("SELECT namevi, class_order FROM `tbl_order_status` WHERE id = ?", array($id_order_status));
+                      $order_status = $d->rawQueryOne("SELECT namevi, class_order FROM `tbl_order_status` WHERE id = ?", array($id_order_status));
                     }
                     ?>
                     <span class="<?= $order_status['class_order'] ?> text-capitalize"><?= $order_status['namevi'] ?></span>

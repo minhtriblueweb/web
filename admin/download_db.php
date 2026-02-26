@@ -16,7 +16,7 @@ $filePath  = $backupDir . '/' . $fileName;
 
 // ====== Lấy danh sách bảng ======
 $tables = [];
-$result = $db->select("SHOW TABLES");
+$result = $d->select("SHOW TABLES");
 while ($row = $result->fetch_array()) {
   $tables[] = $row[0];
 }
@@ -28,11 +28,11 @@ $sqlDump .= "SET FOREIGN_KEY_CHECKS=0;\n\n";
 
 foreach ($tables as $table) {
   $sqlDump .= "DROP TABLE IF EXISTS `$table`;\n";
-  $resCreate = $db->select("SHOW CREATE TABLE `$table`");
+  $resCreate = $d->select("SHOW CREATE TABLE `$table`");
   $rowCreate = $resCreate->fetch_assoc();
   $sqlDump .= $rowCreate['Create Table'] . ";\n\n";
 
-  $resData = $db->select("SELECT * FROM `$table`");
+  $resData = $d->select("SELECT * FROM `$table`");
   if ($resData && $resData->num_rows > 0) {
     $columns = array_keys($resData->fetch_assoc());
     $insertPrefix = "INSERT INTO `$table` (`" . implode("`, `", $columns) . "`) VALUES\n";
@@ -43,8 +43,8 @@ foreach ($tables as $table) {
     $count = 0;
 
     while ($row = $resData->fetch_assoc()) {
-      $vals = array_map(function ($v) use ($db) {
-        return isset($v) ? "'" . $db->link->real_escape_string((string)$v) . "'" : "NULL";
+      $vals = array_map(function ($v) use ($d) {
+        return isset($v) ? "'" . $d->link->real_escape_string((string)$v) . "'" : "NULL";
       }, array_values($row));
 
       $batchRows[] = "(" . implode(", ", $vals) . ")";

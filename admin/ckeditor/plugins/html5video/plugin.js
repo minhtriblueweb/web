@@ -5,16 +5,17 @@ CKEDITOR.plugins.add( 'html5video', {
     init: function( editor ) {
         editor.widgets.add( 'html5video', {
             button: editor.lang.html5video.button,
-            template: '<div class="ckeditor-html5-video"></div>',
+            template: '<div class="ckeditor-html5-video-cus"></div>',
             /*
              * Allowed content rules (http://docs.ckeditor.com/#!/guide/dev_allowed_content_rules):
-             *  - div-s with text-align,float,margin-left,margin-right inline style rules and required ckeditor-html5-video class.
+             *  - div-s with text-align,float,margin-left,margin-right inline style rules and required ckeditor-html5-video-cus class.
              *  - video tags with src, controls, width and height attributes.
              */
-            allowedContent: 'div[data-responsive](!ckeditor-html5-video){text-align,float,margin-left,margin-right}; video[src,controls,autoplay,width, height,loop]{max-width,height};',
-            requiredContent: 'div(ckeditor-html5-video); video[src];',
+            allowedContent: 'div[data-responsive](!ckeditor-html5-video-cus){text-align,float,margin-left,margin-right}; video[src,controls,autoplay,width, height,loop]{max-width,height};',
+            requiredContent: 'div(ckeditor-html5-video-cus); video[src];',
             upcast: function( element ) {
-                return element.name === 'div' && element.hasClass( 'ckeditor-html5-video' );
+                //return element.name === 'div' && element.hasClass( 'ckeditor-html5-video-cus' );
+                return element.name === 'div';
             },
             dialog: 'html5video',
             init: function() {
@@ -26,7 +27,6 @@ CKEDITOR.plugins.add( 'html5video', {
 
                 var width = '';
                 var height = '';
-
                 // If there's a child (the video element)
                 if ( this.element.getChild( 0 ) ) {
                     // get it's attributes.
@@ -85,9 +85,9 @@ CKEDITOR.plugins.add( 'html5video', {
                             videoElement.setAttribute('controls', 'controls');
                         }
                         // Append it to the container of the plugin.
-                        this.element.append( videoElement );
+                        this.element.append(videoElement);
                     }
-                    this.element.getChild( 0 ).setAttribute( 'src', this.data.src );
+                    this.element.getChild(0).setAttribute( 'src', this.data.src ).setAttribute('preload','metadata');
                     if (this.data.width) this.element.getChild( 0 ).setAttribute( 'width', this.data.width );
                     if (this.data.height) this.element.getChild( 0 ).setAttribute( 'height', this.data.height );
 
@@ -158,7 +158,7 @@ CKEDITOR.plugins.add( 'html5video', {
                 if ( element &&
                      element.getChild( 0 ) &&
                      element.getChild( 0 ).hasClass &&
-                     element.getChild( 0 ).hasClass( 'ckeditor-html5-video' ) ) {
+                     element.getChild( 0 ).hasClass( 'ckeditor-html5-video-cus' ) ) {
                     return { html5videoPropertiesItem: CKEDITOR.TRISTATE_OFF };
                 }
             });

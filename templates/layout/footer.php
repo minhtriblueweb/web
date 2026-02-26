@@ -1,10 +1,10 @@
 <?php
-$payment = $fn->show_data(['table' => 'tbl_photo', 'type'  => 'payment', 'status' => 'hienthi', 'select' => "id, file,name{$lang}"]);
-$footer_static = $db->rawQueryOne("SELECT content$lang FROM tbl_static WHERE type = ? AND FIND_IN_SET(?, status) LIMIT 1", ['footer', 'hienthi']);
-$hotrokhachhang = $db->rawQueryOne("SELECT name$lang,content$lang FROM tbl_static WHERE type = ? AND FIND_IN_SET(?, status) LIMIT 1", ['ho-tro-khach-hang', 'hienthi']);
-$dangkynhantin = $db->rawQueryOne("SELECT name$lang,content$lang FROM tbl_static WHERE type = ? AND FIND_IN_SET(?, status) LIMIT 1", ['dang-ky-nhan-tin', 'hienthi']);
-$hotro247 = $db->rawQueryOne("SELECT name$lang,content$lang FROM tbl_static WHERE type = ? AND FIND_IN_SET(?, status) LIMIT 1", ['ho-tro-247', 'hienthi']);
-$background_footer = $db->rawQueryOne("SELECT `file` FROM tbl_photo WHERE type = ? AND FIND_IN_SET('hienthi', status) LIMIT 1", ['background_footer'])['file'] ?? '';
+$payment = $func->show_data(['table' => 'tbl_photo', 'type'  => 'payment', 'status' => 'hienthi', 'select' => "id, file,name{$lang}"]);
+$footer_static = $d->rawQueryOne("SELECT content$lang FROM tbl_static WHERE type = ? AND FIND_IN_SET(?, status) LIMIT 1", ['footer', 'hienthi']);
+$hotrokhachhang = $d->rawQueryOne("SELECT name$lang,content$lang FROM tbl_static WHERE type = ? AND FIND_IN_SET(?, status) LIMIT 1", ['ho-tro-khach-hang', 'hienthi']);
+$dangkynhantin = $d->rawQueryOne("SELECT name$lang,content$lang FROM tbl_static WHERE type = ? AND FIND_IN_SET(?, status) LIMIT 1", ['dang-ky-nhan-tin', 'hienthi']);
+$hotro247 = $d->rawQueryOne("SELECT name$lang,content$lang FROM tbl_static WHERE type = ? AND FIND_IN_SET(?, status) LIMIT 1", ['ho-tro-247', 'hienthi']);
+$background_footer = $d->rawQueryOne("SELECT `file` FROM tbl_photo WHERE type = ? AND FIND_IN_SET('hienthi', status) LIMIT 1", ['background_footer'])['file'] ?? '';
 ?>
 <div class="footer" style="background: #f2f2f2 url('<?= BASE_ADMIN . UPLOADS . $background_footer ?>') no-repeat center;">
   <div class="footer-article">
@@ -13,7 +13,7 @@ $background_footer = $db->rawQueryOne("SELECT `file` FROM tbl_photo WHERE type =
         <div class="logo-footer">
           <?php if ($logo) : ?>
             <a href="./">
-              <?= $fn->getImageCustom(['file' => $logo['file'], 'width'  => 200, 'height'  => 200, 'zc' => 4, 'alt' => $optsetting["name$lang"], 'title' => $optsetting["name$lang"], 'lazy' => false]) ?>
+              <?= $func->getImageCustom(['file' => $logo['file'], 'width'  => 200, 'height'  => 200, 'zc' => 4, 'alt' => $optsetting["name$lang"], 'title' => $optsetting["name$lang"], 'lazy' => false]) ?>
             </a>
           <?php endif ?>
         </div>
@@ -24,7 +24,7 @@ $background_footer = $db->rawQueryOne("SELECT `file` FROM tbl_photo WHERE type =
           <?php if (!empty($show_social)): ?>
             <?php foreach ($show_social as $row): ?>
               <a class="hvr-icon-rotate me-2" href="<?= $row['link'] ?>" target="_blank" rel="noopener noreferrer">
-                <?= $fn->getImageCustom(['width' => 40, 'height' => 40, 'zc' => 1, 'file'   => $row['file'], 'class'  => 'hvr-icon', 'alt' => $row["name$lang"], 'title' => $row["name$lang"], 'lazy' => true]) ?>
+                <?= $func->getImageCustom(['width' => 40, 'height' => 40, 'zc' => 1, 'file'   => $row['file'], 'class'  => 'hvr-icon', 'alt' => $row["name$lang"], 'title' => $row["name$lang"], 'lazy' => true]) ?>
               </a>
             <?php endforeach; ?>
           <?php endif; ?>
@@ -52,7 +52,7 @@ $background_footer = $db->rawQueryOne("SELECT `file` FROM tbl_photo WHERE type =
               <?php if (!empty($payment)): ?>
                 <?php foreach ($payment as $row): ?>
                   <span class="ibank scale-img">
-                    <?= $fn->getImageCustom(['file' =>  $row['file'], 'width' => 72, 'height' => 40, 'zc' => 2, 'alt' => $row["name$lang"], 'title' => $row["name$lang"], 'lazy' => true]) ?>
+                    <?= $func->getImageCustom(['file' =>  $row['file'], 'width' => 72, 'height' => 40, 'zc' => 2, 'alt' => $row["name$lang"], 'title' => $row["name$lang"], 'lazy' => true]) ?>
                   </span>
                 <?php endforeach; ?>
               <?php endif; ?>
@@ -103,7 +103,7 @@ $background_footer = $db->rawQueryOne("SELECT `file` FROM tbl_photo WHERE type =
   <div class="footer-powered">
     <div class="wrap-content d-flex flex-wrap justify-content-between align-items-center">
       <div class="footer-copyright">
-        Copyright © <?= current_year(); ?>
+        Copyright © <?= date('Y'); ?>
         <span><?= $copyright ?></span>.
       </div>
       <?php $counter = $statistic->getOnline(); ?>
@@ -135,7 +135,7 @@ $background_footer = $db->rawQueryOne("SELECT `file` FROM tbl_photo WHERE type =
       <?php $sameAs[] = $v['link'] ?>
       <a href="<?= $v['link'] ?>" class="floating-support__item" target="_blank">
         <div class="floating-support__item__icon">
-          <?= $fn->getImageCustom(['file' =>  $v['file'], 'class'  => 'tada', 'width'  => 50, 'height'  => 50, 'zc'  => 1, 'alt'   => $v["name$lang"], 'title' => $v["name$lang"], 'lazy' => true]) ?>
+          <?= $func->getImageCustom(['file' =>  $v['file'], 'class'  => 'tada', 'width'  => 50, 'height'  => 50, 'zc'  => 1, 'alt'   => $v["name$lang"], 'title' => $v["name$lang"], 'lazy' => true]) ?>
         </div>
         <div class="floating-support__item__content">
           <p><b><?= $v["name$lang"] ?></b></p>
@@ -158,7 +158,7 @@ $background_footer = $db->rawQueryOne("SELECT `file` FROM tbl_photo WHERE type =
           title="<?= $v["name$lang"] ?>"
           href="<?= $v['link'] ?>"
           <?= ($v['link'] !== BASE.'gio-hang') ? 'target="_blank"' : '' ?>>
-          <?= $fn->getImageCustom([
+          <?= $func->getImageCustom([
             'file'   => $v['file'],
             'width'  => 30,
             'height' => 30,

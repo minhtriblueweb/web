@@ -1,9 +1,9 @@
 <?php
-$linkNews = "index.php?page=news&type=" . $type;
+$linkNews = "index.php?com=news&type=" . $type;
 $linkMan = "$linkNews&act=man_list";
 $linkForm  = "$linkNews&act=form_list";
 $linkEdit  = "$linkNews&act=form_list&id=";
-$linkDelete = "index.php?page=news&act=delete_list&type=" . $type;
+$linkDelete = "index.php?com=news&act=delete_list&type=" . $type;
 ?>
 <section class="content-header text-sm">
   <div class="container-fluid">
@@ -78,7 +78,7 @@ $linkDelete = "index.php?page=news&act=delete_list&type=" . $type;
                   <?php if (!empty($config['news'][$type]['show_images_list'])): ?>
                     <td class="align-middle">
                       <a href="<?= $linkEdit . $row['id'] ?>" title="<?= $row["name$lang"] ?>">
-                        <?= $fn->getImage(['file' => $row['file'], 'class' => 'rounded img-preview', 'alt' => $row["name$lang"]]) ?>
+                        <?= $func->getImage(['file' => $row['file'], 'class' => 'rounded img-preview', 'alt' => $row["name$lang"]]) ?>
                       </a>
                     </td>
                   <?php endif; ?>

@@ -1,9 +1,9 @@
 <?php
-$linkProduct = "index.php?page=product&type=" . $type;
+$linkProduct = "index.php?com=product&type=" . $type;
 $linkMan = "$linkProduct&act=man_cat";
 $linkForm  = "$linkProduct&act=form_cat";
-$linkEdit = "index.php?page=product&act=form_cat&type=" . $type;
-$linkDelete = "index.php?page=product&act=delete_cat&type=" . $type;
+$linkEdit = "index.php?com=product&act=form_cat&type=" . $type;
+$linkDelete = "index.php?com=product&act=delete_cat&type=" . $type;
 ?>
 <section class="content-header text-sm">
   <div class="container-fluid">
@@ -32,7 +32,7 @@ $linkDelete = "index.php?page=product&act=delete_cat&type=" . $type;
   </div>
   <div class="card-footer form-group-category text-sm bg-light row">
     <div class="form-group col-xl-2 col-lg-3 col-md-4 col-sm-4 mb-2">
-      <?= $fn->getLinkCategory('product', 'list', $type) ?>
+      <?= $func->getLinkCategory('product', 'list', $type) ?>
     </div>
   </div>
   <form class="validation-form" novalidate method="post" action="">
@@ -86,7 +86,7 @@ $linkDelete = "index.php?page=product&act=delete_cat&type=" . $type;
                   <?php if (!empty($config['product'][$type]['show_images_cat'])): ?>
                     <td class="align-middle">
                       <a href="<?= $linkEdit . $linkID ?>&id=<?= $row['id'] ?>" title="<?= $row["name$lang"] ?>">
-                        <?= $fn->getImage(['file' => $row['file'], 'class' => 'rounded img-preview', 'alt' => $row["name$lang"]]) ?>
+                        <?= $func->getImage(['file' => $row['file'], 'class' => 'rounded img-preview', 'alt' => $row["name$lang"]]) ?>
                       </a>
                     </td>
                   <?php endif; ?>

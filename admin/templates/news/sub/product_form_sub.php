@@ -109,19 +109,19 @@
               <?php if (!empty($config['product'][$type]['list'])) : ?>
                 <div class="form-group col-xl-6 col-sm-4">
                   <label class="d-block" for="id_list"><?= danhmuccap1 ?>:</label>
-                  <?= $fn->getAjaxCategory('product', 'list', $type) ?>
+                  <?= $func->getAjaxCategory('product', 'list', $type) ?>
                 </div>
               <?php endif; ?>
               <?php if (!empty($config['product'][$type]['cat'])) : ?>
                 <div class="form-group col-xl-6 col-sm-4">
                   <label class="d-block" for="id_cat"><?= danhmuccap2 ?>:</label>
-                  <?= $fn->getAjaxCategory('product', 'cat', $type) ?>
+                  <?= $func->getAjaxCategory('product', 'cat', $type) ?>
                 </div>
               <?php endif; ?>
               <?php if (!empty($config['product'][$type]['item'])) : ?>
                 <div class="form-group col-xl-6 col-sm-4">
                   <label class="d-block" for="id_sub"><?= danhmuccap3 ?>:</label>
-                  <?= $fn->getAjaxCategory('product', 'item', $type) ?>
+                  <?= $func->getAjaxCategory('product', 'item', $type) ?>
                 </div>
               <?php endif; ?>
             </div>
@@ -163,7 +163,7 @@
                       name="data[status][<?= $check ?>]"
                       class="switch-input custom-control-input .show-checkbox"
                       id="<?= $check ?>-checkbox"
-                      <?= $fn->is_checked($check, $result['status'] ?? '', $id ?? '') ?>>
+                      <?= $func->is_checked($check, $result['status'] ?? '', $id ?? '') ?>>
                   </label>
                 </div>
               <?php endforeach; ?>

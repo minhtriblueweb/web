@@ -153,7 +153,7 @@
                       name="data[status][<?= $check ?>]"
                       class="switch-input custom-control-input .show-checkbox"
                       id="<?= $check ?>-checkbox"
-                      <?= $fn->is_checked($check, $result['status'] ?? '', $id ?? '') ?>>
+                      <?= $func->is_checked($check, $result['status'] ?? '', $id ?? '') ?>>
                   </label>
                 </div>
               <?php endforeach; ?>

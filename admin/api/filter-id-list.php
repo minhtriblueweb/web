@@ -1,6 +1,6 @@
 <?php
 require_once __DIR__ . '/../init.php';
-$db = new Database();
+$d = new Database();
 
 $id_list = (int)($_POST['id_list'] ?? 0);
 if ($id_list <= 0) {
@@ -13,7 +13,7 @@ $linkDelete = "index.php?page=delete&table=$table&id=";
 $linkEdit = "index.php?page=danhmuc_c2_form&id=";
 
 $query = "SELECT * FROM $table WHERE id_list = $id_list ORDER BY numb, id DESC";
-$result = $db->select($query);
+$result = $d->select($query);
 $html = '';
 
 if ($result && $result->num_rows > 0) {

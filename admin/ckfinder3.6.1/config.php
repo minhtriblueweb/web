@@ -21,20 +21,23 @@ session_start();
 // https://ckeditor.com/docs/ckfinder/ckfinder3-php/configuration.html
 function baseUrl($atRoot = false, $atCore = false, $parse = false)
 {
-    if (isset($_SERVER['HTTP_HOST'])) {
+    if (isset($_SERVER['HTTP_HOST']))
+    {
         $http = isset($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) !== 'off' ? 'https' : 'http';
         $hostname = $_SERVER['HTTP_HOST'];
-        $dir = str_replace(basename($_SERVER['SCRIPT_NAME']), '', $_SERVER['SCRIPT_NAME']);
+        $dir = str_replace(basename($_SERVER['SCRIPT_NAME']) , '', $_SERVER['SCRIPT_NAME']);
 
-        $core = preg_split('@/@', str_replace($_SERVER['DOCUMENT_ROOT'], '', realpath(dirname(__FILE__))), 0, PREG_SPLIT_NO_EMPTY);
+        $core = preg_split('@/@', str_replace($_SERVER['DOCUMENT_ROOT'], '', realpath(dirname(__FILE__))) , 0, PREG_SPLIT_NO_EMPTY);
         $core = $core[0];
 
         $tmplt = $atRoot ? ($atCore ? "%s://%s/%s/" : "%s://%s/") : ($atCore ? "%s://%s/%s/" : "%s://%s%s");
         $end = $atRoot ? ($atCore ? $core : $hostname) : ($atCore ? $core : $dir);
         $base_url = sprintf($tmplt, $http, $hostname, $end);
-    } else $base_url = 'http://localhost/';
+    }
+    else $base_url = 'http://localhost/';
 
-    if ($parse) {
+    if ($parse)
+    {
         $base_url = parse_url($base_url);
         if (isset($base_url['path'])) if ($base_url['path'] == '/') $base_url['path'] = '';
     }
@@ -46,11 +49,12 @@ $config = array();
 /*============================ Enable PHP Connector HERE ==============================*/
 // https://ckeditor.com/docs/ckfinder/ckfinder3-php/configuration.html#configuration_options_authentication
 
+// $config['authentication'] = function () {
+//     return $_SESSION['isLoggedIn'];
+// };
 $config['authentication'] = function () {
-    // return $_SESSION['isLoggedIn'];
-    return true;
+  return true;
 };
-
 /*============================ License Key ============================================*/
 // https://ckeditor.com/docs/ckfinder/ckfinder3-php/configuration.html#configuration_options_licenseKey
 
@@ -88,8 +92,9 @@ $config['images'] = array(
 $config['backends'][] = array(
     'name'         => 'default',
     'adapter'      => 'local',
-    'baseUrl'      => '/web/admin/uploads/filemanager/',
-    'root'         => $_SERVER['DOCUMENT_ROOT'] . '/web/admin/uploads/filemanager/',
+    'baseUrl'      => dirname(str_replace('ckfinder3.6.1/core/connector/php/', '', baseUrl())).'/upload/filemanager/',
+  // 'baseUrl' => '/admin/upload/filemanager/',
+    'root'         => dirname(dirname(__DIR__)).'/upload/filemanager/',
     'chmodFiles'   => 0644,
     'chmodFolders' => 0755,
     'filesystemEncoding' => 'UTF-8',
@@ -197,30 +202,32 @@ $config['csrfProtection'] = true;
 $config['headers'] = array();
 
 /*============================== End of Configuration =================================*/
-if (!empty($_SESSION['waterM'])) {
+if ( !empty($_SESSION['waterM']) ) {
     $waterM = $_SESSION['waterM'];
-    if (is_array($waterM)) {
-        if ($waterM['actived'] == 'on') {
+    if (is_array($waterM) ) {
+        if ($waterM['actived'] == 'on' ) {
             array_push($config['plugins'], 'ImageWatermark');
             $vitriX = $waterM['vitrix'];
             $vitriY = $waterM['vitriy'];
             $labelA = $valueA = $labelB = $valueB = null;
-            if ($vitriX == 'left' || $vitriX == 'right') {
+            if ( $vitriX == 'left' || $vitriX == 'right' ) {
                 $labelA = $vitriX;
                 $valueA = 0;
-            } elseif ($vitriX == 'center') {
+            }
+            elseif ( $vitriX == 'center' ) {
                 $labelA = 'right';
                 $valueA = 'center';
             }
-            if ($vitriY == 'top' || $vitriY == 'bottom') {
+            if ( $vitriY == 'top' || $vitriY == 'bottom' ) {
                 $labelB = $vitriY;
                 $valueB = 0;
-            } elseif ($vitriY == 'center') {
+            }
+            elseif ($vitriY == 'center') {
                 $labelB = 'bottom';
                 $valueB = 'center';
             }
             $config['ImageWatermark'] = [
-                'imagePath' => __DIR__ . '../../../upload/' . @$waterM['imglogowatermark'], // Also use a custom image.
+                'imagePath' => __DIR__.'../../../upload/'.@$waterM['imglogowatermark'], // Also use a custom image.
                 'position' => [
                     $labelA => $valueA,
                     $labelB => $valueB

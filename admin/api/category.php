@@ -1,11 +1,6 @@
 <?php
+include "config.php";
 
-if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-  http_response_code(403);
-  exit;
-}
-require_once __DIR__ . '/../init.php';
-$db = new Database();
 if (!empty($_POST["id"])) {
   $level = (!empty($_POST["level"])) ? htmlspecialchars($_POST["level"]) : 0;
   $table = (!empty($_POST["table"])) ? htmlspecialchars($_POST["table"]) : '';
@@ -32,8 +27,8 @@ if (!empty($_POST["id"])) {
       break;
   }
 
-  if ($id > 0) {
-    $row = $db->rawQuery("SELECT namevi, id FROM {$table} WHERE {$id_temp} = ? AND type = ? ORDER BY numb ASC, id DESC", [$id, $type]);
+  if ($id) {
+    $row = $d->rawQuery("select namevi, id from $table where $id_temp = ? and type = ? order by numb,id desc", array($id, $type));
   }
 
   $str = '<option value="0">' . chondanhmuc . '</option>';

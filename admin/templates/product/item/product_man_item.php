@@ -1,9 +1,9 @@
 <?php
-$linkProduct = "index.php?page=product&type=" . $type;
+$linkProduct = "index.php?com=product&type=" . $type;
 $linkMan = "$linkProduct&act=man_item";
 $linkForm  = "$linkProduct&act=form_item";
-$linkEdit = "index.php?page=product&act=form_item&type=" . $type;
-$linkDelete = "index.php?page=product&act=delete_item&type=" . $type;
+$linkEdit = "index.php?com=product&act=form_item&type=" . $type;
+$linkDelete = "index.php?com=product&act=delete_item&type=" . $type;
 ?>
 <section class="content-header text-sm">
   <div class="container-fluid">
@@ -33,12 +33,12 @@ $linkDelete = "index.php?page=product&act=delete_item&type=" . $type;
   <div class="card-footer form-group-category text-sm bg-light row">
     <?php if (!empty($config['product'][$type]['list'])) : ?>
       <div class="form-group col-xl-2 col-lg-3 col-md-4 col-sm-4 mb-2">
-        <?= $fn->getLinkCategory('product', 'list', $type) ?>
+        <?= $func->getLinkCategory('product', 'list', $type) ?>
       </div>
     <?php endif; ?>
     <?php if (!empty($config['product'][$type]['cat'])) : ?>
       <div class="form-group col-xl-2 col-lg-3 col-md-4 col-sm-4 mb-2">
-        <?= $fn->getLinkCategory('product', 'cat', $type) ?>
+        <?= $func->getLinkCategory('product', 'cat', $type) ?>
       </div>
     <?php endif; ?>
   </div>
@@ -95,7 +95,7 @@ $linkDelete = "index.php?page=product&act=delete_item&type=" . $type;
                   <?php if (!empty($config['product'][$type]['show_images_item'])): ?>
                     <td class="align-middle">
                       <a href="<?= $linkEdit . $linkID ?>&id=<?= $row['id'] ?>" title="<?= $row["name$lang"] ?>">
-                        <?= $fn->getImage(['file' => $row['file'], 'class' => 'rounded img-preview', 'alt' => $row["name$lang"]]) ?>
+                        <?= $func->getImage(['file' => $row['file'], 'class' => 'rounded img-preview', 'alt' => $row["name$lang"]]) ?>
                       </a>
                     </td>
                   <?php endif; ?>

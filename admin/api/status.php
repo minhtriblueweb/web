@@ -1,32 +1,28 @@
 <?php
-session_start();
-if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-  http_response_code(403);
-  exit;
+include "config.php";
+
+$result = 0;
+$table = (!empty($_POST['table'])) ? htmlspecialchars($_POST['table']) : '';
+$id = (!empty($_POST['id'])) ? htmlspecialchars($_POST['id']) : 0;
+$attr = (!empty($_POST['attr'])) ? htmlspecialchars($_POST['attr']) : '';
+
+if ($id) {
+  $status_detail = $d->rawQueryOne("select status from $table where id = $id limit 0,1");
+  $status_array = (!empty($status_detail['status'])) ? explode(',', $status_detail['status']) : array();
+
+  if (array_search($attr, $status_array) !== false) {
+    $key = array_search($attr, $status_array);
+    unset($status_array[$key]);
+  } else {
+    array_push($status_array, $attr);
+  }
+
+  $data = array();
+  $data['status'] = (!empty($status_array)) ? implode(',', $status_array) : "";
+  $d->where('id', $id);
+  if ($d->update($table, $data)) {
+    $result = 1;
+  }
 }
-require_once __DIR__ . '/../init.php';
-$db = new Database();
-$table = $_POST['table'] ?? '';
-$id = isset($_POST['id']) ? (int)$_POST['id'] : 0;
-$attr = $_POST['attr'] ?? '';
-$checked = isset($_POST['checked']) ? (int)$_POST['checked'] : 0;
-if (!$table || !$id || !$attr) {
-  echo json_encode(['success' => false]);
-  exit;
-}
-$table = preg_replace('/[^a-zA-Z0-9_]/', '', $table);
-$row = $db->rawQueryOne("SELECT status FROM `$table` WHERE id = ?", [$id]);
-if (!$row) {
-  echo json_encode(['success' => false]);
-  exit;
-}
-$status_array = array_filter(array_map('trim', explode(',', $row['status'] ?? '')));
-if ($checked && !in_array($attr, $status_array)) {
-  $status_array[] = $attr;
-} elseif (!$checked && in_array($attr, $status_array)) {
-  $status_array = array_diff($status_array, [$attr]);
-}
-$new_status = implode(',', $status_array);
-$stmt = $db->execute("UPDATE `$table` SET `status` = ? WHERE id = ?", [$new_status, $id]);
-echo json_encode(['success' => $stmt !== false]);
-exit;
+
+echo $result;

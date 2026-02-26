@@ -1,9 +1,9 @@
 <?php
-$linkProduct = "index.php?page=product&type=" . $type;
+$linkProduct = "index.php?com=product&type=" . $type;
 $linkMan = "$linkProduct&act=man_sub";
 $linkForm  = "$linkProduct&act=form_sub";
-$linkEdit = "index.php?page=product&act=form_sub&type=" . $type;
-$linkDelete = "index.php?page=product&act=delete_sub&type=" . $type;
+$linkEdit = "index.php?com=product&act=form_sub&type=" . $type;
+$linkDelete = "index.php?com=product&act=delete_sub&type=" . $type;
 ?>
 <section class="content-header text-sm">
   <div class="container-fluid">
@@ -36,7 +36,7 @@ $linkDelete = "index.php?page=product&act=delete_sub&type=" . $type;
     foreach ($categories as $v) {
       if (!empty($config['product'][$type][$v])) {
         echo '<div class="form-group col-xl-2 col-lg-3 col-md-4 col-sm-4 mb-2">';
-        echo $fn->getLinkCategory('product', $v, $type);
+        echo $func->getLinkCategory('product', $v, $type);
         echo '</div>';
       }
     }
@@ -96,7 +96,7 @@ $linkDelete = "index.php?page=product&act=delete_sub&type=" . $type;
                   <?php if (!empty($config['product'][$type]['show_images_sub'])): ?>
                     <td class="align-middle">
                       <a href="<?= $linkEdit . $linkID ?>&id=<?= $row['id'] ?>" title="<?= $row["name$lang"] ?>">
-                        <?= $fn->getImage(['file' => $row['file'], 'class' => 'rounded img-preview', 'alt' => $row["name$lang"]]) ?>
+                        <?= $func->getImage(['file' => $row['file'], 'class' => 'rounded img-preview', 'alt' => $row["name$lang"]]) ?>
                       </a>
                     </td>
                   <?php endif; ?>

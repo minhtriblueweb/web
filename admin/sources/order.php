@@ -2,7 +2,7 @@
 if (!defined('SOURCES')) die("Error");
 
 /* Kiểm tra active đơn hàng */
-if (!isset($config['order']['active']) || $config['order']['active'] == false) $fn->transfer(trangkhongtontai, "index.php", false);
+if (!isset($config['order']['active']) || $config['order']['active'] == false) $func->transfer(trangkhongtontai, "index.php", false);
 
 /* Cấu hình đường dẫn trả về */
 $strUrl = "";
@@ -20,25 +20,29 @@ switch ($act) {
     viewMans();
     $template = "order/man/mans";
     break;
+
   case "edit":
     editMan();
     $template = "order/man/man_add";
     break;
+
   case "save":
     saveMan();
     break;
+
   case "delete":
     deleteMan();
     break;
+
   default:
-    $fn->transfer(trangkhongtontai, "index.php", false);
+    $func->transfer(trangkhongtontai, "index.php", false);
     break;
 }
 
 /* View order */
 function viewMans()
 {
-  global $db, $fn, $strUrl, $curPage, $items, $paging, $minTotal, $maxTotal, $price_from, $price_to, $allNewOrder, $totalNewOrder, $allConfirmOrder, $totalConfirmOrder, $allDeliveriedOrder, $totalDeliveriedOrder, $allCanceledOrder, $totalCanceledOrder;
+  global $d, $func, $strUrl, $curPage, $items, $paging, $minTotal, $maxTotal, $price_from, $price_to, $allNewOrder, $totalNewOrder, $allConfirmOrder, $totalConfirmOrder, $allDeliveriedOrder, $totalDeliveriedOrder, $allCanceledOrder, $totalCanceledOrder;
 
   $where = "";
 
@@ -88,43 +92,43 @@ function viewMans()
   $limit = " LIMIT $startpoint, $perPage";
 
   /* ===== DANH SÁCH ĐƠN HÀNG ===== */
-  $sql = "SELECT * FROM `tbl_order` WHERE id <> 0 $where ORDER BY date_created DESC $limit";
-  $items = $db->rawQuery($sql);
+  $sql = "SELECT * FROM `tbl_order` WHERE id <> 0 $where ORDER BY numb ASC, date_created DESC $limit";
+  $items = $d->rawQuery($sql);
 
   /* ===== ĐẾM TỔNG ===== */
   $sqlNum = "SELECT COUNT(*) AS num FROM `tbl_order` WHERE id <> 0 $where";
-  $count = $db->rawQueryOne($sqlNum);
+  $count = $d->rawQueryOne($sqlNum);
   $total = !empty($count) ? (int)$count['num'] : 0;
   $url    = $strUrl;
-  $paging = $fn->pagination($total, $perPage, $curPage, $url);
+  $paging = $func->pagination($total, $perPage, $curPage, $url);
 
   /* ===== GIÁ MIN ===== */
-  $minTotal = $db->rawQueryOne("SELECT MIN(total_price) AS min_price FROM tbl_order");
+  $minTotal = $d->rawQueryOne("SELECT MIN(total_price) AS min_price FROM tbl_order");
   $minTotal = !empty($minTotal['min_price']) ? $minTotal['min_price'] : 0;
 
   /* ===== GIÁ MAX ===== */
-  $maxTotal = $db->rawQueryOne("SELECT MAX(total_price) AS max_price FROM tbl_order");
+  $maxTotal = $d->rawQueryOne("SELECT MAX(total_price) AS max_price FROM tbl_order");
   $maxTotal = !empty($maxTotal['max_price']) ? $maxTotal['max_price'] : 0;
 
   /* ===== THỐNG KÊ ĐƠN HÀNG ===== */
 
   // Mới đặt
-  $order_count = $db->rawQueryOne("SELECT COUNT(id) AS total, SUM(total_price) AS amount FROM tbl_order WHERE order_status = 1");
+  $order_count = $d->rawQueryOne("SELECT COUNT(id) AS total, SUM(total_price) AS amount FROM tbl_order WHERE order_status = 1");
   $allNewOrder   = $order_count['total'];
   $totalNewOrder = $order_count['amount'];
 
   // Đã xác nhận
-  $order_count = $db->rawQueryOne("SELECT COUNT(id) AS total, SUM(total_price) AS amount FROM tbl_order WHERE order_status = 2");
+  $order_count = $d->rawQueryOne("SELECT COUNT(id) AS total, SUM(total_price) AS amount FROM tbl_order WHERE order_status = 2");
   $allConfirmOrder   = $order_count['total'];
   $totalConfirmOrder = $order_count['amount'];
 
   // Đã giao
-  $order_count = $db->rawQueryOne("SELECT COUNT(id) AS total, SUM(total_price) AS amount FROM tbl_order WHERE order_status = 4");
+  $order_count = $d->rawQueryOne("SELECT COUNT(id) AS total, SUM(total_price) AS amount FROM tbl_order WHERE order_status = 4");
   $allDeliveriedOrder   = $order_count['total'];
   $totalDeliveriedOrder = $order_count['amount'];
 
   // Đã hủy
-  $order_count = $db->rawQueryOne("SELECT COUNT(id) AS total, SUM(total_price) AS amount FROM tbl_order WHERE order_status = 5");
+  $order_count = $d->rawQueryOne("SELECT COUNT(id) AS total, SUM(total_price) AS amount FROM tbl_order WHERE order_status = 5");
   $allCanceledOrder   = $order_count['total'];
   $totalCanceledOrder = $order_count['amount'];
 }
@@ -132,16 +136,16 @@ function viewMans()
 /* Edit order */
 function editMan()
 {
-  global $db, $fn, $curPage, $item, $order_detail;
+  global $d, $func, $item, $order_detail;
   $id = (!empty($_GET['id'])) ? htmlspecialchars($_GET['id']) : 0;
   if (empty($id)) {
-    $fn->transfer(khongnhanduocdulieu, "index.php?page=order&act=man", false);
+    $func->transfer(khongnhanduocdulieu, "index.php?com=order&act=man", false);
   } else {
-    $item = $db->rawQueryOne("SELECT * FROM `tbl_order` WHERE id = ? LIMIT 0,1", array($id));
+    $item = $d->rawQueryOne("SELECT * FROM `tbl_order` WHERE id = ? LIMIT 0,1", array($id));
     if (empty($item)) {
-      $fn->transfer(dulieukhongcothuc, "index.php?page=order&act=man", false);
+      $func->transfer(dulieukhongcothuc, "index.php?com=order&act=man", false);
     } else {
-      $order_detail = $db->rawQuery("SELECT * FROM `tbl_order_detail` WHERE id_order = ? ORDER BY id DESC", array($id));
+      $order_detail = $d->rawQuery("SELECT * FROM `tbl_order_detail` WHERE id_order = ? ORDER BY id DESC", array($id));
     }
   }
 }
@@ -149,55 +153,59 @@ function editMan()
 /* Save order */
 function saveMan()
 {
-  global $db, $fn;
-  if (empty($_POST)) {
-    $fn->transfer(khongnhanduocdulieu, "index.php?page=order&act=man", false);
+  global $d, $func;
+  if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    return;
   }
-  $id = (!empty($_POST['id'])) ? htmlspecialchars($_POST['id']) : 0;
+  $id   = (!empty($_POST['id'])) ? htmlspecialchars($_POST['id']) : 0;
   $data = (!empty($_POST['data'])) ? $_POST['data'] : null;
   if ($data) {
     foreach ($data as $column => $value) {
-      $data[$column] = htmlspecialchars($fn->sanitize($value));
+      $data[$column] = htmlspecialchars($func->sanitize($value));
     }
   }
   if ($id) {
-    $db->where('id', $id);
-    if ($db->update('tbl_order', $data)) {
-      $fn->transfer(capnhatdulieuthanhcong, "index.php?page=order&act=man");
+    $d->where('id', $id);
+    if ($d->update('tbl_order', $data)) {
+      if (isset($_POST['save-here'])) {
+        $func->Notify(capnhatdulieuthanhcong, "index.php?com=order&act=edit&id=$id", 'success');
+      } else {
+        $func->transfer(capnhatdulieuthanhcong, "index.php?com=order&act=man");
+      }
     } else {
-      $fn->transfer(capnhatdulieubiloi, "index.php?page=order&act=man", false);
+      $func->transfer(capnhatdulieubiloi, "index.php?com=order&act=man", false);
     }
   } else {
-    $fn->transfer(dulieurong, "index.php?page=order&act=man", false);
+    $func->transfer(dulieurong, "index.php?com=order&act=man", false);
   }
 }
 
 /* Delete order */
 function deleteMan()
 {
-  global $db, $fn, $curPage;
+  global $d, $func;
   $id = (!empty($_GET['id'])) ? htmlspecialchars($_GET['id']) : 0;
   if ($id) {
-    $row = $db->rawQueryOne("SELECT id FROM tbl_order WHERE id = ? LIMIT 1", array($id));
+    $row = $d->rawQueryOne("SELECT id FROM tbl_order WHERE id = ? LIMIT 1", array($id));
     if (!empty($row)) {
-      $db->rawQuery("DELETE FROM tbl_order_detail WHERE id_order = ?", array($id));
-      $db->rawQuery("DELETE FROM tbl_order WHERE id = ?", array($id));
-      $fn->transfer(xoadulieuthanhcong, "index.php?page=order&act=man");
+      $d->rawQuery("DELETE FROM tbl_order_detail WHERE id_order = ?", array($id));
+      $d->rawQuery("DELETE FROM tbl_order WHERE id = ?", array($id));
+      $func->transfer(xoadulieuthanhcong, "index.php?com=order&act=man");
     } else {
-      $fn->transfer(xoadulieubiloi, "index.php?page=order&act=man", false);
+      $func->transfer(xoadulieubiloi, "index.php?com=order&act=man", false);
     }
   } elseif (isset($_GET['listid'])) {
     $listid = explode(",", $_GET['listid']);
     for ($i = 0; $i < count($listid); $i++) {
       $id = htmlspecialchars($listid[$i]);
-      $row = $db->rawQueryOne("SELECT id FROM tbl_order WHERE id = ? LIMIT 1", array($id));
+      $row = $d->rawQueryOne("SELECT id FROM tbl_order WHERE id = ? LIMIT 1", array($id));
       if (!empty($row)) {
-        $db->rawQuery("DELETE FROM tbl_order_detail WHERE id_order = ?", array($id));
-        $db->rawQuery("DELETE FROM tbl_order WHERE id = ?", array($id));
+        $d->rawQuery("DELETE FROM tbl_order_detail WHERE id_order = ?", array($id));
+        $d->rawQuery("DELETE FROM tbl_order WHERE id = ?", array($id));
       }
     }
-    $fn->transfer(xoadulieuthanhcong, "index.php?page=order&act=man");
+    $func->transfer(xoadulieuthanhcong, "index.php?com=order&act=man");
   } else {
-    $fn->transfer(khongnhanduocdulieu, "index.php?page=order&act=man", false);
+    $func->transfer(khongnhanduocdulieu, "index.php?com=order&act=man", false);
   }
 }

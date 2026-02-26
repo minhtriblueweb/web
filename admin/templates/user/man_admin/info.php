@@ -4,7 +4,7 @@ if (!empty($_GET['changepass']) && ($_GET['changepass'] == 1)) {
 } else {
   $changepass = '';
 }
-$linkSave = "index.php?page=user&act=info_admin" . $changepass;
+$linkSave = "index.php?com=user&act=info_admin" . $changepass;
 ?>
 <!-- Content Header -->
 <section class="content-header text-sm">

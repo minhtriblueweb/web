@@ -9,14 +9,14 @@
       <div class="menu-bar-left-list">
         <div class="menu-list">
           <?php
-          $listsMenu = $db->rawQuery("select id,name{$lang},slug{$lang},file from tbl_product_list where type = 'san-pham' and find_in_set('hienthi',status) and find_in_set('menu',status) order by numb,id desc limit 10");
+          $listsMenu = $d->rawQuery("select id,name{$lang},slug{$lang},file from tbl_product_list where type = 'san-pham' and find_in_set('hienthi',status) and find_in_set('menu',status) order by numb,id desc limit 10");
           foreach ($listsMenu as $v_list):
-            $cats = $db->rawQuery("select id,id_list,name{$lang},slug{$lang},file from tbl_product_cat where id_list = ? and find_in_set('hienthi',status) order by numb,id desc", [$v_list['id']]);
+            $cats = $d->rawQuery("select id,id_list,name{$lang},slug{$lang},file from tbl_product_cat where id_list = ? and find_in_set('hienthi',status) order by numb,id desc", [$v_list['id']]);
           ?>
             <div class="menu-list-item <?= !empty($cats) ? 'has-cat' : '' ?>">
               <a href="<?= $v_list["slug$lang"] ?>" title="<?= $v_list["name$lang"] ?>">
                 <span class="menu-icon">
-                  <?= $fn->getImageCustom(['file' => $v_list['file'], 'width' => 24, 'height' => 24, 'alt' => $v_list["name$lang"], 'title' => $v_list["name$lang"], 'lazy' => false]) ?>
+                  <?= $func->getImageCustom(['file' => $v_list['file'], 'width' => 24, 'height' => 24, 'alt' => $v_list["name$lang"], 'title' => $v_list["name$lang"], 'lazy' => false]) ?>
                 </span>
                 <span class="menu-text"><?= $v_list["name$lang"] ?></span>
               </a>
@@ -28,7 +28,7 @@
                       <div class="menu-cat-col">
                         <a href="<?= $v_cat["slug$lang"] ?>" title="<?= $v_cat["name$lang"] ?>">
                           <span class="menu-cat-img">
-                            <?= $fn->getImageCustom(['file' => $v_cat['file'], 'width' => 64, 'height' => 64, 'alt' => $v_cat["name$lang"], 'title' => $v_cat["name$lang"], 'lazy' => true]) ?>
+                            <?= $func->getImageCustom(['file' => $v_cat['file'], 'width' => 64, 'height' => 64, 'alt' => $v_cat["name$lang"], 'title' => $v_cat["name$lang"], 'lazy' => true]) ?>
                           </span>
                           <span class="menu-cat-text"><?= $v_cat["name$lang"] ?></span>
                         </a>

@@ -28,7 +28,7 @@
             <div class="form-group d-inline-block mb-2 mr-5">
               <label for="<?= $check ?>-checkbox" class="d-inline-block align-middle mb-0 mr-3 form-label"><?= defined($check) ? constant($check) : $check ?>:</label>
               <label class="switch switch-success">
-                <input type="checkbox" name="data[status][<?= $check ?>]" class="switch-input custom-control-input" id="<?= $check ?>-checkbox" <?= $fn->is_checked($check, $result['status'] ?? '', $result['id'] ?? '') ?>>
+                <input type="checkbox" name="data[status][<?= $check ?>]" class="switch-input custom-control-input" id="<?= $check ?>-checkbox" <?= $func->is_checked($check, $result['status'] ?? '', $result['id'] ?? '') ?>>
               </label>
             </div>
           <?php endforeach; ?>

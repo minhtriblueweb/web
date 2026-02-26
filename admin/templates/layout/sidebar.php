@@ -1,8 +1,9 @@
 <!-- Main Sidebar -->
 <aside class="main-sidebar sidebar-dark-primary elevation-4 text-sm">
+
   <!-- Logo -->
   <a class="brand-link" href="index.php">
-    <?= $fn->getImageCustom(['file' => $logo['file'], 'class' => 'brand-image', 'width'  => 200, 'height'  => 200, 'zc' => 4, 'lazy' => false]) ?>
+    <?= $func->getImageCustom(['file' => $logo['file'], 'class' => 'brand-image', 'width'  => 200, 'height'  => 200, 'zc' => 4, 'lazy' => false]) ?>
   </a>
 
   <!-- Sidebar -->
@@ -12,7 +13,7 @@
         <!-- dashboard -->
         <?php
         $active = "";
-        if ($page == 'index' || $page == '') $active = 'active';
+        if ($com == 'index' || $com == '') $active = 'active';
         ?>
         <li class="nav-item <?= $active ?>">
           <a class="nav-link <?= $active ?>" href="index.php" title="<?= dashboard ?>">
@@ -381,8 +382,8 @@
               $none = "";
               $active = "";
               $menuopen = "";
-              if (isset($is_permission) && $is_permission == true) if ($fn->checkPermission('product', 'man_list', $k, null, 'phrase-1') && $fn->checkPermission('product', 'man_cat', $k, null, 'phrase-1') && $fn->checkPermission('product', 'man_item', $k, null, 'phrase-1') && $fn->checkPermission('product', 'man_sub', $k, null, 'phrase-1') && $fn->checkPermission('product', 'man_brand', $k, null, 'phrase-1') && $fn->checkPermission('product', 'man', $k, null, 'phrase-1') && $fn->checkPermission('import', 'man', $k, null, 'phrase-1') && $fn->checkPermission('export', 'man', $k, null, 'phrase-1')) $none = "d-none";
-              if ((($page == 'product')  || ($page == 'gallery') || ($page == 'import') || ($page == 'export')) && ($k == $_GET['type'])) {
+              if (isset($is_permission) && $is_permission == true) if ($func->checkPermission('product', 'man_list', $k, null, 'phrase-1') && $func->checkPermission('product', 'man_cat', $k, null, 'phrase-1') && $func->checkPermission('product', 'man_item', $k, null, 'phrase-1') && $func->checkPermission('product', 'man_sub', $k, null, 'phrase-1') && $func->checkPermission('product', 'man_brand', $k, null, 'phrase-1') && $func->checkPermission('product', 'man', $k, null, 'phrase-1') && $func->checkPermission('import', 'man', $k, null, 'phrase-1') && $func->checkPermission('export', 'man', $k, null, 'phrase-1')) $none = "d-none";
+              if ((($com == 'product')  || ($com == 'gallery') || ($com == 'import') || ($com == 'export')) && ($k == $_GET['type'])) {
                 $active = 'active';
                 $menuopen = 'menu-open';
               }
@@ -400,45 +401,45 @@
                     if (isset($v['list']) && $v['list'] == true) {
                       $none = "";
                       $active = "";
-                      if (isset($is_permission) && $is_permission == true) if ($fn->checkPermission('product', 'man_list', $k, null, 'phrase-1')) $none = "d-none";
-                      if ($page == 'product' && ($act == 'man_list' || $act == 'form_list') && $k == $_GET['type']) $active = "active"; ?>
-                      <li class="nav-item <?= $none ?>"><a class="nav-link <?= $active ?>" href="index.php?page=product&act=man_list&type=<?= $k ?>" title="<?= danhmuccap1 ?>"><i class="nav-icon text-sm far fa-caret-square-right"></i>
+                      if (isset($is_permission) && $is_permission == true) if ($func->checkPermission('product', 'man_list', $k, null, 'phrase-1')) $none = "d-none";
+                      if ($com == 'product' && ($act == 'man_list' || $act == 'form_list') && $k == $_GET['type']) $active = "active"; ?>
+                      <li class="nav-item <?= $none ?>"><a class="nav-link <?= $active ?>" href="index.php?com=product&act=man_list&type=<?= $k ?>" title="<?= danhmuccap1 ?>"><i class="nav-icon text-sm far fa-caret-square-right"></i>
                           <p><?= danhmuccap1 ?></p>
                         </a></li>
                     <?php } ?>
                     <?php if (isset($v['cat']) && $v['cat'] == true) {
                       $none = "";
                       $active = "";
-                      if (isset($is_permission) && $is_permission == true) if ($fn->checkPermission('product', 'man_cat', $k, null, 'phrase-1')) $none = "d-none";
-                      if ($page == 'product' && ($act == 'man_cat' || $act == 'form_cat') && $k == $_GET['type']) $active = "active"; ?>
-                      <li class="nav-item <?= $none ?>"><a class="nav-link <?= $active ?>" href="index.php?page=product&act=man_cat&type=<?= $k ?>" title="<?= danhmuccap2 ?>"><i class="nav-icon text-sm far fa-caret-square-right"></i>
+                      if (isset($is_permission) && $is_permission == true) if ($func->checkPermission('product', 'man_cat', $k, null, 'phrase-1')) $none = "d-none";
+                      if ($com == 'product' && ($act == 'man_cat' || $act == 'form_cat') && $k == $_GET['type']) $active = "active"; ?>
+                      <li class="nav-item <?= $none ?>"><a class="nav-link <?= $active ?>" href="index.php?com=product&act=man_cat&type=<?= $k ?>" title="<?= danhmuccap2 ?>"><i class="nav-icon text-sm far fa-caret-square-right"></i>
                           <p><?= danhmuccap2 ?></p>
                         </a></li>
                     <?php } ?>
                     <?php if (isset($v['item']) && $v['item'] == true) {
                       $none = "";
                       $active = "";
-                      if (isset($is_permission) && $is_permission == true) if ($fn->checkPermission('product', 'man_item', $k, null, 'phrase-1')) $none = "d-none";
-                      if ($page == 'product' && ($act == 'man_item' || $act == 'form_item') && $k == $_GET['type']) $active = "active"; ?>
-                      <li class="nav-item <?= $none ?>"><a class="nav-link <?= $active ?>" href="index.php?page=product&act=man_item&type=<?= $k ?>" title="<?= danhmuccap3 ?>"><i class="nav-icon text-sm far fa-caret-square-right"></i>
+                      if (isset($is_permission) && $is_permission == true) if ($func->checkPermission('product', 'man_item', $k, null, 'phrase-1')) $none = "d-none";
+                      if ($com == 'product' && ($act == 'man_item' || $act == 'form_item') && $k == $_GET['type']) $active = "active"; ?>
+                      <li class="nav-item <?= $none ?>"><a class="nav-link <?= $active ?>" href="index.php?com=product&act=man_item&type=<?= $k ?>" title="<?= danhmuccap3 ?>"><i class="nav-icon text-sm far fa-caret-square-right"></i>
                           <p><?= danhmuccap3 ?></p>
                         </a></li>
                     <?php } ?>
                     <?php if (isset($v['sub']) && $v['sub'] == true) {
                       $none = "";
                       $active = "";
-                      if (isset($is_permission) && $is_permission == true) if ($fn->checkPermission('product', 'man_sub', $k, null, 'phrase-1')) $none = "d-none";
-                      if ($page == 'product' && ($act == 'man_sub' || $act == 'form_sub') && $k == $_GET['type']) $active = "active"; ?>
-                      <li class="nav-item <?= $none ?>"><a class="nav-link <?= $active ?>" href="index.php?page=product&act=man_sub&type=<?= $k ?>" title="<?= danhmuccap4 ?>"><i class="nav-icon text-sm far fa-caret-square-right"></i>
+                      if (isset($is_permission) && $is_permission == true) if ($func->checkPermission('product', 'man_sub', $k, null, 'phrase-1')) $none = "d-none";
+                      if ($com == 'product' && ($act == 'man_sub' || $act == 'form_sub') && $k == $_GET['type']) $active = "active"; ?>
+                      <li class="nav-item <?= $none ?>"><a class="nav-link <?= $active ?>" href="index.php?com=product&act=man_sub&type=<?= $k ?>" title="<?= danhmuccap4 ?>"><i class="nav-icon text-sm far fa-caret-square-right"></i>
                           <p><?= danhmuccap4 ?></p>
                         </a></li>
                     <?php } ?>
                     <?php if (isset($v['vari']) && $v['vari'] == true) {
                       $none = "";
                       $active = "";
-                      if (isset($is_permission) && $is_permission == true) if ($fn->checkPermission('product', 'man_vari', $k, null, 'phrase-1')) $none = "d-none";
-                      if ($page == 'product' && ($act == 'man_vari' || $act == 'form_vari') && $k == $_GET['type']) $active = "active"; ?>
-                      <li class="nav-item <?= $none ?>"><a class="nav-link <?= $active ?>" href="index.php?page=product&act=man_vari&type=<?= $k ?>" title="Danh mục cấp 5"><i class="nav-icon text-sm far fa-caret-square-right"></i>
+                      if (isset($is_permission) && $is_permission == true) if ($func->checkPermission('product', 'man_vari', $k, null, 'phrase-1')) $none = "d-none";
+                      if ($com == 'product' && ($act == 'man_vari' || $act == 'form_vari') && $k == $_GET['type']) $active = "active"; ?>
+                      <li class="nav-item <?= $none ?>"><a class="nav-link <?= $active ?>" href="index.php?com=product&act=man_vari&type=<?= $k ?>" title="Danh mục cấp 5"><i class="nav-icon text-sm far fa-caret-square-right"></i>
                           <p>Danh mục cấp 5</p>
                         </a></li>
                   <?php }
@@ -446,52 +447,52 @@
                   <?php if (isset($v['brand']) && $v['brand'] == true) {
                     $none = "";
                     $active = "";
-                    if (isset($is_permission) && $is_permission == true) if ($fn->checkPermission('product', 'man_brand', $k, null, 'phrase-1')) $none = "d-none";
-                    if ($page == 'product' && ($act == 'man_brand' || $act == 'form_brand') && $k == $_GET['type']) $active = "active"; ?>
-                    <li class="nav-item <?= $none ?>"><a class="nav-link <?= $active ?>" href="index.php?page=product&act=man_brand&type=<?= $k ?>" title="<?= danhmuchang ?>"><i class="nav-icon text-sm far fa-caret-square-right"></i>
+                    if (isset($is_permission) && $is_permission == true) if ($func->checkPermission('product', 'man_brand', $k, null, 'phrase-1')) $none = "d-none";
+                    if ($com == 'product' && ($act == 'man_brand' || $act == 'form_brand') && $k == $_GET['type']) $active = "active"; ?>
+                    <li class="nav-item <?= $none ?>"><a class="nav-link <?= $active ?>" href="index.php?com=product&act=man_brand&type=<?= $k ?>" title="<?= danhmuchang ?>"><i class="nav-icon text-sm far fa-caret-square-right"></i>
                         <p><?= danhmuchang ?></p>
                       </a></li>
                   <?php } ?>
                   <?php if (isset($v['color']) && $v['color'] == true) {
                     $none = "";
                     $active = "";
-                    if (isset($is_permission) && $is_permission == true) if ($fn->checkPermission('product', 'man_color', $k, null, 'phrase-1')) $none = "d-none";
-                    if ($page == 'product' && ($act == 'man_color' || $act == 'add_color' || $act == 'edit_color') && $k == $_GET['type']) $active = "active"; ?>
-                    <li class="nav-item <?= $none ?>"><a class="nav-link <?= $active ?>" href="index.php?page=product&act=man_color&type=<?= $k ?>" title="<?= danhmucmausac ?>"><i class="nav-icon text-sm far fa-caret-square-right"></i>
+                    if (isset($is_permission) && $is_permission == true) if ($func->checkPermission('product', 'man_color', $k, null, 'phrase-1')) $none = "d-none";
+                    if ($com == 'product' && ($act == 'man_color' || $act == 'add_color' || $act == 'edit_color') && $k == $_GET['type']) $active = "active"; ?>
+                    <li class="nav-item <?= $none ?>"><a class="nav-link <?= $active ?>" href="index.php?com=product&act=man_color&type=<?= $k ?>" title="<?= danhmucmausac ?>"><i class="nav-icon text-sm far fa-caret-square-right"></i>
                         <p><?= danhmucmausac ?></p>
                       </a></li>
                   <?php } ?>
                   <?php if (isset($v['size']) && $v['size'] == true) {
                     $none = "";
                     $active = "";
-                    if (isset($is_permission) && $is_permission == true) if ($fn->checkPermission('product', 'man_size', $k, null, 'phrase-1')) $none = "d-none";
-                    if ($page == 'product' && ($act == 'man_size' || $act == 'add_size' || $act == 'edit_size') && $k == $_GET['type']) $active = "active"; ?>
-                    <li class="nav-item <?= $none ?>"><a class="nav-link <?= $active ?>" href="index.php?page=product&act=man_size&type=<?= $k ?>" title="<?= danhmuckichthuoc ?>"><i class="nav-icon text-sm far fa-caret-square-right"></i>
+                    if (isset($is_permission) && $is_permission == true) if ($func->checkPermission('product', 'man_size', $k, null, 'phrase-1')) $none = "d-none";
+                    if ($com == 'product' && ($act == 'man_size' || $act == 'add_size' || $act == 'edit_size') && $k == $_GET['type']) $active = "active"; ?>
+                    <li class="nav-item <?= $none ?>"><a class="nav-link <?= $active ?>" href="index.php?com=product&act=man_size&type=<?= $k ?>" title="<?= danhmuckichthuoc ?>"><i class="nav-icon text-sm far fa-caret-square-right"></i>
                         <p><?= danhmuckichthuoc ?></p>
                       </a></li>
                   <?php } ?>
                   <?php
                   $none = "";
                   $active = "";
-                  if (isset($is_permission) && $is_permission == true) if ($fn->checkPermission('product', 'man', $k, null, 'phrase-1')) $none = "d-none";
+                  if (isset($is_permission) && $is_permission == true) if ($func->checkPermission('product', 'man', $k, null, 'phrase-1')) $none = "d-none";
                   if (
-                    in_array($page, ['product', 'gallery'], true)
+                    in_array($com, ['product', 'gallery'], true)
                     && in_array($act, ['man', 'form','copy'], true)
                     && $type === $k
                   ) {
                     $active = 'active';
                   }
                   ?>
-                  <li class="nav-item <?= $none ?>"><a class="nav-link <?= $active ?>" href="index.php?page=product&act=man&type=<?= $k ?>" title="<?= $v['title_main'] ?>"><i class="nav-icon text-sm far fa-caret-square-right"></i>
+                  <li class="nav-item <?= $none ?>"><a class="nav-link <?= $active ?>" href="index.php?com=product&act=man&type=<?= $k ?>" title="<?= $v['title_main'] ?>"><i class="nav-icon text-sm far fa-caret-square-right"></i>
                       <p><?= $v['title_main'] ?></p>
                     </a></li>
                   <?php if (isset($v['import']) && $v['import'] == true) {
                     $none = "";
                     $active = "";
-                    if (isset($is_permission) && $is_permission == true) if ($fn->checkPermission('import', 'man', $k, null, 'phrase-1')) $none = "d-none";
-                    if (($page == 'import') && ($k == $_GET['type'])) $active = "active"; ?>
+                    if (isset($is_permission) && $is_permission == true) if ($func->checkPermission('import', 'man', $k, null, 'phrase-1')) $none = "d-none";
+                    if (($com == 'import') && ($k == $_GET['type'])) $active = "active"; ?>
                     <li class="nav-item <?= $none ?>">
-                      <a class="nav-link <?= $active ?>" href="index.php?page=import&act=man&type=<?= $k ?>" title="Import"><i class="nav-icon text-sm far fa-caret-square-right"></i>
+                      <a class="nav-link <?= $active ?>" href="index.php?com=import&act=man&type=<?= $k ?>" title="Import"><i class="nav-icon text-sm far fa-caret-square-right"></i>
                         <p>Import</p>
                       </a>
                     </li>
@@ -499,10 +500,10 @@
                   <?php if (isset($v['export']) && $v['export'] == true) {
                     $none = "";
                     $active = "";
-                    if (isset($is_permission) && $is_permission == true) if ($fn->checkPermission('export', 'man', $k, null, 'phrase-1')) $none = "d-none";
-                    if (($page == 'export') && ($act == 'man') && ($k == $_GET['type'])) $active = "active"; ?>
+                    if (isset($is_permission) && $is_permission == true) if ($func->checkPermission('export', 'man', $k, null, 'phrase-1')) $none = "d-none";
+                    if (($com == 'export') && ($act == 'man') && ($k == $_GET['type'])) $active = "active"; ?>
                     <li class="nav-item <?= $none ?>">
-                      <a class="nav-link <?= $active ?>" href="index.php?page=export&act=man&type=<?= $k ?>" title="Export"><i class="nav-icon text-sm far fa-caret-square-right"></i>
+                      <a class="nav-link <?= $active ?>" href="index.php?com=export&act=man&type=<?= $k ?>" title="Export"><i class="nav-icon text-sm far fa-caret-square-right"></i>
                         <p>Export</p>
                       </a>
                     </li>
@@ -522,8 +523,8 @@
                 $none = "";
                 $active = "";
                 $menuopen = "";
-                if (isset($is_permission) && $is_permission == true) if ($fn->checkPermission('news', 'man_list', $k, null, 'phrase-1') && $fn->checkPermission('news', 'man_cat', $k, null, 'phrase-1') && $fn->checkPermission('news', 'man_item', $k, null, 'phrase-1') && $fn->checkPermission('news', 'man_sub', $k, null, 'phrase-1') && $fn->checkPermission('news', 'man', $k, null, 'phrase-1')) $none = "d-none";
-                if (($page == 'news') && ($k == $_GET['type'])) {
+                if (isset($is_permission) && $is_permission == true) if ($func->checkPermission('news', 'man_list', $k, null, 'phrase-1') && $func->checkPermission('news', 'man_cat', $k, null, 'phrase-1') && $func->checkPermission('news', 'man_item', $k, null, 'phrase-1') && $func->checkPermission('news', 'man_sub', $k, null, 'phrase-1') && $func->checkPermission('news', 'man', $k, null, 'phrase-1')) $none = "d-none";
+                if (($com == 'news') && ($k == $_GET['type'])) {
                   $active = 'active';
                   $menuopen = 'menu-open';
                 }
@@ -540,46 +541,46 @@
                     <?php if (isset($v['list']) && $v['list'] == true) {
                       $none = "";
                       $active = "";
-                      if (isset($is_permission) && $is_permission == true) if ($fn->checkPermission('news', 'man_list', $k, null, 'phrase-1')) $none = "d-none";
-                      if ($page == 'news' && ($act == 'man_list' || $act == 'form_list') && $k == $_GET['type']) $active = "active"; ?>
-                      <li class="nav-item <?= $none ?>"><a class="nav-link <?= $active ?>" href="index.php?page=news&act=man_list&type=<?= $k ?>" title="<?= danhmuccap1 ?>"><i class="nav-icon text-sm far fa-caret-square-right"></i>
+                      if (isset($is_permission) && $is_permission == true) if ($func->checkPermission('news', 'man_list', $k, null, 'phrase-1')) $none = "d-none";
+                      if ($com == 'news' && ($act == 'man_list' || $act == 'form_list') && $k == $_GET['type']) $active = "active"; ?>
+                      <li class="nav-item <?= $none ?>"><a class="nav-link <?= $active ?>" href="index.php?com=news&act=man_list&type=<?= $k ?>" title="<?= danhmuccap1 ?>"><i class="nav-icon text-sm far fa-caret-square-right"></i>
                           <p><?= danhmuccap1 ?></p>
                         </a></li>
                     <?php } ?>
                     <?php if (isset($v['cat']) && $v['cat'] == true) {
                       $none = "";
                       $active = "";
-                      if (isset($is_permission) && $is_permission == true) if ($fn->checkPermission('news', 'man_cat', $k, null, 'phrase-1')) $none = "d-none";
-                      if ($page == 'news' && ($act == 'man_cat' || $act == 'form_cat') && $k == $_GET['type']) $active = "active"; ?>
-                      <li class="nav-item <?= $none ?>"><a class="nav-link <?= $active ?>" href="index.php?page=news&act=man_cat&type=<?= $k ?>" title="<?= danhmuccap2 ?>"><i class="nav-icon text-sm far fa-caret-square-right"></i>
+                      if (isset($is_permission) && $is_permission == true) if ($func->checkPermission('news', 'man_cat', $k, null, 'phrase-1')) $none = "d-none";
+                      if ($com == 'news' && ($act == 'man_cat' || $act == 'form_cat') && $k == $_GET['type']) $active = "active"; ?>
+                      <li class="nav-item <?= $none ?>"><a class="nav-link <?= $active ?>" href="index.php?com=news&act=man_cat&type=<?= $k ?>" title="<?= danhmuccap2 ?>"><i class="nav-icon text-sm far fa-caret-square-right"></i>
                           <p><?= danhmuccap2 ?></p>
                         </a></li>
                     <?php } ?>
                     <?php if (isset($v['item']) && $v['item'] == true) {
                       $none = "";
                       $active = "";
-                      if (isset($is_permission) && $is_permission == true) if ($fn->checkPermission('news', 'man_item', $k, null, 'phrase-1')) $none = "d-none";
-                      if ($page == 'news' && ($act == 'man_item' || $act == 'form_item') && $k == $_GET['type']) $active = "active"; ?>
-                      <li class="nav-item <?= $none ?>"><a class="nav-link <?= $active ?>" href="index.php?page=news&act=man_item&type=<?= $k ?>" title="<?= danhmuccap3 ?>"><i class="nav-icon text-sm far fa-caret-square-right"></i>
+                      if (isset($is_permission) && $is_permission == true) if ($func->checkPermission('news', 'man_item', $k, null, 'phrase-1')) $none = "d-none";
+                      if ($com == 'news' && ($act == 'man_item' || $act == 'form_item') && $k == $_GET['type']) $active = "active"; ?>
+                      <li class="nav-item <?= $none ?>"><a class="nav-link <?= $active ?>" href="index.php?com=news&act=man_item&type=<?= $k ?>" title="<?= danhmuccap3 ?>"><i class="nav-icon text-sm far fa-caret-square-right"></i>
                           <p><?= danhmuccap3 ?></p>
                         </a></li>
                     <?php } ?>
                     <?php if (isset($v['sub']) && $v['sub'] == true) {
                       $none = "";
                       $active = "";
-                      if (isset($is_permission) && $is_permission == true) if ($fn->checkPermission('news', 'man_sub', $k, null, 'phrase-1')) $none = "d-none";
-                      if ($page == 'news' && ($act == 'man_sub' || $act == 'form_sub') && $k == $_GET['type']) $active = "active"; ?>
-                      <li class="nav-item <?= $none ?>"><a class="nav-link <?= $active ?>" href="index.php?page=news&act=man_sub&type=<?= $k ?>" title="<?= danhmuccap4 ?>"><i class="nav-icon text-sm far fa-caret-square-right"></i>
+                      if (isset($is_permission) && $is_permission == true) if ($func->checkPermission('news', 'man_sub', $k, null, 'phrase-1')) $none = "d-none";
+                      if ($com == 'news' && ($act == 'man_sub' || $act == 'form_sub') && $k == $_GET['type']) $active = "active"; ?>
+                      <li class="nav-item <?= $none ?>"><a class="nav-link <?= $active ?>" href="index.php?com=news&act=man_sub&type=<?= $k ?>" title="<?= danhmuccap4 ?>"><i class="nav-icon text-sm far fa-caret-square-right"></i>
                           <p><?= danhmuccap4 ?></p>
                         </a></li>
                     <?php } ?>
                     <?php
                     $none = "";
                     $active = "";
-                    if (isset($is_permission) && $is_permission == true) if ($fn->checkPermission('news', 'man', $k, null, 'phrase-1')) $none = "d-none";
-                    if ($page == 'news' && ($act == 'man' || $act == 'form' || $act == 'edit' || $act == 'copy') && $k == $_GET['type']) $active = "active";
+                    if (isset($is_permission) && $is_permission == true) if ($func->checkPermission('news', 'man', $k, null, 'phrase-1')) $none = "d-none";
+                    if ($com == 'news' && ($act == 'man' || $act == 'form' || $act == 'edit' || $act == 'copy') && $k == $_GET['type']) $active = "active";
                     ?>
-                    <li class="nav-item <?= $none ?>"><a class="nav-link <?= $active ?>" href="index.php?page=news&act=man&type=<?= $k ?>" title="<?= $v['title_main'] ?>"><i class="nav-icon text-sm far fa-caret-square-right"></i>
+                    <li class="nav-item <?= $none ?>"><a class="nav-link <?= $active ?>" href="index.php?com=news&act=man&type=<?= $k ?>" title="<?= $v['title_main'] ?>"><i class="nav-icon text-sm far fa-caret-square-right"></i>
                         <p><?= $v['title_main'] ?></p>
                       </a></li>
                   </ul>
@@ -595,8 +596,8 @@
           $none = "";
           $active = "";
           $menuopen = "";
-          if (isset($is_permission) && $is_permission == true) if ($fn->checkPermission('news', 'man', '', $config['news'], 'phrase-2')) $none = "d-none";
-          if (($page == 'news') && !isset($disabled['news'][$_GET['type']]) && empty($config['news'][$_GET['type']]['dropdown'])) {
+          if (isset($is_permission) && $is_permission == true) if ($func->checkPermission('news', 'man', '', $config['news'], 'phrase-2')) $none = "d-none";
+          if (($com == 'news') && !isset($disabled['news'][$_GET['type']]) && empty($config['news'][$_GET['type']]['dropdown'])) {
             $active = 'active';
             $menuopen = 'menu-open';
           }
@@ -615,11 +616,11 @@
                   <?php
                   $none = "";
                   $active = "";
-                  if (isset($is_permission) && $is_permission == true) if ($fn->checkPermission('news', 'man', $k, null, 'phrase-1')) $none = "d-none";
-                  if ($page == 'news' && ($act == 'man' || $act == 'form' || $act == 'copy') && $k == $_GET['type']) $active = "active";
+                  if (isset($is_permission) && $is_permission == true) if ($func->checkPermission('news', 'man', $k, null, 'phrase-1')) $none = "d-none";
+                  if ($com == 'news' && ($act == 'man' || $act == 'form' || $act == 'copy') && $k == $_GET['type']) $active = "active";
                   ?>
                   <li class="nav-item <?= $none ?>">
-                    <a class="nav-link <?= $active ?>" href="index.php?page=news&act=man&type=<?= $k ?>" title="<?= $v['title_main'] ?>"><i class="nav-icon text-sm far fa-caret-square-right"></i>
+                    <a class="nav-link <?= $active ?>" href="index.php?com=news&act=man&type=<?= $k ?>" title="<?= $v['title_main'] ?>"><i class="nav-icon text-sm far fa-caret-square-right"></i>
                       <p><?= $v['title_main'] ?></p>
                     </a>
                   </li>
@@ -634,11 +635,11 @@
           <?php
           $none = "";
           $active = "";
-          if (isset($is_permission) && $is_permission == true) if ($fn->checkPermission('order', 'man', '', null, 'phrase-1')) $none = "d-none";
-          if ($page == 'order') $active = 'active';
+          if (isset($is_permission) && $is_permission == true) if ($func->checkPermission('order', 'man', '', null, 'phrase-1')) $none = "d-none";
+          if ($com == 'order') $active = 'active';
           ?>
           <li class="nav-item <?= $active ?> <?= $none ?>">
-            <a class="nav-link <?= $active ?>" href="index.php?page=order&act=man" title="<?= quanlydonhang ?>">
+            <a class="nav-link <?= $active ?>" href="index.php?com=order&act=man" title="<?= quanlydonhang ?>">
               <i class="nav-icon text-sm fas fa-shopping-bag"></i>
               <p><?= quanlydonhang ?></p>
             </a>
@@ -651,8 +652,8 @@
           $none = "";
           $active = "";
           $menuopen = "";
-          if (isset($is_permission) && $is_permission == true) if ($fn->checkPermission('tags', 'man', '', $config['tags'], 'phrase-2')) $none = "d-none";
-          if ($page == 'tags' && !isset($disabled['tags'][$_GET['type']])) {
+          if (isset($is_permission) && $is_permission == true) if ($func->checkPermission('tags', 'man', '', $config['tags'], 'phrase-2')) $none = "d-none";
+          if ($com == 'tags' && !isset($disabled['tags'][$_GET['type']])) {
             $active = 'active';
             $menuopen = 'menu-open';
           }
@@ -671,11 +672,11 @@
                   <?php
                   $none = "";
                   $active = "";
-                  if (isset($is_permission) && $is_permission == true) if ($fn->checkPermission('tags', 'man', $k, null, 'phrase-1')) $none = "d-none";
-                  if ($page == 'tags' && $k == $_GET['type']) $active = "active";
+                  if (isset($is_permission) && $is_permission == true) if ($func->checkPermission('tags', 'man', $k, null, 'phrase-1')) $none = "d-none";
+                  if ($com == 'tags' && $k == $_GET['type']) $active = "active";
                   ?>
                   <li class="nav-item <?= $none ?>">
-                    <a class="nav-link <?= $active ?>" href="index.php?page=tags&act=man&type=<?= $k ?>" title="<?= $v['title_main'] ?>"><i class="nav-icon text-sm far fa-caret-square-right"></i>
+                    <a class="nav-link <?= $active ?>" href="index.php?com=tags&act=man&type=<?= $k ?>" title="<?= $v['title_main'] ?>"><i class="nav-icon text-sm far fa-caret-square-right"></i>
                       <p><?= $v['title_main'] ?></p>
                     </a>
                   </li>
@@ -691,8 +692,8 @@
           $none = "";
           $active = "";
           $menuopen = "";
-          if (isset($is_permission) && $is_permission == true) if ($fn->checkPermission('newsletter', 'man', '', $config['newsletter'], 'phrase-2')) $none = "d-none";
-          if ($page == 'newsletter' && !isset($disabled['newsletter'][$_GET['type']])) {
+          if (isset($is_permission) && $is_permission == true) if ($func->checkPermission('newsletter', 'man', '', $config['newsletter'], 'phrase-2')) $none = "d-none";
+          if ($com == 'newsletter' && !isset($disabled['newsletter'][$_GET['type']])) {
             $active = 'active';
             $menuopen = 'menu-open';
           }
@@ -711,11 +712,11 @@
                   <?php
                   $none = "";
                   $active = "";
-                  if (isset($is_permission) && $is_permission == true) if ($fn->checkPermission('newsletter', 'man', $k, null, 'phrase-1')) $none = "d-none";
-                  if ($page == 'newsletter' && $k == $_GET['type']) $active = "active";
+                  if (isset($is_permission) && $is_permission == true) if ($func->checkPermission('newsletter', 'man', $k, null, 'phrase-1')) $none = "d-none";
+                  if ($com == 'newsletter' && $k == $_GET['type']) $active = "active";
                   ?>
                   <li class="nav-item <?= $none ?>">
-                    <a class="nav-link <?= $active ?>" href="index.php?page=newsletter&act=man&type=<?= $k ?>" title="<?= $v['title_main'] ?>"><i class="nav-icon text-sm far fa-caret-square-right"></i>
+                    <a class="nav-link <?= $active ?>" href="index.php?com=newsletter&act=man&type=<?= $k ?>" title="<?= $v['title_main'] ?>"><i class="nav-icon text-sm far fa-caret-square-right"></i>
                       <p><?= $v['title_main'] ?></p>
                     </a>
                   </li>
@@ -731,8 +732,8 @@
           $none = "";
           $active = "";
           $menuopen = "";
-          if (isset($is_permission) && $is_permission == true) if ($fn->checkPermission('static', 'update', '', $config['static'], 'phrase-2')) $none = "d-none";
-          if ($page == 'static' && !isset($disabled['static'][$_GET['type']])) {
+          if (isset($is_permission) && $is_permission == true) if ($func->checkPermission('static', 'update', '', $config['static'], 'phrase-2')) $none = "d-none";
+          if ($com == 'static' && !isset($disabled['static'][$_GET['type']])) {
             $active = 'active';
             $menuopen = 'menu-open';
           }
@@ -751,11 +752,11 @@
                   <?php
                   $none = "";
                   $active = "";
-                  if (isset($is_permission) && $is_permission == true) if ($fn->checkPermission('static', 'update', $k, null, 'phrase-1')) $none = "d-none";
-                  if ($page == 'static' && $k == $_GET['type']) $active = "active";
+                  if (isset($is_permission) && $is_permission == true) if ($func->checkPermission('static', 'update', $k, null, 'phrase-1')) $none = "d-none";
+                  if ($com == 'static' && $k == $_GET['type']) $active = "active";
                   ?>
                   <li class="nav-item <?= $none ?>">
-                    <a class="nav-link <?= $active ?>" href="index.php?page=static&act=update&type=<?= $k ?>" title="<?= $v['title_main'] ?>"><i class="nav-icon text-sm far fa-caret-square-right"></i>
+                    <a class="nav-link <?= $active ?>" href="index.php?com=static&act=update&type=<?= $k ?>" title="<?= $v['title_main'] ?>"><i class="nav-icon text-sm far fa-caret-square-right"></i>
                       <p><?= $v['title_main'] ?></p>
                     </a>
                   </li>
@@ -771,8 +772,8 @@
           $none = "";
           $active = "";
           $menuopen = "";
-          if (isset($is_permission) && $is_permission == true) if ($fn->checkPermission('photo', 'photo_static', '', $config['photo']['photo_static'], 'phrase-2') && $fn->checkPermission('photo', 'photo_man', '', $config['photo']['photo_man'], 'phrase-2')) $none = "d-none";
-          if ($page == 'photo' && !isset($disabled['photo'][$_GET['type']]) && !isset($disabled['photo_static'][$_GET['type']])) {
+          if (isset($is_permission) && $is_permission == true) if ($func->checkPermission('photo', 'photo_static', '', $config['photo']['photo_static'], 'phrase-2') && $func->checkPermission('photo', 'photo_man', '', $config['photo']['photo_man'], 'phrase-2')) $none = "d-none";
+          if ($com == 'photo' && !isset($disabled['photo'][$_GET['type']]) && !isset($disabled['photo_static'][$_GET['type']])) {
             $active = 'active';
             $menuopen = 'menu-open';
           }
@@ -791,10 +792,10 @@
                   if (!isset($disabled['photo'][$k])) {
                     $none = "";
                     $active = "";
-                    if (isset($is_permission) && $is_permission == true) if ($fn->checkPermission('photo', 'photo_man', $k, null, 'phrase-1')) $none = "d-none";
-                    if ($page == 'photo' && $_GET['type'] == $k && ($act == 'photo_man' || $act == 'photo_form')) $active = "active"; ?>
+                    if (isset($is_permission) && $is_permission == true) if ($func->checkPermission('photo', 'photo_man', $k, null, 'phrase-1')) $none = "d-none";
+                    if ($com == 'photo' && $_GET['type'] == $k && ($act == 'photo_man' || $act == 'photo_form')) $active = "active"; ?>
                     <li class="nav-item <?= $none ?>">
-                      <a class="nav-link <?= $active ?>" href="index.php?page=photo&act=photo_man&type=<?= $k ?>" title="<?= $v['title_main_photo'] ?>"><i class="nav-icon text-sm far fa-caret-square-right"></i>
+                      <a class="nav-link <?= $active ?>" href="index.php?com=photo&act=photo_man&type=<?= $k ?>" title="<?= $v['title_main_photo'] ?>"><i class="nav-icon text-sm far fa-caret-square-right"></i>
                         <p><?= $v['title_main_photo'] ?></p>
                       </a>
                     </li>
@@ -806,10 +807,10 @@
                   if (!isset($disabled['photo_static'][$k])) {
                     $none = "";
                     $active = "";
-                    if (isset($is_permission) && $is_permission == true) if ($fn->checkPermission('photo', 'photo_static', $k, null, 'phrase-1')) $none = "d-none";
-                    if ($page == 'photo' && $_GET['type'] == $k && $act == 'photo_static') $active = "active"; ?>
+                    if (isset($is_permission) && $is_permission == true) if ($func->checkPermission('photo', 'photo_static', $k, null, 'phrase-1')) $none = "d-none";
+                    if ($com == 'photo' && $_GET['type'] == $k && $act == 'photo_static') $active = "active"; ?>
                     <li class="nav-item <?= $none ?>">
-                      <a class="nav-link <?= $active ?>" href="index.php?page=photo&act=photo_static&type=<?= $k ?>" title="<?= $v['title_main'] ?>"><i class="nav-icon text-sm far fa-caret-square-right"></i>
+                      <a class="nav-link <?= $active ?>" href="index.php?com=photo&act=photo_static&type=<?= $k ?>" title="<?= $v['title_main'] ?>"><i class="nav-icon text-sm far fa-caret-square-right"></i>
                         <p><?= $v['title_main'] ?></p>
                       </a>
                     </li>
@@ -826,8 +827,8 @@
           $none = "";
           $active = "";
           $menuopen = "";
-          if (isset($is_permission) && $is_permission == true) if ($fn->checkPermission('places', 'man_city', '', null, 'phrase-1') && $fn->checkPermission('places', 'man_district', '', null, 'phrase-1') && $fn->checkPermission('places', 'man_ward', '', null, 'phrase-1')) $none = "d-none";
-          if ($page == 'places') {
+          if (isset($is_permission) && $is_permission == true) if ($func->checkPermission('places', 'man_city', '', null, 'phrase-1') && $func->checkPermission('places', 'man_district', '', null, 'phrase-1') && $func->checkPermission('places', 'man_ward', '', null, 'phrase-1')) $none = "d-none";
+          if ($com == 'places') {
             $active = 'active';
             $menuopen = 'menu-open';
           }
@@ -844,33 +845,33 @@
               <?php
               $none = "";
               $active = "";
-              if (isset($is_permission) && $is_permission == true) if ($fn->checkPermission('places', 'man_city', '', null, 'phrase-1')) $none = "d-none";
-              if ($page == 'places' && ($act == 'man_city' || $act == 'add_city' || $act == 'edit_city')) $active = "active";
+              if (isset($is_permission) && $is_permission == true) if ($func->checkPermission('places', 'man_city', '', null, 'phrase-1')) $none = "d-none";
+              if ($com == 'places' && ($act == 'man_city' || $act == 'add_city' || $act == 'edit_city')) $active = "active";
               ?>
               <li class="nav-item <?= $none ?>">
-                <a class="nav-link <?= $active ?>" href="index.php?page=places&act=man_city" title="<?= tinhthanh ?>"><i class="nav-icon text-sm far fa-caret-square-right"></i>
+                <a class="nav-link <?= $active ?>" href="index.php?com=places&act=man_city" title="<?= tinhthanh ?>"><i class="nav-icon text-sm far fa-caret-square-right"></i>
                   <p><?= tinhthanh ?></p>
                 </a>
               </li>
               <?php
               $none = "";
               $active = "";
-              if (isset($is_permission) && $is_permission == true) if ($fn->checkPermission('places', 'man_district', '', null, 'phrase-1')) $none = "d-none";
-              if ($page == 'places' && ($act == 'man_district' || $act == 'add_district' || $act == 'edit_district')) $active = "active";
+              if (isset($is_permission) && $is_permission == true) if ($func->checkPermission('places', 'man_district', '', null, 'phrase-1')) $none = "d-none";
+              if ($com == 'places' && ($act == 'man_district' || $act == 'add_district' || $act == 'edit_district')) $active = "active";
               ?>
               <li class="nav-item <?= $none ?>">
-                <a class="nav-link <?= $active ?>" href="index.php?page=places&act=man_district" title="<?= quanhuyen ?>"><i class="nav-icon text-sm far fa-caret-square-right"></i>
+                <a class="nav-link <?= $active ?>" href="index.php?com=places&act=man_district" title="<?= quanhuyen ?>"><i class="nav-icon text-sm far fa-caret-square-right"></i>
                   <p><?= quanhuyen ?></p>
                 </a>
               </li>
               <?php
               $none = "";
               $active = "";
-              if (isset($is_permission) && $is_permission == true) if ($fn->checkPermission('places', 'man_ward', '', null, 'phrase-1')) $none = "d-none";
-              if ($page == 'places' && ($act == 'man_ward' || $act == 'add_ward' || $act == 'edit_ward')) $active = "active";
+              if (isset($is_permission) && $is_permission == true) if ($func->checkPermission('places', 'man_ward', '', null, 'phrase-1')) $none = "d-none";
+              if ($com == 'places' && ($act == 'man_ward' || $act == 'add_ward' || $act == 'edit_ward')) $active = "active";
               ?>
               <li class="nav-item <?= $none ?>">
-                <a class="nav-link <?= $active ?>" href="index.php?page=places&act=man_ward" title="<?= phuongxa ?>"><i class="nav-icon text-sm far fa-caret-square-right"></i>
+                <a class="nav-link <?= $active ?>" href="index.php?com=places&act=man_ward" title="<?= phuongxa ?>"><i class="nav-icon text-sm far fa-caret-square-right"></i>
                   <p><?= phuongxa ?></p>
                 </a>
               </li>
@@ -879,12 +880,12 @@
         <?php } ?>
 
         <!-- User -->
-        <?php if (isset($config['user']['active']) && $config['user']['active'] == true && !$fn->checkRole()) { ?>
+        <?php if (isset($config['user']['active']) && $config['user']['active'] == true && !$func->checkRole()) { ?>
           <?php
           $none = "";
           $active = "";
           $menuopen = "";
-          if ($page == 'user' && $act != 'login' && $act != 'logout') {
+          if ($com == 'user' && $act != 'login' && $act != 'logout') {
             $active = 'active';
             $menuopen = 'menu-open';
           }
@@ -901,7 +902,7 @@
               <?php if (isset($config['permission']['active']) && $config['permission']['active'] == true) {
                 $active = "";
                 if ($act == 'permission_group' || $act == 'add_permission_group' || $act == 'edit_permission_group') $active = "active"; ?>
-                <li class="nav-item"><a class="nav-link <?= $active ?>" href="index.php?page=user&act=permission_group" title="<?= nhomquyen ?>"><i class="nav-icon text-sm far fa-caret-square-right"></i>
+                <li class="nav-item"><a class="nav-link <?= $active ?>" href="index.php?com=user&act=permission_group" title="<?= nhomquyen ?>"><i class="nav-icon text-sm far fa-caret-square-right"></i>
                     <p><?= nhomquyen ?></p>
                   </a></li>
               <?php } ?>
@@ -909,20 +910,20 @@
               $active = "";
               if ($act == 'info_admin') $active = "active";
               ?>
-              <li class="nav-item"><a class="nav-link <?= $active ?>" href="index.php?page=user&act=info_admin" title="<?= thongtinadmin ?>"><i class="nav-icon text-sm far fa-caret-square-right"></i>
+              <li class="nav-item"><a class="nav-link <?= $active ?>" href="index.php?com=user&act=info_admin" title="<?= thongtinadmin ?>"><i class="nav-icon text-sm far fa-caret-square-right"></i>
                   <p><?= thongtinadmin ?></p>
                 </a></li>
               <?php if (isset($config['user']['admin']) && $config['user']['admin'] == true) {
                 $active = "";
                 if ($act == 'man_admin' || $act == 'add_admin' || $act == 'edit_admin') $active = "active"; ?>
-                <li class="nav-item"><a class="nav-link <?= $active ?>" href="index.php?page=user&act=man_admin" title="<?= taikhoanadmin ?>"><i class="nav-icon text-sm far fa-caret-square-right"></i>
+                <li class="nav-item"><a class="nav-link <?= $active ?>" href="index.php?com=user&act=man_admin" title="<?= taikhoanadmin ?>"><i class="nav-icon text-sm far fa-caret-square-right"></i>
                     <p><?= taikhoanadmin ?></p>
                   </a></li>
               <?php } ?>
               <?php if (isset($config['user']['member']) && $config['user']['member'] == true) {
                 $active = "";
-                if ($page == 'user' && ($act == 'man_member' || $act == 'add_member' || $act == 'edit_member')) $active = "active"; ?>
-                <li class="nav-item"><a class="nav-link <?= $active ?>" href="index.php?page=user&act=man_member" title="<?= taikhoankhach ?>"><i class="nav-icon text-sm far fa-caret-square-right"></i>
+                if ($com == 'user' && ($act == 'man_member' || $act == 'add_member' || $act == 'edit_member')) $active = "active"; ?>
+                <li class="nav-item"><a class="nav-link <?= $active ?>" href="index.php?com=user&act=man_member" title="<?= taikhoankhach ?>"><i class="nav-icon text-sm far fa-caret-square-right"></i>
                     <p><?= taikhoankhach ?></p>
                   </a></li>
               <?php } ?>
@@ -935,11 +936,11 @@
           <?php
           $none = "";
           $active = "";
-          if (isset($is_permission) && $is_permission == true) if ($fn->checkPermission('pushOnesignal', 'man', '', null, 'phrase-1')) $none = "d-none";
-          if ($page == 'pushOnesignal') $active = 'active';
+          if (isset($is_permission) && $is_permission == true) if ($func->checkPermission('pushOnesignal', 'man', '', null, 'phrase-1')) $none = "d-none";
+          if ($com == 'pushOnesignal') $active = 'active';
           ?>
           <li class="nav-item <?= $active ?> <?= $none ?>">
-            <a class="nav-link <?= $active ?>" href="index.php?page=pushOnesignal&act=man" title="<?= quanlythongbaoday ?>">
+            <a class="nav-link <?= $active ?>" href="index.php?com=pushOnesignal&act=man" title="<?= quanlythongbaoday ?>">
               <i class="nav-icon text-sm fas fa-bell"></i>
               <p><?= quanlythongbaoday ?></p>
             </a>
@@ -952,8 +953,8 @@
           $none = "";
           $active = "";
           $menuopen = "";
-          if (isset($is_permission) && $is_permission == true) if ($fn->checkPermission('seopage', 'update', '', $config['seopage']['page'], 'phrase-2')) $none = "d-none";
-          if ($page == 'seopage') {
+          if (isset($is_permission) && $is_permission == true) if ($func->checkPermission('seopage', 'update', '', $config['seopage']['page'], 'phrase-2')) $none = "d-none";
+          if ($com == 'seopage') {
             $active = 'active';
             $menuopen = 'menu-open';
           }
@@ -971,11 +972,11 @@
                 <?php
                 $none = "";
                 $active = "";
-                if (isset($is_permission) && $is_permission == true) if ($fn->checkPermission('seopage', 'update', $k, null, 'phrase-1')) $none = "d-none";
-                if ($page == 'seopage' && $k == $_GET['type']) $active = "active";
+                if (isset($is_permission) && $is_permission == true) if ($func->checkPermission('seopage', 'update', $k, null, 'phrase-1')) $none = "d-none";
+                if ($com == 'seopage' && $k == $_GET['type']) $active = "active";
                 ?>
                 <li class="nav-item <?= $none ?>">
-                  <a class="nav-link <?= $active ?>" href="index.php?page=seopage&act=update&type=<?= $k ?>" title="<?= $v ?>"><i class="nav-icon text-sm far fa-caret-square-right"></i>
+                  <a class="nav-link <?= $active ?>" href="index.php?com=seopage&act=update&type=<?= $k ?>" title="<?= $v ?>"><i class="nav-icon text-sm far fa-caret-square-right"></i>
                     <p><?= $v ?></p>
                   </a>
                 </li>
@@ -988,11 +989,11 @@
         <?php
         $none = "";
         $active = "";
-        if (isset($is_permission) && $is_permission == true) if ($fn->checkPermission('setting', 'update', '', null, 'phrase-1')) $none = "d-none";
-        if ($page == 'setting') $active = 'active';
+        if (isset($is_permission) && $is_permission == true) if ($func->checkPermission('setting', 'update', '', null, 'phrase-1')) $none = "d-none";
+        if ($com == 'setting') $active = 'active';
         ?>
         <li class="nav-item <?= $active ?> <?= $none ?>">
-          <a class="nav-link <?= $active ?>" href="index.php?page=setting&act=update" title="<?= thietlapthongtin ?>">
+          <a class="nav-link <?= $active ?>" href="index.php?com=setting&act=update" title="<?= thietlapthongtin ?>">
             <i class="nav-icon text-sm fas fa-cogs"></i>
             <p><?= thietlapthongtin ?></p>
           </a>

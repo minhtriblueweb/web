@@ -106,7 +106,7 @@
           <div class="card-body">
             <div class="form-group col-xl-6 col-sm-4">
               <label class="d-block" for="id_list"><?=danhmuccap1?>:</label>
-              <?= $fn->getAjaxCategory('product', 'list', $type) ?>
+              <?= $func->getAjaxCategory('product', 'list', $type) ?>
             </div>
           </div>
         </div>
@@ -146,7 +146,7 @@
                       name="data[status][<?= $check ?>]"
                       class="switch-input custom-control-input .show-checkbox"
                       id="<?= $check ?>-checkbox"
-                      <?= $fn->is_checked($check, $result['status'] ?? '', $id ?? '') ?>>
+                      <?= $func->is_checked($check, $result['status'] ?? '', $id ?? '') ?>>
                   </label>
                 </div>
               <?php endforeach; ?>

@@ -17,7 +17,7 @@
   var CHARTS = <?= (!empty($charts)) ? json_encode($charts) : '{}' ?>;
   var ADD_OR_EDIT_PERMISSIONS = false;
   var IMPORT_IMAGE_EXCELL = false;
-  var ORDER_ADVANCED_SEARCH = <?= (!empty($page) && $page == 'order' && !empty($config['order']['search'])) ? 'true' : 'false' ?>;
+  var ORDER_ADVANCED_SEARCH = <?= (!empty($com) && $com == 'order' && !empty($config['order']['search'])) ? 'true' : 'false' ?>;
   var ORDER_MIN_TOTAL = <?= (!empty($minTotal)) ? $minTotal : 1 ?>;
   var ORDER_MAX_TOTAL = <?= (!empty($maxTotal)) ? $maxTotal : 1 ?>;
   var ORDER_PRICE_FROM = <?= (!empty($price_from)) ? $price_from : 1 ?>;
@@ -110,7 +110,7 @@ foreach ($jsFiles as $file) {
   echo '<script src="./assets/' . $file . '?v=' . VERSION . '"></script>' . PHP_EOL;
 }
 ?>
-<script src="<?= $page === 'setting' ? 'monaco/min/vs/loader.js' : 'ckeditor/ckeditor.js' ?>"></script>
+<script src="<?= $com === 'setting' ? 'monaco/min/vs/loader.js' : 'ckeditor/ckeditor.js' ?>"></script>
 <?php if (!empty($_SESSION['notify']) && is_array($_SESSION['notify'])): ?>
   <script>
     $(function() {

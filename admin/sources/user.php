@@ -1,11 +1,11 @@
 <?php
 if (!defined('SOURCES')) die("Error");
 $table = 'tbl_user';
-$linkSave = "index.php?page=user&act=info_admin";
+$linkSave = "index.php?com=user&act=info_admin";
 $adminId = Session::get('adminId');
 switch ($act) {
   case "login":
-    if (!empty($is_logged_in)) $fn->transfer(trangkhongtontai, "index.php", false);
+    if (!empty($is_logged_in)) $func->transfer(trangkhongtontai, "index.php", false);
     else $template = "user/login";
     break;
 
@@ -14,23 +14,23 @@ switch ($act) {
     break;
 
   case 'info_admin':
-    $result = $db->rawQueryOne("SELECT * FROM `$table` WHERE id = ? LIMIT 1", [$adminId]) ?? [];
+    $result = $d->rawQueryOne("SELECT * FROM `$table` WHERE id = ? LIMIT 1", [$adminId]) ?? [];
     if (!empty($_POST)) infoAdmin();
     $template = "user/man_admin/info";
     break;
 
   default:
-    $fn->transfer(trangkhongtontai, "index.php", false);
+    $func->transfer(trangkhongtontai, "index.php", false);
     break;
 }
 function infoAdmin()
 {
-  global $db, $fn, $adminId, $linkSave;
+  global $d, $func, $adminId, $linkSave;
   $changepass = (!empty($_GET['changepass']) && $_GET['changepass'] == 1);
   $response['messages'] = [];
 
   if (!$adminId) {
-    $fn->Notify(banchuacotaikhoan, $linkSave, 'error');
+    $func->Notify(banchuacotaikhoan, $linkSave, 'error');
     exit;
   }
 
@@ -55,29 +55,29 @@ function infoAdmin()
     }
 
     if (!empty($response['messages'])) {
-      $fn->Notify($response['messages'], $linkSave, 'error');
+      $func->Notify($response['messages'], $linkSave, 'error');
       exit;
     }
 
-    $user = $db->rawQueryOne("SELECT id, password FROM tbl_user WHERE id = ? LIMIT 1", [$adminId]);
+    $user = $d->rawQueryOne("SELECT id, password FROM tbl_user WHERE id = ? LIMIT 1", [$adminId]);
     if (!$user) {
-      $fn->Notify(taikhoandatontai, $linkSave, 'error');
+      $func->Notify(taikhoandatontai, $linkSave, 'error');
       exit;
     }
 
     if (!password_verify($old_pass, $user['password'])) {
-      $fn->Notify(matkhaucukhongchinhxac, $linkSave, 'error');
+      $func->Notify(matkhaucukhongchinhxac, $linkSave, 'error');
       exit;
     }
 
     $hashedPassword = password_hash($new_pass, PASSWORD_DEFAULT);
-    $success = $db->execute("UPDATE tbl_user SET password = ? WHERE id = ?", [$hashedPassword, $adminId]);
+    $success = $d->execute("UPDATE tbl_user SET password = ? WHERE id = ?", [$hashedPassword, $adminId]);
 
     if ($success) {
-      $fn->transfer("Cập nhật mật khẩu thành công. Vui lòng đăng nhập lại.", "index.php?page=user&act=logout", true);
+      $func->transfer("Cập nhật mật khẩu thành công. Vui lòng đăng nhập lại.", "index.php?com=user&act=logout", true);
       exit;
     } else {
-      $fn->Notify(capnhatdulieubiloi, $linkSave, 'error');
+      $func->Notify(capnhatdulieubiloi, $linkSave, 'error');
       exit;
     }
   }
@@ -98,7 +98,7 @@ function infoAdmin()
   $raw_birthday = trim($data['birthday'] ?? '');
   if (empty($raw_birthday)) {
     $response['messages'][] = ngaysinhkhongduoctrong;
-  } elseif (!$fn->isDate($raw_birthday)) {
+  } elseif (!$func->isDate($raw_birthday)) {
     $response['messages'][] = ngaysinhkhonghople;
   }
 
@@ -120,7 +120,7 @@ function infoAdmin()
 
   if (!$data_sql['username']) {
     $response['messages'][] = taikhoankhongduoctrong;
-  } elseif (!$fn->isAlphaNum($data_sql['username'])) {
+  } elseif (!$func->isAlphaNum($data_sql['username'])) {
     $response['messages'][] = 'Tài khoản chỉ được nhập chữ thường và số (không dấu, không khoảng trắng)';
   }
 
@@ -129,18 +129,18 @@ function infoAdmin()
 
   if (!$data_sql['email']) {
     $response['messages'][] = emailkhongduoctrong;
-  } elseif (!$fn->isEmail($data_sql['email'])) {
+  } elseif (!$func->isEmail($data_sql['email'])) {
     $response['messages'][] = emailkhonghople;
   }
 
   if (!$data_sql['phone']) {
     $response['messages'][] = sodienthoaikhongduoctrong;
-  } elseif (!$fn->isPhone($data_sql['phone'])) {
+  } elseif (!$func->isPhone($data_sql['phone'])) {
     $response['messages'][] = sodienthoaikhonghople;
   }
 
   if (!empty($response['messages'])) {
-    $fn->Notify($response['messages'], $linkSave, 'error');
+    $func->Notify($response['messages'], $linkSave, 'error');
     exit;
   }
 
@@ -151,11 +151,11 @@ function infoAdmin()
   }
   $params[] = $adminId;
 
-  $success = $db->execute("UPDATE `tbl_user` SET " . implode(', ', $fields) . " WHERE id = ?", $params);
+  $success = $d->execute("UPDATE `tbl_user` SET " . implode(', ', $fields) . " WHERE id = ?", $params);
   if ($success) {
-    $fn->Notify(capnhatdulieuthanhcong, $linkSave, 'success');
+    $func->Notify(capnhatdulieuthanhcong, $linkSave, 'success');
   } else {
-    $fn->Notify(capnhatdulieubiloi, $linkSave, 'error');
+    $func->Notify(capnhatdulieubiloi, $linkSave, 'error');
   }
 
   return $response['messages'];
@@ -165,6 +165,6 @@ function logout()
   session_start();
   session_unset();
   session_destroy();
-  header("Location: index.php?page=user&act=login");
+  header("Location: index.php?com=user&act=login");
   exit();
 }

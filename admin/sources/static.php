@@ -1,11 +1,12 @@
 <?php
 if (!defined('SOURCES')) die("Error");
-$linkUpload = "index.php?page=static&type=$type";
-if (!isset($config['static'][$type])) $fn->transfer(trangkhongtontai, "index.php", false);
-$result = $db->rawQueryOne("SELECT * FROM tbl_static WHERE type = ? LIMIT 1", [$type]);
+$table = 'tbl_static';
+$linkUpload = "index.php?com=static&type=" . $type;
+if (!isset($config['static'][$type])) $func->transfer(trangkhongtontai, "index.php", false);
+$result = $d->rawQueryOne("SELECT * FROM $table WHERE type = ? LIMIT 0,1", [$type]);
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['upload'])) {
-  $fn->save_data($_POST['data'] ?? [], $_FILES, $result['id'], [
-    'table'    => 'tbl_static',
+  $func->save_data($_POST['data'] ?? [], $_FILES, $result['id'], [
+    'table'    => $table,
     'type'     => $type,
     'redirect' => $linkUpload
   ]);

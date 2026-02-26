@@ -1,12 +1,12 @@
 <?php
-$linkNews = "index.php?page=news&type=" . $type;
+$linkNews = "index.php?com=news&type=" . $type;
 $linkMan   = "$linkNews&act=man";
 $linkForm  = "$linkNews&act=form";
-$linkEdit = "index.php?page=news&act=form&type=" . $type;
-$linkCopy = "index.php?page=news&act=copy&type=" . $type;
-$linkDelete = "index.php?page=news&act=delete&type=" . $type;
-$linkGalleryMan  = "index.php?page=gallery&act=man&type=$type&id=";
-$linkGalleryForm  = "index.php?page=gallery&act=form&type=$type&id=";
+$linkEdit = "index.php?com=news&act=form&type=" . $type;
+$linkCopy = "index.php?com=news&act=copy&type=" . $type;
+$linkDelete = "index.php?com=news&act=delete&type=" . $type;
+$linkGalleryMan  = "index.php?com=gallery&act=man&type=$type&id=";
+$linkGalleryForm  = "index.php?com=gallery&act=form&type=$type&id=";
 $copyImg = (isset($config['news'][$type]['copy_image']) && $config['news'][$type]['copy_image'] == true) ? TRUE : FALSE;
 ?>
 <section class="content-header text-sm">
@@ -40,7 +40,7 @@ $copyImg = (isset($config['news'][$type]['copy_image']) && $config['news'][$type
     foreach ($categories as $v) {
       if (!empty($config['news'][$type][$v])) {
         echo '<div class="form-group col-xl-2 col-lg-3 col-md-4 col-sm-4 mb-2">';
-        echo $fn->getLinkCategory('news', $v, $type);
+        echo $func->getLinkCategory('news', $v, $type);
         echo '</div>';
       }
     }
@@ -103,7 +103,7 @@ $copyImg = (isset($config['news'][$type]['copy_image']) && $config['news'][$type
                   <!-- Ảnh sản phẩm -->
                   <?php if (!empty($config['news'][$type]['show_images'])): ?>
                     <td class="align-middle">
-                      <a href="<?= $linkEdit . $linkID ?>&id=<?= $row['id'] ?>" title="<?= $row["name$lang"] ?>"><?= $fn->getImage(['file' => $row['file'], 'class' => 'rounded img-preview', 'alt' => $row["name$lang"]]) ?></a>
+                      <a href="<?= $linkEdit . $linkID ?>&id=<?= $row['id'] ?>" title="<?= $row["name$lang"] ?>"><?= $func->getImage(['file' => $row['file'], 'class' => 'rounded img-preview', 'alt' => $row["name$lang"]]) ?></a>
                     </td>
                   <?php endif; ?>
                   <!-- Tên sản phẩm -->

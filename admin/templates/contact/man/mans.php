@@ -1,8 +1,7 @@
 <?php
-$linkMan = "index.php?page=contact&act=man&type=lien-he";
-$linkEdit = "index.php?page=contact&act=edit";
-$linkDelete = "index.php?page=contact&act=delete&id=";
-$linkMulti  = "index.php?page=contact&act=delete_multiple";
+$linkMan = "index.php?com=contact&act=man&type=lien-he";
+$linkEdit = "index.php?com=contact&act=edit";
+$linkDelete = "index.php?com=contact&act=delete";
 ?>
 <section class="content-header text-sm">
   <div class="container-fluid">
@@ -18,7 +17,7 @@ $linkMulti  = "index.php?page=contact&act=delete_multiple";
 <!-- Main content -->
 <section class="content">
   <div class="card-footer text-sm sticky-top">
-    <a class="btn btn-sm bg-gradient-danger text-white" id="delete-all" data-url="<?= $linkMulti ?>" title="<?= xoatatca ?>"><i class="far fa-trash-alt mr-2"></i><?= xoatatca ?></a>
+    <a class="btn btn-sm bg-gradient-danger text-white" id="delete-all" data-url="<?= $linkDelete ?>" title="<?= xoatatca ?>"><i class="far fa-trash-alt mr-2"></i><?= xoatatca ?></a>
     <div class="form-inline form-search d-inline-block align-middle ml-3">
       <div class="input-group input-group-sm">
         <input class="form-control form-control-navbar text-sm" type="search" id="keyword" placeholder="<?= timkiem ?>" aria-label="<?= timkiem ?>" value="<?= $keyword ?>" onkeypress="doEnter(event,'keyword','<?= $linkMan ?>')">
@@ -117,17 +116,8 @@ $linkMulti  = "index.php?page=contact&act=delete_multiple";
                   </td>
                 <?php endforeach; ?>
                 <td class="align-middle text-center text-md text-nowrap">
-                  <a class="text-primary mr-2"
-                    href="<?= $linkEdit ?>&id=<?= $row['id'] ?>"
-                    title="<?= chinhsua ?>">
-                    <i class="fas fa-edit"></i>
-                  </a>
-                  <a class="text-danger"
-                    id="delete-item"
-                    data-url="<?= $linkDelete ?>&id=<?= $row['id'] ?>"
-                    title="Xóa">
-                    <i class="fas fa-trash-alt"></i>
-                  </a>
+                  <a class="text-primary mr-2" href="<?= $linkEdit ?>&id=<?= $row['id'] ?>" title="<?= chinhsua ?>"><i class="fas fa-edit"></i></a>
+                  <a class="text-danger" id="delete-item" data-url="<?= $linkDelete ?>&id=<?= $row['id'] ?>" title="<?= xoa ?>"><i class="fas fa-trash-alt"></i></a>
                 </td>
               </tr>
             <?php endforeach; ?>
@@ -138,6 +128,6 @@ $linkMulti  = "index.php?page=contact&act=delete_multiple";
   </div>
   <?php if ($paging): ?><div class="card-footer text-sm p-3"><?= $paging ?></div><?php endif; ?>
   <div class="card-footer text-sm">
-    <a class="btn btn-sm bg-gradient-danger text-white" id="delete-all" data-url="<?= $linkMulti ?>" title="<?= xoatatca ?>"><i class="far fa-trash-alt mr-2"></i><?= xoatatca ?></a>
+    <a class="btn btn-sm bg-gradient-danger text-white" id="delete-all" data-url="<?= $linkDelete ?>" title="<?= xoatatca ?>"><i class="far fa-trash-alt mr-2"></i><?= xoatatca ?></a>
   </div>
 </section>

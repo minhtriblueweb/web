@@ -8,9 +8,9 @@
 <style>
   :root {
     --main-color: #<?= $color ?>;
-    --main-color-dark: #<?= $fn->darkenColor($color, 15) ?>;
+    --main-color-dark: #<?= $func->darkenColor($color, 15) ?>;
   }
-  <?= $fn->decodeHtmlChars($optsetting['custom_css']) ?>
+  <?= $func->decodeHtmlChars($optsetting['custom_css']) ?>
 </style>
 
 <body>

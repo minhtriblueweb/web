@@ -1,9 +1,7 @@
 <?php
-if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-  http_response_code(403);
-  exit('Forbidden');
-}
-require_once __DIR__ . '/../init.php';
+include "config.php";
+include LIBRARIES . "type/config-type-product.php";
+include LIBRARIES . "type/config-type-news.php";
 
 if (!empty($_POST['id'])) {
   $id = (!empty($_POST['id'])) ? htmlspecialchars($_POST['id']) : 0;
@@ -11,18 +9,18 @@ if (!empty($_POST['id'])) {
   $copyimg = (!empty($_POST['copyimg'])) ? htmlspecialchars($_POST['copyimg']) : false;
 
   if ($id) {
-    $item = $db->rawQueryOne("select * from `$table` where id = ? limit 0,1", array($id));
+    $item = $d->rawQueryOne("select * from `$table` where id = ? limit 0,1", array($id));
   }
 
   function createCopy($titleCopy = '', $titleSlug = '', $table = '')
   {
-    global $db, $fn, $config, $item, $copyimg;
+    global $d, $func, $config, $item, $copyimg;
 
-    $check = $db->rawQueryOne("select id from `$table` where slugvi = ? or slugen = ? limit 0,1", array($titleSlug, $titleSlug));
+    $check = $d->rawQueryOne("select id from `$table` where slugvi = ? or slugen = ? limit 0,1", array($titleSlug, $titleSlug));
 
     if (!empty($check['id'])) {
       $titleCopy .= " (1)";
-      $titleSlug = $fn->changeTitle($titleCopy);
+      $titleSlug = $func->changeTitle($titleCopy);
       createCopy($titleCopy, $titleSlug, $table);
     } else {
       foreach ($config['website']['lang'] as $key => $value) {
@@ -30,11 +28,11 @@ if (!empty($_POST['id'])) {
         $dataCopy['content' . $key] = $item['content' . $key];
       }
       if ($copyimg) {
-        $dataCopy['file'] = $fn->copyImg($item['file']);
+        $dataCopy['file'] = $func->copyImg($item['file']);
       }
       $comTable = str_replace('tbl_', '', $table);
       $dataCopy['namevi'] = $titleCopy;
-      $dataCopy['slugvi'] = !empty($config[$comTable][$item['type']]['slug']) ? $fn->changeTitle($dataCopy['namevi']) : '';
+      $dataCopy['slugvi'] = !empty($config[$comTable][$item['type']]['slug']) ? $func->changeTitle($dataCopy['namevi']) : '';
       $dataCopy['id_list'] = $item['id_list'];
       $dataCopy['id_cat'] = $item['id_cat'];
       $dataCopy['id_item'] = $item['id_item'];
@@ -52,7 +50,7 @@ if (!empty($_POST['id'])) {
       $dataCopy['status'] = '';
       $dataCopy['type'] = $item['type'];
       $dataCopy['date_created'] = date('Y-m-d H:i:s');
-      $db->insert($table, $dataCopy);
+      $d->insert($table, $dataCopy);
       // if ($d->insert($table, $dataCopy)) {
       //   $gallery = $d->rawQuery("select * from #_gallery where id_parent = ? and com = ? and type = ? and kind = ? and val = ? order by numb,id desc", array($item['id'], $com, $item['type'], 'man', $item['type']));
       // }
@@ -70,7 +68,7 @@ if (!empty($_POST['id'])) {
 // $id    = (int)$_POST['id'];
 // $table = $_POST['table'];
 
-// $item = $db->rawQueryOne("SELECT * FROM `$table` WHERE id = ? LIMIT 1", [$id]);
+// $item = $d->rawQueryOne("SELECT * FROM `$table` WHERE id = ? LIMIT 1", [$id]);
 // if (!$item) {
 //   echo json_encode(['success' => false, 'message' => 'Không tìm thấy dữ liệu']);
 //   exit;
@@ -78,8 +76,8 @@ if (!empty($_POST['id'])) {
 
 // function getExistingColumns($table)
 // {
-//   global $db;
-//   $result = $db->rawQuery("SHOW COLUMNS FROM `$table`");
+//   global $d;
+//   $result = $d->rawQuery("SHOW COLUMNS FROM `$table`");
 //   if (!$result) return [];
 //   $columns = [];
 //   if ($result instanceof mysqli_result) {
@@ -96,13 +94,13 @@ if (!empty($_POST['id'])) {
 // }
 // function makeUniqueSlugChain($baseSlug, $table, $lang = 'vi', $excludeId = 0)
 // {
-//   global $db;
+//   global $d;
 //   $slugCol = 'slug' . $lang;
 //   $slug = $baseSlug;
 //   $i = 1;
 
 //   while (true) {
-//     $exists = $db->rawQueryOne(
+//     $exists = $d->rawQueryOne(
 //       "SELECT id FROM `$table` WHERE `$slugCol` = ? AND id != ? LIMIT 1",
 //       [$slug, $excludeId]
 //     );
@@ -114,7 +112,7 @@ if (!empty($_POST['id'])) {
 
 // function createCopy($item, $table)
 // {
-//   global $db, $config;
+//   global $d, $config;
 
 //   $langs = array_keys($config['website']['lang'] ?? ['vi']);
 //   $data = [];
@@ -158,7 +156,7 @@ if (!empty($_POST['id'])) {
 //   $existing = getExistingColumns($table);
 //   $insert = array_intersect_key($data, array_flip($existing));
 
-//   return !empty($insert) && $db->insert($table, $insert);
+//   return !empty($insert) && $d->insert($table, $insert);
 // }
 
 // $ok = createCopy($item, $table);

@@ -1,8 +1,7 @@
 <?php
-$linkMan = "index.php?page=newsletter&act=man&type=" . $type;
-$linkAdd = $linkEdit = "index.php?page=newsletter&act=edit&type=" . $type;
-$linkDelete = "index.php?page=newsletter&act=delete&type=" . $type;
-$linkMulti  = "index.php?page=newsletter&act=delete_multiple&type=" . $type;
+$linkMan = "index.php?com=newsletter&act=man&type=" . $type;
+$linkAdd = $linkEdit = "index.php?com=newsletter&act=edit&type=" . $type;
+$linkDelete = "index.php?com=newsletter&act=delete&type=" . $type;
 ?>
 <!-- Content Header -->
 <section class="content-header text-sm">
@@ -23,7 +22,7 @@ $linkMulti  = "index.php?page=newsletter&act=delete_multiple&type=" . $type;
       <a class="btn btn-sm bg-gradient-success text-white" id="send-email" title="Gửi email"><i class="fas fa-paper-plane mr-2"></i><?= guiemail ?></a>
     <?php } ?>
     <a class="btn btn-sm bg-gradient-primary text-white" href="<?= $linkAdd ?>" title="Thêm mới"><i class="fas fa-plus mr-2"></i><?= themmoi ?></a>
-    <a class="btn btn-sm bg-gradient-danger text-white" id="delete-all" data-url="<?= $linkMulti ?>" title="<?= xoatatca ?>"><i class="far fa-trash-alt mr-2"></i><?= xoatatca ?></a>
+    <a class="btn btn-sm bg-gradient-danger text-white" id="delete-all" data-url="<?= $linkDelete ?>" title="<?= xoatatca ?>"><i class="far fa-trash-alt mr-2"></i><?= xoatatca ?></a>
     <div class="form-inline form-search d-inline-block align-middle ml-3">
       <div class="input-group input-group-sm">
         <input class="form-control form-control-navbar text-sm" type="search" id="keyword" placeholder="<?= timkiem ?>" aria-label="<?= timkiem ?>" value="<?= (isset($_GET['keyword'])) ? $_GET['keyword'] : '' ?>" onkeypress="doEnter(event,'keyword','<?= $linkMan ?>')">
@@ -141,20 +140,15 @@ $linkMulti  = "index.php?page=newsletter&act=delete_multiple&type=" . $type;
 
                 <?php if (!empty($cfg['confirm_status'])) { ?>
                   <td class="align-middle">
-                    <?= $fn->getStatusNewsletter($item['confirm_status'], $type) ?>
+                    <?= $func->getStatusNewsletter($item['confirm_status'], $type) ?>
                   </td>
                 <?php } ?>
 
                 <td class="align-middle text-center text-nowrap">
-                  <a class="text-primary mr-2"
-                    href="<?= $linkEdit ?>&id=<?= $item['id'] ?>">
+                  <a class="text-primary mr-2" href="<?= $linkEdit ?>&id=<?= $item['id'] ?>">
                     <i class="fas fa-edit"></i>
                   </a>
-                  <a class="text-danger"
-                    id="delete-item"
-                    data-url="<?= $linkDelete ?>&id=<?= $item['id'] ?>">
-                    <i class="fas fa-trash-alt"></i>
-                  </a>
+                  <a title="<?= xoa ?>" class="text-danger" id="delete-item" data-url="<?= $linkDelete ?>&id=<?= $item['id'] ?>"><i class="fas fa-trash-alt"></i></a>
                 </td>
               </tr>
           <?php }
@@ -197,6 +191,6 @@ $linkMulti  = "index.php?page=newsletter&act=delete_multiple&type=" . $type;
       <a class="btn btn-sm bg-gradient-success text-white" id="send-email" title="Gửi email"><i class="fas fa-paper-plane mr-2"></i>Gửi email</a>
     <?php } ?>
     <a class="btn btn-sm bg-gradient-primary text-white" href="<?= $linkAdd ?>" title="Thêm mới"><i class="fas fa-plus mr-2"></i><?= themmoi ?></a>
-    <a class="btn btn-sm bg-gradient-danger text-white" id="delete-all" data-url="<?= $linkMulti ?>" title="<?= xoatatca ?>"><i class="far fa-trash-alt mr-2"></i><?= xoatatca ?></a>
+    <a class="btn btn-sm bg-gradient-danger text-white" id="delete-all" data-url="<?= $linkDelete ?>" title="<?= xoatatca ?>"><i class="far fa-trash-alt mr-2"></i><?= xoatatca ?></a>
   </div>
 </section>

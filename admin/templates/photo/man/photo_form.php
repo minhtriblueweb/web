@@ -114,7 +114,7 @@ if ((isset($config['photo']['photo_man'][$type]['images_photo']) && $config['pho
                   <label class="switch switch-success">
                     <input type="checkbox" name="data[status][<?= $check ?>]"
                       class="switch-input custom-control-input" id="<?= $check ?>-checkbox"
-                      <?= $fn->is_checked($check, $result['status'] ?? '', $id ?? '') ?>>
+                      <?= $func->is_checked($check, $result['status'] ?? '', $id ?? '') ?>>
                   </label>
                 </div>
               <?php endforeach; ?>

@@ -1,3 +1,26 @@
+<?php
+$linkMan = "index.php?com=product&act=man_list&type=" . $type;
+$linkSave = "index.php?com=product&act=save_list&type=" . $type;
+
+/* Check cols */
+if (isset($config['product'][$type]['gallery_list']) && count($config['product'][$type]['gallery_list']) > 0) {
+  foreach ($config['product'][$type]['gallery_list'] as $key => $value) {
+    if ($key == $type) {
+      $keyGallery = $key;
+      $flagGallery = true;
+      break;
+    }
+  }
+}
+
+if ((isset($config['product'][$type]['images_list']) && $config['product'][$type]['images_list'] == true)) {
+  $colLeft = "col-xl-8";
+  $colRight = "col-xl-4";
+} else {
+  $colLeft = "col-12";
+  $colRight = "d-none";
+}
+?>
 <section class="content-header text-sm">
   <div class="container-fluid">
     <div class="row">
@@ -21,7 +44,7 @@
       <a class="btn btn-sm bg-gradient-danger" href="<?= $linkMan ?>" title="<?= thoat ?>"><i class="fas fa-sign-out-alt mr-2"></i><?= thoat ?></a>
     </div>
     <div class="row">
-      <div class="col-xl-8">
+      <div class="<?= $colLeft ?>">
         <?php if (!empty($config['product'][$type]['slug_list'])): ?>
           <?php include TEMPLATE . LAYOUT . 'slug.php'; ?>
         <?php endif; ?>
@@ -98,7 +121,7 @@
           </div>
         </div>
       </div>
-      <div class="col-xl-4">
+      <div class="<?= $colRight ?>">
         <?php if (!empty($config['product'][$type]['images_list'])): ?>
           <div class="card card-primary card-outline text-sm">
             <div class="card-header">
@@ -131,7 +154,7 @@
                 <div class="form-group d-inline-block mb-2 mr-4">
                   <label for="<?= $check ?>-checkbox" class="d-inline-block align-middle mb-0 mr-3 form-label"><?= defined($check) ? constant($check) : $check ?>:</label>
                   <label class="switch switch-success">
-                    <input type="checkbox" name="data[status][<?= $check ?>]" class="switch-input custom-control-input .show-checkbox" id="<?= $check ?>-checkbox" <?= $fn->is_checked($check, $result['status'] ?? '', $id ?? '') ?>>
+                    <input type="checkbox" name="data[status][<?= $check ?>]" class="switch-input custom-control-input .show-checkbox" id="<?= $check ?>-checkbox" <?= $func->is_checked($check, $result['status'] ?? '', $id ?? '') ?>>
                   </label>
                 </div>
               <?php endforeach; ?>

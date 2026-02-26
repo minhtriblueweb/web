@@ -1,5 +1,5 @@
 <?php
-$linkMan = "index.php?page=newsletter&act=man&type=" . $type;
+$linkMan = "index.php?com=newsletter&act=man&type=" . $type;
 ?>
 <!-- Content Header -->
 <section class="content-header text-sm">

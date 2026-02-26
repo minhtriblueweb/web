@@ -9,22 +9,22 @@
                 <div class="d-flex justify-content-center align-items-center">
                   <a id="Zoom-1" class="MagicZoom"
                     data-options="zoomMode: magnifier; zoomPosition: inner; hint: off; rightClick: true; expandCaption: false; history: false;"
-                    href="<?= $fn->getImageCustom(['file' => $rowDetail['file'], 'width' => $optsetting_json["san-pham_man_width"], 'height' => $optsetting_json["san-pham_man_height"], 'zc' => $optsetting_json["san-pham_man_zc"], 'src_only' => true, 'watermark' => $config['product'][$type]['watermark']]) ?>" title="<?= $rowDetail["name$lang"] ?>">
-                    <?= $fn->getImageCustom(['file' => $rowDetail['file'], 'alt' => $rowDetail["name$lang"], 'title' => $rowDetail["name$lang"], 'width' => $optsetting_json["san-pham_man_width"], 'height' => $optsetting_json["san-pham_man_height"], 'zc' => $optsetting_json["san-pham_man_zc"], 'lazy' => true, 'watermark' => $config['product'][$type]['watermark']]) ?>
+                    href="<?= $func->getImageCustom(['file' => $rowDetail['file'], 'width' => $optsetting_json["san-pham_man_width"], 'height' => $optsetting_json["san-pham_man_height"], 'zc' => $optsetting_json["san-pham_man_zc"], 'src_only' => true, 'watermark' => $config['product'][$type]['watermark']]) ?>" title="<?= $rowDetail["name$lang"] ?>">
+                    <?= $func->getImageCustom(['file' => $rowDetail['file'], 'alt' => $rowDetail["name$lang"], 'title' => $rowDetail["name$lang"], 'width' => $optsetting_json["san-pham_man_width"], 'height' => $optsetting_json["san-pham_man_height"], 'zc' => $optsetting_json["san-pham_man_zc"], 'lazy' => true, 'watermark' => $config['product'][$type]['watermark']]) ?>
                   </a>
                 </div>
                 <?php if (!empty($rowDetailPhoto)): ?>
                   <div class="gallery-thumb-pro">
                     <div class="slick-pro-detail">
                       <div>
-                        <a class="thumb-pro-detail" data-zoom-id="Zoom-1" href="<?= $fn->getImageCustom(['file' => $rowDetail['file'], 'watermark' => $config['product'][$type]['watermark'], 'src_only' => true]) ?>">
-                          <?= $fn->getImageCustom(['file' => $rowDetail['file'], 'title' => $rowDetail["name$lang"], 'alt' => $rowDetail["name$lang"], 'class' => '', 'width' => $optsetting_json["san-pham_man_width"], 'height' => $optsetting_json["san-pham_man_height"], 'zc' => $optsetting_json["san-pham_man_zc"], 'lazy' => true, 'watermark' => $config['product'][$type]['watermark']]) ?>
+                        <a class="thumb-pro-detail" data-zoom-id="Zoom-1" href="<?= $func->getImageCustom(['file' => $rowDetail['file'], 'watermark' => $config['product'][$type]['watermark'], 'src_only' => true]) ?>">
+                          <?= $func->getImageCustom(['file' => $rowDetail['file'], 'title' => $rowDetail["name$lang"], 'alt' => $rowDetail["name$lang"], 'class' => '', 'width' => $optsetting_json["san-pham_man_width"], 'height' => $optsetting_json["san-pham_man_height"], 'zc' => $optsetting_json["san-pham_man_zc"], 'lazy' => true, 'watermark' => $config['product'][$type]['watermark']]) ?>
                         </a>
                       </div>
                       <?php foreach ($rowDetailPhoto as $gallery): ?>
                         <div>
-                          <a href=" <?= $fn->getImageCustom(['file' => $gallery['file'], 'watermark' => $config['product'][$type]['watermark'], 'width' => $optsetting_json["san-pham_man_width"], 'height' => $optsetting_json["san-pham_man_height"], 'zc' => $optsetting_json["san-pham_man_zc"], 'src_only' => true]) ?>" class="thumb-pro-detail" data-zoom-id="Zoom-1">
-                            <?= $fn->getImageCustom(['file' => $gallery['file'], 'title' => $gallery['name'], 'alt' => $gallery['name'], 'class' => '', 'width' => $optsetting_json["san-pham_man_width"], 'height' => $optsetting_json["san-pham_man_height"], 'zc' => $optsetting_json["san-pham_man_zc"], 'lazy' => true, 'watermark' => $config['product'][$type]['watermark']]) ?>
+                          <a href=" <?= $func->getImageCustom(['file' => $gallery['file'], 'watermark' => $config['product'][$type]['watermark'], 'width' => $optsetting_json["san-pham_man_width"], 'height' => $optsetting_json["san-pham_man_height"], 'zc' => $optsetting_json["san-pham_man_zc"], 'src_only' => true]) ?>" class="thumb-pro-detail" data-zoom-id="Zoom-1">
+                            <?= $func->getImageCustom(['file' => $gallery['file'], 'title' => $gallery['name'], 'alt' => $gallery['name'], 'class' => '', 'width' => $optsetting_json["san-pham_man_width"], 'height' => $optsetting_json["san-pham_man_height"], 'zc' => $optsetting_json["san-pham_man_zc"], 'lazy' => true, 'watermark' => $config['product'][$type]['watermark']]) ?>
                           </a>
                         </div>
                       <?php endforeach; ?>
@@ -51,7 +51,7 @@
                 <?php
                 $params = array();
                 $params['oaidzalo'] = $optsetting_json['oaidzalo'];
-                $params['data-href'] = $fn->getCurrentPageURL();
+                $params['data-href'] = $func->getCurrentPageURL();
                 include TEMPLATE . LAYOUT . 'share.php'
                 ?>
                 <ul class="attr-pro-detail mt-3">
@@ -65,7 +65,7 @@
                     <li>
                       <label class="attr-label-pro-detail">Thương hiệu:</label>
                       <div class="attr-content-pro-detail">
-                        <a href="<?= $productBrand["slug$lang"] ?>"> <?= $fn->getImageCustom(['file' => $productBrand['file'], 'width' => 30, 'height' => 30, 'zc' => 2, 'alt' => $productBrand["name$lang"], 'title' => $productBrand["name$lang"], 'lazy' => false]) ?></a>
+                        <a href="<?= $productBrand["slug$lang"] ?>"> <?= $func->getImageCustom(['file' => $productBrand['file'], 'width' => 30, 'height' => 30, 'zc' => 2, 'alt' => $productBrand["name$lang"], 'title' => $productBrand["name$lang"], 'lazy' => false]) ?></a>
                       </div>
                     </li>
                   <?php endif; ?>
@@ -78,17 +78,17 @@
                     <div class="attr-content-pro-detail">
                       <?php if (!empty($rowDetail['sale_price'])): ?>
                         <span class="price-new-pro-detail">
-                          <?= $fn->formatMoney($rowDetail['sale_price']) ?>
+                          <?= $func->formatMoney($rowDetail['sale_price']) ?>
                         </span>
                         <span class="price-old-pro-detail">
                           <?= !empty($rowDetail['regular_price'])
-                            ? $fn->formatMoney($rowDetail['regular_price'])
+                            ? $func->formatMoney($rowDetail['regular_price'])
                             : lienhe ?>
                         </span>
                       <?php else: ?>
                         <span class="price-new-pro-detail">
                           <?= !empty($rowDetail['regular_price'])
-                            ? $fn->formatMoney($rowDetail['regular_price'])
+                            ? $func->formatMoney($rowDetail['regular_price'])
                             : lienhe ?>
                         </span>
                       <?php endif; ?>
@@ -149,20 +149,20 @@
             <div class="tab-content" id="tabsProDetailContent">
               <div class="tab-pane fade show active" id="info-pro-detail" role="tabpanel">
                 <div class="content-main content-ck content-text" id="toc-content">
-                  <?= $fn->decodeHtmlChars($rowDetail["content$lang"]) ?>
+                  <?= $func->decodeHtmlChars($rowDetail["content$lang"]) ?>
                 </div>
               </div>
               <?php if ($muahang): ?>
                 <div class="tab-pane fade" id="muahang-pro-detail" role="tabpanel">
                   <div class="content-main content-ck content-text">
-                    <?= $fn->decodeHtmlChars($muahang["content$lang"]) ?>
+                    <?= $func->decodeHtmlChars($muahang["content$lang"]) ?>
                   </div>
                 </div>
               <?php endif ?>
               <?php if ($thanhtoan): ?>
                 <div class="tab-pane fade" id="thanhtoan-pro-detail" role="tabpanel">
                   <div class="content-main content-ck content-text">
-                    <?= $fn->decodeHtmlChars($thanhtoan["content$lang"]) ?>
+                    <?= $func->decodeHtmlChars($thanhtoan["content$lang"]) ?>
                   </div>
                 </div>
               <?php endif ?>
@@ -197,7 +197,7 @@
               <?php foreach ($tieuchi as $row_tc): ?>
                 <div class="i-policy hover-glass shadow-sm">
                   <a class="me-2" title="<?= $row_tc["name$lang"] ?>">
-                    <?= $fn->getImageCustom([
+                    <?= $func->getImageCustom([
                       'file' => $row_tc['file'],
                       'class' => '',
                       'alt' => $row_tc["name$lang"],

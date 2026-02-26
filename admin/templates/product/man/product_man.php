@@ -1,12 +1,12 @@
 <?php
-$linkProduct = "index.php?page=product&type=" . $type;
+$linkProduct = "index.php?com=product&type=" . $type;
 $linkMan   = "$linkProduct&act=man";
 $linkForm  = "$linkProduct&act=form";
-$linkEdit = "index.php?page=product&act=form&type=" . $type;
-$linkCopy = "index.php?page=product&act=copy&type=" . $type;
-$linkDelete = "index.php?page=product&act=delete&type=" . $type;
-$linkGalleryMan  = "index.php?page=gallery&act=man&type=$type&id=";
-$linkGalleryForm  = "index.php?page=gallery&act=form&type=$type&id=";
+$linkEdit = "index.php?com=product&act=form&type=" . $type;
+$linkCopy = "index.php?com=product&act=copy&type=" . $type;
+$linkDelete = "index.php?com=product&act=delete&type=" . $type;
+$linkGalleryMan  = "index.php?com=gallery&act=man&type=$type&id=";
+$linkGalleryForm  = "index.php?com=gallery&act=form&type=$type&id=";
 $copyImg = (isset($config['product'][$type]['copy_image']) && $config['product'][$type]['copy_image'] == true) ? TRUE : FALSE;
 ?>
 <section class="content-header text-sm">
@@ -40,7 +40,7 @@ $copyImg = (isset($config['product'][$type]['copy_image']) && $config['product']
     foreach ($categories as $v) {
       if (!empty($config['product'][$type][$v])) {
         echo '<div class="form-group col-xl-2 col-lg-3 col-md-4 col-sm-4 mb-2">';
-        echo $fn->getLinkCategory('product', $v, $type);
+        echo $func->getLinkCategory('product', $v, $type);
         echo '</div>';
       }
     }
@@ -105,7 +105,7 @@ $copyImg = (isset($config['product'][$type]['copy_image']) && $config['product']
                   <!-- Ảnh sản phẩm -->
                   <?php if (!empty($config['product'][$type]['show_images'])): ?>
                     <td class="align-middle">
-                      <a href="<?= $linkEdit . $linkID ?>&id=<?= $row['id'] ?>" title="<?= $row["name$lang"] ?>"><?= $fn->getImage(['file' => $row['file'], 'class' => 'rounded img-preview', 'alt' => $row["name$lang"]]) ?></a>
+                      <a href="<?= $linkEdit . $linkID ?>&id=<?= $row['id'] ?>" title="<?= $row["name$lang"] ?>"><?= $func->getImage(['file' => $row['file'], 'class' => 'rounded img-preview', 'alt' => $row["name$lang"]]) ?></a>
                     </td>
                   <?php endif; ?>
 
@@ -155,8 +155,7 @@ $copyImg = (isset($config['product'][$type]['copy_image']) && $config['product']
                   <?php foreach ($config['product'][$type]['check'] as $attr => $label): ?>
                     <td class="align-middle text-center">
                       <label class="switch switch-success">
-                        <input type="checkbox" class="switch-input custom-control-input show-checkbox"
-                          id="show-checkbox-<?= $attr ?>-<?= $row['id'] ?>"
+                        <input type="checkbox" class="switch-input custom-control-input show-checkbox" id="show-checkbox-<?= $attr ?>-<?= $row['id'] ?>"
                           data-table="<?= $table ?>" data-id="<?= $row['id'] ?>" data-attr="<?= $attr ?>"
                           <?= (strpos($row['status'], $attr) !== false) ? 'checked' : '' ?>>
                       </label>

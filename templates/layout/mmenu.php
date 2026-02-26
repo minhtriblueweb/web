@@ -6,7 +6,7 @@
     </div>
     <div class="logo-mobile">
       <a href="./">
-        <?= $fn->getImageCustom([
+        <?= $func->getImageCustom([
           'file'  => $logo['file'],
           'alt'   => $optsetting["name$lang"],
           'title' => $optsetting["name$lang"],
@@ -46,18 +46,18 @@
     <li class="">
       <a href="san-pham">Sản phẩm</a>
       <?php
-      $listsMenuM = $db->rawQuery("select id,name{$lang},slug{$lang},file from tbl_product_list where type = 'san-pham' and find_in_set('hienthi',status) order by numb,id desc");
+      $listsMenuM = $d->rawQuery("select id,name{$lang},slug{$lang},file from tbl_product_list where type = 'san-pham' and find_in_set('hienthi',status) order by numb,id desc");
       if (!empty($listsMenuM)): ?>
         <ul>
           <?php foreach ($listsMenuM as $v_list): ?>
             <li>
               <a href="<?= $v_list["slug$lang"] ?>"><?= $v_list["name$lang"] ?></a>
               <?php
-              $cats = $db->rawQuery("select id,name{$lang},slug{$lang} from tbl_product_cat where id_list = ? and find_in_set('hienthi',status) order by numb,id desc", [$v_list['id']]);
+              $cats = $d->rawQuery("select id,name{$lang},slug{$lang} from tbl_product_cat where id_list = ? and find_in_set('hienthi',status) order by numb,id desc", [$v_list['id']]);
               if (!empty($cats)): ?>
                 <ul>
                   <?php foreach ($cats as $v_cat):
-                    $items = $db->rawQuery("select id,name{$lang},slug{$lang} from tbl_product_item where id_cat = ? and find_in_set('hienthi',status) order by numb,id desc", [$v_cat['id']]);
+                    $items = $d->rawQuery("select id,name{$lang},slug{$lang} from tbl_product_item where id_cat = ? and find_in_set('hienthi',status) order by numb,id desc", [$v_cat['id']]);
                   ?>
                     <li>
                       <a href="<?= $v_cat["slug$lang"] ?>"><?= $v_cat["name$lang"] ?></a>

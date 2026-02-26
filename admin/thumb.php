@@ -1,6 +1,13 @@
 <?php
-require_once 'init.php';
-
+define('LIBRARIES', '../libraries/');
+define('UPLOADS', 'uploads/');
+define('THUMB', 'thumb/');
+define('WATERMARK', '../watermark');
+require_once LIBRARIES . 'database.php';
+require_once LIBRARIES . 'autoload.php';
+new AutoLoad();
+$d  = new Database();
+$func = new Functions($d);
 $w  = max(0, (int)($_GET['w'] ?? 0));
 $h  = max(0, (int)($_GET['h'] ?? 0));
 $zc = (int)($_GET['zc'] ?? 1);
@@ -21,7 +28,7 @@ $thumb_sub_dir = $thumb_name . '/' . $folder;
 $thumb_filename = $base_filename . '.' . $ext;
 $thumb_path = rtrim($thumb_base_dir . $thumb_sub_dir, '/') . '/' . ($add_watermark ? trim(WATERMARK, '/') . '/' : '') . $thumb_filename;
 if (!file_exists($thumb_path)) {
-  $thumb_path = $fn->createThumb($source_path, $thumb_name, false, $add_watermark);
+  $thumb_path = $func->createThumb($source_path, $thumb_name, false, $add_watermark);
 }
 if (!$thumb_path || !file_exists($thumb_path)) {
   http_response_code(500);

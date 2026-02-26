@@ -1,6 +1,6 @@
 <?php
-$linkMan = "index.php?page=order&act=man";
-$linkSave = "index.php?page=order&act=save";
+$linkMan = "index.php?com=order&act=man";
+$linkSave = "index.php?com=order&act=save";
 ?>
 <!-- Content Header -->
 <section class="content-header text-sm">
@@ -17,9 +17,10 @@ $linkSave = "index.php?page=order&act=save";
 
 <!-- Main content -->
 <section class="content">
-  <form method="post" action="<?= $linkSave ?>" enctype="multipart/form-data">
+  <form class="validation-form" novalidate method="post" action="<?= $linkSave ?>" enctype="multipart/form-data">
     <div class="card-footer text-sm sticky-top">
       <button type="submit" class="btn btn-sm bg-gradient-primary"><i class="far fa-save mr-2"></i><?= luu ?></button>
+      <button type="submit" class="btn btn-sm bg-gradient-success" name="save-here"><i class="far fa-save mr-2"></i><?= luutaitrang ?></button>
       <button type="reset" class="btn btn-sm bg-gradient-secondary"><i class="fas fa-redo mr-2"></i><?= lamlai ?></button>
       <a class="btn btn-sm bg-gradient-danger" href="<?= $linkMan ?>" title="<?= thoat ?>"><i class="fas fa-sign-out-alt mr-2"></i><?= thoat ?></a>
     </div>
@@ -34,8 +35,8 @@ $linkSave = "index.php?page=order&act=save";
         </div>
         <div class="form-group col-md-4 col-sm-6">
           <label><?= hinhthucthanhtoan ?>:</label>
-          <?php $order_payment = $fn->getInfoDetail('namevi', 'tbl_news', @$item['order_payment']); ?>
-          <p class="text-info"><?= $order_payment['namevi'] ?></p>
+          <?php $order_payment = $func->getInfoDetail("name$lang", 'tbl_news', @$item['order_payment']); ?>
+          <p class="text-info"><?= $order_payment["name$lang"] ?></p>
         </div>
         <div class="form-group col-md-4 col-sm-6">
           <label><?= hoten ?>:</label>
@@ -58,7 +59,7 @@ $linkSave = "index.php?page=order&act=save";
             <label><?= phivanchuyen ?>:</label>
             <p class="font-weight-bold text-danger">
               <?php if (isset($item['ship_price']) && $item['ship_price'] > 0) { ?>
-                <?= $fn->formatMoney($item['ship_price']) ?>
+                <?= $func->formatMoney($item['ship_price']) ?>
               <?php } else { ?>
                 Không
               <?php } ?>
@@ -75,7 +76,7 @@ $linkSave = "index.php?page=order&act=save";
         </div>
         <div class="form-group col-12">
           <label for="order_status" class="mr-2"><?= tinhtrang ?>:</label>
-          <?= $fn->orderStatus(@$item['order_status']) ?>
+          <?= $func->orderStatus(@$item['order_status']) ?>
         </div>
         <div class="form-group col-12">
           <label for="notes"><?= ghichu ?>:</label>
@@ -116,10 +117,7 @@ $linkSave = "index.php?page=order&act=save";
                   <td class="align-middle text-center"><?= ($k + 1) ?></td>
                   <td class="align-middle">
                     <a title="<?= $v['name'] ?>">
-                      <?= $fn->getImage([
-                        'file' => $v['photo'],
-                        'class' => 'rounded img-preview',
-                      ]) ?>
+                      <?= $func->getImage(['file' => $v['photo'], 'class' => 'rounded img-preview']) ?>
                     </a>
                   </td>
                   <td class="align-middle">
@@ -138,10 +136,16 @@ $linkSave = "index.php?page=order&act=save";
                   <td class="align-middle text-center">
                     <div class="price-cart-detail">
                       <?php if ($v['sale_price']) { ?>
-                        <span class="price-new-cart-detail"><?= $fn->formatMoney($v['sale_price']) ?></span>
-                        <span class="price-old-cart-detail"><?= $fn->formatMoney($v['regular_price']) ?></span>
+                        <span class="price-new-cart-detail">
+                          <?= $func->formatMoney($v['sale_price']) ?>
+                        </span>
+                        <span class="price-old-cart-detail">
+                          <?= $func->formatMoney($v['regular_price']) ?>
+                        </span>
                       <?php } else { ?>
-                        <span class="price-new-cart-detail"><?= $fn->formatMoney($v['regular_price']) ?></span>
+                        <span class="price-new-cart-detail">
+                          <?= $func->formatMoney($v['regular_price']) ?>
+                        </span>
                       <?php } ?>
                     </div>
                   </td>
@@ -149,10 +153,10 @@ $linkSave = "index.php?page=order&act=save";
                   <td class="align-middle text-right">
                     <div class="price-cart-detail">
                       <?php if ($v['sale_price']) { ?>
-                        <span class="price-new-cart-detail"><?= $fn->formatMoney($v['sale_price'] * $v['quantity']) ?></span>
-                        <span class="price-old-cart-detail"><?= $fn->formatMoney($v['regular_price'] * $v['quantity']) ?></span>
+                        <span class="price-new-cart-detail"><?= $func->formatMoney($v['sale_price'] * $v['quantity']) ?></span>
+                        <span class="price-old-cart-detail"><?= $func->formatMoney($v['regular_price'] * $v['quantity']) ?></span>
                       <?php } else { ?>
-                        <span class="price-new-cart-detail"><?= $fn->formatMoney($v['regular_price'] * $v['quantity']) ?></span>
+                        <span class="price-new-cart-detail"><?= $func->formatMoney($v['regular_price'] * $v['quantity']) ?></span>
                       <?php } ?>
                     </div>
                   </td>
@@ -163,7 +167,7 @@ $linkSave = "index.php?page=order&act=save";
               ) { ?>
                 <tr>
                   <td colspan="5" class="title-money-cart-detail"><?= tamtinh ?>:</td>
-                  <td colspan="1" class="cast-money-cart-detail"><?= $fn->formatMoney($item['temp_price']) ?></td>
+                  <td colspan="1" class="cast-money-cart-detail"><?= $func->formatMoney($item['temp_price']) ?></td>
                 </tr>
               <?php } ?>
               <?php if (isset($config['order']['ship']) && $config['order']['ship'] == true) { ?>
@@ -171,7 +175,7 @@ $linkSave = "index.php?page=order&act=save";
                   <td colspan="5" class="title-money-cart-detail"><?= phivanchuyen ?>:</td>
                   <td colspan="1" class="cast-money-cart-detail">
                     <?php if ($item['ship_price']) { ?>
-                      <?= $fn->formatMoney($item['ship_price']) ?>
+                      <?= $func->formatMoney($item['ship_price']) ?>
                     <?php } else { ?>
                       Không
                     <?php } ?>
@@ -180,7 +184,7 @@ $linkSave = "index.php?page=order&act=save";
               <?php } ?>
               <tr>
                 <td colspan="5" class="title-money-cart-detail"><?= tonggiatridonhang ?>:</td>
-                <td colspan="1" class="cast-money-cart-detail"><?= $fn->formatMoney($item['total_price']) ?></td>
+                <td colspan="1" class="cast-money-cart-detail"><?= $func->formatMoney($item['total_price']) ?></td>
               </tr>
             </tbody>
           <?php } ?>
@@ -189,6 +193,7 @@ $linkSave = "index.php?page=order&act=save";
     </div>
     <div class="card-footer text-sm">
       <button type="submit" class="btn btn-sm bg-gradient-primary"><i class="far fa-save mr-2"></i><?= luu ?></button>
+      <button type="submit" class="btn btn-sm bg-gradient-success" name="save-here"><i class="far fa-save mr-2"></i><?= luutaitrang ?></button>
       <button type="reset" class="btn btn-sm bg-gradient-secondary"><i class="fas fa-redo mr-2"></i><?= lamlai ?></button>
       <a class="btn btn-sm bg-gradient-danger" href="<?= $linkMan ?>" title="<?= thoat ?>"><i class="fas fa-sign-out-alt mr-2"></i><?= thoat ?></a>
       <input type="hidden" name="id" value="<?= (isset($item['id']) && $item['id'] > 0) ? $item['id'] : '' ?>">

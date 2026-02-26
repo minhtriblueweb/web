@@ -1584,38 +1584,29 @@ $(document).ready(function () {
   });
 
   /* Change status */
-  $("body").on("click", ".show-checkbox", function () {
-    const $checkbox = $(this);
-    const id = $checkbox.data("id");
-    const table = $checkbox.data("table");
-    const attr = $checkbox.data("attr");
-    const isChecked = $checkbox.is(":checked");
-    $.ajax({
-      url: "api/status.php",
-      type: "POST",
-      dataType: "json",
-      data: {
-        id: id,
-        table: table,
-        attr: attr,
-        checked: isChecked ? 1 : 0,
-      },
-      success: function (res) {
-        if (res.success) {
-          $checkbox.prop("checked", isChecked);
-        } else {
-          $checkbox.prop("checked", !isChecked);
-          alert(res.message || "Lỗi cập nhật trạng thái.");
+  if ($('.show-checkbox').length) {
+    $('body').on('click', '.show-checkbox', function () {
+      var id = $(this).attr('data-id');
+      var table = $(this).attr('data-table');
+      var attr = $(this).attr('data-attr');
+      var $this = $(this);
+      $.ajax({
+        url: 'api/status.php',
+        type: 'POST',
+        dataType: 'html',
+        data: {
+          id: id,
+          table: table,
+          attr: attr
+        },
+        success: function () {
+          if ($this.is(':checked')) $this.prop('checked', false);
+          else $this.prop('checked', true);
         }
-      },
-      error: function () {
-        $checkbox.prop("checked", !isChecked);
-        alert("Lỗi kết nối đến máy chủ.");
-      },
+      });
+      return false;
     });
-    return false;
-  });
-
+  }
 
   /* Change numb */
   if ($("input.update-numb").length) {
@@ -2395,7 +2386,7 @@ $(function () {
           if (v) params += `&${k}=${v}`;
         });
       }
-      const link = `index.php?page=${item.page}&act=form&type=${item.type}${params}&id=${item.id}`;
+      const link = `index.php?com=${item.page}&act=form&type=${item.type}${params}&id=${item.id}`;
       html += `
         <a href="${link}" class="text-decoration-none">
           <div class="d-flex align-items-center px-3 py-2 gap-2">

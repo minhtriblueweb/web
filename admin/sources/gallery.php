@@ -5,9 +5,9 @@ $id_child  = (int)($_GET['id_child'] ?? 0);
 $type      = $_GET['type'] ?? '';
 $keyword   = $_GET['keyword'] ?? '';
 $table     = "tbl_gallery";
-$parent    = $id ? $db->rawQueryOne("SELECT id, name{$lang}, slug{$lang} FROM tbl_product WHERE id = ? LIMIT 1", [$id]) : [];
+$parent    = $id ? $d->rawQueryOne("SELECT id, name{$lang}, slug{$lang} FROM tbl_product WHERE id = ? LIMIT 1", [$id]) : [];
 
-$linkBase  = "index.php?page=gallery&type=$type&id=$id";
+$linkBase  = "index.php?com=gallery&type=$type&id=$id";
 $linkMan   = "$linkBase&act=man";
 $linkForm  = "$linkBase&act=form";
 $linkEdit  = "$linkBase&act=form&id_child=";
@@ -34,24 +34,24 @@ switch ($act) {
     break;
 
   default:
-    $fn->transfer(trangkhongtontai, "index.php", false);
+    $func->transfer(trangkhongtontai, "index.php", false);
     break;
 }
 function save_gallery($data, $files, $id_parent)
 {
-  global $db, $fn, $linkBase, $lang, $config, $type;
+  global $d, $func, $linkBase, $lang, $config, $type;
   $id_parent = (int)$id_parent;
   $table = 'tbl_gallery';
   $result = false;
-  $redirect_page = "$linkBase&act=man&id=$id_parent";
-  $parent = $db->rawQueryOne("SELECT name$lang FROM tbl_product WHERE id = ? LIMIT 1", [$id_parent]);
+  $redirect_com = "$linkBase&act=man&id=$id_parent";
+  $parent = $d->rawQueryOne("SELECT name$lang FROM tbl_product WHERE id = ? LIMIT 1", [$id_parent]);
   $parent_name = $parent["name$lang"] ?? 'gallery';
   if (!empty($data['id-filer'])) {
     foreach ($data['id-filer'] as $i => $gid) {
       $gid = (int)$gid;
       $numb = (int)($data['numb-filer'][$i] ?? 0);
       $name = trim($data['name-filer'][$i] ?? '');
-      $db->execute("UPDATE $table SET numb = ?, name = ? WHERE id = ?", [$numb, $name, $gid]);
+      $d->execute("UPDATE $table SET numb = ?, name = ? WHERE id = ?", [$numb, $name, $gid]);
     }
   }
   $total = count($files['files']['name'] ?? []);
@@ -64,7 +64,7 @@ function save_gallery($data, $files, $id_parent)
         'error' => $files['files']['error'][$i],
         'size' => $files['files']['size'][$i]
       ];
-      $thumb_filename = $fn->uploadImage([
+      $thumb_filename = $func->uploadImage([
         'file' => $file,
         'custom_name' => $parent_name,
         'old_file_path' => '',
@@ -75,23 +75,23 @@ function save_gallery($data, $files, $id_parent)
         $name = trim($data['name-filer'][$i] ?? '');
         $fields = ['id_parent', 'type', 'file', 'numb', 'name', 'status'];
         $params = [$id_parent, $type, $thumb_filename, $numb, $name, !empty($data['hienthi_all']) ? 'hienthi' : ''];
-        $result = $db->execute("INSERT INTO `$table` (" . implode(', ', $fields) . ") VALUES (" . implode(', ', array_fill(0, count($fields), '?')) . ")", $params);
+        $result = $d->execute("INSERT INTO `$table` (" . implode(', ', $fields) . ") VALUES (" . implode(', ', array_fill(0, count($fields), '?')) . ")", $params);
       }
     }
   }
-  $fn->transfer($result ? capnhathinhanhthanhcong : capnhathinhanhthatbai,  $redirect_page, $result);
+  $func->transfer($result ? capnhathinhanhthanhcong : capnhathinhanhthatbai,  $redirect_com, $result);
   return $result;
 }
 function upload_gallery($data, $files, $id, $id_parent)
 {
-  global $db, $fn, $linkBase, $lang, $config, $type;
+  global $d, $func, $linkBase, $lang, $config, $type;
 
-  $redirect_page = "$linkBase&act=man&id=$id_parent";
+  $redirect_com = "$linkBase&act=man&id=$id_parent";
   $id = (int)$id;
   $id_parent = (int)$id_parent;
   $table = 'tbl_gallery';
 
-  $parent = $db->rawQueryOne("SELECT name$lang FROM tbl_product WHERE id = ? LIMIT 1", [$id_parent]);
+  $parent = $d->rawQueryOne("SELECT name$lang FROM tbl_product WHERE id = ? LIMIT 1", [$id_parent]);
   $parent_name = $parent["name$lang"] ?? '';
 
   $fields = [
@@ -101,10 +101,10 @@ function upload_gallery($data, $files, $id, $id_parent)
 
   $thumb_filename = '';
   if (!empty($files['file']['name']) && !empty($files['file']['tmp_name'])) {
-    $old = $db->rawQueryOne("SELECT file FROM `$table` WHERE id = ?", [$id]);
+    $old = $d->rawQueryOne("SELECT file FROM `$table` WHERE id = ?", [$id]);
     $old_file_path = !empty($old['file']) ? UPLOADS . $old['file'] : '';
 
-    $thumb_filename = $fn->uploadImage([
+    $thumb_filename = $func->uploadImage([
       'file' => $files['file'],
       'custom_name' => $parent_name,
       'old_file_path' => $old_file_path,
@@ -112,7 +112,7 @@ function upload_gallery($data, $files, $id, $id_parent)
     ]);
 
     if (!$thumb_filename) {
-      $fn->transfer(capnhatdulieubiloi, $redirect_page, false);
+      $func->transfer(capnhatdulieubiloi, $redirect_com, false);
     }
 
     $fields['file'] = $thumb_filename;
@@ -126,63 +126,63 @@ function upload_gallery($data, $files, $id, $id_parent)
   }
 
   $params[] = $id;
-  $success = $db->execute("UPDATE `$table` SET " . implode(', ', $sqlFields) . " WHERE id = ?", $params);
+  $success = $d->execute("UPDATE `$table` SET " . implode(', ', $sqlFields) . " WHERE id = ?", $params);
 
-  $fn->transfer($success ? capnhathinhanhthanhcong : capnhathinhanhthatbai, $redirect_page, $success);
+  $func->transfer($success ? capnhathinhanhthanhcong : capnhathinhanhthatbai, $redirect_com, $success);
 }
 function view()
 {
-  global $fn, $id, $table, $type, $keyword, $paging, $show_data;
-  $perPage = 10;
-  $curPage = max(1, (int)($_GET['p'] ?? 1));
+  global $func, $id, $table, $type, $keyword, $paging, $show_data;
+  $percom = 10;
+  $curcom = max(1, (int)($_GET['p'] ?? 1));
   $options = [
     'table' => $table,
     'type' => $type,
     'id_parent' => $id,
     'keyword' => $keyword,
-    'pagination' => [$perPage, $curPage]
+    'pagination' => [$percom, $curcom]
   ];
-  $total = $fn->count_data($options);
-  $show_data = $fn->show_data($options);
-  $paging = $fn->pagination($total, $perPage, $curPage);
+  $total = $func->count_data($options);
+  $show_data = $func->show_data($options);
+  $paging = $func->pagination($total, $percom, $curcom);
 }
 function add()
 {
-  global $db, $table, $id_child, $id, $result;
+  global $d, $table, $id_child, $id, $result;
   $isPost = ($_SERVER['REQUEST_METHOD'] === 'POST');
   $isAdd  = ($isPost && isset($_POST['add']) && $id);
   $isEdit = ($isPost && isset($_POST['edit']) && $id_child > 0);
   if ($isAdd) save_gallery($_POST, $_FILES, $id);
-  $result = $db->rawQueryOne("SELECT * FROM $table WHERE id = ? LIMIT 1", [$id_child]);
+  $result = $d->rawQueryOne("SELECT * FROM $table WHERE id = ? LIMIT 1", [$id_child]);
   if ($isEdit && $result && isset($result['id_parent'])) {
     upload_gallery($_POST, $_FILES, $id_child, $result['id_parent']);
   }
 }
 function delete()
 {
-  global $fn, $table, $type,  $id_child, $linkMan;
+  global $func, $table, $type,  $id_child, $linkMan;
   if (is_numeric($_GET['id'] ?? null)) {
-    $fn->delete_data([
+    $func->delete_data([
       'id' => $id_child,
       'table' => $table,
       'type' => $type,
       'redirect' => $linkMan
     ]);
   } else {
-    $fn->transfer(khongnhanduocdulieu, $linkMan, false);
+    $func->transfer(khongnhanduocdulieu, $linkMan, false);
   }
 }
 function deleteMultiple()
 {
-  global $fn, $table, $type, $linkMan;
+  global $func, $table, $type, $linkMan;
   if (!empty($_GET['listid'])) {
-    $fn->deleteMultiple_data([
+    $func->deleteMultiple_data([
       'listid' => $_GET['listid'] ?? '',
       'table' => $table,
       'type' => $type,
       'redirect' => $linkMan
     ]);
   } else {
-    $fn->transfer(khongnhanduocdulieu, $linkMan, false);
+    $func->transfer(khongnhanduocdulieu, $linkMan, false);
   }
 }

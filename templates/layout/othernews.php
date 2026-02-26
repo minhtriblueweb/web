@@ -62,7 +62,7 @@
         <div class="col-lg-12 col-md-6">
           <div class="news-other d-flex flex-wrap">
             <a class="scale-img text-decoration-none pic-news-other" href="<?= $v["slug$lang"] ?>" title="<?= $v["name$lang"] ?>">
-              <?= $fn->getImageCustom([
+              <?= $func->getImageCustom([
                 'file' => $v['file'],
                 'class' => 'w-100',
                 'width' => 210,
@@ -87,7 +87,7 @@
         <div class="col-lg-12 col-md-6">
           <div class="news-other d-flex flex-wrap">
             <a class="scale-img text-decoration-none pic-news-other" href="<?= $v["slug$lang"] ?>" title="<?= $v["name$lang"] ?>">
-              <?= $fn->getImageCustom([
+              <?= $func->getImageCustom([
                 'file' => $v['file'],
                 'class' => 'w-100',
                 'width' => 210,

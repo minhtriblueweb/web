@@ -143,31 +143,31 @@ if (
               <?php if (!empty($config['product'][$type]['list'])) : ?>
                 <div class="form-group col-xl-6 col-sm-4">
                   <label class="d-block" for="id_list"><?= danhmuccap1 ?>:</label>
-                  <?= $fn->getAjaxCategory('product', 'list', $type) ?>
+                  <?= $func->getAjaxCategory('product', 'list', $type) ?>
                 </div>
               <?php endif; ?>
               <?php if (!empty($config['product'][$type]['cat'])) : ?>
                 <div class="form-group col-xl-6 col-sm-4">
                   <label class="d-block" for="id_cat"><?= danhmuccap2 ?>:</label>
-                  <?= $fn->getAjaxCategory('product', 'cat', $type) ?>
+                  <?= $func->getAjaxCategory('product', 'cat', $type) ?>
                 </div>
               <?php endif; ?>
               <?php if (!empty($config['product'][$type]['item'])) : ?>
                 <div class="form-group col-xl-6 col-sm-4">
                   <label class="d-block" for="id_item"><?= danhmuccap3 ?>:</label>
-                  <?= $fn->getAjaxCategory('product', 'item', $type) ?>
+                  <?= $func->getAjaxCategory('product', 'item', $type) ?>
                 </div>
               <?php endif; ?>
               <?php if (!empty($config['product'][$type]['sub'])) : ?>
                 <div class="form-group col-xl-6 col-sm-4">
                   <label class="d-block" for="id_sub"><?= danhmuccap4 ?>:</label>
-                  <?= $fn->getAjaxCategory('product', 'sub', $type) ?>
+                  <?= $func->getAjaxCategory('product', 'sub', $type) ?>
                 </div>
               <?php endif; ?>
               <?php if (!empty($config['product'][$type]['brand'])) : ?>
                 <div class="form-group col-xl-6 col-sm-4">
                   <label class="d-block" for="id_brand"><?= danhmuchang ?>:</label>
-                  <?= $fn->getAjaxCategory('product', 'brand', $type) ?>
+                  <?= $func->getAjaxCategory('product', 'brand', $type) ?>
                 </div>
               <?php endif; ?>
             </div>
@@ -237,7 +237,7 @@ if (
                       name="data[status][<?= $check ?>]"
                       class="switch-input custom-control-input .show-checkbox"
                       id="<?= $check ?>-checkbox"
-                      <?= $fn->is_checked($check, $result['status'] ?? '', $id ?? '') ?>>
+                      <?= $func->is_checked($check, $result['status'] ?? '', $id ?? '') ?>>
                   </label>
                 </div>
               <?php endforeach; ?>
@@ -298,7 +298,7 @@ if (
               <div class="jFiler-items my-jFiler-items jFiler-row">
                 <ul class="jFiler-items-list jFiler-items-grid row scroll-bar" id="jFilerSortable">
                   <?php foreach ($gallery as $g): ?>
-                    <?= $fn->galleryFiler($g['numb'] ?? 1, $g['id'] ?? 0, $g['file'] ?? '', $g['name'] ?? '', 'col-xl-2 col-lg-3 col-md-3 col-sm-4 col-6') ?>
+                    <?= $func->galleryFiler($g['numb'] ?? 1, $g['id'] ?? 0, $g['file'] ?? '', $g['name'] ?? '', 'col-xl-2 col-lg-3 col-md-3 col-sm-4 col-6') ?>
                   <?php endforeach; ?>
                 </ul>
               </div>

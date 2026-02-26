@@ -1,8 +1,7 @@
 <?php
-$linkForm   = "index.php?page=photo&act=photo_form&type=$type";
+$linkForm   = "index.php?com=photo&act=photo_form&type=" . $type;
 $linkEdit   = "$linkForm&id=";
-$linkDelete = "index.php?page=photo&act=delete&type=$type&id=";
-$linkMulti  = "index.php?page=photo&act=delete_multiple&type=$type";
+$linkDelete = "index.php?com=photo&act=delete&type=" . $type;
 ?>
 <section class="content-header text-sm">
   <div class="container-fluid">
@@ -17,7 +16,7 @@ $linkMulti  = "index.php?page=photo&act=delete_multiple&type=$type";
 <section class="content">
   <div class="card-footer text-sm sticky-top">
     <a class="btn btn-sm bg-gradient-primary text-white" href="<?= $linkForm ?>" title="<?= themmoi ?>"><i class="fas fa-plus mr-2"></i><?= themmoi ?></a>
-    <a class="btn btn-sm bg-gradient-danger text-white" id="delete-all" data-url="<?= $linkMulti ?>" title="<?= xoatatca ?>"><i class="far fa-trash-alt mr-2"></i><?= xoatatca ?></a>
+    <a class="btn btn-sm bg-gradient-danger text-white" id="delete-all" data-url="<?= $linkDelete ?>" title="<?= xoatatca ?>"><i class="far fa-trash-alt mr-2"></i><?= xoatatca ?></a>
     <div class="form-inline form-search d-inline-block align-middle ml-3">
       <div class="input-group input-group-sm">
         <input class="form-control form-control-navbar text-sm" type="search" id="keyword" placeholder="Tìm kiếm" aria-label="Tìm kiếm" value="<?= (isset($_GET['keyword'])) ? $_GET['keyword'] : '' ?>" onkeypress="doEnter(event,'keyword','<?= $linkMan ?>')">
@@ -79,7 +78,7 @@ $linkMulti  = "index.php?page=photo&act=delete_multiple&type=$type";
                 <?php if (!empty($config['photo']['photo_man'][$type]['images_photo'])): ?>
                   <td class="align-middle">
                     <a href="<?= $linkEdit . $row['id'] ?>" title="<?= $row["name$lang"] ?>">
-                      <?= $fn->getImage([
+                      <?= $func->getImage([
                         'file' => $row['file'],
                         'class' => 'rounded img-preview',
                         'alt' => $row["name$lang"],
@@ -120,9 +119,7 @@ $linkMulti  = "index.php?page=photo&act=delete_multiple&type=$type";
                   <a class="text-primary mr-2" href="<?= $linkEdit . $row['id'] ?>" title="<?= chinhsua ?>">
                     <i class="fas fa-edit"></i>
                   </a>
-                  <a class="text-danger" id="delete-item" data-url="<?= $linkDelete . $row['id'] ?>" title="<?= xoa ?>">
-                    <i class="fas fa-trash-alt"></i>
-                  </a>
+                  <a class="text-danger" id="delete-item" data-url="<?= $linkDelete ?>&id=<?= $row['id'] ?>" title="<?=xoa?>"><i class="fas fa-trash-alt"></i></a>
                 </td>
               </tr>
             <?php endforeach; ?>

@@ -8,7 +8,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 
 require_once __DIR__ . '/../init.php';
 
-$db = new Database();
+$d = new Database();
 
 // Lấy dữ liệu POST
 $id_parent = $_POST['id_parent'] ?? null;
@@ -26,7 +26,7 @@ if (!$id_parent || !$com || !$type || $cmd !== 'refresh') {
 $id_parent = (int)$id_parent;
 
 // Truy vấn gallery theo id_parent
-$rows = $db->rawQuery("SELECT * FROM tbl_gallery WHERE id_parent = ? ORDER BY numb, id DESC", [$id_parent]);
+$rows = $d->rawQuery("SELECT * FROM tbl_gallery WHERE id_parent = ? ORDER BY numb, id DESC", [$id_parent]);
 
 if (!$rows) {
   echo '';

@@ -68,7 +68,7 @@
                 <!-- Hình ảnh -->
                 <td class="align-middle text-center">
                   <a href="<?= $linkEdit . $row['id'] ?>">
-                    <?= $fn->getImage(['file' => $row['file'], 'class' => 'rounded img-preview']) ?>
+                    <?= $func->getImage(['file' => $row['file'], 'class' => 'rounded img-preview']) ?>
                   </a>
                 </td>
 

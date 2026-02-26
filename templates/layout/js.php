@@ -58,7 +58,7 @@ foreach ($jsFiles as $file) {
 }
 echo $js->get();
 ?>
-<?php if (!$fn->isGoogleSpeed()) { ?>
+<?php if (!$func->isGoogleSpeed()) { ?>
   <?php if (!empty($config['googleAPI']['recaptcha']['active'])) { ?>
     <!-- Js Google Recaptcha V3 -->
     <script src="https://www.google.com/recaptcha/api.js?render=<?= $config['googleAPI']['recaptcha']['sitekey'] ?>"></script>
@@ -67,7 +67,7 @@ echo $js->get();
     </script>
   <?php } ?>
   <!-- Js Body -->
-  <?= $fn->decodeHtmlChars($optsetting['bodyjs']) ?>
+  <?= $func->decodeHtmlChars($optsetting['bodyjs']) ?>
 <?php } ?>
 <!-- Js Structdata -->
 <?php include TEMPLATE . LAYOUT . "strucdata.php"; ?>

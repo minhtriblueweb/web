@@ -20,14 +20,14 @@
   <?php
   foreach ($productList as $v_list):
     // Danh mục cấp 2 theo từng danh sách
-    $productCat = $fn->show_data([
+    $productCat = $func->show_data([
       'table'   => 'tbl_product_cat',
       'status'  => 'hienthi,noibat',
       'id_list' => $v_list['id'],
       'select'  => "id, slug$lang, name$lang"
     ]);
     // Sản phẩm "Tất cả" theo id_list
-    $productsAll = $fn->show_data([
+    $productsAll = $func->show_data([
       'table'   => 'tbl_product',
       'status'  => 'hienthi',
       'id_list' => $v_list['id'],
@@ -69,7 +69,7 @@
 
       <!-- Tab theo danh mục cấp 2 -->
       <?php foreach ($productCat as $v_cat):
-        $productsCat = $fn->show_data([
+        $productsCat = $func->show_data([
           'table'   => 'tbl_product',
           'status'  => 'hienthi',
           'id_cat'  => $v_cat['id'],
@@ -101,7 +101,7 @@
       <div class="slick-brand slick-d-none">
         <?php foreach ($brand as $b) : ?>
           <a class=".scale-img hover-glass" href="<?= $b["slug$lang"] ?>" title="<?= $b["name$lang"] ?>">
-            <?= $fn->getImageCustom(['file' => $b['file'], 'width' => $optsetting_json["san-pham_brand_width"], 'height' => $optsetting_json["san-pham_brand_height"], 'zc' => $optsetting_json["san-pham_brand_zc"], 'alt' => $b["name$lang"], 'title' => $b["name$lang"], 'lazy' => true]) ?>
+            <?= $func->getImageCustom(['file' => $b['file'], 'width' => $optsetting_json["san-pham_brand_width"], 'height' => $optsetting_json["san-pham_brand_height"], 'zc' => $optsetting_json["san-pham_brand_zc"], 'alt' => $b["name$lang"], 'title' => $b["name$lang"], 'lazy' => true]) ?>
           </a>
         <?php endforeach; ?>
       </div>
@@ -120,7 +120,7 @@
         foreach ($feedback as $k => $v): ?>
           <div class="item-feedback transition border-">
             <p class="text-split"><?= $v["desc$lang"] ?></p>
-            <div class="content"><?= $fn->getImageCustom(['file' => $v['file'], 'width' => $optsetting_json["danh-gia_man_width"], 'height' => $optsetting_json["danh-gia_man_height"], 'zc' => $optsetting_json["danh-gia_man_zc"], 'alt' => $v["name$lang"], 'title' => $v["name$lang"],'class'=> 'rounded-circle', 'lazy' => true]) ?>
+            <div class="content"><?= $func->getImageCustom(['file' => $v['file'], 'width' => $optsetting_json["danh-gia_man_width"], 'height' => $optsetting_json["danh-gia_man_height"], 'zc' => $optsetting_json["danh-gia_man_zc"], 'alt' => $v["name$lang"], 'title' => $v["name$lang"],'class'=> 'rounded-circle', 'lazy' => true]) ?>
               <div class="title">
                 <h3 class="text-split"><?= $v["name$lang"] ?></h3>
                 <span class="text-split"><?= $v["content$lang"] ?></span>

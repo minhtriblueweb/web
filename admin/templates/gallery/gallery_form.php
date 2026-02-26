@@ -67,7 +67,7 @@
                       class="fas fa-info-circle mr-2"></i>Có thể chọn nhiều hình để di chuyển</div>
                   <div class="jFiler-items my-jFiler-items jFiler-row">
                     <ul class="jFiler-items-list jFiler-items-grid row scroll-bar" id="jFilerSortable">
-                      <?php foreach ($gallery as $v) echo $fn->galleryFiler($v['numb'], $v['id'], $v['photo'], $v['namevi'], 'product', 'col-xl-2 col-lg-3 col-md-3 col-sm-4 col-6'); ?>
+                      <?php foreach ($gallery as $v) echo $func->galleryFiler($v['numb'], $v['id'], $v['photo'], $v['namevi'], 'product', 'col-xl-2 col-lg-3 col-md-3 col-sm-4 col-6'); ?>
                     </ul>
                   </div>
                 </div>
@@ -102,7 +102,7 @@
                     <label class="switch switch-success">
                       <input type="checkbox" name="<?= $check ?>"
                         class="switch-input custom-control-input .show-checkbox"
-                        id="<?= $check ?>-checkbox" <?= $fn->is_checked($check, $result['status'] ?? '', $id ?? '') ?>>
+                        id="<?= $check ?>-checkbox" <?= $func->is_checked($check, $result['status'] ?? '', $id ?? '') ?>>
                     </label>
                   </div>
                 <?php endforeach; ?>

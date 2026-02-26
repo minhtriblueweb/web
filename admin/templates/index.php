@@ -4,11 +4,11 @@ $year  = isset($_GET['year']) ? (int)$_GET['year'] : (int)date('Y');
 $currentMonth = (int)date('m');
 $currentYear  = (int)date('Y');
 if ($year > $currentYear) {
-  $fn->Notify("Năm không hợp lệ",  "index.php", "error");
+  $func->Notify("Năm không hợp lệ",  "index.php", "error");
   exit;
 }
 if ($year == $currentYear && $month > $currentMonth) {
-  $fn->Notify("Tháng không hợp lệ",  "index.php", "error");
+  $func->Notify("Tháng không hợp lệ",  "index.php", "error");
   exit;
 }
 $daysInMonth = cal_days_in_month(CAL_GREGORIAN, $month, $year);
@@ -22,7 +22,7 @@ $charts = [
 for ($i = 1; $i <= $daysInMonth; $i++) {
   $begin = strtotime("$year-$month-$i 00:00:00");
   $end   = strtotime("$year-$month-$i 23:59:59") + 1;
-  $row = $db->rawQueryOne("SELECT COUNT(*) as total FROM tbl_counter WHERE tm >= ? AND tm < ?", [$begin, $end]);
+  $row = $d->rawQueryOne("SELECT COUNT(*) as total FROM `tbl_counter` WHERE tm >= ? AND tm < ?", [$begin, $end]);
   $charts['series'][] = (int)$row['total'];
   $charts['labels'][] = 'D' . $i;
 }
@@ -38,7 +38,7 @@ $counter = $statistic->getOnline();
       <div class="card-body">
         <div class="row mb-2 text-sm">
           <div class="col-12 col-sm-6 col-md-3">
-            <a class="my-info-box info-box" href="index.php?page=setting&act=update" title="<?= cauhinhwebsite ?>">
+            <a class="my-info-box info-box" href="index.php?com=setting&act=update" title="<?= cauhinhwebsite ?>">
               <span class="my-info-box-icon info-box-icon bg-primary"><i class="fas fa-cogs"></i></span>
               <div class="info-box-content text-dark">
                 <span class="info-box-text text-capitalize"><?= cauhinhwebsite ?></span>
@@ -47,7 +47,7 @@ $counter = $statistic->getOnline();
             </a>
           </div>
           <div class="col-12 col-sm-6 col-md-3">
-            <a class="my-info-box info-box" href="index.php?page=user&act=info_admin" title="<?= taikhoan ?>">
+            <a class="my-info-box info-box" href="index.php?com=user&act=info_admin" title="<?= taikhoan ?>">
               <span class="my-info-box-icon info-box-icon bg-danger"><i class="fas fa-user-cog"></i></span>
               <div class="info-box-content text-dark">
                 <span class="info-box-text text-capitalize"><?= taikhoan ?></span>
@@ -57,7 +57,7 @@ $counter = $statistic->getOnline();
           </div>
           <div class="clearfix hidden-md-up"></div>
           <div class="col-12 col-sm-6 col-md-3">
-            <a class="my-info-box info-box" href="index.php?page=user&act=info_admin&changepass=1" title="<?= doimatkhau ?>">
+            <a class="my-info-box info-box" href="index.php?com=user&act=info_admin&changepass=1" title="<?= doimatkhau ?>">
               <span class="my-info-box-icon info-box-icon bg-success"><i class="fas fa-key"></i></span>
               <div class="info-box-content text-dark">
                 <span class="info-box-text text-capitalize"><?= doimatkhau ?></span>
@@ -163,7 +163,7 @@ $counter = $statistic->getOnline();
         for ($i = 1; $i <= $daysInMonth; $i++) {
           $begin = strtotime("$year-$month-$i 00:00:00");
           $end   = strtotime("$year-$month-$i 23:59:59") + 1;
-          $row = $db->rawQueryOne(
+          $row = $d->rawQueryOne(
             "SELECT COUNT(*) as total FROM tbl_counter WHERE tm >= ? AND tm < ?",
             [$begin, $end]
           );

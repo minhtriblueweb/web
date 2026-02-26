@@ -1,8 +1,8 @@
 <?php
-$linkMan = "index.php?page=setting&act=update";
+$linkMan = "index.php?com=setting&act=update";
 
-if (!($row = $db->rawQueryOne("SELECT * FROM tbl_setting LIMIT 1"))) {
-  $fn->transfer(dulieukhongcothuc, $linkMan, false);
+if (!($row = $d->rawQueryOne("SELECT * FROM `tbl_setting` LIMIT 0,1"))) {
+  $func->transfer(dulieukhongcothuc, $linkMan, false);
 }
 $options = json_decode($row['options'] ?? '{}', true);
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -14,13 +14,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   /* ========= VALIDATE ========= */
   if (empty($options['email'])) {
     $response['messages'][] = emailkhongduoctrong;
-  } elseif (!$fn->isEmail($options['email'])) {
+  } elseif (!$func->isEmail($options['email'])) {
     $response['messages'][] = emailkhonghople;
   }
 
   if (empty($options['hotline'])) {
     $response['messages'][] = sodienthoaikhongduoctrong;
-  } elseif (!$fn->isPhone($options['hotline'])) {
+  } elseif (!$func->isPhone($options['hotline'])) {
     $response['messages'][] = sodienthoaikhonghople;
   }
 
@@ -30,7 +30,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       $flash->set($k, $v);
     }
     $flash->set('message', base64_encode(json_encode($response, JSON_UNESCAPED_UNICODE)));
-    $fn->redirect($linkMan);
+    $func->redirect($linkMan);
   }
 
   /* ========= SANITIZE ========= */
@@ -39,28 +39,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       $clean = [];
       foreach ($value as $k => $v) {
         if ($k === 'coords_iframe') {
-          $clean[$k] = $fn->sanitize($v, 'iframe');
+          $clean[$k] = $func->sanitize($v, 'iframe');
         } else {
-          $clean[$k] = $fn->sanitize($v);
+          $clean[$k] = $func->sanitize($v);
         }
       }
       $data[$column] = json_encode($clean, JSON_UNESCAPED_UNICODE);
     } else {
       if ($column === 'mastertool') {
-        $data[$column] = $fn->sanitize($value, 'meta');
+        $data[$column] = $func->sanitize($value, 'meta');
       } elseif (in_array($column, ['headjs', 'bodyjs', 'analytics'])) {
-        $data[$column] = $fn->sanitize($value, 'script');
+        $data[$column] = $func->sanitize($value, 'script');
       } else {
-        $data[$column] = $fn->sanitize($value);
+        $data[$column] = $func->sanitize($value);
       }
     }
   }
 
   /* ========= UPDATE ========= */
   if ($data) {
-    $db->where('id', 1);
-    $success = $db->update('tbl_setting', $data);
+    $d->where('id', 1);
+    $success = $d->update('tbl_setting', $data);
   }
-  $fn->transfer( $success ? capnhatdulieuthanhcong : capnhatdulieubiloi, $linkMan,$success);
+  $func->transfer( $success ? capnhatdulieuthanhcong : capnhatdulieubiloi, $linkMan,$success);
 }
 $template = "setting/setting";

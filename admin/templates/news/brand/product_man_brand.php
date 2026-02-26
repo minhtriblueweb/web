@@ -2,7 +2,7 @@
 $linkMan = "$linkProduct&act=man_brand";
 $linkForm  = "$linkProduct&act=form_brand";
 $linkEdit  = "$linkForm&id=";
-$linkDelete = "index.php?page=product&act=delete_brand&type=" . $type;
+$linkDelete = "index.php?com=product&act=delete_brand&type=" . $type;
 ?>
 <section class="content-header text-sm">
   <div class="container-fluid">
@@ -76,7 +76,7 @@ $linkDelete = "index.php?page=product&act=delete_brand&type=" . $type;
                   <!-- Ảnh -->
                   <?php if (!empty($config['product'][$type]['show_images_brand'])): ?>
                     <td class="align-middle">
-                      <a href="<?= $linkEdit . $row['id'] ?>" title="<?= $row["name$lang"] ?>"><?= $fn->getImage(['file' => $row['file'], 'class' => 'rounded img-preview', 'alt' => $row["name$lang"]]) ?>
+                      <a href="<?= $linkEdit . $row['id'] ?>" title="<?= $row["name$lang"] ?>"><?= $func->getImage(['file' => $row['file'], 'class' => 'rounded img-preview', 'alt' => $row["name$lang"]]) ?>
                       </a>
                     </td>
                   <?php endif; ?>

@@ -66,14 +66,14 @@
         class="nav-link dropdown-toggle"><i class="fas fa-cogs"></i></a>
       <ul aria-labelledby="dropdownSubMenu-info" class="dropdown-menu dropdown-menu-right border-0 shadow">
         <li>
-          <a href="index.php?page=user&act=info_admin" class="dropdown-item">
+          <a href="index.php?com=user&act=info_admin" class="dropdown-item">
             <i class="fas fa-user-cog"></i>
             <span><?= thongtinadmin ?></span>
           </a>
         </li>
         <div class="dropdown-divider"></div>
         <li>
-          <a href="index.php?page=user&act=info_admin&changepass=1" class="dropdown-item">
+          <a href="index.php?com=user&act=info_admin&changepass=1" class="dropdown-item">
             <i class="fas fa-key"></i>
             <span><?= doimatkhau ?></span>
           </a>
@@ -88,9 +88,9 @@
       </ul>
     </li>
     <?php
-    $contactCount    = $fn->count_data(['table' => 'tbl_newsletter', 'type' => 'lien-he']);
-    $newsletterCount = $fn->count_data(['table' => 'tbl_newsletter', 'type' => 'dang-ky-nhan-tin']);
-    $orderCount      = $fn->count_data(['table' => 'tbl_order']);
+    $contactCount    = $func->count_data(['table' => 'tbl_newsletter', 'type' => 'lien-he']);
+    $newsletterCount = $func->count_data(['table' => 'tbl_newsletter', 'type' => 'dang-ky-nhan-tin']);
+    $orderCount      = $func->count_data(['table' => 'tbl_order']);
 
     $totalNotify = $contactCount + $newsletterCount + $orderCount;
     ?>
@@ -104,15 +104,15 @@
       <div class="dropdown-menu dropdown-menu-right shadow">
         <span class="dropdown-item dropdown-header p-0"><?= thongbao ?></span>
         <div class="dropdown-divider"></div>
-        <a href="?page=contact&act=man&type=lien-he" class="dropdown-item"><i class="fas fa-envelope mr-2"></i><span class="badge badge-danger mr-1"><?= $contactCount ?></span><?= lienhe ?></a>
+        <a href="?com=contact&act=man&type=lien-he" class="dropdown-item"><i class="fas fa-envelope mr-2"></i><span class="badge badge-danger mr-1"><?= $contactCount ?></span><?= lienhe ?></a>
         <div class="dropdown-divider"></div>
-        <a href="?page=newsletter&act=man&type=dang-ky-nhan-tin" class="dropdown-item"><i class="fas fa-mail-bulk mr-2"></i><span class="badge badge-danger mr-1"><?= $newsletterCount ?></span><?= dangkynhantin ?></a>
+        <a href="?com=newsletter&act=man&type=dang-ky-nhan-tin" class="dropdown-item"><i class="fas fa-mail-bulk mr-2"></i><span class="badge badge-danger mr-1"><?= $newsletterCount ?></span><?= dangkynhantin ?></a>
         <div class="dropdown-divider"></div>
-        <a href="?page=order&act=man" class="dropdown-item"><i class="fas fa-shopping-bag mr-2"></i><span class="badge badge-danger mr-1"><?= $orderCount ?></span><?= donhang ?></a>
+        <a href="?com=order&act=man" class="dropdown-item"><i class="fas fa-shopping-bag mr-2"></i><span class="badge badge-danger mr-1"><?= $orderCount ?></span><?= donhang ?></a>
       </div>
     </li>
     <li class="nav-item d-sm-inline-block">
-      <a href="?page=user&act=logout" class="nav-link"><i class="fas fa-sign-out-alt mr-1"></i><?= dangxuat ?></a>
+      <a href="?com=user&act=logout" class="nav-link"><i class="fas fa-sign-out-alt mr-1"></i><?= dangxuat ?></a>
     </li>
   </ul>
 </nav>

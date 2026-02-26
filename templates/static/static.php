@@ -8,7 +8,7 @@
       <div class="wrap-content">
         <div class="row">
           <div class="col-lg-9 col-12 content-ck">
-            <?= $fn->decodeHtmlChars($static["content"] ?? '') ?>
+            <?= $func->decodeHtmlChars($static["content"] ?? '') ?>
           </div>
           <div class="col-lg-3 col-12">
             <?php include TEMPLATE . LAYOUT . 'othernews.php' ?>
@@ -20,7 +20,7 @@
             <?php
             $params = array();
             $params['oaidzalo'] = $optsetting_json['oaidzalo'];
-            $params['data-href'] = $fn->getCurrentPageURL();
+            $params['data-href'] = $func->getCurrentPageURL();
             include TEMPLATE . LAYOUT . 'share.php'
             ?>
           </div>

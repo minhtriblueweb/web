@@ -16,23 +16,23 @@
   if (empty($ids) && ((!empty($list) && empty($idi)) || !empty($idb))) : ?>
     <div class="wrap-product-list">
       <div class="wrap-content">
-        <div class="grid-list-no-index">
-          <?php if (!empty($list) && empty($idi)) : ?>
-            <?php foreach ($list as $v): ?>
+        <?php if (!empty($list) && empty($idi)) : ?>
+          <?php foreach ($list as $v): ?>
+            <div class="grid-list-no-index">
               <div class="item-list-noindex <?= ($v["slug$lang"] === $activeSlug ? 'active' : '') ?>">
                 <a title="<?= $v["name$lang"] ?>" href="<?= $v["slug$lang"] ?>">
                   <h3 class="m-0 text-capitalize"><?= htmlspecialchars($v["name$lang"]) ?></h3>
                 </a>
               </div>
-            <?php endforeach; ?>
-          <?php elseif (!empty($idb) && !empty($brandAll)) : ?>
-            <?php if ($productBrand['icon']) : ?>
-              <div class="m-auto mt-3" style="width: 1000px">
-                <?= $fn->getImage(['file' => $productBrand['icon'], 'class' => 'w-100', 'alt' => $productBrand["name$lang"], 'title' => $productBrand["name$lang"], 'lazy' => false]) ?>
-              </div>
-            <?php endif; ?>
+            </div>
+          <?php endforeach; ?>
+        <?php elseif (!empty($idb) && !empty($brandAll)) : ?>
+          <?php if ($productBrand['icon']) : ?>
+            <div class="m-auto mt-3">
+              <?= $func->getImage(['file' => $productBrand['icon'], 'class' => 'w-100', 'alt' => $productBrand["name$lang"], 'title' => $productBrand["name$lang"], 'lazy' => false]) ?>
+            </div>
           <?php endif; ?>
-        </div>
+        <?php endif; ?>
       </div>
     </div>
   <?php endif; ?>
@@ -52,9 +52,9 @@
             <div class="sidebar-menu shadow">
               <ul class="menu-level level-1">
                 <?php
-                $lists = $db->rawQuery("select id,name{$lang},slug{$lang},file from tbl_product_list where type = 'san-pham' and find_in_set('hienthi',status) order by numb,id desc");
+                $lists = $d->rawQuery("select id,name{$lang},slug{$lang},file from tbl_product_list where type = 'san-pham' and find_in_set('hienthi',status) order by numb,id desc");
                 foreach ($lists as $list):
-                  $cats = $db->rawQuery("select id,name{$lang},slug{$lang} from tbl_product_cat where id_list = ? and find_in_set('hienthi',status) order by numb,id desc", [$list['id']]);
+                  $cats = $d->rawQuery("select id,name{$lang},slug{$lang} from tbl_product_cat where id_list = ? and find_in_set('hienthi',status) order by numb,id desc", [$list['id']]);
                 ?>
                   <li>
                     <a class="<?= !empty($cats) ? 'has-child' : '' ?> <?= ($slug == $list["slug$lang"]) ? 'active' : '' ?>"
@@ -65,7 +65,7 @@
                       <ul class="menu-level level-2">
                         <?php foreach ($cats as $cat): ?>
                           <?php
-                          $items = $db->rawQuery("select id,name{$lang},slug{$lang} from tbl_product_item where id_cat = ? and find_in_set('hienthi',status) order by numb,id desc", [$cat['id']]);
+                          $items = $d->rawQuery("select id,name{$lang},slug{$lang} from tbl_product_item where id_cat = ? and find_in_set('hienthi',status) order by numb,id desc", [$cat['id']]);
                           ?>
                           <li>
                             <a class="<?= !empty($items) ? 'has-child ' : '' ?><?= ($slug == $cat["slug$lang"]) ? 'active' : '' ?>" href="<?= $cat["slug$lang"] ?>">
@@ -75,7 +75,7 @@
                               <ul class="menu-level level-3">
                                 <?php foreach ($items as $item): ?>
                                   <?php
-                                  $subs = $db->rawQuery("select id,name{$lang},slug{$lang} from tbl_product_sub where id_item = ? and find_in_set('hienthi',status) order by numb,id desc", [$item['id']]);
+                                  $subs = $d->rawQuery("select id,name{$lang},slug{$lang} from tbl_product_sub where id_item = ? and find_in_set('hienthi',status) order by numb,id desc", [$item['id']]);
                                   ?>
                                   <li>
                                     <a class="<?= !empty($subs) ? 'has-child ' : '' ?><?= ($slug == $item["slug$lang"]) ? 'active' : '' ?>" href="<?= $item["slug$lang"] ?>">
@@ -123,7 +123,6 @@
         </div>
       </div>
 
-
       <!-- PHÂN TRANG -->
       <?php if ($paging): ?><div class="mt-3 mb-3 pagination-home w-100"><?= $paging ?></div><?php endif; ?>
 
@@ -132,7 +131,7 @@
         <div class="content-toggle mt-3 mb-3">
           <div class="content-toggle__body-wrapper">
             <div class="content-toggle__body content-main content-ck pro_tpl" id="toc-content">
-              <?= $fn->decodeHtmlChars($contentCate) ?>
+              <?= $func->decodeHtmlChars($contentCate) ?>
             </div>
           </div>
           <p class="content-toggle__button">

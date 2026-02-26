@@ -14,13 +14,13 @@ if ($id != '') {
   // Trang bài viết detail
 
   /* Lấy bài viết detail */
-  $rowDetail = $db->rawQueryOne("select id, views, date_created, id_list, id_cat, id_item, id_sub, type, name$lang, slug$lang, desc$lang, content$lang, file from tbl_news where id = ? and type = ? and find_in_set('hienthi',status) limit 0,1", array($id, $type));
+  $rowDetail = $d->rawQueryOne("select id, views, date_created, id_list, id_cat, id_item, id_sub, type, name$lang, slug$lang, desc$lang, content$lang, file from tbl_news where id = ? and type = ? and find_in_set('hienthi',status) limit 0,1", array($id, $type));
 
   /* Lấy cấp 1 */
-  $newsList = $db->rawQueryOne("select id, name$lang, slug$lang from tbl_news_list where id = ? and type = ? and find_in_set('hienthi',status) limit 0,1", array($rowDetail['id_list'], $type));
+  $newsList = $d->rawQueryOne("select id, name$lang, slug$lang from tbl_news_list where id = ? and type = ? and find_in_set('hienthi',status) limit 0,1", array($rowDetail['id_list'], $type));
 
   /* Cập nhật lượt xem */
-  $fn->update_views('tbl_news', $rowDetail["slug$lang"], $lang);
+  $func->update_views('tbl_news', $rowDetail["slug$lang"], $lang);
 
   // Tin liên quan
   $where = "";
@@ -28,14 +28,14 @@ if ($id != '') {
   $limit = " limit 10";
   $sql = "select id, name{$lang}, slug{$lang}, file from tbl_news where $where order by numb,id desc $limit";
   $params = array($id, $type);
-  $relatedNews = $db->rawQuery($sql, $params);
+  $relatedNews = $d->rawQuery($sql, $params);
 
-  $footer_news = $db->rawQueryOne("SELECT content$lang FROM `tbl_static` WHERE type = ? AND FIND_IN_SET(?, status) LIMIT 1", ['footer_news', 'hienthi']);
+  $footer_news = $d->rawQueryOne("SELECT content$lang FROM `tbl_static` WHERE type = ? AND FIND_IN_SET(?, status) LIMIT 1", ['footer_news', 'hienthi']);
 
-  $showFooterNews = !empty($db->rawQueryOne("SELECT id FROM tbl_news WHERE id = ? AND FIND_IN_SET('Footernews', status)",[$id]));
+  $showFooterNews = !empty($d->rawQueryOne("SELECT id FROM tbl_news WHERE id = ? AND FIND_IN_SET('Footernews', status)",[$id]));
 
   /* SEO */
-  $seo_data = $db->rawQueryOne("SELECT * FROM `tbl_seo` WHERE `id_parent` = ? AND `type` = ? AND `act` = ? LIMIT 0,1", [$id, $type, 'man']);
+  $seo_data = $d->rawQueryOne("SELECT * FROM `tbl_seo` WHERE `id_parent` = ? AND `type` = ? AND `act` = ? LIMIT 0,1", [$id, $type, 'man']);
   $seo->set('h1', $rowDetail["name$lang"]);
   $seo->set('title', !empty($seo_data["title$lang"]) ? $seo_data["title$lang"] : $rowDetail["name$lang"]);
   $seo->set('keywords', !empty($seo_data["keywords$lang"]) ? $seo_data["keywords$lang"] : '');
@@ -46,7 +46,7 @@ if ($id != '') {
     $seo->set('photo:width', $imgJson['width']);
     $seo->set('photo:height', $imgJson['height']);
   }
-  if (!empty($rowDetail['file'])) $seo->set('photo',  $fn->getImageCustom(['file' => $rowDetail['file'], 'width' => 600, 'height' => 315, 'zc' => 2, 'src_only' => true]));
+  if (!empty($rowDetail['file'])) $seo->set('photo',  $func->getImageCustom(['file' => $rowDetail['file'], 'width' => 600, 'height' => 315, 'zc' => 2, 'src_only' => true]));
 
   /* breadCrumbs */
   // $breadcr->set($type, $titleMain);
@@ -73,19 +73,19 @@ if ($id != '') {
   $startpoint = ($curPage * $perPage) - $perPage;
   $limit = " limit " . $startpoint . "," . $perPage;
   $sql = "select id,id_list,file, name{$lang}, slug{$lang}, desc{$lang}, date_updated from tbl_news where $where order by numb,id desc $limit";
-  $news = $db->rawQuery($sql, $params);
+  $news = $d->rawQuery($sql, $params);
   $sqlNum = "select count(*) as 'num' from tbl_news where $where order by numb,id desc";
-  $count = $db->rawQueryOne($sqlNum, $params);
+  $count = $d->rawQueryOne($sqlNum, $params);
   $total = (!empty($count)) ? $count['num'] : 0;
-  $paging = $fn->pagination_tc($total, $perPage, $curPage);
+  $paging = $func->pagination_tc($total, $perPage, $curPage);
 
   /* Lấy cấp 1 */
-  $newsList = $db->rawQueryOne("select id,slug{$lang},name{$lang} from tbl_news_list where type = ? and id = ? and find_in_set('hienthi',status) order by numb,id desc limit 0,1", $params);
+  $newsList = $d->rawQueryOne("select id,slug{$lang},name{$lang} from tbl_news_list where type = ? and id = ? and find_in_set('hienthi',status) order by numb,id desc limit 0,1", $params);
 
   /* SEO */
   $titleCate = $newsList["name$lang"] ?? [];
   $contentCate = $newsList["content$lang"] ?? [];
-  $seo_data = $db->rawQueryOne("SELECT * FROM `tbl_seo` WHERE `id_parent` = ? AND `type` = ? AND `act` = ? LIMIT 0,1", [$idl, $type, 'man_list']);
+  $seo_data = $d->rawQueryOne("SELECT * FROM `tbl_seo` WHERE `id_parent` = ? AND `type` = ? AND `act` = ? LIMIT 0,1", [$idl, $type, 'man_list']);
   $seo->set('h1', $newsList["name$lang"]);
   $seo->set('title', !empty($seo_data["title$lang"]) ? $seo_data["title$lang"] : ($newsList["name$lang"] ?? ''));
   $seo->set('keywords', !empty($seo_data["keywords$lang"]) ? $seo_data["keywords$lang"] : '');
@@ -96,7 +96,7 @@ if ($id != '') {
     $seo->set('photo:width', $imgJson['width']);
     $seo->set('photo:height', $imgJson['height']);
   }
-  if (!empty($newsList['file'])) $seo->set('photo',  $fn->getImageCustom(['file' => $newsList['file'], 'width' => 600, 'height' => 315, 'zc' => 2, 'src_only' => true]));
+  if (!empty($newsList['file'])) $seo->set('photo',  $func->getImageCustom(['file' => $newsList['file'], 'width' => 600, 'height' => 315, 'zc' => 2, 'src_only' => true]));
 
   /* breadCrumbs */
   if (!empty($titleMain)) $breadcr->set($type, $titleMain);
@@ -108,13 +108,13 @@ if ($id != '') {
   $where  = "type = ? AND FIND_IN_SET('hienthi', status)";
   $params = [$type];
   $sql = "select id,id_list,file,slug{$lang},name{$lang},desc{$lang},date_updated,views from `tbl_news` where $where order by numb, id desc";
-  $news = $db->rawQuery($sql, $params);
+  $news = $d->rawQuery($sql, $params);
 
-  // $news_list = $db->rawQuery("SELECT id,slug$lang, name$lang FROM tbl_news_list WHERE type = 'tin-tuc' AND FIND_IN_SET('hienthi', status) ORDER BY numb, id DESC");
-  // $paging = $fn->pagination_tc($total, $perPage, $curPage);
+  // $news_list = $d->rawQuery("SELECT id,slug$lang, name$lang FROM tbl_news_list WHERE type = 'tin-tuc' AND FIND_IN_SET('hienthi', status) ORDER BY numb, id DESC");
+  // $paging = $func->pagination_tc($total, $perPage, $curPage);
 
   /* SEO */
-  $seo_data = $db->rawQueryOne("SELECT * FROM tbl_seopage WHERE `type` = ? LIMIT 0,1", [$type]);
+  $seo_data = $d->rawQueryOne("SELECT * FROM tbl_seopage WHERE `type` = ? LIMIT 0,1", [$type]);
   $seo->set('h1', $titleMain);
   if (!empty($seo_data["title$lang"])) $seo->set('title', $seo_data["title$lang"]);
   if (!empty($seo_data["keywords$lang"])) $seo->set('keywords', $seo_data["keywords$lang"]);
@@ -124,7 +124,7 @@ if ($id != '') {
     $seo->set('photo:width', $imgJson['width']);
     $seo->set('photo:height', $imgJson['height']);
   }
-  if (!empty($seo_data['file'])) $seo->set('photo',  $fn->getImageCustom(['file' => $seo_data['file'], 'width' => 600, 'height' => 315, 'zc' => 2, 'src_only' => true]));
+  if (!empty($seo_data['file'])) $seo->set('photo',  $func->getImageCustom(['file' => $seo_data['file'], 'width' => 600, 'height' => 315, 'zc' => 2, 'src_only' => true]));
 
   /* breadCrumbs */
   if (!empty($titleMain)) $breadcr->set($type, $titleMain);

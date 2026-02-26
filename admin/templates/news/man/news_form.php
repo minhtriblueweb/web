@@ -132,31 +132,31 @@ if ((isset($config['news'][$type]['tags']) && $config['news'][$type]['tags'] == 
                 <?php if (!empty($config['news'][$type]['list'])) : ?>
                   <div class="form-group col-xl-6 col-sm-4">
                     <label class="d-block" for="id_list"><?= danhmuccap1 ?>:</label>
-                    <?= $fn->getAjaxCategory('news', 'list', $type) ?>
+                    <?= $func->getAjaxCategory('news', 'list', $type) ?>
                   </div>
                 <?php endif; ?>
                 <?php if (!empty($config['news'][$type]['cat'])) : ?>
                   <div class="form-group col-xl-6 col-sm-4">
                     <label class="d-block" for="id_cat"><?= danhmuccap2 ?>:</label>
-                    <?= $fn->getAjaxCategory('news', 'cat', $type) ?>
+                    <?= $func->getAjaxCategory('news', 'cat', $type) ?>
                   </div>
                 <?php endif; ?>
                 <?php if (!empty($config['news'][$type]['item'])) : ?>
                   <div class="form-group col-xl-6 col-sm-4">
                     <label class="d-block" for="id_item"><?= danhmuccap3 ?>:</label>
-                    <?= $fn->getAjaxCategory('news', 'item', $type) ?>
+                    <?= $func->getAjaxCategory('news', 'item', $type) ?>
                   </div>
                 <?php endif; ?>
                 <?php if (!empty($config['news'][$type]['sub'])) : ?>
                   <div class="form-group col-xl-6 col-sm-4">
                     <label class="d-block" for="id_sub"><?= danhmuccap4 ?>:</label>
-                    <?= $fn->getAjaxCategory('news', 'sub', $type) ?>
+                    <?= $func->getAjaxCategory('news', 'sub', $type) ?>
                   </div>
                 <?php endif; ?>
                 <?php if (!empty($config['news'][$type]['brand'])) : ?>
                   <div class="form-group col-xl-6 col-sm-4">
                     <label class="d-block" for="id_brand"><?= danhmuchang ?>:</label>
-                    <?= $fn->getAjaxCategory('news', 'brand', $type) ?>
+                    <?= $func->getAjaxCategory('news', 'brand', $type) ?>
                   </div>
                 <?php endif; ?>
               </div>
@@ -202,7 +202,7 @@ if ((isset($config['news'][$type]['tags']) && $config['news'][$type]['tags'] == 
                   name="data[status][<?= $check ?>]"
                   class="switch-input custom-control-input"
                   id="<?= $check ?>-checkbox"
-                  <?= $fn->is_checked($check, $result['status'] ?? '', $id ?? '') ?>>
+                  <?= $func->is_checked($check, $result['status'] ?? '', $id ?? '') ?>>
               </label>
             </div>
           <?php endforeach; ?>

@@ -1,9 +1,9 @@
 <?php
-$linkProduct = "index.php?page=product&type=" . $type;
+$linkProduct = "index.php?com=product&type=" . $type;
 $linkMan = "$linkProduct&act=man_list";
 $linkForm  = "$linkProduct&act=form_list";
 $linkEdit  = "$linkProduct&act=form_list&id=";
-$linkDelete = "index.php?page=product&act=delete_list&type=" . $type;
+$linkDelete = "index.php?com=product&act=delete_list&type=" . $type;
 ?>
 <section class="content-header text-sm">
   <div class="container-fluid">
@@ -78,7 +78,7 @@ $linkDelete = "index.php?page=product&act=delete_list&type=" . $type;
                   <?php if (!empty($config['product'][$type]['show_images_list'])): ?>
                     <td class="align-middle">
                       <a href="<?= $linkEdit . $row['id'] ?>" title="<?= $row["name$lang"] ?>">
-                        <?= $fn->getImage(['file' => $row['file'], 'class' => 'rounded img-preview', 'alt' => $row["name$lang"]]) ?>
+                        <?= $func->getImage(['file' => $row['file'], 'class' => 'rounded img-preview', 'alt' => $row["name$lang"]]) ?>
                       </a>
                     </td>
                   <?php endif; ?>

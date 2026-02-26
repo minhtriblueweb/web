@@ -1,6 +1,5 @@
 <?php
-include_once "../config/autoload.php";
-require_once "../lib/lang/web/$lang.php";
+include "config.php";
 $cmd = (!empty($_POST['cmd'])) ? htmlspecialchars($_POST['cmd']) : '';
 $id = (!empty($_POST['id'])) ? htmlspecialchars($_POST['id']) : 0;
 $quantity = (!empty($_POST['quantity'])) ? htmlspecialchars($_POST['quantity']) : 1;
@@ -29,13 +28,13 @@ if ($cmd === 'add-cart' && $id > 0) {
   $proinfo = $cart->getProductInfo($id);
   $regular = (int) preg_replace('/[^0-9]/', '', $proinfo['regular_price'] ?? 0);
   $sale    = (int) preg_replace('/[^0-9]/', '', $proinfo['sale_price'] ?? 0);
-  $regular_price = $fn->formatMoney($regular * $quantity);
-  $sale_price    = $sale ? $fn->formatMoney($sale * $quantity) : '';
+  $regular_price = $func->formatMoney($regular * $quantity);
+  $sale_price    = $sale ? $func->formatMoney($sale * $quantity) : '';
   $temp = $cart->getOrderTotal();
-  $tempText = $fn->formatMoney($temp);
+  $tempText = $func->formatMoney($temp);
   $total = $temp;
   if (!empty($ship)) $total += (int)$ship;
-  $totalText = $fn->formatMoney($total);
+  $totalText = $func->formatMoney($total);
   echo json_encode([
     'regularPrice' => $regular_price,
     'salePrice'    => $sale_price,
@@ -47,10 +46,10 @@ if ($cmd === 'add-cart' && $id > 0) {
   $cart->removeProduct($code);
   $max = (!empty($_SESSION['cart'])) ? count($_SESSION['cart']) : 0;
   $temp = $cart->getOrderTotal();
-  $tempText = $fn->formatMoney($temp);
+  $tempText = $func->formatMoney($temp);
   $total = $cart->getOrderTotal();
   if (!empty($ship)) $total += $ship;
-  $totalText = $fn->formatMoney($total);
+  $totalText = $func->formatMoney($total);
   $data = array('max' => $max, 'tempText' => $tempText, 'totalText' => $totalText);
   echo json_encode($data);
 } else if ($cmd == 'ship-cart') {
@@ -59,13 +58,13 @@ if ($cmd === 'add-cart' && $id > 0) {
   $shipText = '0đ';
   $total = 0;
   $totalText = '';
-  if ($id) $shipData = $fn->getInfoDetail('ship_price', "ward", $id);
+  if ($id) $shipData = $func->getInfoDetail('ship_price', "ward", $id);
   $total = $cart->getOrderTotal();
   if (!empty($shipData['ship_price'])) {
     $total += $shipData['ship_price'];
-    $shipText = $fn->formatMoney($shipData['ship_price']);
+    $shipText = $func->formatMoney($shipData['ship_price']);
   }
-  $totalText = $fn->formatMoney($total);
+  $totalText = $func->formatMoney($total);
   $shipPrice = (!empty($shipData['ship_price'])) ? $shipData['ship_price'] : 0;
   $data = array('shipText' => $shipText, 'ship' => $shipPrice, 'totalText' => $totalText);
   echo json_encode($data);
@@ -107,7 +106,7 @@ if ($cmd === 'add-cart' && $id > 0) {
                 </div>
                 <div class="pic-procart col-3 col-md-2 mg-col-10">
                   <a class="text-decoration-none" href="<?= $proinfo["slug$lang"] ?>" target="_blank" title="<?= $proinfo["name$lang"] ?>">
-                    <?= $fn->getImageCustom(['file'  => $proinfo['file'], 'alt' => $proinfo["name$lang"], 'title' => $proinfo["name$lang"], 'width' => 85, 'height' => 85, 'zc' => 2]) ?>
+                    <?= $func->getImageCustom(['file'  => $proinfo['file'], 'alt' => $proinfo["name$lang"], 'title' => $proinfo["name$lang"], 'width' => 85, 'height' => 85, 'zc' => 2]) ?>
                   </a>
                   <a class="del-procart text-decoration-none" data-code="<?= $code ?>">
                     <i class="fa fa-times-circle"></i><span><?= xoa ?></span>
@@ -122,14 +121,14 @@ if ($cmd === 'add-cart' && $id > 0) {
                   <div class="price-procart price-procart-rp">
                     <?php if ($proinfo['sale_price']) { ?>
                       <p class="price-new-cart load-price-new-<?= $code ?>">
-                        <?= $fn->formatMoney($pro_price_new_qty) ?>
+                        <?= $func->formatMoney($pro_price_new_qty) ?>
                       </p>
                       <p class="price-old-cart load-price-<?= $code ?>">
-                        <?= $fn->formatMoney($pro_price_qty) ?>
+                        <?= $func->formatMoney($pro_price_qty) ?>
                       </p>
                     <?php } else { ?>
                       <p class="price-new-cart load-price-<?= $code ?>">
-                        <?= $fn->formatMoney($pro_price_qty) ?>
+                        <?= $func->formatMoney($pro_price_qty) ?>
                       </p>
                     <?php } ?>
                   </div>
@@ -143,14 +142,14 @@ if ($cmd === 'add-cart' && $id > 0) {
                   <div>
                     <?php if ($proinfo['sale_price']) { ?>
                       <p class="price-new-cart load-price-new-<?= $code ?>">
-                        <?= $fn->formatMoney($pro_price_new_qty) ?>
+                        <?= $func->formatMoney($pro_price_new_qty) ?>
                       </p>
                       <p class="price-old-cart load-price-<?= $code ?>">
-                        <?= $fn->formatMoney($pro_price_qty) ?>
+                        <?= $func->formatMoney($pro_price_qty) ?>
                       </p>
                     <?php } else { ?>
                       <p class="price-new-cart load-price-<?= $code ?>">
-                        <?= $fn->formatMoney($pro_price_qty) ?>
+                        <?= $func->formatMoney($pro_price_qty) ?>
                       </p>
                     <?php } ?>
                   </div>
@@ -163,7 +162,7 @@ if ($cmd === 'add-cart' && $id > 0) {
           <div class="total-procart d-flex align-items-center justify-content-between">
             <p><?= tamtinh ?>:</p>
             <p class="total-price load-price-temp">
-              <?= $fn->formatMoney($cart->getOrderTotal()) ?>
+              <?= $func->formatMoney($cart->getOrderTotal()) ?>
             </p>
           </div>
         </div>

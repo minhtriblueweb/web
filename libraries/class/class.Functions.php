@@ -14,6 +14,7 @@ class Functions
     $data = htmlspecialchars($data);
     return $data;
   }
+
   /* Copy image */
   public function copyImg($photo = '')
   {
@@ -23,8 +24,8 @@ class Functions
       $name = pathinfo($photo, PATHINFO_FILENAME);
       $ext = pathinfo($photo, PATHINFO_EXTENSION);
       $photo_new = $name . '-' . $rand . '.' . $ext;
-      $oldpath = '../' . UPLOADS . $photo;
-      $newpath = '../' . UPLOADS . $photo_new;
+      $oldpath = UPLOADS . $photo;
+      $newpath = UPLOADS . $photo_new;
       if (file_exists($oldpath)) {
         if (copy($oldpath, $newpath)) {
           $str = $photo_new;
@@ -174,62 +175,7 @@ class Functions
     $row = $this->d->rawQueryOne($sql, $whereData['params']);
     return (int)($row['total'] ?? 0);
   }
-  public function save_gallery($data, $files, $id_parent, $type = '', $redirect_url = null)
-  {
-    $id_parent = (int)$id_parent;
-    $table = 'tbl_gallery';
-    $result = false;
-    $parent = $this->d->rawQueryOne("SELECT namevi FROM tbl_product WHERE id = ? LIMIT 1", [$id_parent]);
-    $parent_name = $parent['namevi'] ?? 'gallery';
-    if (!empty($data['id-filer'])) {
-      foreach ($data['id-filer'] as $i => $gid) {
-        $gid  = (int)$gid;
-        $numb = (int)($data['numb-filer'][$i] ?? 0);
-        $name = trim($data['name-filer'][$i] ?? '');
-        $this->d->execute("UPDATE $table SET numb = ?, name = ? WHERE id = ?", [$numb, $name, $gid]);
-      }
-    }
-    $total = count($files['files']['name'] ?? []);
-    for ($i = 0; $i < $total; $i++) {
-      if (!empty($files['files']['name'][$i]) && $files['files']['error'][$i] === 0) {
-        $file = [
-          'name'     => $files['files']['name'][$i],
-          'type'     => $files['files']['type'][$i],
-          'tmp_name' => $files['files']['tmp_name'][$i],
-          'error'    => $files['files']['error'][$i],
-          'size'     => $files['files']['size'][$i]
-        ];
-        $thumb_filename = $this->uploadImage([
-          'file'          => $file,
-          'custom_name'   => $parent_name,
-          'old_file_path' => '',
-          'watermark'     => true,
-          'convert_webp'  => true
-        ]);
-        if (!empty($thumb_filename)) {
-          $numb = (int)($data['numb-filer'][$i] ?? 0);
-          $name = trim($data['name-filer'][$i] ?? '');
-          $fields = ['id_parent', 'type', 'file', 'numb', 'name', 'status'];
-          $params = [
-            $id_parent,
-            $type,
-            $thumb_filename,
-            $numb,
-            $name,
-            !empty($data['hienthi_all']) ? 'hienthi' : ''
-          ];
-          $result = $this->d->execute(
-            "INSERT INTO `$table` (" . implode(', ', $fields) . ") VALUES (" . implode(', ', array_fill(0, count($fields), '?')) . ")",
-            $params
-          );
-        }
-      }
-    }
-    if (!empty($redirect_url)) {
-      $this->transfer($result ? capnhathinhanhthanhcong : capnhathinhanhthatbai, $redirect_url, $result);
-    }
-    return $result;
-  }
+
   public function save_seo(string $type, int $id_parent, array $data, string $act): void
   {
     $seo_table = 'tbl_seo';
@@ -267,6 +213,104 @@ class Functions
       $this->d->execute("INSERT INTO `$seo_table` (" . implode(',', $cols) . ") VALUES (" . implode(',', $placeholders) . ")", $params);
     }
   }
+
+  public function save_gallery($data, $files, $id_parent, $type = '', $gallery_id = 0)
+  {
+    $id_parent  = (int)$id_parent;
+    $gallery_id = (int)$gallery_id;
+    $table = 'tbl_gallery';
+    $result = false;
+
+    // lấy tên cha
+    $parent = $this->d->rawQueryOne(
+      "SELECT namevi FROM tbl_product WHERE id = ? LIMIT 1",
+      [$id_parent]
+    );
+    $parent_name = $parent['namevi'] ?? 'gallery';
+
+    /* =========================
+     EDIT – 1 HÌNH
+  ========================= */
+    if ($gallery_id > 0) {
+      $fields = [
+        'numb'   => (int)($data['numb'] ?? 0),
+        'status' => !empty($data['hienthi']) ? 'hienthi' : ''
+      ];
+
+      if (!empty($files['file']['name'])) {
+        $old = $this->d->rawQueryOne(
+          "SELECT file FROM `$table` WHERE id = ?",
+          [$gallery_id]
+        );
+        $old_path = !empty($old['file']) ? UPLOADS . $old['file'] : '';
+
+        $thumb = $this->uploadImage([
+          'file'          => $files['file'],
+          'custom_name'   => $parent_name,
+          'old_file_path' => $old_path,
+          'convert_webp'  => true
+        ]);
+
+        if (!$thumb) return false;
+        $fields['file'] = $thumb;
+      }
+
+      $sql = [];
+      $params = [];
+      foreach ($fields as $k => $v) {
+        $sql[] = "`$k` = ?";
+        $params[] = $v;
+      }
+      $params[] = $gallery_id;
+
+      return $this->d->execute(
+        "UPDATE `$table` SET " . implode(', ', $sql) . " WHERE id = ?",
+        $params
+      );
+    }
+
+    /* =========================
+     ADD – NHIỀU HÌNH
+  ========================= */
+    if (empty($files['files']['name'])) return false;
+
+    foreach ($files['files']['name'] as $i => $name) {
+      if (empty($name) || $files['files']['error'][$i] !== 0) continue;
+
+      $file = [
+        'name'     => $files['files']['name'][$i],
+        'type'     => $files['files']['type'][$i],
+        'tmp_name' => $files['files']['tmp_name'][$i],
+        'error'    => $files['files']['error'][$i],
+        'size'     => $files['files']['size'][$i]
+      ];
+
+      $thumb = $this->uploadImage([
+        'file'        => $file,
+        'custom_name' => $parent_name,
+        'convert_webp' => true
+      ]);
+
+      if (!$thumb) continue;
+
+      $result = $this->d->execute(
+        "INSERT INTO `$table`
+       (id_parent, type, file, numb, name, status)
+       VALUES (?, ?, ?, ?, ?, ?)",
+        [
+          $id_parent,
+          $type,
+          $thumb,
+          (int)($data['numb-filer'][$i] ?? 0),
+          trim($data['name-filer'][$i] ?? ''),
+          !empty($data['hienthi_all']) ? 'hienthi' : ''
+        ]
+      );
+    }
+
+    return $result;
+  }
+
   public function save_data($data, $files = null, $id = null, $options = [])
   {
     global $config;
@@ -294,7 +338,7 @@ class Functions
       // $data_prepared[$key] = $val;
     }
     if (!empty($data['options']) && is_array($data['options']) && in_array('options', $columns)) {
-      $data_prepared['options'] = json_encode($this->sanitize($data['options']),JSON_UNESCAPED_UNICODE);
+      $data_prepared['options'] = json_encode($this->sanitize($data['options']), JSON_UNESCAPED_UNICODE);
     }
     if (in_array('status', $columns)) {
       if (!empty($data['status']) && is_array($data['status'])) {
@@ -400,7 +444,7 @@ class Functions
         }
       }
       if ($enable_gallery && !empty($files['files']['name'][0])) {
-        $this->save_gallery($data, $files, $id, $data_prepared['type'] ?? '', false);
+        $this->save_gallery($data, $files, $id, $data_prepared['type'] ?? '');
       }
       $msg = $result ? capnhatdulieuthanhcong : capnhatdulieubiloi;
     } else {
@@ -423,7 +467,7 @@ class Functions
         $this->save_seo($data_prepared['type'] ?? '', $insert_id, $data, $options['act'] ?? '');
       }
       if ($enable_gallery && !empty($files['files']['name'][0])) {
-        $this->save_gallery($data, $files, $insert_id, $data_prepared['type'] ?? '', false);
+        $this->save_gallery($data, $files, $insert_id, $data_prepared['type'] ?? '');
       }
       $msg = $inserted ? capnhatdulieuthanhcong : capnhatdulieubiloi;
     }
@@ -450,7 +494,6 @@ class Functions
   public function deleteFile($file = '')
   {
     if (!$file) return true;
-
     $filename = basename($file);
     $filenameNoExt = pathinfo($filename, PATHINFO_FILENAME);
     $ext = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
@@ -501,10 +544,12 @@ class Functions
       $this->deleteFile(UPLOADS . $row['file']);
     }
     if ($delete_gallery) {
-      $gallery = $this->d->rawQuery("SELECT file FROM tbl_gallery WHERE id_parent = ?", [$id]);
-      foreach ($gallery as $g) {
-        if (!empty($g['file'])) {
-          $this->deleteFile(UPLOADS . $g['file']);
+      $gallery = $this->d->rawQuery("SELECT file FROM `tbl_gallery` WHERE id_parent = ?", [$id]);
+      if (!empty($gallery) && is_array($gallery)) {
+        foreach ($gallery as $g) {
+          if (!empty($g['file'])) {
+            $this->deleteFile(UPLOADS . $g['file']);
+          }
         }
       }
       $this->d->execute("DELETE FROM tbl_gallery WHERE id_parent = ?", [$id]);
@@ -540,10 +585,12 @@ class Functions
         $this->deleteFile($row['file']);
       }
       if ($delete_gallery) {
-        $gallery = $this->d->rawQuery("SELECT file FROM tbl_gallery WHERE id_parent = ?", [$id]);
-        foreach ($gallery as $g) {
-          if (!empty($g['file'])) {
-            $this->deleteFile($g['file']);
+        $gallery = $this->d->rawQuery("SELECT file FROM `tbl_gallery` WHERE id_parent = ?", [$id]);
+        if (!empty($gallery) && is_array($gallery)) {
+          foreach ($gallery as $g) {
+            if (!empty($g['file'])) {
+              $this->deleteFile($g['file']);
+            }
           }
         }
         $this->d->execute("DELETE FROM tbl_gallery WHERE id_parent = ?", [$id]);
@@ -963,16 +1010,13 @@ class Functions
   {
     $result = false;
     $row = array();
-
     if (!empty($data) && !empty($type) && !empty($tbl)) {
       $where = (!empty($id)) ? ' and id != ' . $id : '';
-      $row = $this->d->rawQueryOne("select id from #_$tbl where $type = ? $where limit 0,1", array($data));
-
+      $row = $this->d->rawQueryOne("select id from {$this->d->prefix}$tbl where $type = ? $where limit 0,1", array($data));
       if (!empty($row)) {
         $result = true;
       }
     }
-
     return $result;
   }
 
@@ -1343,12 +1387,11 @@ class Functions
   {
     $file = $options['file'] ?? null;
     if (empty($file['name']) || empty($file['tmp_name'])) return '';
-    $upload_dir = UPLOADS;
-    if (!is_dir($upload_dir)) mkdir($upload_dir, 0777, true);
+    if (!is_dir(UPLOADS)) mkdir(UPLOADS, 0777, true);
     $ext = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
     $custom = !empty($options['custom_name']) ? $this->to_slug($options['custom_name']) . '_' . substr(md5(uniqid()), 0, 4) : substr(md5(time() . rand()), 0, 10);
-    $filename = $this->generateUniqueFilename($upload_dir, $custom, $ext);
-    $target_path = $upload_dir . $filename;
+    $filename = $this->generateUniqueFilename(UPLOADS, $custom, $ext);
+    $target_path = UPLOADS . $filename;
     if (!empty($options['old_file_path']) && file_exists($options['old_file_path'])) {
       $this->deleteFile($options['old_file_path']);
     }
@@ -1373,7 +1416,7 @@ class Functions
         imagefill($canvas, 0, 0, imagecolorallocatealpha($canvas, ...$background));
         imagecopy($canvas, $img, 0, 0, 0, 0, $w, $h);
         imagedestroy($img);
-        $webp_path = $upload_dir . pathinfo($filename, PATHINFO_FILENAME) . '.webp';
+        $webp_path = UPLOADS . pathinfo($filename, PATHINFO_FILENAME) . '.webp';
         imagewebp($canvas, $webp_path, 100);
         imagedestroy($canvas);
         @unlink($target_path);

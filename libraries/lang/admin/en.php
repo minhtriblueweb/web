@@ -425,3 +425,5 @@ define("chiduocuploadmoilan", "Can only be uploaded at a time");
 define("cokichthuocqualonvuilonguploadhinhanhcokichthuoctoida", "size is too large. Please upload the maximum size image");
 define("nhunghinhanhbanchoncokichthuocqualonvuilongchonnhunghinhanhcokichthuoctoida", "The images you selected are too large in size. Please choose the maximum size images");
 define("chon", "Choose");
+define('vuilongnhaphoten', "Please enter your first and last name");
+define('vuilongnhapdiachi', "Please enter your address");

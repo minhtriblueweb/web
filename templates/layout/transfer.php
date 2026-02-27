@@ -1,10 +1,10 @@
 <HTML>
 
 <HEAD>
-    <TITLE>:: Thông Báo ::</TITLE>
+    <TITLE>:: <?= thongbao ?> ::</TITLE>
     <base href="<?= $basehref ?>" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <meta http-equiv="REFRESH" content="4.5; url=<?= $page_transfer ?>">
+    <meta http-equiv="REFRESH" content="4.5; url=<?= $com_transfer ?>">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="robots" content="noodp,noindex,nofollow" />
     <link rel="stylesheet" href="assets/bootstrap/bootstrap.css">
@@ -166,9 +166,9 @@
 <BODY>
     <div id="alert">
         <i class="fas <?= ($numb) ? 'fa-check-circle fasuccess' : 'fa-exclamation-triangle fadanger' ?>"></i>
-        <div class="title">Thông báo</div>
+        <div class="title"><?= thongbao ?></div>
         <div class="message alert <?= ($numb) ? 'alert-success' : 'alert-danger' ?>"><?= $showtext ?></div>
-        <div class="rlink">(<a href="<?= $page_transfer ?>">Click vào đây nếu không muốn đợi lâu</a>)</div>
+        <div class="rlink">(<a href="<?= $com_transfer ?>"><?= clickvaodayneukhongmuondoilau ?></a>)</div>
         <div class="progress">
             <div id="process-bar" class="progress-bar progress-bar-striped progress-bar-<?= ($numb) ? 'success' : 'danger' ?> active" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
         </div>

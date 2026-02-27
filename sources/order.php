@@ -127,5 +127,5 @@ if (!empty($_POST['thanhtoan'])) {
     }
   }
   unset($_SESSION['cart']);
-  $func->transfer_tc(thongtindonhangdaduocguithanhcong, BASE, true);
+  $func->transfer(thongtindonhangdaduocguithanhcong, BASE, true);
 }

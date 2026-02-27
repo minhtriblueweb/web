@@ -200,3 +200,4 @@ define("dulieukhonghople", "Dữ liệu không hợp lệ");
 define("datlich", "Đặt lịch");
 define("danhmuckichthuoc", "Danh mục kích thước");
 define("danhmuctags", "Danh mục tags");
+define("clickvaodayneukhongmuondoilau", "Click vào đây nếu không muốn đợi lâu");

@@ -31,9 +31,9 @@ define('NO_IMG', BASE_ADMIN . 'assets/img/noimage.jpeg');
 
 $optsetting = $d->rawQueryOne("SELECT * FROM `tbl_setting` WHERE id = ?", [1]);
 $optsetting_json = json_decode($optsetting['options'] ?? '{}', true);
+$lang = $optsetting_json['lang_default'] ?? array_key_first($config['website']['lang']);
 $logo = $d->rawQueryOne("SELECT `file` FROM `tbl_photo` WHERE type = ? AND FIND_IN_SET('hienthi', status) LIMIT 1", ['logo']);
 $favicon = $d->rawQueryOne("SELECT `file` FROM `tbl_photo` WHERE type = ? AND FIND_IN_SET('hienthi', status) LIMIT 1", ['favicon']);
-$lang = $optsetting_json['lang_default'] ?? array_key_first($config['website']['lang']);
 
 require_once LIBRARIES . "lang/admin/$lang.php";
 require_once LIBRARIES . "requick.php";

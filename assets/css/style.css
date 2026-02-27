@@ -1057,8 +1057,7 @@ img:not([src]) {
   z-index: 99;
 }
 
-.search input:focus {
-  border-color: #dfe1e5;
+.search input.is-open {
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
   box-shadow: 0 1px 6px rgba(32, 33, 36, 0.28);
@@ -1139,6 +1138,13 @@ img:not([src]) {
   border-radius: 4px;
   margin-right: 12px;
   object-fit: cover;
+}
+
+.suggestion-empty {
+  padding: 10px;
+  color: #888;
+  font-style: italic;
+  cursor: default;
 }
 
 #toggle_menu {
@@ -5848,10 +5854,10 @@ coccocgrammar {
   opacity: 0.1;
 }
 .mg-col-10 {
-    padding-left: 5px;
-    padding-right: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
 }
 .row-10 {
-    margin-left: -5px;
-    margin-right: -5px;
+  margin-left: -5px;
+  margin-right: -5px;
 }

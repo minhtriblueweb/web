@@ -200,3 +200,4 @@ define("dulieukhonghople", "Invalid data");
 define("datlich", "Booking");
 define("danhmuckichthuoc", "Size List");
 define("danhmuctags", "Category tags");
+define("clickvaodayneukhongmuondoilau", "Click here if you don&#039;t want to wait");

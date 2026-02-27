@@ -1,3 +1,8 @@
+<?php
+$linkAdd = "$linkBase&act=add";
+$linkEdit  = "$linkBase&act=edit&id_child=";
+$linkDelete = "$linkBase&act=delete";
+?>
 <section class="content-header text-sm">
   <div class="container-fluid">
     <div class="row">
@@ -10,9 +15,9 @@
 </section>
 <section class="content">
   <div class="card-footer text-sm sticky-top">
-    <a class="btn btn-sm bg-gradient-primary text-white" href="<?= $linkForm ?>"
+    <a class="btn btn-sm bg-gradient-primary text-white" href="<?= $linkAdd?>"
       title="<?= themmoi ?>"><i class="fas fa-plus mr-2"></i><?= themmoi ?></a>
-    <a class="btn btn-sm bg-gradient-danger text-white" id="delete-all" data-url="<?= $linkMulti ?>" title="<?= xoatatca ?>"><i
+    <a class="btn btn-sm bg-gradient-danger text-white" id="delete-all" data-url="<?= $linkDelete ?>" title="<?= xoatatca ?>"><i
         class="far fa-trash-alt mr-2"></i><?= xoatatca ?></a>
     <a target="_blank" class="btn btn-sm bg-gradient-info text-white" id="" href="<?= BASE . $parent["slug$lang"] ?>" title="Xem sản phẩm"><i
         class="far fa-eye mr-2"></i>Xem sản phẩm</a>
@@ -61,8 +66,7 @@
 
                 <!-- Số thứ tự -->
                 <td class="align-middle">
-                  <input type="number" class="form-control form-control-mini m-auto update-numb" min="0"
-                    value="<?= $row['numb'] ?>" data-id="<?= $row['id'] ?>" data-table="<?= $table ?>">
+                  <input type="number" class="form-control form-control-mini m-auto update-numb" min="0" value="<?= $row['numb'] ?>" data-id="<?= $row['id'] ?>" data-table="<?= $table ?>">
                 </td>
 
                 <!-- Hình ảnh -->
@@ -89,7 +93,7 @@
                 <!-- Hành động -->
                 <td class="align-middle text-center text-md text-nowrap">
                   <a class="text-primary mr-2" href="<?= $linkEdit . $row['id'] ?>" title="Chỉnh sửa"><i class="fas fa-edit"></i></a>
-                  <a class="text-danger" id="delete-item" data-url="<?= $linkDelete . $row['id'] ?>" title="Xóa"><i class="fas fa-trash-alt"></i></a>
+                  <a class="text-danger" id="delete-item" data-url="<?= $linkDelete ?>&id_child=<?= $row['id'] ?>" title="<?= xoa ?>"><i class="fas fa-trash-alt"></i></a>
                 </td>
               </tr>
             <?php endforeach; ?>

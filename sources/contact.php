@@ -2,7 +2,7 @@
 if (!defined('SOURCES')) die("Error");
 
 /* Lấy bài viết tĩnh */
-$static = $d->rawQueryOne("SELECT id, type, name$lang as name, content$lang as content, file FROM tbl_static WHERE type = ? LIMIT 1", [$type]);
+$static = $d->rawQueryOne("SELECT id, type, name$lang as name, content$lang as content, file FROM `tbl_static` WHERE type = ? LIMIT 1", [$type]);
 
 //SEO
 $seo_data = $d->rawQueryOne("SELECT * FROM tbl_seopage WHERE type = ?", array($type));
@@ -87,9 +87,5 @@ if (isset($_POST['submit-contact'])) {
   ];
   $insert = $d->insert('tbl_newsletter', $data);
 
-  $func->transfer_tc(
-    $insert ? guilienhethanhcong : guilienhethatbai,
-    BASE,
-    $insert
-  );
+  $func->transfer($insert ? guilienhethanhcong : guilienhethatbai,BASE,$insert);
 }

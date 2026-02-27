@@ -1,7 +1,6 @@
 <?php
 if (!defined('SOURCES')) die("Error");
 if (!isset($config['product'][$type])) $func->transfer(trangkhongtontai, "index.php", false);
-$curPage = max(1, (int)($_GET['p'] ?? 1));
 $perPage = 10;
 $keyword = $_GET['keyword'] ?? '';
 $id_list = $_GET['id_list'] ?? '';

@@ -31,23 +31,19 @@
             </div>
             <div class="card-body">
               <div class="form-group">
-                <label for="filer-gallery" class="alabel-filer-gallery mb-3">
+                <label for="filer-gallery" class="label-filer-gallery mb-3">
                   Album: (<?= $config['product'][$type]['gallery'][$type]['img_type_photo'] ?>)
                 </label>
                 <input type="file" name="files[]" id="filer-gallery" multiple="multiple">
                 <input type="hidden" name="id_parent" value="<?= $id ?>">
                 <input type="hidden" class="col-filer" value="col-xl-2 col-lg-3 col-md-3 col-sm-4 col-6">
+                <input type="hidden" name="data[deleted_images]" class="deleted-images" value="">
               </div>
 
               <div class="form-group d-inline-block mb-2 mr-5">
-                <label for="hienthi_all-checkbox" class="d-inline-block align-middle mb-0 mr-3 form-label"><?= hienthitatca ?></label>
+                <label for="hienthi_all-checkbox" class="d-inline-block align-middle mb-0 mr-3 form-label"><?= hienthitatca ?>:</label>
                 <label class="switch switch-success">
-                  <input
-                    type="checkbox"
-                    name="hienthi_all"
-                    class="switch-input custom-control-input"
-                    id="hienthi_all-checkbox"
-                    value="hienthi" checked>
+                  <input type="checkbox" name="data[hienthi_all]" class="switch-input custom-control-input" id="hienthi_all-checkbox" value="hienthi" checked>
                 </label>
               </div>
               <?php
@@ -72,8 +68,7 @@
                   </div>
                 </div>
               <?php } ?>
-*/
-              ?>
+*/ ?>
             </div>
           </div>
         </div>

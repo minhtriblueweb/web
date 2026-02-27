@@ -50,18 +50,18 @@ if (!empty($_POST['submit-newsletter'])) {
   $data = $_POST['dataNewsletter'] ?? [];
   $email = trim($data['email'] ?? '');
   if ($email === '') {
-    $func->transfer_tc(vuilongnhapdiachiemail, $func->getCurrentPageURL(), false);
+    $func->transfer(vuilongnhapdiachiemail, $func->getCurrentPageURL(), false);
   }
   if (!$func->isEmail($email)) {
-    $func->transfer_tc(emailkhonghople, $func->getCurrentPageURL(), false);
+    $func->transfer(emailkhonghople, $func->getCurrentPageURL(), false);
   }
-  $exists = $d->rawQueryOne("SELECT id FROM tbl_newsletter WHERE email = ? LIMIT 1",[$email]);
+  $exists = $d->rawQueryOne("SELECT id FROM `tbl_newsletter` WHERE email = ? LIMIT 1",[$email]);
   if ($exists) {
-    $func->transfer_tc("Email đã được đăng ký", $func->getCurrentPageURL(), false);
+    $func->transfer("Email đã được đăng ký", $func->getCurrentPageURL(), false);
   }
   $insert = $d->execute(
     "INSERT INTO `tbl_newsletter` (email, type, date_created) VALUES (?, ?, NOW())",
     [$email, 'dang-ky-nhan-tin']
   );
-  $func->transfer_tc( $insert ? guilienhethanhcong : guilienhethatbai, BASE, $insert);
+  $func->transfer( $insert ? guilienhethanhcong : guilienhethatbai, BASE, $insert);
 }

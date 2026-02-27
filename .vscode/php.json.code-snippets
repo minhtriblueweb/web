@@ -2,7 +2,7 @@
   "fn-getImage": {
     "prefix": "imgfn",
     "body": [
-      "<?= \\$fn->getImage([",
+      "<?= \\$func->getImage([",
       "  'file' => '${1:file.jpg}',",
       "  'width' => ${2:50},",
       "  'height' => ${3:50},",
@@ -26,7 +26,7 @@
   "Dump Fn": {
     "prefix": "Dump",
     "body": [
-      "\\$fn->dump(${1:\\$data});"
+      "\\$func->dump(${1:\\$data});"
     ],
     "description": "Gọi hàm dump() từ $fn để debug dữ liệu"
   },
@@ -44,7 +44,7 @@
   "Save Model (fn->save)": {
     "prefix": "save",
     "body": [
-      "\\$fn->save(\\$_POST, \\$_FILES, \\$id, [",
+      "\\$func->save(\\$_POST, \\$_FILES, \\$id, [",
       "  'table'               => \\$table,",
       "  'fields_multi'        => ['slug', 'name', 'desc', 'content'],",
       "  'fields_common'       => ['numb', 'type'],",
@@ -63,6 +63,6 @@
       "  'enable_gallery'      => true",
       "]);"
     ],
-    "description": "Gọi hàm $fn->save chuẩn hoá dữ liệu với tuỳ chọn đầy đủ"
+    "description": "Gọi hàm $func->save chuẩn hoá dữ liệu với tuỳ chọn đầy đủ"
   }
 }

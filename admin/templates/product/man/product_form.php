@@ -1,7 +1,11 @@
 <?php
-if (isset($id_copy) && $id_copy > 0) {$breadcrumb = 'Sao chép';}
-elseif ($id > 0) {$breadcrumb = capnhat;}
-else {$breadcrumb = themmoi;}
+if (isset($id_copy) && $id_copy > 0) {
+  $breadcrumb = 'Sao chép';
+} elseif ($id > 0) {
+  $breadcrumb = capnhat;
+} else {
+  $breadcrumb = themmoi;
+}
 /* Check cols */
 if (isset($config['product'][$type]['gallery']) && count($config['product'][$type]['gallery']) > 0) {
   foreach ($config['product'][$type]['gallery'] as $key => $value) {
@@ -281,7 +285,7 @@ if (
         <div class="card-body">
           <div class="form-group">
             <label for="filer-gallery" class="label-filer-gallery mb-3">
-              Album: (<?= $config['product'][$type]['img_type'] ?>)
+              Album: (<?= $config['product'][$type]['gallery'][$type]['img_type_photo'] ?>)
             </label>
             <input type="file" name="files[]" id="filer-gallery" multiple="multiple">
             <input type="hidden" name="id_parent" value="<?= $id ?>">

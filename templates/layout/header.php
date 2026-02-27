@@ -27,16 +27,10 @@
         <?php endif ?>
       </div>
       <div class="search">
-        <input
-          autocomplete="off"
-          type="text"
-          class="js-search-input"
-          placeholder="Tìm kiếm sản phẩm..." />
-
+        <input autocomplete="off" type="text" class="js-search-input" placeholder="Tìm kiếm sản phẩm..." />
         <p class="search-btn js-search-btn">
           <i class="fa-solid fa-magnifying-glass"></i>
         </p>
-
         <div class="suggestions"></div>
       </div>
 

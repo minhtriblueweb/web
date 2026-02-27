@@ -1,31 +1,55 @@
-<?php 
-    $langadmin = (!empty($_SESSION['langadmin'])) ? $_SESSION['langadmin'] : 'vi';
-    require_once LIBRARIES."lang/admin/".$langadmin.".php"; 
+<?php
+$image = $this->getImage([
+  'file' => $params['photo'],
+  'width' => 150,
+  'height' => 150,
+  'thumb' => false,
+  'class' => 'img-fluid rounded mx-auto d-block'
+]);
 ?>
-<li class="jFiler-item my-jFiler-item my-jFiler-item-<?= $params['id'] ?> <?= $params['col'] ?>" data-id="<?= $params['id'] ?>">
-    <div class="jFiler-item-container">
-        <div class="jFiler-item-inner">
-            <div class="jFiler-item-thumb">
-                <div class="jFiler-item-thumb-image">
-                    <?= $this->getImage(['isLazy' => false, 'sizes' => '235x150x2', 'upload' => 'upload/' . $params['folder'] . '/', 'image' => $params['photo'], 'alt' => $params['name']]); ?>
-                    <i class="fas fa-arrows-alt"></i>
-                </div>
+
+<li class="jFiler-item <?= $params['col'] ?>">
+  <div class="jFiler-item-container">
+    <div class="jFiler-item-inner">
+      <div class="jFiler-item-thumb">
+        <div class="jFiler-item-status"></div>
+        <div class="jFiler-item-thumb-overlay">
+          <div class="jFiler-item-info">
+            <div style="display: table-cell; vertical-align: middle;">
+              <span class="jFiler-item-title">
+                <b title="<?= htmlspecialchars($params['name']) ?>">
+                  <?= htmlspecialchars($params['name']) ?>
+                </b>
+              </span>
             </div>
-            <div class="jFiler-item-assets jFiler-row">
-                <ul class="list-inline pull-right d-flex align-items-center justify-content-between">
-                    <li class="ml-1">
-                        <a class="icon-jfi-trash jFiler-item-trash-action my-jFiler-item-trash" data-id="<?= $params['id'] ?>" data-folder="<?= $params['folder'] ?>"></a>
-                    </li>
-                    <li class="mr-1">
-                        <div class="custom-control custom-checkbox d-inline-block align-middle text-md">
-                            <input type="checkbox" class="custom-control-input filer-checkbox" id="filer-checkbox-<?= $params['id'] ?>" value="<?= $params['id'] ?>">
-                            <label for="filer-checkbox-<?= $params['id'] ?>" class="custom-control-label font-weight-normal"><?=chon?></label>
-                        </div>
-                    </li>
-                </ul>
-            </div>
-            <input type="number" class="form-control form-control-sm my-jFiler-item-info rounded mb-1 text-sm" value="<?= $params['numb'] ?>" placeholder="<?=sothutu?>" data-info="numb" data-id="<?= $params['id'] ?>" />
-            <input type="text" class="form-control form-control-sm my-jFiler-item-info rounded text-sm" value="<?= $params['name'] ?>" placeholder="<?=tieude?>" data-info="name" data-id="<?= $params['id'] ?>" />
+          </div>
         </div>
+        <?= $image ?>
+      </div>
+      <div class="jFiler-item-assets jFiler-row">
+        <ul class="list-inline pull-right d-flex align-items-center justify-content-between w-100">
+          <li class="ml-1">
+            <a class="icon-jfi-trash jFiler-item-trash-action my-jFiler-item-trash"
+              data-id="<?= (int)$params['id'] ?>" data-photo="<?= htmlspecialchars($params['photo']) ?>"></a>
+          </li>
+          <li class="mr-1">
+            <div class="custom-control custom-checkbox d-inline-block align-middle text-md">
+              <input type="checkbox"
+                class="custom-control-input filer-checkbox"
+                id="filer-checkbox-<?= (int)$params['id'] ?>"
+                value="<?= (int)$params['id'] ?>">
+              <label for="filer-checkbox-<?= (int)$params['id'] ?>"
+                class="custom-control-label font-weight-normal"
+                data-label="<?= chon ?>"><?= chon ?></label>
+            </div>
+          </li>
+        </ul>
+      </div>
+
+      <input type="number" class="form-control form-control-sm mb-1" name="data[numb-filer][]" placeholder="<?= sothutu ?>" value="<?= (int)$params['numb'] ?>">
+      <input type="text" class="form-control form-control-sm" name="data[name-filer][]" placeholder="<?= tieude ?>" value="<?= htmlspecialchars($params['name']) ?>">
+      <input type="hidden" name="data[id-filer][]" value="<?= (int)$params['id'] ?>">
+      <input type="hidden" name="data[photo-filer][]" value="<?= htmlspecialchars($params['photo']) ?>">
     </div>
+  </div>
 </li>

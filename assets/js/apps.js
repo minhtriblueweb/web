@@ -6,52 +6,63 @@ validateForm("validation-contact");
 
 // Gợi ý tìm kiếm
 $(function () {
+  function getSuggestBox($wrapper) {
+    let $box = $wrapper.find('.suggestions');
+    if ($box.length === 0) {
+      $box = $('<div class="suggestions"></div>');
+      $wrapper.append($box);
+    }
+    return $box;
+  }
   $(document).on('keyup', '.search .js-search-input', function () {
-    var $input = $(this);
-    var keyword = $.trim($input.val());
-    var $wrapper = $input.closest('.search');
-    var $suggestBox = $wrapper.find('.suggestions');
+    const $input = $(this);
+    const keyword = $.trim($input.val());
+    const $wrapper = $input.closest('.search');
+    const $suggestBox = getSuggestBox($wrapper);
     if (keyword.length === 0) {
-      $suggestBox.removeClass('show').html('');
+      $suggestBox.removeClass('show').empty();
+      $input.removeClass('is-open');
       return;
     }
     $.ajax({
       url: 'api/search.php',
-      method: 'GET',
-      data: { keyword: keyword },
+      data: { keyword },
       dataType: 'json',
-      cache: false,
       success: function (data) {
-        var html = '';
-        if (data && data.length > 0) {
-          $.each(data, function (i, item) {
-            html +=
-              '<a class="suggestion-item" title="' + item.name + '" href="' + item.slug + '">' +
-              item.img +
-              '<span>' + item.name + '</span>' +
-              '</a>';
-          });
-
+        let html = '';
+        if (data && data[0] && data[0].message) {
+          html = '<div class="suggestion-empty">' + data[0].message + '</div>';
           $suggestBox.html(html).addClass('show');
+          $input.addClass('is-open');
+          return;
+        }
+        if (data && data.length > 0) {
+          $.each(data, function (_, item) {
+            html += `
+              <a class="suggestion-item" href="${item.slug}" title="${item.name}">
+                ${item.img}
+                <span>${item.name}</span>
+              </a>`;
+          });
+          $suggestBox.html(html).addClass('show');
+          $input.addClass('is-open');
         } else {
-          $suggestBox.removeClass('show').html('');
+          $suggestBox.removeClass('show').empty();
+          $input.removeClass('is-open');
         }
       },
       error: function () {
-        $suggestBox.removeClass('show').html('');
+        $suggestBox.removeClass('show').empty();
+        $input.removeClass('is-open');
       }
     });
   });
-  $(document).on('focus', '.search .js-search-input', function () {
-    var $wrapper = $(this).closest('.search');
-    var $suggestBox = $wrapper.find('.suggestions');
-    if ($suggestBox.html().trim() !== '') {
-      $suggestBox.addClass('show');
-    }
-  });
+
+  // Click ra ngoài → đóng
   $(document).on('click', function (e) {
     if (!$(e.target).closest('.search').length) {
-      $('.search .suggestions').removeClass('show');
+      $('.search .suggestions').removeClass('show').empty();
+      $('.search .js-search-input').removeClass('is-open');
     }
   });
 });

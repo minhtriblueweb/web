@@ -116,6 +116,7 @@
             </div>
             <div class="bottom-cart col-12 col-lg-5">
               <div class="section-cart">
+                <?php if($payments_info): ?>
                 <p class="title-cart"><?= hinhthucthanhtoan ?>:</p>
                 <div class="information-cart">
                   <?php $flashPayment = $flash->get('payments'); ?>
@@ -127,6 +128,7 @@
                     </div>
                   <?php } ?>
                 </div>
+                <?php endif ; ?>
                 <p class="title-cart"><?= thongtingiaohang ?>:</p>
                 <div class="information-cart">
                   <div class="row .row-10">

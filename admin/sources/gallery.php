@@ -5,7 +5,7 @@ $id_child  = (int)($_GET['id_child'] ?? 0);
 $type      = $_GET['type'] ?? '';
 $keyword   = $_GET['keyword'] ?? '';
 $table     = "tbl_gallery";
-$parent    = $id ? $d->rawQueryOne("SELECT id, name{$lang}, slug{$lang} FROM tbl_product WHERE id = ? LIMIT 1", [$id]) : [];
+$parent    = $id ? $d->rawQueryOne("SELECT id, name{$lang}, slug{$lang} FROM tbl_product WHERE id = ? LIMIT 0,1", [$id]) : [];
 $linkBase  = "index.php?com=gallery&type=$type&id=$id";
 $linkMan   = "$linkBase&act=man";
 switch ($act) {
@@ -72,22 +72,22 @@ function delete()
 
 function edit()
 {
-  global $func, $d, $table, $id_child, $type, $linkMan, $result;
+  global $func, $d, $table, $id_child, $type, $linkMan, $result, $config;
   $result = $d->rawQueryOne("SELECT * FROM $table WHERE id = ? LIMIT 1", [$id_child]);
   if (!$result) return;
   if ($_SERVER['REQUEST_METHOD'] !== 'POST') return;
   if (!isset($_POST['edit'])) return;
-  $success = $func->save_gallery($_POST, $_FILES, $result['id_parent'], $type, $id_child);
+  $success = $func->save_gallery($_POST, $_FILES, $result['id_parent'], $type, $id_child, [
+    'convert_webp' => $config['product'][$type]['gallery'][$type]['convert_webp']
+  ]);
   $func->transfer($success ? capnhathinhanhthanhcong : capnhathinhanhthatbai, $linkMan, $success);
 }
 
 function add()
 {
-  global $func, $id, $type, $linkMan;
+  global $func, $id, $type, $linkMan, $config, $table;
   if ($_SERVER['REQUEST_METHOD'] !== 'POST') return;
   if (!isset($_POST['add']) || $id <= 0) return;
-  $data  = $_POST['data'] ?? [];
-  $files = $_FILES;
-  $success = $func->save_gallery($data, $files, $id, $type);
+  $success = $func->save_gallery($_POST['data'] ?? [], $_FILES, $id, $type, 0, ['convert_webp' => $config['product'][$type]['gallery'][$type]['convert_webp']]);
   $func->transfer($success ? capnhathinhanhthanhcong : capnhathinhanhthatbai, $linkMan, $success);
 }

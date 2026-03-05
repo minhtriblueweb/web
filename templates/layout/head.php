@@ -1,38 +1,37 @@
 <!-- Basehref -->
-<base href="<?= BASE ?>" />
+<base href="<?= $configBase ?>" />
 
 <!-- UTF-8 -->
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 
 <!-- Title, Keywords, Description -->
-<title><?= $seo->get('title') ?: $optsetting["name$lang"] ?></title>
+<title><?= $seo->get('title') ?></title>
 <meta name="keywords" content="<?= $seo->get('keywords') ?>" />
 <meta name="description" content="<?= $seo->get('description') ?>" />
 
 <!-- Robots -->
-<meta name="robots" content="index,follow,noodp" />
+<meta name="robots" content="<?= (in_array($source, $config['website']['noseo'])) ? 'noindex,nofollow' : 'index,follow,noodp' ?>" />
 
 <!-- Favicon -->
-<link rel="shortcut icon" type="image/x-icon" href="<?= $seo->get('favicon') ?>" />
+<link href="<?= BASE_ADMIN . UPLOADS . $favicon['file'] ?>" rel="shortcut icon" type="image/x-icon" />
 
 <!-- Webmaster Tool -->
-<?= $func->decodeHtmlChars($optsetting['mastertool']) ?>
-
+<?= $func->decodeHtmlChars($setting['mastertool']) ?>
 
 <!-- GEO -->
 <meta name="geo.region" content="VN" />
 <meta name="geo.placename" content="Hồ Chí Minh" />
-<meta name="geo.position" content="<?= $optsetting_json['coords'] ?>" />
-<meta name="ICBM" content="<?= $optsetting_json['coords'] ?>" />
+<meta name="geo.position" content="<?= $optsetting['coords'] ?>" />
+<meta name="ICBM" content="<?= $optsetting['coords'] ?>" />
 
 <!-- Author - Copyright -->
-<meta name="revisit-after" content="1 days" />
-<meta name="author" content="<?= $optsetting["name$lang"] ?>" />
-<meta name="copyright" content="<?= $optsetting["name$lang"] . " - [" . $optsetting_json['email'] . "]" ?>" />
+<meta name='revisit-after' content='1 days' />
+<meta name="author" content="<?= $setting['name' . $lang] ?>" />
+<meta name="copyright" content="<?= $setting['name' . $lang] . " - [" . $optsetting['email'] . "]" ?>" />
 
-<!-- Facebook Open Graph -->
+<!-- Facebook -->
 <meta property="og:type" content="website" />
-<meta property="og:site_name" content="<?= $optsetting["name$lang"] ?>" />
+<meta property="og:site_name" content="<?= $setting["name$lang"] ?>" />
 <meta property="og:title" content="<?= $seo->get('title') ?>" />
 <meta property="og:description" content="<?= $seo->get('description') ?>" />
 <meta property="og:url" content="<?= $seo->get('url') ?>" />
@@ -44,11 +43,12 @@
 
 <!-- Twitter Card -->
 <meta name="twitter:card" content="summary_large_image" />
-<meta name="twitter:site" content="<?= $optsetting_json['email'] ?>" />
-<meta name="twitter:creator" content="<?= $optsetting["name$lang"] ?>" />
-<meta name="twitter:title" content="<?= $seo->get('title') ?>" />
-<meta name="twitter:description" content="<?= $seo->get('description') ?>" />
-<meta name="twitter:image" content="<?= $seo->get('photo') ?>" />
+<meta name="twitter:site" content="<?= $optsetting['email'] ?>" />
+<meta name="twitter:creator" content="<?= $setting['name' . $lang] ?>" />
+<meta property="og:url" content="<?= $seo->get('url') ?>" />
+<meta property="og:title" content="<?= $seo->get('title') ?>" />
+<meta property="og:description" content="<?= $seo->get('description') ?>" />
+<meta property="og:image" content="<?= $seo->get('photo') ?>" />
 
 <!-- Canonical -->
 <link rel="canonical" href="<?= $func->getCurrentPageURL() ?>" />
@@ -61,19 +61,3 @@
 
 <!-- AddtoAny Share -->
 <script async src="https://static.addtoany.com/menu/page.js"></script>
-
-<script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "WebSite",
-    "name": "<?= $optsetting["name$lang"] ?>",
-    "url": "<?= $seo->get('url') ?>",
-    "description": "<?= $seo->get('description') ?>",
-    "image": {
-      "@type": "ImageObject",
-      "url": "<?= $seo->get('photo') ?>",
-      "width": <?= $seo->get('photo:width') ?: 1200 ?>,
-      "height": <?= $seo->get('photo:height') ?: 630 ?>
-    }
-  }
-</script>

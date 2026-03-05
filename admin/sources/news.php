@@ -134,99 +134,28 @@ function deleteNews(string $level)
   $newsConfig = $config['news'][$type] ?? [];
   $delete_seo = $newsConfig["seo_$level"] ?? $newsConfig['seo'] ?? false;
   $delete_gallery = $newsConfig["gallery_$level"] ?? $newsConfig['gallery'] ?? false;
-  $id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
-  if ($id) {
-    $func->delete_data([
-      'id'             => $id,
-      'table'          => $table,
-      'type'           => $type,
-      'redirect'       => $redirect,
-      'delete_seo'     => $delete_seo,
-      'delete_gallery' => $delete_gallery
-    ]);
+  $payload = [
+    'table'          => $table,
+    'type'           => $type,
+    'redirect'       => $redirect,
+    'delete_seo'     => $delete_seo,
+    'delete_gallery' => $delete_gallery
+  ];
+  if ($id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT)) {
+    $func->delete_data($payload + ['id' => $id]);
     return;
   }
-  $listid = $_GET['listid'] ?? '';
-  if ($listid) {
-    $func->deleteMultiple_data([
-      'listid'         => $listid,
-      'table'          => $table,
-      'type'           => $type,
-      'redirect'       => $redirect,
-      'delete_seo'     => $delete_seo,
-      'delete_gallery' => $delete_gallery
-    ]);
+  if ($listid = ($_GET['listid'] ?? '')) {
+    $func->deleteMultiple_data($payload + ['listid' => $listid]);
+    return;
   }
 }
-function saveNews(string $level)
-{
-  global $id, $id_copy, $table, $d, $func, $type, $config, $strUrl, $gallery, $result, $seo_data;
 
-  $isMan = ($level === 'man');
-  $table = $isMan ? 'tbl_news' : "tbl_news_$level";
-  $act   = $isMan ? 'man' : "man_$level";
-
-  $linkMan  = "index.php?com=news&act=$act&type=$type";
-  $linkForm = "index.php?com=news&act=form" . ($isMan ? '' : "_$level") . "&type=$type";
-
-  $id_copy = filter_input(INPUT_GET, 'id_copy', FILTER_VALIDATE_INT);
-  $id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
-  $newsConfig = $config['news'][$type] ?? [];
-
-  /* ================== SAVE ================== */
-  if ((isset($_POST['add']) || isset($_POST['edit']) || isset($_POST['save-here']))) {
-    $isSaveHere = isset($_POST['save-here']);
-
-    $redirect = $linkMan . $strUrl;
-    if ($isSaveHere && $id) {
-      $redirect = $linkForm . $strUrl . '&id=' . $id;
-    }
-
-    $newId = $func->save_data(
-      $_POST['data'] ?? [],
-      $_FILES,
-      $id,
-      [
-        'table'          => $table,
-        'type'           => $type,
-        'act'            => $act,
-        'redirect'       => $redirect,
-        'convert_webp'   => $newsConfig["convert_webp_$level"] ?? $newsConfig['convert_webp'] ?? false,
-        'enable_slug'    => $newsConfig["slug_$level"] ?? $newsConfig['slug'] ?? false,
-        'enable_seo'     => $newsConfig["seo_$level"] ?? $newsConfig['seo'] ?? false,
-        'enable_gallery' => $newsConfig["gallery_$level"] ?? $newsConfig['gallery'] ?? false,
-        'skip_redirect'  => $isSaveHere && !$id,
-      ]
-    );
-
-    if ($isSaveHere && !$id && $newId > 0) {
-      $func->transfer(capnhatdulieuthanhcong, $linkForm . $strUrl . '&id=' . $newId, true);
-    }
-  }
-
-  /* ================== EDIT ================== */
-  $result = $seo_data = [];
-  $isId = $id_copy ?: $id;
-  if ($isId) {
-    $result = $d->rawQueryOne("SELECT * FROM `$table` WHERE id = ?", [$isId]);
-    if (!$result) {
-      $func->transfer(dulieukhongcothuc, $linkMan, false);
-    }
-
-    if (!empty($newsConfig["seo_$level"] ?? $newsConfig['seo'] ?? false)) {
-      $seo_data = $d->rawQueryOne("SELECT * FROM `tbl_seo` WHERE id_parent = ? AND type = ? AND act = ?",[$isId, $type, $act]);
-    }
-
-    if (!empty($newsConfig["gallery_$level"] ?? $newsConfig['gallery'] ?? false)) {
-      $gallery = $d->rawQuery("SELECT * FROM `tbl_gallery` WHERE id_parent = ? AND type = ? ORDER BY numb, id DESC",[$isId, $type]);
-    }
-  }
-}
 function viewNews(string $level)
 {
   global $func, $table, $curPage, $perPage, $type;
   global $id_list, $id_cat, $id_item, $id_brand, $id_sub, $keyword;
-  global $paging, $show_data;
+  global $paging, $item;
   $isMan = ($level === 'man');
   $table = $isMan ? 'tbl_news' : "tbl_news_$level";
   $options = [
@@ -248,7 +177,58 @@ function viewNews(string $level)
       $options[$field] = is_numeric($value) ? (int)$value : $value;
     }
   }
-  $total     = $func->count_data($options);
-  $show_data = $func->show_data($options);
-  $paging    = $func->pagination($total, $perPage, $curPage);
+  $total = $func->count_data($options);
+  $item = $func->show_data($options);
+  $paging = $func->pagination($total, $perPage, $curPage);
+}
+
+function saveNews(string $level)
+{
+  global $id, $id_copy, $table, $d, $func, $type, $config, $strUrl, $gallery, $item, $seo_data;
+  $isMan = ($level === 'man');
+  $table = $isMan ? 'tbl_news' : "tbl_news_$level";
+  $act   = $isMan ? 'man' : "man_$level";
+  $linkMan  = "index.php?com=news&act=$act&type=$type";
+  $linkForm = "index.php?com=news&act=form" . ($isMan ? '' : "_$level") . "&type=$type";
+  $id      = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
+  $id_copy = filter_input(INPUT_GET, 'id_copy', FILTER_VALIDATE_INT);
+  $newsConfig = $config['news'][$type] ?? [];
+  /* ================== SAVE ================== */
+  if (isset($_POST['add'], $_POST['data']) || isset($_POST['edit']) || isset($_POST['save-here'])) {
+    $isSaveHere = isset($_POST['save-here']);
+    $redirect = $linkMan . $strUrl;
+    if ($isSaveHere && $id) {
+      $redirect = $linkForm . $strUrl . '&id=' . $id;
+    }
+    $options = [
+      'table'          => $table,
+      'type'           => $type,
+      'act'            => $act,
+      'convert_webp'   => $newsConfig["convert_webp_$level"] ?? $newsConfig['convert_webp'] ?? false,
+      'enable_slug'    => $newsConfig["slug_$level"] ?? $newsConfig['slug'] ?? false,
+      'enable_seo'     => $newsConfig["seo_$level"] ?? $newsConfig['seo'] ?? false,
+      'enable_gallery' => $newsConfig["gallery_$level"] ?? $newsConfig['gallery'] ?? false,
+    ];
+    $res = $func->save_data($_POST['data'] ?? [], $_FILES, $id, $options);
+    if ($isSaveHere && empty($id) && $res['success'] && $res['id'] > 0) {
+      $redirect = $linkForm . $strUrl . '&id=' . $res['id'];
+    }
+    $func->transfer($res['message'], $redirect, $res['success']);
+  }
+
+  /* ================== EDIT ================== */
+  $item = $seo_data = [];
+  $isId = $id_copy ?: $id;
+  if ($isId) {
+    $item = $d->rawQueryOne("SELECT * FROM `$table` WHERE id = ?", [$isId]);
+    if (!$item) {
+      $func->transfer(dulieukhongcothuc, $linkMan, false);
+    }
+    if (!empty($newsConfig["seo_$level"] ?? $newsConfig['seo'] ?? false)) {
+      $seo_data = $d->rawQueryOne("SELECT * FROM `tbl_seo` WHERE id_parent = ? AND type = ? AND act = ?", [$isId, $type, $act]);
+    }
+    if (!empty($newsConfig["gallery_$level"] ?? $newsConfig['gallery'] ?? false)) {
+      $gallery = $d->rawQuery("SELECT * FROM `tbl_gallery` WHERE id_parent = ? AND type = ? ORDER BY numb, id DESC", [$isId, $type]);
+    }
+  }
 }

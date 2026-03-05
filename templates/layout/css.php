@@ -29,8 +29,8 @@ echo $css->get();
 ?>
 <?php if (!$func->isGoogleSpeed()) { ?>
   <!-- Js Google Analytic -->
-  <?= $func->decodeHtmlChars($optsetting['analytics']) ?>
+  <?= $func->decodeHtmlChars($setting['analytics']) ?>
 
   <!-- Js Head -->
-  <?= $func->decodeHtmlChars($optsetting['headjs']) ?>
+  <?= $func->decodeHtmlChars($setting['headjs']) ?>
 <?php } ?>

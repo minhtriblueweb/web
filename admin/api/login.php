@@ -4,9 +4,10 @@ define('LIBRARIES', '../../libraries/');
 
 require_once LIBRARIES . "config.php";
 require_once LIBRARIES . 'autoload.php';
+require_once LIBRARIES . "database.php";
 new AutoLoad();
 $injection = new AntiSQLInjection();
-$d = new PDODb($config['database']);
+$d  = new Database();
 $cache = new Cache($d);
 $func = new Functions($d, $cache);
 

@@ -12,23 +12,20 @@ if ($year == $currentYear && $month > $currentMonth) {
   exit;
 }
 $daysInMonth = cal_days_in_month(CAL_GREGORIAN, $month, $year);
-$charts = [
-  'month' => str_pad($month, 2, '0', STR_PAD_LEFT),
-  'year' => $year,
-  'series' => [],
-  'labels' => []
-];
-
+/* Make data for js chart */
+$charts = array();
+$charts['month'] = $month;
 for ($i = 1; $i <= $daysInMonth; $i++) {
-  $begin = strtotime("$year-$month-$i 00:00:00");
-  $end   = strtotime("$year-$month-$i 23:59:59") + 1;
-  $row = $d->rawQueryOne("SELECT COUNT(*) as total FROM `tbl_counter` WHERE tm >= ? AND tm < ?", [$begin, $end]);
-  $charts['series'][] = (int)$row['total'];
+  $k = $i + 1;
+  $begin = strtotime($year . '-' . $month . '-' . $i);
+  $end = strtotime($year . '-' . $month . '-' . $k);
+  $todayrc = $d->rawQueryOne("select count(*) as todayrecord from #_counter where tm >= ? and tm < ?", array($begin, $end));
+  $today_visitors = $todayrc['todayrecord'];
+  $charts['series'][] = $today_visitors;
   $charts['labels'][] = 'D' . $i;
 }
 $counter = $statistic->getOnline();
 ?>
-<?php include TEMPLATE . LAYOUT . 'loader.php'; ?>
 <section class="content mb-3">
   <div class="container-fluid">
     <div class="card">
@@ -93,7 +90,7 @@ $counter = $statistic->getOnline();
                 <i class="fa-solid fa-chart-line"></i>
               </div>
               <div class="card-info">
-                <h5 class="mb-0"><?= $counter['online'] ?></h5>
+                <h5 class="mb-0"><?= $counter['now'] ?></h5>
                 <small>Đang online</small>
               </div>
             </div>
@@ -104,7 +101,7 @@ $counter = $statistic->getOnline();
                 <i class="fa-solid fa-chart-line"></i>
               </div>
               <div class="card-info">
-                <h5 class="mb-0"><?= $counter['today'] ?></h5>
+                <h5 class="mb-0"><?= $counter['day'] ?></h5>
                 <small>Trong ngày</small>
               </div>
             </div>
@@ -140,70 +137,40 @@ $counter = $statistic->getOnline();
   <div class="container-fluid">
     <div class="card">
       <div class="card-header">
-        <h5 class="mb-0">
-          <?= thongketruycapthang ?> <?= str_pad($month, 2, '0', STR_PAD_LEFT) ?>/<?= $year ?>
-        </h5>
+        <h5 class="mb-0"><?= thongketruycapthang ?> <?= $month ?>/<?= $year ?></h5>
       </div>
       <div class="card-body">
-        <?php
-        date_default_timezone_set('Asia/Ho_Chi_Minh');
-
-        $month = isset($_GET['month']) ? (int)$_GET['month'] : (int)date('m');
-        $year = isset($_GET['year']) ? (int)$_GET['year'] : (int)date('Y');
-
-        $daysInMonth = cal_days_in_month(CAL_GREGORIAN, $month, $year);
-
-        $charts = [
-          'month' => str_pad($month, 2, '0', STR_PAD_LEFT),
-          'year' => $year,
-          'series' => [],
-          'labels' => []
-        ];
-
-        for ($i = 1; $i <= $daysInMonth; $i++) {
-          $begin = strtotime("$year-$month-$i 00:00:00");
-          $end   = strtotime("$year-$month-$i 23:59:59") + 1;
-          $row = $d->rawQueryOne(
-            "SELECT COUNT(*) as total FROM tbl_counter WHERE tm >= ? AND tm < ?",
-            [$begin, $end]
-          );
-          $charts['series'][] = (int)$row['total'];
-          $charts['labels'][] = 'D' . $i;
-        }
-        ?>
-
-        <form class="form-filter-charts row align-items-center mb-3" method="get">
+        <form class="form-filter-charts row align-items-center mb-1" action="index.php" method="get" name="form-thongke" accept-charset="utf-8">
           <div class="col-md-4">
             <div class="form-group">
               <select class="form-control select2" name="month" id="month">
-                <option value=""><?= thang ?></option>
-                <?php for ($i = 1; $i <= 12; $i++): ?>
-                  <option value="<?= $i ?>" <?= $i == $month ? 'selected' : '' ?>>
-                    Tháng <?= $i ?>
-                  </option>
-                <?php endfor; ?>
+                <option value="">Chọn tháng</option>
+                <?php for ($i = 1; $i <= 12; $i++) { ?>
+                  <?php
+                  if (isset($_GET['year'])) $selected = ($i == $_GET['month']) ? 'selected' : '';
+                  else $selected = ($i == date('m')) ? 'selected' : '';
+                  ?>
+                  <option value="<?= $i ?>" <?= $selected ?>><?= thang ?> <?= $i ?></option>
+                <?php } ?>
               </select>
             </div>
           </div>
           <div class="col-md-4">
             <div class="form-group">
               <select class="form-control select2" name="year" id="year">
-                <option value=""><?= nam ?></option>
-                <?php
-                $currentYear = date('Y');
-                for ($y = 2000; $y <= $currentYear + 10; $y++):
-                ?>
-                  <option value="<?= $y ?>" <?= $y == $year ? 'selected' : '' ?>>
-                    Năm <?= $y ?>
-                  </option>
-                <?php endfor; ?>
+                <option value="">Chọn năm</option>
+                <?php for ($i = 2000; $i <= date('Y') + 20; $i++) { ?>
+                  <?php
+                  if (isset($_GET['year'])) $selected = ($i == $_GET['year']) ? 'selected' : '';
+                  else $selected = ($i == date('Y')) ? 'selected' : '';
+                  ?>
+                  <option value="<?= $i ?>" <?= $selected ?>><?= year ?> <?= $i ?></option>
+                <?php } ?>
               </select>
             </div>
           </div>
           <div class="col-md-4">
-            <div class="form-group">
-              <button type="submit" class="btn btn-success"><?= thongke ?></button>
-            </div>
+            <div class="form-group"><button type="submit" class="btn btn-success"><?= thongke ?></button></div>
           </div>
         </form>
         <div id="apexMixedChart"></div>

@@ -1,89 +1,106 @@
 <?php
 class Cache
 {
-  private $d;
-  private $path;
+    private $d;
+    private $path;
 
-  public function __construct($d)
-  {
-    $this->db = $d;
-    $this->path = ROOT . '/cache';
-
-    // Tạo thư mục nếu chưa có
-    if (!is_dir($this->path)) {
-      mkdir($this->path, 0777, true);
+    function __construct($d)
+    {
+        $this->d = $d;
+        $this->path = ROOT . 'caches';
     }
 
-    // Tạo file .htaccess để chặn truy cập nếu chưa có
-    $htaccess = $this->path . '/.htaccess';
-    if (!file_exists($htaccess)) {
-      file_put_contents($htaccess, "Deny from all\n");
-    }
-  }
+    private function store($key, $data, $ttl)
+    {
+        $h = fopen($this->read($key), 'w');
 
-  private function getFileName($key)
-  {
-    return $this->path . '/cache_' . md5($key);
-  }
+        if (!$h) throw new Exception('Could not write to cache');
 
-  private function store($key, $data, $ttl)
-  {
-    $filename = $this->getFileName($key);
-    $data = serialize([time() + $ttl, $data]);
-    file_put_contents($filename, $data);
-  }
+        $data = serialize(array(time() + $ttl, $data));
 
-  private function read($key)
-  {
-    $filename = $this->getFileName($key);
+        if (fwrite($h, $data) === false) {
+            throw new Exception('Could not write to cache');
+        }
 
-    if (!file_exists($filename)) return false;
-
-    $data = file_get_contents($filename);
-    $data = @unserialize($data);
-
-    if (!$data || time() > $data[0]) {
-      @unlink($filename);
-      return false;
+        fclose($h);
     }
 
-    return $data[1];
-  }
+    private function read($key)
+    {
+        if (!file_exists($this->path)) {
+            if (!mkdir($this->path, 0777, true)) {
+                die('Failed to create folders...');
+            }
+        }
+        if (!file_exists($this->path . "/.htaccess") && file_exists("./upload/.htaccess")) {
+            copy("./upload/.htaccess", $this->path . "/.htaccess");
+        }
 
-  public function get($sql, $params = [], $type = 'one', $ttl = 600)
-  {
-    $key = $sql . '|' . serialize($params);
-
-    if (!$data = $this->read($key)) {
-      if ($type == 'all') {
-        $data = $this->db->rawQueryArray($sql, $params);
-      } else {
-        $data = $this->db->rawQueryOne($sql, $params);
-      }
-
-      $this->store($key, $data, $ttl);
+        return $this->path . '/cache_' . md5($key);
     }
 
-    return $data;
-  }
+    private function exist($key)
+    {
+        $filename = $this->read($key);
 
+        if (!file_exists($filename) || !is_readable($filename)) return false;
 
-  public function deleteAll()
-  {
-    if (!is_dir($this->path)) return false;
-    $files = glob($this->path . '/cache_*');
+        $data = file_get_contents($filename);
+        $data = @unserialize($data);
 
-    foreach ($files as $file) {
-      if (is_file($file)) @unlink($file);
+        if (!$data) {
+            unlink($filename);
+            return false;
+        }
+
+        if (time() > $data[0]) {
+            unlink($filename);
+            return false;
+        }
+
+        return $data[1];
     }
 
-    return true;
-  }
+    public function get($sql, $params = array(), $type = 'fetch', $time = 600)
+    {
+        /* Create sql key */
+        $paramsString = (!empty($params)) ? implode(",", $params) : '';
+        $key = $sql . $paramsString;
 
-  public function deleteKey($sql, $params = [])
-  {
-    $key = $sql . '|' . serialize($params);
-    $filename = $this->getFileName($key);
-    return file_exists($filename) ? unlink($filename) : false;
-  }
+        /* Check or Get sql data */
+        if (!$data = $this->exist($key)) {
+            if ($type == 'result') {
+                if (!empty($params)) {
+                    $data = $this->d->rawQuery($sql, $params);
+                } else {
+                    $data = $this->d->rawQuery($sql);
+                }
+            } else if ($type == 'fetch') {
+                if (!empty($params)) {
+                    $data = $this->d->rawQueryOne($sql, $params);
+                } else {
+                    $data = $this->d->rawQueryOne($sql);
+                }
+            }
+
+            /* Store sql data */
+            $this->store($key, $data, $time);
+        }
+
+        return $data;
+    }
+
+    public function delete()
+    {
+        if (!is_dir($this->path)) return false;
+        if ($handle = opendir($this->path)) {
+            while (false !== ($file = readdir($handle))) {
+                if ($file != "." && $file != ".." && $file != ".htaccess" && $file != "thumb.db" && $file != "index.html") {
+                    if (!file_exists($this->path . "/" . $file) || !is_readable($this->path . "/" . $file)) return false;
+                    unlink($this->path . "/" . $file);
+                }
+            }
+            return true;
+        } else return false;
+    }
 }

@@ -10,8 +10,9 @@ require_once LIBRARIES . "database.php";
 require_once LIBRARIES . 'autoload.php';
 new AutoLoad();
 $d  = new Database();
-$func = new Functions($d);
-$lang = (json_decode($d->rawQueryOne("SELECT options FROM tbl_setting WHERE id = ?", [1])['options'] ?? '{}',true)['lang_default']) ?? array_key_first($config['website']['lang']);
+$cache = new Cache($d);
+$func = new Functions($d, $cache);
+$lang = (json_decode($d->rawQueryOne("select options from #_setting where id = ?", [1])['options'] ?? '{}',true)['lang_default']) ?? array_key_first($config['website']['lang']);
 require_once LIBRARIES . "lang/admin/$lang.php";
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {

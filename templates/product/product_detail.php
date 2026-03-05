@@ -9,22 +9,19 @@
                 <div class="d-flex justify-content-center align-items-center">
                   <a id="Zoom-1" class="MagicZoom"
                     data-options="zoomMode: magnifier; zoomPosition: inner; hint: off; rightClick: true; expandCaption: false; history: false;"
-                    href="<?= $func->getImageCustom(['file' => $rowDetail['file'], 'width' => $optsetting_json["san-pham_man_width"], 'height' => $optsetting_json["san-pham_man_height"], 'zc' => $optsetting_json["san-pham_man_zc"], 'src_only' => true, 'watermark' => $config['product'][$type]['watermark']]) ?>" title="<?= $rowDetail["name$lang"] ?>">
-                    <?= $func->getImageCustom(['file' => $rowDetail['file'], 'alt' => $rowDetail["name$lang"], 'title' => $rowDetail["name$lang"], 'width' => $optsetting_json["san-pham_man_width"], 'height' => $optsetting_json["san-pham_man_height"], 'zc' => $optsetting_json["san-pham_man_zc"], 'lazy' => true, 'watermark' => $config['product'][$type]['watermark']]) ?>
+                    href="<?= $func->getImageCustom(['file' => $rowDetail['file'], 'width' => $optsetting["san-pham_man_width"], 'height' => $optsetting["san-pham_man_height"], 'zc' => $optsetting["san-pham_man_zc"], 'src_only' => true, 'watermark' => $config['product'][$type]['watermark']]) ?>" title="<?= $rowDetail["name$lang"] ?>"><?= $func->getImageCustom(['file' => $rowDetail['file'], 'alt' => $rowDetail["name$lang"], 'title' => $rowDetail["name$lang"], 'width' => $optsetting["san-pham_man_width"], 'height' => $optsetting["san-pham_man_height"], 'zc' => $optsetting["san-pham_man_zc"], 'lazy' => true, 'watermark' => $config['product'][$type]['watermark']]) ?>
                   </a>
                 </div>
                 <?php if (!empty($rowDetailPhoto)): ?>
                   <div class="gallery-thumb-pro">
                     <div class="slick-pro-detail">
                       <div>
-                        <a class="thumb-pro-detail" data-zoom-id="Zoom-1" href="<?= $func->getImageCustom(['file' => $rowDetail['file'], 'watermark' => $config['product'][$type]['watermark'], 'src_only' => true]) ?>">
-                          <?= $func->getImageCustom(['file' => $rowDetail['file'], 'title' => $rowDetail["name$lang"], 'alt' => $rowDetail["name$lang"], 'class' => '', 'width' => $optsetting_json["san-pham_man_width"], 'height' => $optsetting_json["san-pham_man_height"], 'zc' => $optsetting_json["san-pham_man_zc"], 'lazy' => true, 'watermark' => $config['product'][$type]['watermark']]) ?>
+                        <a class="thumb-pro-detail" data-zoom-id="Zoom-1" href="<?= $func->getImageCustom(['file' => $rowDetail['file'], 'watermark' => $config['product'][$type]['watermark'], 'src_only' => true]) ?>"><?= $func->getImageCustom(['file' => $rowDetail['file'], 'title' => $rowDetail["name$lang"], 'alt' => $rowDetail["name$lang"], 'class' => '', 'width' => $optsetting["san-pham_man_width"], 'height' => $optsetting["san-pham_man_height"], 'zc' => $optsetting["san-pham_man_zc"], 'lazy' => true, 'watermark' => $config['product'][$type]['watermark']]) ?>
                         </a>
                       </div>
                       <?php foreach ($rowDetailPhoto as $gallery): ?>
                         <div>
-                          <a href=" <?= $func->getImageCustom(['file' => $gallery['file'], 'watermark' => $config['product'][$type]['watermark'], 'width' => $optsetting_json["san-pham_man_width"], 'height' => $optsetting_json["san-pham_man_height"], 'zc' => $optsetting_json["san-pham_man_zc"], 'src_only' => true]) ?>" class="thumb-pro-detail" data-zoom-id="Zoom-1">
-                            <?= $func->getImageCustom(['file' => $gallery['file'], 'title' => $gallery['name'], 'alt' => $gallery['name'], 'class' => '', 'width' => $optsetting_json["san-pham_man_width"], 'height' => $optsetting_json["san-pham_man_height"], 'zc' => $optsetting_json["san-pham_man_zc"], 'lazy' => true, 'watermark' => $config['product'][$type]['watermark']]) ?>
+                          <a href=" <?= $func->getImageCustom(['file' => $gallery['file'], 'watermark' => $config['product'][$type]['watermark'], 'width' => $optsetting["san-pham_man_width"], 'height' => $optsetting["san-pham_man_height"], 'zc' => $optsetting["san-pham_man_zc"], 'src_only' => true]) ?>" class="thumb-pro-detail" data-zoom-id="Zoom-1"><?= $func->getImageCustom(['file' => $gallery['file'], 'title' => $gallery['name'], 'alt' => $gallery['name'], 'class' => '', 'width' => $optsetting["san-pham_man_width"], 'height' => $optsetting["san-pham_man_height"], 'zc' => $optsetting["san-pham_man_zc"], 'lazy' => true, 'watermark' => $config['product'][$type]['watermark']]) ?>
                           </a>
                         </div>
                       <?php endforeach; ?>
@@ -50,7 +47,7 @@
                 <p class="title-pro-detail mb-3"><?= $rowDetail["name$lang"] ?></p>
                 <?php
                 $params = array();
-                $params['oaidzalo'] = $optsetting_json['oaidzalo'];
+                $params['oaidzalo'] = $optsetting['oaidzalo'];
                 $params['data-href'] = $func->getCurrentPageURL();
                 include TEMPLATE . LAYOUT . 'share.php'
                 ?>
@@ -179,20 +176,22 @@
                 <div class="table-criteria"><?= $camket["content$lang"] ?></div>
               </div>
             <?php endif ?>
-            <div class="box-desc-pro-detail border-main">
-              <div class="title-desc-pro-detail bg-main">
-                <span>Chính sách hậu mãi</span>
+            <?php if ($show_chinhsach) : ?>
+              <div class="box-desc-pro-detail border-main">
+                <div class="title-desc-pro-detail bg-main">
+                  <span>Chính sách hậu mãi</span>
+                </div>
+                <div class="table-criteria">
+                  <ul>
+                    <?php foreach ($show_chinhsach as $row): ?>
+                      <li>
+                        <a class="transition" href="<?= $row['slug' . $lang] ?>" title="<?= $row['name' . $lang] ?>"><?= $row['name' . $lang] ?> →</a>
+                      </li>
+                    <?php endforeach; ?>
+                  </ul>
+                </div>
               </div>
-              <div class="table-criteria">
-                <ul>
-                  <?php foreach ($show_chinhsach as $row): ?>
-                    <li>
-                      <a class="transition" href="<?= $row['slug' . $lang] ?>" title="<?= $row['name' . $lang] ?>"><?= $row['name' . $lang] ?> →</a>
-                    </li>
-                  <?php endforeach; ?>
-                </ul>
-              </div>
-            </div>
+            <?php endif ?>
             <?php if (!empty($tieuchi)): ?>
               <?php foreach ($tieuchi as $row_tc): ?>
                 <div class="i-policy hover-glass shadow-sm">
@@ -202,9 +201,9 @@
                       'class' => '',
                       'alt' => $row_tc["name$lang"],
                       'title' => $row_tc["name$lang"],
-                      'width' => $optsetting_json["tieu-chi_man_width"],
-                      'height' => $optsetting_json["tieu-chi_man_height"],
-                      'zc' => $optsetting_json["tieu-chi_man_zc"],
+                      'width' => $optsetting["tieu-chi_man_width"],
+                      'height' => $optsetting["tieu-chi_man_height"],
+                      'zc' => $optsetting["tieu-chi_man_zc"],
                       'lazy' => true
                     ]) ?>
                   </a>

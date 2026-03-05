@@ -65,14 +65,14 @@ if ((isset($config['photo']['photo_man'][$type]['images_photo']) && $config['pho
                             class="form-control for-seo text-sm"
                             name="data[name<?= $k ?>]" id="name<?= $k ?>"
                             placeholder="<?= tieude ?> (<?= $k ?>)"
-                            value="<?= $_POST['name' . $k] ?? ($result['name' . $k] ?? '') ?>" />
+                            value="<?= $_POST['name' . $k] ?? ($item['name' . $k] ?? '') ?>" />
                         </div>
                       <?php endif; ?>
                       <?php if (!empty($config['photo']['photo_man'][$type]['desc_photo'])): ?>
                         <div class="form-group">
                           <label for="desc<?= $k ?>"><?= mota ?> (<?= $k ?>):</label>
                           <input type="text" class="form-control for-seo text-sm" name="data[desc<?= $k ?>]" id="desc<?= $k ?>"
-                            placeholder="<?= mota ?>" value="<?= $_POST['desc' . $k] ?? ($result['desc' . $k] ?? '') ?>" />
+                            placeholder="<?= mota ?>" value="<?= $_POST['desc' . $k] ?? ($item['desc' . $k] ?? '') ?>" />
                         </div>
                       <?php endif; ?>
                       <?php if (!empty($config['photo']['photo_man'][$type]['content_photo'])): ?>
@@ -80,7 +80,7 @@ if ((isset($config['photo']['photo_man'][$type]['images_photo']) && $config['pho
                           <label for="content<?= $k ?>"><?= mota ?> (<?= $k ?>):</label>
                           <textarea class="form-control for-seo text-sm"
                             name="data[content<?= $k ?>]" id="content<?= $k ?>"
-                            rows="4" placeholder="<?= mota ?> (<?= $k ?>)"><?= $_POST['content' . $k] ?? ($result['content' . $k] ?? '') ?></textarea>
+                            rows="4" placeholder="<?= mota ?> (<?= $k ?>)"><?= $_POST['content' . $k] ?? ($item['content' . $k] ?? '') ?></textarea>
                         </div>
                       <?php endif; ?>
                     </div>
@@ -103,27 +103,24 @@ if ((isset($config['photo']['photo_man'][$type]['images_photo']) && $config['pho
               <div class="form-group">
                 <label for="link0">Link:</label>
                 <input type="text" class="form-control text-sm" name="data[link]" id="link0" placeholder="Link"
-                  value="<?= $_POST['link'] ?? $result['link'] ?? '' ?>">
+                  value="<?= $_POST['link'] ?? $item['link'] ?? '' ?>">
               </div>
             <?php endif; ?>
             <div class="form-group">
-              <?php foreach ($config['photo']['photo_man'][$type]['status_photo'] as $check => $label): ?>
-                <div class="form-group d-inline-block mb-2 mr-5">
-                  <label for="<?= $check ?>-checkbox"
-                    class="d-inline-block align-middle mb-0 mr-3 form-label"><?= defined($check) ? constant($check) : $check ?>:</label>
-                  <label class="switch switch-success">
-                    <input type="checkbox" name="data[status][<?= $check ?>]"
-                      class="switch-input custom-control-input" id="<?= $check ?>-checkbox"
-                      <?= $func->is_checked($check, $result['status'] ?? '', $id ?? '') ?>>
-                  </label>
-                </div>
-              <?php endforeach; ?>
+              <?php
+              $status_array = !empty($item['status']) ? explode(',', $item['status']) : [];
+              if (!empty($config['photo']['photo_man'][$type]['check_photo'])) {
+                foreach ($config['photo']['photo_man'][$type]['check_photo'] as $key => $value) {
+                  echo $func->is_checked($key, $value, $status_array, $item['id'] ?? null);
+                }
+              }
+              ?>
             </div>
             <div class="form-group">
               <label for="numb" class="d-inline-block align-middle mb-0 mr-2"><?= sothutu ?>:</label>
               <input type="number" class="form-control form-control-mini d-inline-block align-middle text-sm" min="0"
                 name="data[numb]" id="numb" placeholder="<?= sothutu ?>"
-                value="<?= $_POST['numb'] ?? (!empty($id) ? $result['numb'] : '1') ?>">
+                value="<?= $_POST['numb'] ?? (!empty($id) ? $item['numb'] : '1') ?>">
             </div>
           </div>
         </div>
@@ -141,7 +138,7 @@ if ((isset($config['photo']['photo_man'][$type]['images_photo']) && $config['pho
             <div class="card-body">
               <?php
               $photoDetail = array();
-              $photoDetail['image'] = $result['file'] ?? '';
+              $photoDetail['image'] = $item['file'] ?? '';
               $photoDetail['dimension'] = "Width: " . ($config['photo']['photo_man'][$type]['width_photo'] ?? 0) . " px - Height: " . ($config['photo']['photo_man'][$type]['height_photo'] ?? 0) . " px (" . ($config['photo']['photo_man'][$type]['img_type_photo'] ?? '.jpg|.png') . ")";
               include TEMPLATE . LAYOUT . "image.php"; ?>
             </div>
@@ -149,10 +146,5 @@ if ((isset($config['photo']['photo_man'][$type]['images_photo']) && $config['pho
         <?php endif; ?>
       </div>
     </div>
-
-    <input type="hidden" name="data[type]" value="<?= $type ?>">
-    <input type="hidden" name="data[options][width]" value="<?= $config['photo']['photo_man'][$type]['width_photo'] ?>">
-    <input type="hidden" name="data[options][height]" value="<?= $config['photo']['photo_man'][$type]['height_photo'] ?>">
-    <input type="hidden" name="data[options][zc]" value="<?= substr($config['photo']['photo_man'][$type]['thumb_photo'], -1) ?? 1 ?>">
   </form>
 </section>

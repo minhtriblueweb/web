@@ -20,6 +20,6 @@ $cssFiles = [
 ];
 
 foreach ($cssFiles as $file) {
-  echo '<link href="./assets/' . $file . '?v=' . VERSION . '" rel="stylesheet" />' . PHP_EOL;
+  echo '<link href="./assets/' . $file . '" rel="stylesheet" />' . PHP_EOL;
 }
 ?>

@@ -8,8 +8,8 @@
       <a href="./">
         <?= $func->getImageCustom([
           'file'  => $logo['file'],
-          'alt'   => $optsetting["name$lang"],
-          'title' => $optsetting["name$lang"],
+          'alt'   => $setting["name$lang"],
+          'title' => $setting["name$lang"],
           'width' => 100,
           'height' => 100,
           'zc'    => 4,

@@ -1,5 +1,5 @@
 <?php
-// echo password_hash('fX*%DaY$p', PASSWORD_DEFAULT);
+// echo $func->encryptPassword($config['website']['secret'], 'dQ#iyuhLz', $config['website']['salt']);
 ?>
 <div class="login_blueweb blue-wrap-main">
   <div class="login_blueweb_content">
@@ -25,9 +25,11 @@
         <div class="gr_titlehethong">
           <img src="./assets/img/security.png" alt="" class="security">
           <div class="title_loginhethong">Hệ Thống Quản Trị</div>
-          <div class="mien"><?= $config['base'] ?></div>
+          <div class="mien"><?= $configBase ?></div>
         </div>
-        <form action="" method="post" class="formLoginBlueweb" enctype="multipart/form-data">
+        <form class="formLoginBlueweb" enctype="multipart/form-data">
+          <input type="hidden" name="xsrf_token" id="xsrf_token"
+            value="<?= $_SESSION['xsrf_token']; ?>">
           <div class="input-group mb-3 login-input">
             <div class="input-group-prepend login-input-group-append">
               <span class="input-group-text login-icon">
@@ -63,20 +65,16 @@
               </span>
             </div>
           </div>
-          <button
-            type="submit"
-            class="login_blueweb_btn"
-            name="btn_login"
-            id="btn_login">
+
+          <button type="button" class="login_blueweb_btn btn-login">
             <span class="login-btn-text">ĐĂNG NHẬP</span>
           </button>
 
           <div class="login_l_footer">
             Designed by Minh Trí Website - 0328 732 834
           </div>
-          <?php if (isset($login_check)): ?>
-            <div class="alert my-alert alert-login text-center text-sm p-2 mb-0 mt-2 alert-danger" role="alert"><?= $login_check; ?></div>
-          <?php endif; ?>
+
+          <div class="alert my-alert alert-login d-none text-center text-sm p-2 mb-0 mt-2" role="alert"></div>
         </form>
       </div>
     </div>

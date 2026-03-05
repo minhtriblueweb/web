@@ -1,83 +1,103 @@
 <?php
 class CssMinify
 {
-  private $path = [];
+  private $path = array();
+  private $debug;
+  private $func;
+  private $access = array(
+    'server' => ROOT . 'assets/',
+    'asset' => ASSET . 'assets/',
+    'folder' => 'caches/'
+  );
+  private $cacheName = '';
+  private $cacheFile = '';
+  private $cacheLink = '';
+  private $cacheSize = false;
+  private $cacheTime = 3600 * 24 * 30;
   private $file = [];
-  private $access = [];
-  private $debug = false;
-  private $cacheDir = 'caches/';
-  private $cacheTime = 3600 * 24 * 7; // 7 ngày
 
-  public function __construct($debug = false, $func = null)
+  function __construct($debug, $func)
   {
     $this->debug = $debug;
+    $this->func = $func;
+  }
 
-    // Gán access mặc định
-    $this->access = [
-      'server' => ROOT . '/assets/',
-      'asset'  => BASE . 'assets/'
-    ];
-
-    // Có thể mở rộng dùng $func nếu cần tạo hash hoặc path thông minh
-    if ($func instanceof Functions) {
-      // ví dụ: $this->version = $func->generateHash();
+  public function init($name)
+  {
+    if (!$this->debug && !file_exists($this->cacheLink . $this->access['server'] . $this->access['folder'])) {
+      if (!mkdir($this->cacheLink . $this->access['server'] . $this->access['folder'], 0777, true)) {
+        die('Failed to create folders...');
+      }
     }
+
+    $this->cacheName = $name;
+    $this->cacheFile = $this->cacheFile . $this->access['server'] . $this->access['folder'] . $this->cacheName . '.css';
+    $this->cacheLink = $this->cacheLink . $this->access['asset'] . $this->access['folder'] . $this->cacheName . '.css';
+    $this->cacheSize = (file_exists($this->cacheFile)) ? filesize($this->cacheFile) : 0;
   }
 
   public function set($path)
   {
     $this->path[] = [
       'server' => $this->access['server'] . $path,
-      'asset'  => $this->access['asset'] . $path
+      'asset' => $this->access['asset'] . $path
     ];
-    $this->file[] = $path;
-  }
 
-  public function enableDebug($bool = true)
-  {
-    $this->debug = $bool;
+    $this->file[] = $path;
   }
 
   public function get()
   {
-    if (empty($this->file)) return '';
+    $this->init(md5(implode(",", $this->file)));
+    if (empty($this->path)) die("No files to optimize");
+    return ($this->debug) ? $this->links() : $this->minify();
+  }
 
-    return $this->debug ? $this->links() : $this->minify();
+  private function minify()
+  {
+    $strCss = '';
+    $extension = '';
+
+    if (!$this->cacheSize || $this->isExpire($this->cacheFile)) {
+      foreach ($this->path as $path) {
+        $parts = pathinfo($path['server']);
+        $extension = strtolower($parts['extension']);
+        if ($extension != 'css') die("Invalid file");
+        $myfile = fopen($path['server'], "r") or die("Unable to open file");
+        $sizefile = filesize($path['server']);
+        if ($sizefile) $strCss .= $this->compress(fread($myfile, $sizefile));
+        fclose($myfile);
+      }
+
+      if ($strCss) {
+        $file = fopen($this->cacheFile, "w") or die("Unable to open file");
+        fwrite($file, $strCss);
+        fclose($file);
+      }
+    }
+
+    return '<link href="' . $this->cacheLink . '?v=' . filemtime($this->cacheFile) . '" rel="stylesheet">';
   }
 
   private function links()
   {
-    $html = '';
-    foreach ($this->path as $file) {
-      $html .= '<link href="' . $file['asset'] . '?v=' . $this->randomVersion() . '" rel="stylesheet" />' . PHP_EOL;
-    }
-    return $html;
-  }
-  private function minify()
-  {
-    $hash = md5(implode(",", $this->file));
-    $cacheFile = $this->access['server'] . $this->cacheDir . "cache_$hash.css";
-    $cacheLink = $this->access['asset'] . $this->cacheDir . "cache_$hash.css";
+    $linkCss = '';
+    $extension = '';
 
-    if (!is_dir(dirname($cacheFile))) {
-      mkdir(dirname($cacheFile), 0777, true);
+    if ($this->cacheSize) {
+      $file = fopen($this->cacheFile, "r+") or die("Unable to open file");
+      ftruncate($file, 0);
+      fclose($file);
     }
 
-    if (!file_exists($cacheFile) || (time() - filemtime($cacheFile) > $this->cacheTime)) {
-      $css = '';
-      foreach ($this->path as $index => $file) {
-        $serverPath = $file['server'];
-        if (!file_exists($serverPath)) continue;
-
-        $content = file_get_contents($serverPath);
-        $isMinified = preg_match('/\.min\.css$/', $this->file[$index]);
-
-        $css .= $isMinified ? $content : $this->compress($content);
-      }
-      file_put_contents($cacheFile, $css);
+    foreach ($this->path as $path) {
+      $parts = pathinfo($path['server']);
+      $extension = strtolower($parts['extension']);
+      if ($extension != 'css') die("Invalid file");
+      $linkCss .= '<link href="' . $path['asset'] . '?v=' . $this->func->stringRandom(10) . '" rel="stylesheet">' . PHP_EOL;
     }
 
-    return '<link href="' . $cacheLink . '?v=' . filemtime($cacheFile) . '" rel="stylesheet" />';
+    return $linkCss;
   }
 
   private function compress($buffer)
@@ -98,20 +118,5 @@ class CssMinify
     }
 
     return $isExpire;
-  }
-
-  private function randomVersion($length = 10)
-  {
-    return substr(str_shuffle('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'), 0, $length);
-  }
-
-  public function clearCache()
-  {
-    $folder = $this->access['server'] . $this->cacheDir;
-    if (is_dir($folder)) {
-      foreach (glob($folder . "cache_*.css") as $file) {
-        unlink($file);
-      }
-    }
   }
 }

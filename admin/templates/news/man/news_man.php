@@ -1,13 +1,12 @@
 <?php
-$linkNews = "index.php?com=news&type=" . $type;
-$linkMan   = "$linkNews&act=man";
-$linkForm  = "$linkNews&act=form";
+$linkMan   = "index.php?com=news&act=man&type=" . $type;
+$linkForm  = "index.php?com=news&act=form&type=" . $type;
 $linkEdit = "index.php?com=news&act=form&type=" . $type;
 $linkCopy = "index.php?com=news&act=copy&type=" . $type;
 $linkDelete = "index.php?com=news&act=delete&type=" . $type;
 $linkGalleryMan  = "index.php?com=gallery&act=man&type=$type&id=";
-$linkGalleryForm  = "index.php?com=gallery&act=form&type=$type&id=";
-$copyImg = (isset($config['news'][$type]['copy_image']) && $config['news'][$type]['copy_image'] == true) ? TRUE : FALSE;
+$linkGalleryForm  = "index.php?com=gallery&act=add&type=$type&id=";
+$copyImg = !empty($config['news'][$type]['copy_image']);
 ?>
 <section class="content-header text-sm">
   <div class="container-fluid">
@@ -68,16 +67,18 @@ $copyImg = (isset($config['news'][$type]['copy_image']) && $config['news'][$type
             <?php if (!empty($config['news'][$type]['gallery'])): ?>
               <th class="align-middle">Gallery</th>
             <?php endif; ?>
-            <?php foreach ($config['news'][$type]['check'] as $attr => $label): ?>
-              <th class="align-middle text-center"><?= defined($attr) ? constant($attr) : $attr ?></th>
-            <?php endforeach; ?>
+            <?php if (isset($config['news'][$type]['check'])) {
+              foreach ($config['news'][$type]['check'] as $key => $value) { ?>
+                <th class="align-middle text-center"><?= $value ?></th>
+            <?php }
+            } ?>
             <th class="align-middle text-center"><?= thaotac ?></th>
           </tr>
         </thead>
         <form action="" method="POST">
           <tbody>
-            <?php if (!empty($show_data)): ?>
-              <?php foreach ($show_data as $row):
+            <?php if (!empty($item)): ?>
+              <?php foreach ($item as $row):
                 $linkID = "";
                 if ($row['id_list']) $linkID .= "&id_list=" . $row['id_list'];
                 if ($row['id_cat']) $linkID .= "&id_cat=" . $row['id_cat'];

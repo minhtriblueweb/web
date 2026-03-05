@@ -2,33 +2,116 @@
 class Statistic
 {
   private $d;
-  public function __construct()
+  private $cache;
+
+  function __construct($d, $cache)
   {
-    $this->db = new Database();
+    $this->d = $d;
+    $this->cache = $cache;
   }
+
+  public function getCounter()
+  {
+    $locktime = 15 * 60;
+    $initialvalue = 1;
+    $records = 100000;
+    $day = date('d');
+    $month = date('n');
+    $year = date('Y');
+
+    /* Day start */
+    $daystart = mktime(0, 0, 0, $month, $day, $year);
+
+    /* Month start */
+    $monthstart = mktime(0, 0, 0, $month, 1, $year);
+
+    /* Week start */
+    $weekday = date('w');
+    $weekday--;
+    if ($weekday < 0) $weekday = 7;
+    $weekday = $weekday * 24 * 60 * 60;
+    $weekstart = $daystart - $weekday;
+
+    /* Yesterday start */
+    $yesterdaystart = $daystart - (24 * 60 * 60);
+    $now = time();
+    $ip = $_SERVER['REMOTE_ADDR'];
+
+    $t = $this->cache->get("select max(id) as total from #_counter", null, 'fetch', 1800);
+    $all_visitors = $t['total'];
+
+    if ($all_visitors !== NULL) $all_visitors += $initialvalue;
+    else $all_visitors = $initialvalue;
+
+    /* Delete old records */
+    $temp = $all_visitors - $records;
+
+    if ($temp > 0) $this->d->rawQuery("delete from #_counter where id < '$temp'");
+
+    $vip = $this->d->rawQueryOne("select count(*) as visitip from #_counter where ip='$ip' and (tm+'$locktime')>'$now' limit 0,1");
+    $items = $vip['visitip'];
+
+    if (empty($items)) $this->d->rawQuery("insert into #_counter (tm, ip) values ('$now', '$ip')");
+
+    $n = $all_visitors;
+    $div = 100000;
+    while ($n > $div) $div *= 10;
+
+    $todayrec = $this->cache->get("select count(*) as todayrecord from #_counter where tm > '$daystart'", null, 'fetch', 1800);
+    $yesrec = $this->cache->get("select count(*) as yesterdayrec from #_counter where tm > '$yesterdaystart' and tm < '$daystart'", null, 'fetch', 1800);
+    $weekrec = $this->cache->get("select count(*) as weekrec from #_counter where tm >= '$weekstart'", null, 'fetch', 1800);
+    $monthrec = $this->cache->get("select count(*) as monthrec from #_counter where tm >= '$monthstart'", null, 'fetch', 1800);
+    $totalrec = $this->cache->get("select max(id) as totalrec from #_counter", null, 'fetch', 1800);
+
+    $result['today'] = $todayrec['todayrecord'];
+    $result['yesterday'] = $yesrec['yesterdayrec'];
+    $result['week'] = $weekrec['weekrec'];
+    $result['month'] = $monthrec['monthrec'];
+    $result['total'] = $totalrec['totalrec'];
+
+    return $result;
+  }
+
   public function getOnline()
   {
-    if (session_status() === PHP_SESSION_NONE) {
-      session_start();
-    }
     $now = time();
-    $sessionId = session_id();
-    $ip = $_SERVER['REMOTE_ADDR'] ?? '0.0.0.0';
-    if (empty($_SESSION['counted'])) {
-      $_SESSION['counted'] = true;
-      $this->db->rawQuery("INSERT INTO `tbl_counter` (tm, ip) VALUES (?, ?)",[$now, $ip]);
-    }
-    $this->db->rawQuery("REPLACE INTO tbl_user_online (session, last_activity, ip) VALUES (?, ?, ?)",[$sessionId, $now, $ip]);
-    $this->db->rawQuery("DELETE FROM tbl_user_online WHERE last_activity < ?",[$now - 300]);
-    $todayStart  = strtotime(date('Y-m-d 00:00:00'));
-    $mondayStart = strtotime('monday this week');
-    $monthStart = strtotime(date('Y-m-01 00:00:00'));
+
+    /* ===== TIME RANGE ===== */
+    $daystart   = strtotime('today');
+    $weekstart  = strtotime('monday this week');
+    $monthstart = strtotime(date('Y-m-01'));
+
+    /* ===== ONLINE HIỆN TẠI (10 PHÚT) ===== */
+    $online_time = $now - 600;
+
+    $online_now = $this->d->rawQueryOne(
+      "SELECT COUNT(*) AS total FROM #_user_online WHERE time > ?",
+      [$online_time]
+    )['total'];
+
+    /* ===== ONLINE TRONG NGÀY (IP DUY NHẤT) ===== */
+    $online_day = $this->d->rawQueryOne(
+      "SELECT COUNT(DISTINCT ip) AS total FROM #_user_online WHERE time >= ?",
+      [$daystart]
+    )['total'];
+
+    /* ===== ONLINE TRONG TUẦN ===== */
+    $online_week = $this->d->rawQueryOne(
+      "SELECT COUNT(DISTINCT ip) AS total FROM #_user_online WHERE time >= ?",
+      [$weekstart]
+    )['total'];
+
+    /* ===== ONLINE TRONG THÁNG ===== */
+    $online_month = $this->d->rawQueryOne(
+      "SELECT COUNT(DISTINCT ip) AS total FROM #_user_online WHERE time >= ?",
+      [$monthstart]
+    )['total'];
+
     return [
-      'online' => $this->db->rawQueryOne("SELECT COUNT(*) AS total FROM `tbl_user_online`")['total'] ?? 0,
-      'today'  => $this->db->rawQueryOne("SELECT COUNT(*) AS total FROM `tbl_counter` WHERE tm >= ?", [$todayStart])['total'] ?? 0,
-      'week'   => $this->db->rawQueryOne("SELECT COUNT(*) AS total FROM `tbl_counter` WHERE tm >= ?", [$mondayStart])['total'] ?? 0,
-      'total'  => $this->db->rawQueryOne("SELECT COUNT(*) AS total FROM `tbl_counter`")['total'] ?? 0,
-      'month'  => $this->db->rawQueryOne("SELECT COUNT(*) AS total FROM `tbl_counter` WHERE tm >= ?", [$monthStart])['total'] ?? 0,
+      'now'   => (int)$online_now,
+      'day'   => (int)$online_day,
+      'week'  => (int)$online_week,
+      'month' => (int)$online_month,
     ];
   }
 }

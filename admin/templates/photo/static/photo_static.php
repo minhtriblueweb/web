@@ -24,14 +24,14 @@
       </div>
       <div class="card-body">
         <div class="form-group">
-          <?php foreach ($config['photo']['photo_static'][$type]['status'] as $check => $label): ?>
-            <div class="form-group d-inline-block mb-2 mr-5">
-              <label for="<?= $check ?>-checkbox" class="d-inline-block align-middle mb-0 mr-3 form-label"><?= defined($check) ? constant($check) : $check ?>:</label>
-              <label class="switch switch-success">
-                <input type="checkbox" name="data[status][<?= $check ?>]" class="switch-input custom-control-input .show-checkbox" id="<?= $check ?>-checkbox" <?= $func->is_checked($check, $result['status'] ?? '', $result['id'] ?? '') ?>>
-              </label>
-            </div>
-          <?php endforeach; ?>
+          <?php
+          $status_array = !empty($item['status']) ? explode(',', $item['status']) : [];
+          if (!empty($config['photo']['photo_static'][$type]['status'])) {
+            foreach ($config['photo']['photo_static'][$type]['status'] as $key => $value) {
+              echo $func->is_checked($key, $value, $status_array, $item['id'] ?? null);
+            }
+          }
+          ?>
         </div>
         <div class="row">
           <div class="<?= ($type === 'watermark') ? 'col-xl-4' : 'col-xl-12' ?>">
@@ -42,7 +42,7 @@
                   <div class="upload-file-image rounded mb-3">
                     <div class="d-flex justify-content-center">
                       <div class="border rounded bg-white d-flex align-items-center justify-content-center">
-                        <?= $func->getImage(['file' => $result['file'] ?? '', 'class' => 'img-fluid', 'alt' => $config['photo']['photo_static'][$type]['title_main'], 'title' => $config['photo']['photo_static'][$type]['title_main'], 'id' => 'preview-image', 'style' => 'max-height:100%; max-width:100%;']) ?>
+                        <?= $func->getImage(['file' => $item['file'] ?? '', 'class' => 'img-fluid', 'alt' => $config['photo']['photo_static'][$type]['title_main'], 'title' => $config['photo']['photo_static'][$type]['title_main'], 'id' => 'preview-image', 'style' => 'max-height:100%; max-width:100%;']) ?>
                       </div>
                     </div>
                   </div>
@@ -58,13 +58,13 @@
             </div>
             <?php if ($type === 'watermark'):
               $position   = (int)($options['position'] ?? 1);
-              $per        = (int)$options['per'] ?? '';
-              $small_per  = (int)$options['small_per'] ?? '';
-              $max        = (int)$options['max'] ?? '';
-              $min        = (int)$options['min'] ?? '';
-              $opacity    = (int)$options['opacity'] ?? '';
-              $offset_x   = (int)$options['offset_x'] ?? '';
-              $offset_y   = (int)$options['offset_y'] ?? '';
+              $per        = (int)$options['per'] ?? 40;
+              $small_per  = (int)$options['small_per'] ?? 50;
+              $max        = (int)$options['max'] ?? 500;
+              $min        = (int)$options['min'] ?? 100;
+              $opacity    = (int)$options['opacity'] ?? 100;
+              $offset_x   = (int)$options['offset_x'] ?? 0;
+              $offset_y   = (int)$options['offset_y'] ?? 0;
             ?>
               <div class="form-group">
                 <label><?= vitridongdau ?>:</label>
@@ -73,7 +73,7 @@
                     <label class="<?= ($i === $position) ? 'active' : '' ?>">
                       <input type="radio" name="data[options][position]" value="<?= $i ?>" <?= ($i === $position) ? 'checked' : '' ?>>
                       <?= $func->getImage([
-                        'file' => ($i === $position) ? $result['file'] : '',
+                        'file' => ($i === $position) ? $item['file'] : '',
                         'class' => 'rounded',
                         'alt'   => 'Watermark Position ' . $i,
                         'title' => 'Watermark Position ' . $i,
@@ -94,32 +94,32 @@
 
               <div class="form-group">
                 <label for="per">Tỉ lệ:</label>
-                <input type="text" class="form-control text-sm" id="per" name="data[options][per]" value="<?= $per ?>" placeholder="2">
+                <input min="0" max="100" type="number" class="form-control text-sm" id="per" name="data[options][per]" value="<?= $per ?>" placeholder="2">
               </div>
 
               <div class="form-group">
                 <label for="small_per">Tỉ lệ &lt; 300px:</label>
-                <input type="text" class="form-control text-sm" id="small_per" name="data[options][small_per]" value="<?= $small_per ?>" placeholder="3">
+                <input min="0" max="800" type="number" class="form-control text-sm" id="small_per" name="data[options][small_per]" value="<?= $small_per ?>" placeholder="3">
               </div>
 
               <div class="form-group">
                 <label for="max">Kích thước tối đa:</label>
-                <input type="text" class="form-control text-sm" id="max" name="data[options][max]" value="<?= $max ?>" placeholder="600">
+                <input min="0" max="800" type="number" class="form-control text-sm" id="max" name="data[options][max]" value="<?= $max ?>" placeholder="600">
               </div>
 
               <div class="form-group">
                 <label for="min">Kích thước tối thiểu:</label>
-                <input type="text" class="form-control text-sm" id="min" name="data[options][min]" value="<?= $min ?>" placeholder="100">
+                <input min="0" max="800" type="number" class="form-control text-sm" id="min" name="data[options][min]" value="<?= $min ?>" placeholder="100">
               </div>
 
               <div class="form-group">
                 <label for="offset_x">Độ lệch X:</label>
-                <input type="text" class="form-control" id="offset_x" name="data[options][offset_x]" value="<?= $offset_x ?>">
+                <input min="0" max="800" type="number" class="form-control" id="offset_x" name="data[options][offset_x]" value="<?= $offset_x ?>">
               </div>
 
               <div class="form-group">
                 <label for="offset_y">Độ lệch Y:</label>
-                <input type="text" class="form-control" id="offset_y" name="data[options][offset_y]" value="<?= $offset_y ?>">
+                <input min="0" max="800" type="number" class="form-control" id="offset_y" name="data[options][offset_y]" value="<?= $offset_y ?>">
               </div>
 
               <div class="mt-2">
@@ -132,9 +132,5 @@
         </div>
       </div>
     </div>
-    <input type="hidden" name="data[options][width]" value="<?= $config['photo']['photo_static'][$type]['width'] ?>">
-    <input type="hidden" name="data[options][height]" value="<?= $config['photo']['photo_static'][$type]['height'] ?>">
-    <input type="hidden" name="data[options][zc]" value="<?= substr($config['photo']['photo_static'][$type]['thumb'], -1) ?? 1 ?>">
-    <input type="hidden" name="data[type]" value="<?= $type ?>">
   </form>
 </section>

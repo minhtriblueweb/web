@@ -4,7 +4,7 @@
   <?php endif; ?>
   <a href="<?= htmlspecialchars($v["slug$lang"]) ?>">
     <div class="images">
-      <?= $func->getImageCustom(['file' => $v['file'], 'class' => 'w-100', 'alt'   => htmlspecialchars($v["name$lang"]), 'title' => htmlspecialchars($v["name$lang"]), 'width' => $optsetting_json["san-pham_man_width"], 'height' => $optsetting_json["san-pham_man_height"], 'zc' => $optsetting_json["san-pham_man_zc"], 'lazy'  => true, 'watermark' => $config['product']['san-pham']['watermark']]) ?>
+      <?= $func->getImageCustom(['file' => $v['file'], 'class' => 'w-100', 'alt'   => htmlspecialchars($v["name$lang"]), 'title' => htmlspecialchars($v["name$lang"]), 'width' => $optsetting["san-pham_man_width"], 'height' => $optsetting["san-pham_man_height"], 'zc' => $optsetting["san-pham_man_zc"], 'lazy'  => true, 'watermark' => $config['product']['san-pham']['watermark']]) ?>
     </div>
     <div class="content">
       <div class="title">

@@ -14,7 +14,7 @@ if ($id != '') {
   // Trang bài viết detail
 
   /* Lấy bài viết detail */
-  $rowDetail = $d->rawQueryOne("select id, views, date_created, id_list, id_cat, id_item, id_sub, type, name$lang, slug$lang, desc$lang, content$lang, file from tbl_news where id = ? and type = ? and find_in_set('hienthi',status) limit 0,1", array($id, $type));
+  $rowDetail = $d->rawQueryOne("select id, views, date_updated, id_list, id_cat, id_item, id_sub, type, name$lang, slug$lang, desc$lang, content$lang, file from tbl_news where id = ? and type = ? and find_in_set('hienthi',status) limit 0,1", array($id, $type));
 
   /* Lấy cấp 1 */
   $newsList = $d->rawQueryOne("select id, name$lang, slug$lang from tbl_news_list where id = ? and type = ? and find_in_set('hienthi',status) limit 0,1", array($rowDetail['id_list'], $type));

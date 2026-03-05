@@ -4,7 +4,7 @@ $result = [];
 $keyword = trim($_POST['keyword'] ?? '');
 
 if ($keyword !== '') {
-  $products = $d->rawQuery("select id, id_list, id_cat, id_item, id_sub, id_brand, name$lang, type from `tbl_product` where name$lang like ? order by id desc limit 10",["%$keyword%"]) ?: [];
+  $products = $d->rawQuery("select id, id_list, id_cat, id_item, id_sub, id_brand, name$lang, type from `table_product` where name$lang like ? order by id desc limit 10",["%$keyword%"]) ?: [];
 
   foreach ($products as $row) {
     $result[] = [
@@ -22,7 +22,7 @@ if ($keyword !== '') {
     ];
   }
 
-  $news = $d->rawQuery("select id, id_list, id_cat, id_item, id_sub, name$lang, type from `tbl_news` where name$lang like ? order by id desc limit 10", ["%$keyword%"]) ?: [];
+  $news = $d->rawQuery("select id, id_list, id_cat, id_item, id_sub, name$lang, type from `table_news` where name$lang like ? order by id desc limit 10", ["%$keyword%"]) ?: [];
 
   foreach ($news as $row) {
     $result[] = [

@@ -1,6 +1,6 @@
 <?php
-$linkMan = "index.php?com=contact&act=man&type=lien-he";
-$linkEdit = "index.php?com=contact&act=edit";
+$linkMan = "index.php?com=contact&act=man&type=" . $type;
+$linkEdit = "index.php?com=contact&act=edit&type=" . $type;
 $linkDelete = "index.php?com=contact&act=delete";
 ?>
 <section class="content-header text-sm">
@@ -104,9 +104,7 @@ $linkDelete = "index.php?com=contact&act=delete";
                     <?= $row['email'] ?>
                   </a>
                 </td>
-                <td class="align-middle">
-                  <?= date('H:i - d/m/Y', strtotime($row['date_created'])) ?>
-                </td>
+                <td class="align-middle"><?= date("h:i:s A - d/m/Y", $row['date_created']) ?></td>
                 <?php foreach ($config['contact']['check'] as $attr => $label): ?>
                   <td class="align-middle text-center">
                     <label class="switch switch-success">

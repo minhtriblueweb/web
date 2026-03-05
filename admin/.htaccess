@@ -1,9 +1,0 @@
-RewriteEngine On
-
-# Không rewrite nếu là file hoặc thư mục thật
-RewriteCond %{REQUEST_FILENAME} -f [OR]
-RewriteCond %{REQUEST_FILENAME} -d
-RewriteRule ^ - [L]
-
-# Routing nội bộ (nếu có)
-RewriteRule ^trang-chu$ index.php [L]

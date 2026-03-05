@@ -1,22 +1,9 @@
 <?php
 include "config.php";
 
-$dataSlug = [
-  'slug'       => trim($_POST['slug'] ?? ''),
-  'table'      => trim($_POST['table'] ?? ''),
-  'exclude_id' => (int)($_POST['id'] ?? 0),
-  'lang'       => trim($_POST['lang'] ?? 'vi')
-];
+$dataSlug = array();
+$dataSlug['slug'] = (!empty($_POST['slug'])) ? trim(htmlspecialchars($_POST['slug'])) : '';
+$dataSlug['id'] = (!empty($_POST['id'])) ? htmlspecialchars($_POST['id']) : 0;
+$dataSlug['copy'] = (!empty($_POST['copy'])) ? htmlspecialchars($_POST['copy']) : 0;
 
-$check = $func->checkSlug($dataSlug);
-
-$response = ['status' => 0];
-
-if ($check === false) {
-  $response['status'] = 1;
-} elseif (is_string($check)) {
-  $response['message'] = $check;
-}
-
-echo json_encode($response);
-exit;
+echo ($func->checkSlug($dataSlug) == 'exist') ? 0 : 1;

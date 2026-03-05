@@ -1,86 +1,58 @@
 <?php
-session_start();
+include "config.php";
 
-if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-  http_response_code(403);
-  exit('Forbidden');
-}
-
-require_once __DIR__ . '/../init.php'; // Gọi hệ thống (Database, Functions, config...)
-require_once LIBRARIES . "config-type.php"; // Load cấu hình các loại (product, news,...)
-
-// Khởi tạo response mặc định
-$response = ['success' => true, 'msg' => 'Upload thành công'];
-
-// Lấy dữ liệu POST
+/* Xử lý params */
 $flag = true;
-$params = [];
-$paramString = $_POST['params'] ?? null;
-if ($paramString) parse_str(base64_decode(addslashes($paramString)), $params);
+$param = (!empty($_POST['params'])) ? $_POST['params'] : null;
+$params = null;
+if ($param) parse_str(base64_decode(addslashes($param)), $params);
+$id = (!empty($params['id'])) ? $params['id'] : 0;
+$com = (!empty($params['com'])) ? $params['com'] : '';
+$type = (!empty($params['type'])) ? $params['type'] : '';
+$hash = (!empty($_POST['hash'])) ? addslashes($_POST['hash']) : '';
+$numb = (!empty($_POST['numb'])) ? (int)$_POST['numb'] : 0;
+$e = (!empty($params['act'])) ? @explode("_", $params['act']) : null;
+if ($e) $ex = (count($e) > 1) ? end($e) : '';
+else $ex = '';
+$kind = "man" . (($ex) ? ("_" . $ex) : '');
+$data = array('success' => true, 'msg' => 'Upload thanh cong');
+/* Xử lý $_FILE - Path image */
+$myFile = (!empty($_FILES['files'])) ? $_FILES['files'] : null;
+$_FILES['file'] = array('name' => $myFile['name'][0], 'type' => $myFile['type'][0], 'tmp_name' => $myFile['tmp_name'][0], 'error' => $myFile['error'][0], 'size' => $myFile['size'][0]);
+$file_name = $func->uploadName($_FILES['file']['name']);
+$upload_path = array("product" => UPLOAD_PRODUCT, "news" => UPLOAD_NEWS, "static" => UPLOAD_NEWS);
 
-$id = (int)($params['id'] ?? 0);
-$com = $params['com'] ?? '';
-$type = $params['type'] ?? '';
-$hash = addslashes($_POST['hash'] ?? '');
-$numb = (int)($_POST['numb'] ?? 0);
+/* Xử lý lưu image */
+if (empty($config[$com][$type]['img_type'])) {
+  $data_file = array();
 
-// Phân tích act để lấy kind
-$act = $params['act'] ?? '';
-$actParts = explode('_', $act);
-$ex = count($actParts) > 1 ? end($actParts) : '';
-$kind = 'man' . ($ex ? "_$ex" : '');
-
-// Lấy file upload
-$myFile = $_FILES['files'] ?? null;
-if (!$myFile || empty($myFile['name'][0])) {
-  echo json_encode(['success' => false, 'msg' => 'Không có file được tải lên']);
-  exit;
-}
-
-// Chuyển file đầu tiên sang định dạng $_FILES['file']
-$_FILES['file'] = [
-  'name' => $myFile['name'][0],
-  'type' => $myFile['type'][0],
-  'tmp_name' => $myFile['tmp_name'][0],
-  'error' => $myFile['error'][0],
-  'size' => $myFile['size'][0]
-];
-
-// Xác định đường dẫn upload theo $com
-$uploadDir = $upload_paths[$com] ?? '';
-
-// Tên file chuẩn hoá
-$file_name = $func->uploadName($_FILES['file']['name'] ?? 'image');
-
-// Nếu type tồn tại trong config (tức là cho phép upload)
-if (!empty($config[$com][$type]['img_type'])) {
-  $dataInsert = [
-    'id_parent'     => $id,
-    'com'           => $com,
-    'type'          => $type,
-    'kind'          => $kind,
-    'val'           => $type,
-    'namevi'        => '',
-    'status'        => 'hienthi',
-    'date_created'  => time()
-  ];
-
-  if (!$id) {
-    $dataInsert['hash'] = $hash;
+  if (empty($id)) {
+    $data_file['hash'] = $hash;
   }
 
-  // Tính numb mới
-  $max = $d->rawQueryOne("SELECT MAX(numb) as max_numb FROM #_gallery WHERE com = ? AND type = ? AND kind = ? AND val = ? AND id_parent = ?", [$com, $type, $kind, $type, $id]);
-  $dataInsert['numb'] = (int)($max['max_numb'] ?? 0) + 1;
+  $data_file['numb'] = 0;
+  $data_file['namevi'] = "";
+  $data_file['id_parent'] = $id;
+  $data_file['com'] = $com;
+  $data_file['type'] = $type;
+  $data_file['kind'] = $kind;
+  $data_file['val'] = $type;
+  $data_file['status'] = 'hienthi';
+  $data_file['date_created'] = time();
+  $max_numb = $d->rawQueryOne("select max(numb) as max_numb from #_gallery where com = ? and  type = ? and kind = ? and val = ? and id_parent = ?", array($com, $type, $kind, $type, $id));
+  $data_file['numb'] = $max_numb['max_numb'] + 1;
 
-  // Insert dữ liệu
-  if ($d->insert('gallery', $dataInsert)) {
+  if ($d->insert('gallery', $data_file)) {
     $id_insert = $d->getLastInsertId();
 
     if ($func->hasFile("file")) {
-      if ($photo = $func->uploadImage("file", $config[$com][$type]['img_type'], "../" . $uploadDir, $file_name)) {
+      $photoUpdate = array();
+
+      if ($photo = $func->uploadImage("file", ".jpg|.gif|.png|.jpeg|.gif|.webp|.WEBP", '../' . $upload_path[$com], $file_name)) {
+        $photoUpdate['photo'] = $photo;
         $d->where('id', $id_insert);
-        $d->update('gallery', ['photo' => $photo]);
+        $d->update('gallery', $photoUpdate);
+        unset($photoUpdate);
       }
     }
   } else {
@@ -91,7 +63,7 @@ if (!empty($config[$com][$type]['img_type'])) {
 }
 
 if (!$flag) {
-  $response = ['success' => false, 'msg' => 'Upload thất bại'];
+  $data = array('success' => false, 'msg' => "upload that bai");
 }
 
-echo json_encode($response);
+echo json_encode($data);

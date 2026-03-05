@@ -8,9 +8,9 @@ if ($act === 'update') {
   if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['upload'])) {
     $func->save_data($_POST['data'], $_FILES, $seo_data['id'], [
       'table'      => $table,
-      'type'       => $type,
-      'redirect'   => $linkMan
+      'type'       => $type
     ]);
+    $func->transfer(capnhatdulieuthanhcong, $linkMan);
   }
   $template = "seopage/seopage";
 } else {

@@ -7,7 +7,7 @@
       <?= $flash->getMessages("frontend") ?>
       <div class="content-main content-contact-full">
         <div class="contact-article row">
-          <div class="contact-text col-lg-6 mb-3" data-aos="fade-right" data-aos-duration="500"><?= $static["content"] ?></div>
+          <div class="contact-text col-lg-6 mb-3" data-aos="fade-right" data-aos-duration="500"><?= htmlspecialchars_decode($static["content"] ?? '' ) ?></div>
           <form data-aos="fade-left" data-aos-duration="500" class="contact-form validation-contact col-lg-6 mb-3" novalidate="" method="post" action="" enctype="multipart/form-data">
             <div class="social"><p class="text-uppercase"><?= dangkynhantin ?></p></div>
             <div class="row-20 row">

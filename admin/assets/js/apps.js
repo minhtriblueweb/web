@@ -1,4 +1,21 @@
-
+function deletePhoto(_root) {
+  let id = _root.data('id');
+  let upload = _root.data('upload');
+  let action = _root.data('action');
+  let table = _root.data('table');
+  $.ajax({
+    url: 'api/deletephoto.php',
+    type: 'POST',
+    data: { id: id, upload: upload, action: action, table: table },
+    success: function (data) {
+      _root.parents('.photoUpload-detail').html(data);
+    }
+  })
+}
+/* Rounde number */
+function roundNumber(rnum, rlength) {
+  return Math.round(rnum * Math.pow(10, rlength)) / Math.pow(10, rlength);
+}
 /* Validation form */
 function validateForm(ele) {
   window.addEventListener(
@@ -588,7 +605,7 @@ function seoPreview(lang) {
 
   if ($(seourlPreviewText).length) {
     $(seourlPreviewText).html(
-      CONFIG_BASE_RTRIM + ' › ' + (slug ? truncate(slug, maxSlugLength) : '')
+      CONFIG_BASE.replace(/\/+$/, '') + ' › ' + (slug ? truncate(slug, maxSlugLength) : '')
     );
   }
 }
@@ -763,30 +780,44 @@ function handleSlugStatus(status, lang, message = '') {
 
   $(".submit-check").prop("disabled", !canSubmit);
 }
-
-function slugCheck(lang) {
-  const slug = $(`#slug${lang}`).val();
-  const id = $(".slug-id").val();
-  const table = $(".slug-table").val();
-  if (!slug) {
-    handleSlugStatus(-1, lang);
-    return;
+function slugAlert(result, lang) {
+  if (result == 1) {
+    $('#alert-slug-danger' + lang).addClass('d-none');
+    $('#alert-slug-success' + lang).removeClass('d-none');
+  } else if (result == 0) {
+    $('#alert-slug-danger' + lang).removeClass('d-none');
+    $('#alert-slug-success' + lang).addClass('d-none');
+  } else if (result == 2) {
+    $('#alert-slug-danger' + lang).addClass('d-none');
+    $('#alert-slug-success' + lang).addClass('d-none');
   }
-  slugVersion[lang]++;
-  const currentVersion = slugVersion[lang];
-  $.ajax({
-    url: "api/slug.php",
-    type: "POST",
-    dataType: "json",
-    data: { slug, id, table, lang },
-    success: function (res) {
-      if (slugVersion[lang] === currentVersion) {
-        handleSlugStatus(res.status, lang, res.message);
-      }
-    },
-    error: function () {
-      if (slugVersion[lang] === currentVersion) {
-        handleSlugStatus(-1, lang);
+}
+function slugCheck() {
+  var sluglang = LANGS;
+  var slugInput = $('.slug-input');
+  var id = $('.slug-id').val();
+  var copy = $('.slug-copy').val();
+
+  slugInput.each(function (index) {
+    var slugId = $(this).attr('id');
+    var slug = $(this).val();
+    var lang = slugId.substr(slugId.length - 2);
+    if (sluglang.indexOf(lang) >= 0) {
+      if (slug) {
+        $.ajax({
+          url: 'api/slug.php',
+          type: 'POST',
+          dataType: 'html',
+          async: false,
+          data: {
+            slug: slug,
+            id: id,
+            copy: copy
+          },
+          success: function (result) {
+            slugAlert(result, lang);
+          }
+        });
       }
     }
   });
@@ -969,57 +1000,49 @@ $(document).ready(function () {
   });
 });
 
-
 /* Login */
-
 function login() {
-  var username = $("#username").val();
-  var password = $("#password").val();
-
-  if (
-    $(".alert-login").hasClass("alert-danger") ||
-    $(".alert-login").hasClass("alert-success")
-  ) {
-    $(".alert-login").removeClass("alert-danger alert-success");
-    $(".alert-login").addClass("d-none");
-    $(".alert-login").html("");
+  var username = $('#username').val();
+  var password = $('#password').val();
+  var xsrf_token = $('#xsrf_token').val();
+  if ($('.alert-login').hasClass('alert-danger') || $('.alert-login').hasClass('alert-success')) {
+    $('.alert-login').removeClass('alert-danger alert-success');
+    $('.alert-login').addClass('d-none');
+    $('.alert-login').html('');
   }
-
-  if ($(".show-password").hasClass("active")) {
-    $(".show-password").removeClass("active");
-    $("#password").attr("type", "password");
-    $(".show-password").find("span").toggleClass("fas fa-eye fas fa-eye-slash");
+  if ($('.show-password').hasClass('active')) {
+    $('.show-password').removeClass('active');
+    $('#password').attr('type', 'password');
+    $('.show-password').find('span').toggleClass('fas fa-eye fas fa-eye-slash');
   }
-
-  $(".show-password").addClass("disabled");
-  $(".btn-login .sk-chase").removeClass("d-none");
-  $(".btn-login span").addClass("d-none");
-  $(".btn-login").attr("disabled", true);
-  $("#username").attr("disabled", true);
-  $("#password").attr("disabled", true);
-
+  $('.show-password').addClass('disabled');
+  $('.btn-login .sk-chase').removeClass('d-none');
+  $('.btn-login span').addClass('d-none');
+  $('.btn-login').attr('disabled', true);
+  $('#username').attr('disabled', true);
+  $('#password').attr('disabled', true);
   $.ajax({
-    type: "POST",
-    dataType: "json",
-    url: "api/login.php",
+    type: 'POST',
+    dataType: 'json',
+    url: 'api/login.php',
     async: false,
-    data: { username: username, password: password },
+    data: { username: username, password: password, xsrf_token: xsrf_token},
     success: function (result) {
       if (result.success) {
-        window.location = "index.php";
+        window.location = 'index.php';
       } else if (result.error) {
-        $(".alert-login").removeClass("d-none");
-        $(".show-password").removeClass("disabled");
-        $(".btn-login .sk-chase").addClass("d-none");
-        $(".btn-login span").removeClass("d-none");
-        $(".btn-login").attr("disabled", false);
-        $("#username").attr("disabled", false);
-        $("#password").attr("disabled", false);
-        $(".alert-login").removeClass("alert-success");
-        $(".alert-login").addClass("alert-danger");
-        $(".alert-login").html(result.error);
+        $('.alert-login').removeClass('d-none');
+        $('.show-password').removeClass('disabled');
+        $('.btn-login .sk-chase').addClass('d-none');
+        $('.btn-login span').removeClass('d-none');
+        $('.btn-login').attr('disabled', false);
+        $('#username').attr('disabled', false);
+        $('#password').attr('disabled', false);
+        $('.alert-login').removeClass('alert-success');
+        $('.alert-login').addClass('alert-danger');
+        $('.alert-login').html(result.error);
       }
-    },
+    }
   });
 }
 
@@ -1299,6 +1322,7 @@ $(document).ready(function () {
       url: "api/comment.php",
     });
   }
+
   /* Ajax category */
   if ($('.select-category')) {
     $('body').on('change', '.select-category', function () {
@@ -1307,6 +1331,7 @@ $(document).ready(function () {
       var level = parseInt($(this).data('level'));
       var table = $(this).data('table');
       var type = $(this).data('type');
+
       if ($('#' + child).length) {
         $.ajax({
           url: 'api/category.php',
@@ -1319,6 +1344,7 @@ $(document).ready(function () {
           },
           success: function (result) {
             var op = "<option value='0'>" + LANG['chondanhmuc'] + "</option>";
+
             if (level == 0) {
               $('#id_cat').html(op);
               $('#id_item').html(op);
@@ -1332,6 +1358,7 @@ $(document).ready(function () {
             $('#' + child).html(result);
           }
         });
+
         return false;
       }
     });

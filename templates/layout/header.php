@@ -22,7 +22,7 @@
       <div class="logo">
         <?php if ($logo) : ?>
           <a href="./">
-            <?= $func->getImageCustom(['file' => $logo['file'], 'width'  => 200, 'height'  => 200, 'zc' => 4, 'alt' => $optsetting["name$lang"], 'title' => $optsetting["name$lang"], 'lazy' => false]) ?>
+            <?= $func->getImageCustom(['file' => $logo['file'], 'width'  => 200, 'height'  => 200, 'zc' => 4, 'alt' => $setting["name$lang"], 'title' => $setting["name$lang"], 'lazy' => false]) ?>
           </a>
         <?php endif ?>
       </div>

@@ -1,6 +1,5 @@
 <?php
 include "config.php";
-
 if (!empty($_POST['id'])) {
   $table = (!empty($_POST['table'])) ? htmlspecialchars($_POST['table']) : '';
   $id = (!empty($_POST['id'])) ? htmlspecialchars($_POST['id']) : 0;

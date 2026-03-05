@@ -1,6 +1,8 @@
 <?php
 if (!defined('SOURCES')) die("Error");
-if (!isset($config['newsletter'])) $func->transfer(trangkhongtontai, "index.php", false);
+$arrCheck = array();
+foreach ($config['newsletter'] as $k => $v) $arrCheck[] = $k;
+if (!count($arrCheck) || !in_array($type, $arrCheck)) $func->transfer(trangkhongtontai, "index.php", false);
 
 $table = 'tbl_newsletter';
 $linkMan = "index.php?com=newsletter&act=man&type=" . $type;
@@ -36,7 +38,7 @@ switch ($act) {
 /* View newsletter */
 function viewMans()
 {
-  global $func, $d, $table, $keyword, $curPage, $perPage, $paging, $items;
+  global $func, $d, $type, $table, $keyword, $curPage, $perPage, $paging, $items;
 
   $keyword = trim($_GET['keyword'] ?? '');
   $curPage = max(1, (int)($_GET['p'] ?? 1));
@@ -45,9 +47,8 @@ function viewMans()
   $where  = [];
   $params = [];
 
-  // lọc type = dang-ky-nhan-tin
   $where[]  = "type = ?";
-  $params[] = "dang-ky-nhan-tin";
+  $params[] = $type;
 
   // tìm kiếm theo fullname
   if ($keyword !== '') {
@@ -77,10 +78,10 @@ function viewMans()
 function editMan()
 {
   global $d, $func, $table, $linkMan, $id, $item, $linkEdit;
-  $id = (isset($_GET['id']) && is_numeric($_GET['id'])) ? (int)$_GET['id'] : null;
+  $id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
   $item = [];
   if ($id) {
-    $item = $d->rawQueryOne("SELECT * FROM `$table` WHERE id = ? LIMIT 1", [$id]);
+    $item = $d->rawQueryOne("SELECT * FROM `$table` WHERE id = ? LIMIT 0,1", [$id]);
     if (!$item) {
       $func->transfer(dulieukhongcothuc, $linkMan, false);
     }
@@ -90,14 +91,30 @@ function editMan()
     $data['email'] = trim($data['email'] ?? '');
     $data['phone'] = trim($data['phone'] ?? '');
     if (!$func->isEmail($data['email'])) {
-      $func->transfer(emailkhonghople, $linkEdit .= "&id=" . $id, false);
+      $func->Notify(emailkhonghople, $linkEdit .= "&id=" . $id, 'error');
     }
-    $save = $func->save_data($data, $_FILES, $id, [
-      'table'    => $table,
-      'redirect' => $linkMan
-    ]);
-    if ($save) {
-      $func->transfer(capnhatdulieuthanhcong, $linkMan, true);
+    if (!$func->isPhone($data['phone'])) {
+      $func->Notify(sodienthoaikhonghople, $linkEdit .= "&id=" . $id, 'error');
+    }
+    $data = (!empty($_POST['data'])) ? $_POST['data'] : null;
+    if ($data) {
+      foreach ($data as $column => $value) {
+        $data[$column] = htmlspecialchars($func->sanitize($value));
+      }
+    }
+    if ($id) {
+      $d->where('id', $id);
+      if ($d->update($table, $data)) {
+        if (isset($_POST['save-here'])) {
+          $func->Notify(capnhatdulieuthanhcong, $linkEdit .= "&id=" . $id, 'success');
+        } else {
+          $func->transfer(capnhatdulieuthanhcong, $linkMan);
+        }
+      } else {
+        $func->transfer(capnhatdulieubiloi, $linkEdit .= "&id=" . $id, false);
+      }
+    } else {
+      $func->transfer(dulieurong, $linkEdit .= "&id=" . $id, false);
     }
   }
 }
@@ -106,22 +123,17 @@ function editMan()
 function deleteMan()
 {
   global $func, $table, $type, $linkMan;
-  $id = !empty($_GET['id']) ? (int)$_GET['id'] : 0;
-  if ($id) {
-    $func->delete_data([
-      'id' => (int)$_GET['id'],
-      'table' => $table,
-      'type' => $type,
-      'redirect' => $linkMan
-    ]);
-  } elseif (!empty($_GET['listid'])) {
-    $func->deleteMultiple_data([
-      'listid' => $_GET['listid'],
-      'table' => $table,
-      'type' => $type,
-      'redirect' => $linkMan
-    ]);
-  } else {
-    $func->transfer(khongnhanduocdulieu, $linkMan, false);
+  $options = [
+    'table' => $table,
+    'type' => $type,
+    'redirect' => $linkMan
+  ];
+  if ($id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT)) {
+    $func->delete_data($options + ['id' => $id]);
+    return;
+  }
+  if ($listid = ($_GET['listid'] ?? '')) {
+    $func->deleteMultiple_data($options + ['listid' => $listid]);
+    return;
   }
 }

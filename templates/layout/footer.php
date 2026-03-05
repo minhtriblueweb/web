@@ -13,7 +13,7 @@ $background_footer = $d->rawQueryOne("SELECT `file` FROM tbl_photo WHERE type = 
         <div class="logo-footer">
           <?php if ($logo) : ?>
             <a href="./">
-              <?= $func->getImageCustom(['file' => $logo['file'], 'width'  => 200, 'height'  => 200, 'zc' => 4, 'alt' => $optsetting["name$lang"], 'title' => $optsetting["name$lang"], 'lazy' => false]) ?>
+              <?= $func->getImageCustom(['file' => $logo['file'], 'width'  => 200, 'height'  => 200, 'zc' => 4, 'alt' => $setting["name$lang"], 'title' => $setting["name$lang"], 'lazy' => false]) ?>
             </a>
           <?php endif ?>
         </div>
@@ -32,9 +32,9 @@ $background_footer = $d->rawQueryOne("SELECT `file` FROM tbl_photo WHERE type = 
       </div>
       <div class="footer-right">
         <div class="box-policy pe-3">
-          <div class="footer-policy">
-            <p class="footer-title">Chính sách hỗ trợ</p>
-            <?php if (!empty($show_chinhsach)): ?>
+          <?php if (!empty($show_chinhsach)): ?>
+            <div class="footer-policy">
+              <p class="footer-title">Chính sách hỗ trợ</p>
               <ul class="footer-ul">
                 <?php foreach ($show_chinhsach as $row): ?>
                   <li>
@@ -42,22 +42,20 @@ $background_footer = $d->rawQueryOne("SELECT `file` FROM tbl_photo WHERE type = 
                   </li>
                 <?php endforeach; ?>
               </ul>
-            <?php endif; ?>
-
-          </div>
-
-          <div class="footer-policy">
-            <p class="footer-title">PHƯƠNG THỨC THANH TOÁN</p>
-            <div class="ibank-wrapper">
-              <?php if (!empty($payment)): ?>
+            </div>
+          <?php endif; ?>
+          <?php if (!empty($payment)): ?>
+            <div class="footer-policy">
+              <p class="footer-title">PHƯƠNG THỨC THANH TOÁN</p>
+              <div class="ibank-wrapper">
                 <?php foreach ($payment as $row): ?>
                   <span class="ibank scale-img">
                     <?= $func->getImageCustom(['file' =>  $row['file'], 'width' => 72, 'height' => 40, 'zc' => 2, 'alt' => $row["name$lang"], 'title' => $row["name$lang"], 'lazy' => true]) ?>
                   </span>
                 <?php endforeach; ?>
-              <?php endif; ?>
+              </div>
             </div>
-          </div>
+          <?php endif; ?>
         </div>
 
         <div class="box-policy">
@@ -157,7 +155,7 @@ $background_footer = $d->rawQueryOne("SELECT `file` FROM tbl_photo WHERE type = 
         <a
           title="<?= $v["name$lang"] ?>"
           href="<?= $v['link'] ?>"
-          <?= ($v['link'] !== BASE.'gio-hang') ? 'target="_blank"' : '' ?>>
+          <?= ($v['link'] !== BASE . 'gio-hang') ? 'target="_blank"' : '' ?>>
           <?= $func->getImageCustom([
             'file'   => $v['file'],
             'width'  => 30,

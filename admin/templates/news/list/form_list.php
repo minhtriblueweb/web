@@ -1,3 +1,25 @@
+<?php
+$linkMan = "index.php?com=news&act=man_list&type=" . $type;
+$linkSave = "index.php?com=news&act=save_list&type=" . $type;
+/* Check cols */
+if (isset($config['news'][$type]['gallery_list']) && count($config['news'][$type]['gallery_list']) > 0) {
+  foreach ($config['news'][$type]['gallery_list'] as $key => $value) {
+    if ($key == $type) {
+      $keyGallery = $key;
+      $flagGallery = true;
+      break;
+    }
+  }
+}
+
+if ((!empty($config['news'][$type]['images_list']))) {
+  $colLeft = "col-xl-8";
+  $colRight = "col-xl-4";
+} else {
+  $colLeft = "col-12";
+  $colRight = "d-none";
+}
+?>
 <section class="content-header text-sm">
   <div class="container-fluid">
     <div class="row">
@@ -21,7 +43,7 @@
       <a class="btn btn-sm bg-gradient-danger" href="<?= $linkMan ?>" title="<?= thoat ?>"><i class="fas fa-sign-out-alt mr-2"></i><?= thoat ?></a>
     </div>
     <div class="row">
-      <div class="col-xl-8">
+      <div class="<?= $colLeft ?>">
         <?php if (!empty($config['news'][$type]['slug_list'])): ?>
           <?php include TEMPLATE . LAYOUT . 'slug.php'; ?>
         <?php endif; ?>
@@ -68,7 +90,7 @@
                           class="form-control for-seo text-sm"
                           name="data[name<?= $k ?>]" id="name<?= $k ?>"
                           placeholder="<?= tieude ?> (<?= $k ?>)"
-                          value="<?= $_POST['name' . $k] ?? ($result['name' . $k] ?? '') ?>" <?= ($k == $lang) ? 'required' : '' ?> />
+                          value="<?= $_POST['name' . $k] ?? ($item['name' . $k] ?? '') ?>" <?= ($k == $lang) ? 'required' : '' ?> />
                       </div>
 
                       <!-- Mô tả -->
@@ -77,7 +99,7 @@
                           <label for="desc<?= $k ?>"><?= mota ?> (<?= $k ?>):</label>
                           <textarea rows="4" class="form-control for-seo text-sm <?= !empty($config['news'][$type]['desc_cke_list']) ? 'form-control-ckeditor' : '' ?>"
                             name="data[desc<?= $k ?>]" id="desc<?= $k ?>"
-                            placeholder="<?= mota ?> (<?= $k ?>)"><?= $_POST['desc' . $k] ?? ($result['desc' . $k] ?? '') ?></textarea>
+                            placeholder="<?= mota ?> (<?= $k ?>)"><?= $_POST['desc' . $k] ?? ($item['desc' . $k] ?? '') ?></textarea>
                         </div>
                       <?php endif; ?>
 
@@ -87,7 +109,7 @@
                           <label for="content<?= $k ?>"><?= mota ?> (<?= $k ?>):</label>
                           <textarea rows="4" class="form-control for-seo text-sm <?= !empty($config['news'][$type]['content_cke_list']) ? 'form-control-ckeditor' : '' ?>"
                             name="data[content<?= $k ?>]" id="content<?= $k ?>"
-                            placeholder="<?= mota ?> (<?= $k ?>)"><?= $_POST['content' . $k] ?? ($result['content' . $k] ?? '') ?></textarea>
+                            placeholder="<?= mota ?> (<?= $k ?>)"><?= $_POST['content' . $k] ?? ($item['content' . $k] ?? '') ?></textarea>
                         </div>
                       <?php endif; ?>
                     </div>
@@ -95,10 +117,35 @@
                 </div>
               </div>
             </div>
+            <div class="card card-primary card-outline text-sm">
+              <div class="card-header">
+                <h3 class="card-title"><?= thongtin ?></h3>
+                <div class="card-tools">
+                  <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
+                </div>
+              </div>
+              <div class="card-body">
+                <div class="form-group">
+                  <?php
+                  $status_array = !empty($item['status']) ? explode(',', $item['status']) : [];
+                  if (!empty($config['news'][$type]['check_list'])) {
+                    foreach ($config['news'][$type]['check_list'] as $key => $value) {
+                      echo $func->is_checked($key, $value, $status_array, $item['id'] ?? null);
+                    }
+                  }
+                  ?>
+                </div>
+                <div class="form-group">
+                  <label for="numb" class="d-inline-block align-middle mb-0 mr-2"><?= sothutu ?>:</label>
+                  <input type="number" class="form-control form-control-mini d-inline-block align-middle text-sm" min="0"
+                    name="data[numb]" id="numb" placeholder="<?= sothutu ?>" value="<?= $_POST['numb'] ?? (!empty($id) ? $item['numb'] : '1') ?>" />
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
-      <div class="col-xl-4">
+      <div class="<?= $colRight ?>">
         <?php if (!empty($config['news'][$type]['images_list'])): ?>
           <div class="card card-primary card-outline text-sm">
             <div class="card-header">
@@ -112,37 +159,12 @@
             <div class="card-body">
               <?php
               $photoDetail = array();
-              $photoDetail['image'] = $result['file'] ?? '';
+              $photoDetail['image'] = $item['file'] ?? '';
               $photoDetail['dimension'] = "Width: " . $config['news'][$type]['width_list'] . " px - Height: " . $config['news'][$type]['height_list'] . " px (" . $config['news'][$type]['img_type_list'] . ")";
               include TEMPLATE . LAYOUT . "image.php"; ?>
             </div>
           </div>
         <?php endif; ?>
-        <div class="card card-primary card-outline text-sm">
-          <div class="card-header">
-            <h3 class="card-title"><?= thongtin ?></h3>
-            <div class="card-tools">
-              <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
-            </div>
-          </div>
-          <div class="card-body">
-            <div class="form-group">
-              <?php foreach ($config['news'][$type]['check_list'] as $check => $label): ?>
-                <div class="form-group d-inline-block mb-2 mr-4">
-                  <label for="<?= $check ?>-checkbox" class="d-inline-block align-middle mb-0 mr-3 form-label"><?= defined($check) ? constant($check) : $check ?>:</label>
-                  <label class="switch switch-success">
-                    <input type="checkbox" name="data[status][<?= $check ?>]" class="switch-input custom-control-input .show-checkbox" id="<?= $check ?>-checkbox" <?= $func->is_checked($check, $result['status'] ?? '', $id ?? '') ?>>
-                  </label>
-                </div>
-              <?php endforeach; ?>
-            </div>
-            <div class="form-group">
-              <label for="numb" class="d-inline-block align-middle mb-0 mr-2"><?= sothutu ?>:</label>
-              <input type="number" class="form-control form-control-mini d-inline-block align-middle text-sm" min="0"
-                name="data[numb]" id="numb" placeholder="<?= sothutu ?>" value="<?= $_POST['numb'] ?? (!empty($id) ? $result['numb'] : '1') ?>" />
-            </div>
-          </div>
-        </div>
       </div>
     </div>
     <?php if (!empty($config['news'][$type]['seo_list'])): ?>

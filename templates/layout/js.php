@@ -67,7 +67,7 @@ echo $js->get();
     </script>
   <?php } ?>
   <!-- Js Body -->
-  <?= $func->decodeHtmlChars($optsetting['bodyjs']) ?>
+  <?= $func->decodeHtmlChars($setting['bodyjs']) ?>
 <?php } ?>
 <!-- Js Structdata -->
 <?php include TEMPLATE . LAYOUT . "strucdata.php"; ?>

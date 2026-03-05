@@ -134,7 +134,7 @@ $linkDelete = "index.php?com=newsletter&act=delete&type=" . $type;
 
                 <?php if (!empty($cfg['show_date'])) { ?>
                   <td class="align-middle">
-                    <?= date('H:i:s - d/m/Y', strtotime($item['date_created'])) ?>
+                    <?= date("h:i:s A - d/m/Y", $item['date_created']) ?>
                   </td>
                 <?php } ?>
 

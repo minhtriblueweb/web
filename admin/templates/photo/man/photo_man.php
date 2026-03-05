@@ -1,7 +1,9 @@
 <?php
-$linkForm   = "index.php?com=photo&act=photo_form&type=" . $type;
-$linkEdit   = "$linkForm&id=";
+$linkMan   = "index.php?com=photo&act=photo_man&type=" . $type;
+$linkEdit = $linkForm = "index.php?com=photo&act=photo_form&type=" . $type;
+$linkCopy = "index.php?com=photo&act=copy&type=" . $type;
 $linkDelete = "index.php?com=photo&act=delete&type=" . $type;
+$copyImg = !empty($config['photo'][$type]['copy_image']);
 ?>
 <section class="content-header text-sm">
   <div class="container-fluid">
@@ -50,15 +52,17 @@ $linkDelete = "index.php?com=photo&act=delete&type=" . $type;
             <?php if (!empty($config['photo']['photo_man'][$type]['link_photo'])): ?>
               <th class="align-middle">Link</th>
             <?php endif; ?>
-            <?php foreach ($config['photo']['photo_man'][$type]['status_photo'] as $attr => $label): ?>
-              <th class="align-middle text-center"><?= defined($attr) ? constant($attr) : $attr ?></th>
-            <?php endforeach; ?>
+            <?php if (isset($config['photo']['photo_man'][$type]['check_photo'])) {
+              foreach ($config['photo']['photo_man'][$type]['check_photo'] as $key => $value) { ?>
+                <th class="align-middle text-center"><?= $value ?></th>
+            <?php }
+            } ?>
             <th class="align-middle text-center"><?= thaotac ?></th>
           </tr>
         </thead>
         <tbody>
-          <?php if (!empty($show_data)): ?>
-            <?php foreach ($show_data as $row): ?>
+          <?php if (!empty($item)): ?>
+            <?php foreach ($item as $row): ?>
               <tr>
                 <!-- Checkbox chọn nhiều -->
                 <td class="align-middle">
@@ -70,14 +74,13 @@ $linkDelete = "index.php?com=photo&act=delete&type=" . $type;
 
                 <!-- Số thứ tự -->
                 <td class="align-middle">
-                  <input type="number" class="form-control form-control-mini m-auto update-numb" min="0"
-                    value="<?= $row['numb'] ?>" data-id="<?= $row['id'] ?>" data-table="<?= $table ?>">
+                  <input type="number" class="form-control form-control-mini m-auto update-numb" min="0" value="<?= $row['numb'] ?>" data-id="<?= $row['id'] ?>" data-table="<?= $table ?>">
                 </td>
 
                 <!-- Hình ảnh -->
                 <?php if (!empty($config['photo']['photo_man'][$type]['images_photo'])): ?>
                   <td class="align-middle">
-                    <a href="<?= $linkEdit . $row['id'] ?>" title="<?= $row["name$lang"] ?>">
+                    <a href="<?= $linkEdit ?>&id=<?= $row['id'] ?>" title="<?= $row["name$lang"] ?>">
                       <?= $func->getImage([
                         'file' => $row['file'],
                         'class' => 'rounded img-preview',
@@ -89,7 +92,7 @@ $linkDelete = "index.php?com=photo&act=delete&type=" . $type;
                 <?php endif; ?>
                 <!-- Tên -->
                 <td class="align-middle">
-                  <a class="text-dark text-break" href="<?= $linkEdit . $row['id'] ?>" title="<?= $row["name$lang"] ?>">
+                  <a class="text-dark text-break" href="<?= $linkEdit ?>&id=<?= $row['id'] ?>" title="<?= $row["name$lang"] ?>">
                     <?= $row["name$lang"] ?>
                   </a>
                 </td>
@@ -101,7 +104,7 @@ $linkDelete = "index.php?com=photo&act=delete&type=" . $type;
                   </td>
                 <?php endif; ?>
 
-                <?php foreach ($config['photo']['photo_man'][$type]['status_photo'] as $attr => $label): ?>
+                <?php foreach ($config['photo']['photo_man'][$type]['check_photo'] as $attr => $label): ?>
                   <td class="align-middle text-center">
                     <label class="switch switch-success">
                       <input type="checkbox" class="switch-input custom-control-input show-checkbox"
@@ -116,10 +119,10 @@ $linkDelete = "index.php?com=photo&act=delete&type=" . $type;
 
                 <!-- Hành động -->
                 <td class="align-middle text-center text-md text-nowrap">
-                  <a class="text-primary mr-2" href="<?= $linkEdit . $row['id'] ?>" title="<?= chinhsua ?>">
+                  <a class="text-primary mr-2" href="<?= $linkEdit ?>&id=<?= $row['id'] ?>" title="<?= chinhsua ?>">
                     <i class="fas fa-edit"></i>
                   </a>
-                  <a class="text-danger" id="delete-item" data-url="<?= $linkDelete ?>&id=<?= $row['id'] ?>" title="<?=xoa?>"><i class="fas fa-trash-alt"></i></a>
+                  <a class="text-danger" id="delete-item" data-url="<?= $linkDelete ?>&id=<?= $row['id'] ?>" title="<?= xoa ?>"><i class="fas fa-trash-alt"></i></a>
                 </td>
               </tr>
             <?php endforeach; ?>

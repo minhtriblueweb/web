@@ -1,8 +1,3 @@
-<?php
-include_once 'lib/database.php';
-include_once 'config/autoload.php';
-include_once 'lib/router.php';
-?>
 <!DOCTYPE html>
 <html lang="vi">
 
@@ -735,6 +730,11 @@ include_once 'lib/router.php';
     animation-name: pieceLeft;
     animation-delay: 4.5s;
   }
+
+  html,
+  body {
+    overflow: hidden;
+  }
 </style>
 
 <body>
@@ -786,7 +786,7 @@ include_once 'lib/router.php';
       <div class="text">
         <article>
           <p>Oops! Trang hiện không tồn tại!</p>
-          <a href="<?= BASE ?>">Trở lại trang chủ</a>
+          <a href="<?= $configBase ?>">Trở lại trang chủ</a>
         </article>
       </div>
 

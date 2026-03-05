@@ -1,8 +1,7 @@
 <?php
-$linkNews = "index.php?com=news&type=" . $type;
-$linkMan = "$linkNews&act=man_list";
-$linkForm  = "$linkNews&act=form_list";
-$linkEdit  = "$linkNews&act=form_list&id=";
+$linkMan = "index.php?com=news&act=man_list&type=" . $type;
+$linkForm  = "index.php?com=news&act=form_list&type=" . $type;
+$linkEdit = "index.php?com=news&act=form_list&type=" . $type;
 $linkDelete = "index.php?com=news&act=delete_list&type=" . $type;
 ?>
 <section class="content-header text-sm">
@@ -49,16 +48,18 @@ $linkDelete = "index.php?com=news&act=delete_list&type=" . $type;
               <th class="align-middle"><?= hinh ?></th>
             <?php endif; ?>
             <th class="align-middle" style="width: 30%"><?= tieude ?></th>
-            <?php foreach ($config['news'][$type]['check_list'] as $attr => $label): ?>
-              <th class="align-middle text-center"><?= defined($attr) ? constant($attr) : $attr ?></th>
-            <?php endforeach; ?>
+            <?php if (isset($config['news'][$type]['check_list'])) {
+              foreach ($config['news'][$type]['check_list'] as $key => $value) { ?>
+                <th class="align-middle text-center"><?= $value ?></th>
+            <?php }
+            } ?>
             <th class="align-middle text-center"><?= thaotac ?></th>
           </tr>
         </thead>
         <form action="" method="POST">
           <tbody>
-            <?php if (!empty($show_data)): ?>
-              <?php foreach ($show_data as $row): ?>
+            <?php if (!empty($item)): ?>
+              <?php foreach ($item as $row): ?>
                 <tr>
                   <!-- Checkbox chọn -->
                   <td class="align-middle">
@@ -77,14 +78,14 @@ $linkDelete = "index.php?com=news&act=delete_list&type=" . $type;
                   <!-- Ảnh -->
                   <?php if (!empty($config['news'][$type]['show_images_list'])): ?>
                     <td class="align-middle">
-                      <a href="<?= $linkEdit . $row['id'] ?>" title="<?= $row["name$lang"] ?>">
+                      <a href="<?= $linkEdit ?>&id=<?= $row['id'] ?>" title="<?= $row["name$lang"] ?>">
                         <?= $func->getImage(['file' => $row['file'], 'class' => 'rounded img-preview', 'alt' => $row["name$lang"]]) ?>
                       </a>
                     </td>
                   <?php endif; ?>
                   <!-- Tên -->
                   <td class="align-middle">
-                    <a class="text-dark text-break" href="<?= $linkEdit . $row['id'] ?>" title="<?= $row["name$lang"] ?>">
+                    <a class="text-dark text-break" href="<?= $linkEdit ?>&id=<?= $row['id'] ?>" title="<?= $row["name$lang"] ?>">
                       <?= $row["name$lang"] ?>
                     </a>
                   </td>
@@ -103,7 +104,7 @@ $linkDelete = "index.php?com=news&act=delete_list&type=" . $type;
 
                   <!-- Hành động -->
                   <td class="align-middle text-center text-md text-nowrap">
-                    <a class="text-primary mr-2" href="<?= $linkEdit . $row['id'] ?>" title="<?= chinhsua ?>">
+                    <a class="text-primary mr-2" href="<?= $linkEdit ?>&id=<?= $row['id'] ?>" title="<?= chinhsua ?>">
                       <i class="fas fa-edit"></i>
                     </a>
                     <a class="text-danger" id="delete-item" data-url="<?= $linkDelete ?>&id=<?= $row['id'] ?>" title="<?= xoa ?>">

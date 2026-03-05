@@ -54,7 +54,7 @@ $config['photo']['photo_static'][$type]['img_type'] = '.jpg|.png|.jpeg';
 /* Slideshow */
 $type = "slideshow";
 $config['photo']['photo_man'][$type]['title_main_photo'] = $config['size-img'][$type]['man']['title'] = "Slideshow";
-$config['photo']['photo_man'][$type]['status_photo'] = array("hienthi" => "Hiển thị");
+$config['photo']['photo_man'][$type]['check_photo'] = array("hienthi" => "Hiển thị");
 $config['photo']['photo_man'][$type]['images_photo'] = true;
 $config['photo']['photo_man'][$type]['link_photo'] = true;
 $config['photo']['photo_man'][$type]['name_photo'] = true;
@@ -68,7 +68,7 @@ $config['photo']['photo_man'][$type]['img_type_photo'] = '.jpg|.gif|.png|.jpeg|.
 /* Social */
 $type = "social";
 $config['photo']['photo_man'][$type]['title_main_photo'] = "Social";
-$config['photo']['photo_man'][$type]['status_photo'] = array("hienthi" => "Hiển thị");
+$config['photo']['photo_man'][$type]['check_photo'] = array("hienthi" => "Hiển thị");
 $config['photo']['photo_man'][$type]['number_photo'] = 1;
 $config['photo']['photo_man'][$type]['images_photo'] = true;
 $config['photo']['photo_man'][$type]['convert_webp'] = false;
@@ -84,7 +84,7 @@ $config['photo']['photo_man'][$type]['img_type_photo'] = '.jpg|.gif|.png|.jpeg|.
 /* Payment */
 $type = "payment";
 $config['photo']['photo_man'][$type]['title_main_photo'] = "Phương thức thanh toán";
-$config['photo']['photo_man'][$type]['status_photo'] = array("hienthi" => "Hiển thị");
+$config['photo']['photo_man'][$type]['check_photo'] = array("hienthi" => "Hiển thị");
 $config['photo']['photo_man'][$type]['number_photo'] = 1;
 $config['photo']['photo_man'][$type]['images_photo'] = true;
 $config['photo']['photo_man'][$type]['avatar_photo'] = true;
@@ -99,7 +99,7 @@ $config['photo']['photo_man'][$type]['img_type_photo'] = '.jpg|.gif|.png|.jpeg|.
 /* Video */
 // $type = "video";
 // $config['photo']['photo_man'][$type]['title_main_photo'] = "Video";
-// $config['photo']['photo_man'][$type]['status_photo'] = array("hienthi" => "Hiển thị");
+// $config['photo']['photo_man'][$type]['check_photo'] = array("hienthi" => "Hiển thị");
 // $config['photo']['photo_man'][$type]['number_photo'] = 2;
 // $config['photo']['photo_man'][$type]['video_photo'] = true;
 // $config['photo']['photo_man'][$type]['name_photo'] = true;

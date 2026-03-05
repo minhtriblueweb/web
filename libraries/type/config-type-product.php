@@ -31,18 +31,19 @@ $config['product'][$type]['gallery'] = array(
     "images_photo" => true,
     "cart_photo" => true,
     "avatar_photo" => true,
+    "convert_webp" => true,
     "name_photo" => true,
     "width_photo" => 540,
     "height_photo" => 540,
     "thumb_photo" => '100x100x1',
-    "img_type_photo" => '.jpg|.gif|.png|.jpeg|.gif'
+    "img_type_photo" => '.jpg|.gif|.png|.jpeg|.gif|.webp'
   )
 );
 $config['product'][$type]['code'] = true;
 $config['product'][$type]['regular_price'] = true;
 $config['product'][$type]['sale_price'] = true;
 $config['product'][$type]['discount'] = true;
-$config['product'][$type]['desc'] = false;
+$config['product'][$type]['desc'] = true;
 $config['product'][$type]['desc_cke'] = true;
 $config['product'][$type]['content'] = true;
 $config['product'][$type]['content_cke'] = true;
@@ -53,7 +54,7 @@ $config['product'][$type]['height'] = 500;
 $config['size-img'][$type]['man']['width'] = 500;
 $config['size-img'][$type]['man']['height'] = 500;
 $config['product'][$type]['thumb'] = '100x' . round(100 / ($config['product'][$type]['width'] / $config['product'][$type]['height'])) . 'x1';
-$config['product'][$type]['img_type'] = '.jpg|.gif|.png|.jpeg|.gif';
+$config['product'][$type]['img_type'] = '.jpg|.gif|.png|.jpeg|.gif|.webp';
 $config['size-img'][$type]['man']['active'] = true;
 $config['product'][$type]['watermark'] = true;
 
@@ -68,7 +69,7 @@ $config['product'][$type]['watermark'] = true;
 // $config['product'][$type]['width_color'] = 30;
 // $config['product'][$type]['height_color'] = 30;
 // $config['product'][$type]['thumb_color'] = '100x100x1';
-// $config['product'][$type]['img_type_color'] = '.jpg|.gif|.png|.jpeg|.gif';
+// $config['product'][$type]['img_type_color'] = '.jpg|.gif|.png|.jpeg|.gif|.webp';
 
 /* Sản phẩm (List) */
 $config['product'][$type]['title_main_list'] = $config['size-img'][$type]['list']['title'] = "Sản phẩm cấp 1";
@@ -78,14 +79,14 @@ $config['product'][$type]['slug_list'] = true;
 $config['product'][$type]['check_list'] = array("hienthi" => "Hiển thị", "noibat" => "Nổi bật", "menu" => "Menu");
 $config['product'][$type]['desc_list'] = true;
 $config['product'][$type]['desc_cke_list'] = false;
-$config['product'][$type]['content_list'] = false;
+$config['product'][$type]['content_list'] = true;
 $config['product'][$type]['content_cke_list'] = true;
 $config['product'][$type]['seo_list'] = true;
 $config['product'][$type]['convert_webp_list'] = false;
 $config['product'][$type]['width_list'] = $config['size-img'][$type]['list']['width'] = 50;
 $config['product'][$type]['height_list'] = $config['size-img'][$type]['list']['height'] = 50;
 $config['product'][$type]['thumb_list'] = '100x' . round(100 / ($config['product'][$type]['width_list'] / $config['product'][$type]['height_list'])) . 'x1';
-$config['product'][$type]['img_type_list'] = '.jpg|.gif|.png|.jpeg|.gif';
+$config['product'][$type]['img_type_list'] = '.jpg|.gif|.png|.jpeg|.gif|.webp';
 $config['size-img'][$type]['list']['active'] = true;
 
 /* Sản phẩm (Cat) */
@@ -103,7 +104,7 @@ $config['product'][$type]['convert_webp_cat'] = true;
 $config['product'][$type]['width_cat'] = $config['size-img'][$type]['cat']['width'] = 100;
 $config['product'][$type]['height_cat'] = $config['size-img'][$type]['cat']['height'] = 100;
 $config['product'][$type]['thumb_cat'] = '100x' . round(100 / ($config['product'][$type]['width_cat'] / $config['product'][$type]['height_cat'])) . 'x1';
-$config['product'][$type]['img_type_cat'] = '.jpg|.gif|.png|.jpeg|.gif';
+$config['product'][$type]['img_type_cat'] = '.jpg|.gif|.png|.jpeg|.gif|.webp';
 $config['size-img'][$type]['cat']['active'] = true;
 
 /* Sản phẩm (Item) */
@@ -112,13 +113,15 @@ $config['product'][$type]['images_item'] = false;
 $config['product'][$type]['show_images_item'] = false;
 $config['product'][$type]['slug_item'] = true;
 $config['product'][$type]['check_item'] = array("hienthi" => "Hiển thị");
-$config['product'][$type]['desc_item'] = false;
-$config['product'][$type]['content_cke_item'] = true;
+$config['product'][$type]['desc_item'] = true;
+$config['product'][$type]['desc_cke_item'] = false;
+$config['product'][$type]['content_item'] = false;
+$config['product'][$type]['content_cke_item'] = false;
 $config['product'][$type]['seo_item'] = true;
 $config['product'][$type]['width_item'] = $config['size-img'][$type]['item']['width'] = 100;
 $config['product'][$type]['height_item'] = $config['size-img'][$type]['item']['height'] = 100;
 $config['product'][$type]['thumb_item'] = '100x' . round(100 / ($config['product'][$type]['width_item'] / $config['product'][$type]['height_item'])) . 'x1';
-$config['product'][$type]['img_type_item'] = '.jpg|.gif|.png|.jpeg|.gif';
+$config['product'][$type]['img_type_item'] = '.jpg|.gif|.png|.jpeg|.gif|.webp';
 $config['size-img'][$type]['item']['active'] = false;
 
 /* Sản phẩm (Sub) */
@@ -132,7 +135,7 @@ $config['product'][$type]['seo_sub'] = true;
 $config['product'][$type]['width_sub'] = $config['size-img'][$type]['sub']['width'] = 300;
 $config['product'][$type]['height_sub'] = $config['size-img'][$type]['sub']['height'] = 200;
 $config['product'][$type]['thumb_sub'] = '100x' . round(100 / ($config['product'][$type]['width_sub'] / $config['product'][$type]['height_sub'])) . 'x1';
-$config['product'][$type]['img_type_sub'] = '.jpg|.gif|.png|.jpeg|.gif';
+$config['product'][$type]['img_type_sub'] = '.jpg|.gif|.png|.jpeg|.gif|.webp';
 $config['size-img'][$type]['sub']['active'] = false;
 
 /* Sản phẩm (Hãng) */
@@ -142,9 +145,9 @@ $config['product'][$type]['icon_brand'] = true;
 $config['product'][$type]['show_images_brand'] = true;
 $config['product'][$type]['slug_brand'] = true;
 $config['product'][$type]['check_brand'] = array("hienthi" => "Hiển thị", "noibat" => "Nổi bật");
-$config['product'][$type]['desc_brand'] = false;
+$config['product'][$type]['desc_brand'] = true;
 $config['product'][$type]['desc_cke_brand'] = false;
-$config['product'][$type]['content_brand'] = false;
+$config['product'][$type]['content_brand'] = true;
 $config['product'][$type]['content_cke_brand'] = true;
 $config['product'][$type]['seo_brand'] = true;
 $config['product'][$type]['width_brand'] = $config['size-img'][$type]['brand']['width'] = 150;
@@ -152,7 +155,7 @@ $config['product'][$type]['height_brand'] = $config['size-img'][$type]['brand'][
 $config['product'][$type]['thumb_brand'] = '100x100x1';
 $config['product'][$type]['width_brand_icon'] = 1000;
 $config['product'][$type]['height_brand_icon'] = 400;
-$config['product'][$type]['img_type_brand'] = '.jpg|.gif|.png|.jpeg|.gif';
+$config['product'][$type]['img_type_brand'] = '.jpg|.gif|.png|.jpeg|.gif|.webp';
 $config['size-img'][$type]['brand']['active'] = true;
 
 
@@ -177,7 +180,7 @@ $config['size-img'][$type]['brand']['active'] = true;
 //     "width_photo" => 600,
 //     "height_photo" => 520,
 //     "thumb_photo" => '100x100x1',
-//     "img_type_photo" => '.jpg|.gif|.png|.jpeg|.gif'
+//     "img_type_photo" => '.jpg|.gif|.png|.jpeg|.gif|.webp'
 //   )
 // );
 // $config['product'][$type]['seo'] = true;
@@ -186,5 +189,5 @@ $config['size-img'][$type]['brand']['active'] = true;
 // $config['size-img'][$type]['man']['width'] = 300;
 // $config['size-img'][$type]['man']['height'] = 260;
 // $config['product'][$type]['thumb'] = '100x100x1';
-// $config['product'][$type]['img_type'] = '.jpg|.gif|.png|.jpeg|.gif';
+// $config['product'][$type]['img_type'] = '.jpg|.gif|.png|.jpeg|.gif|.webp';
 // $config['product'][$type]['thumb'] = '100x' . round(100 / ($config['product'][$type]['width'] / $config['product'][$type]['height'])) . 'x1';

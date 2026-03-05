@@ -1,22 +1,24 @@
+<!-- Js Config -->
 <script type="text/javascript">
-  var PHP_VERSION = 80309;
-  var CONFIG_BASE = "<?= BASE ?>";
-  var CONFIG_BASE_RTRIM = " <?= rtrim(BASE, '/') ?>";
+  var PHP_VERSION = <?= PHP_VERSION_ID ?>;
+  var CONFIG_BASE = '<?= $configBase ?>';
   var LANGS = "<?= implode(',', array_keys($config['website']['lang'])) ?>";
-  var TOKEN = "4cfd9a6ec93f31ec5006af2f97389efa";
-  var ADMIN = "admin";
-  var ASSET = "<?= BASE ?>";
-  var LINK_FILTER = "<?= (!empty($linkMan)) ? $linkMan : '' ?>";
+  var TOKEN = '<?= TOKEN ?>';
+  var ADMIN = '<?= ADMIN ?>';
+  var ASSET = '<?= ASSET ?>';
+  var LINK_FILTER = '<?= (!empty($linkFilter)) ? $linkFilter : '' ?>';
   var ID = <?= (!empty($id)) ? $id : 0 ?>;
+  var COM = '<?= (!empty($com)) ? $com : '' ?>';
+  var ACT = '<?= (!empty($act)) ? $act : '' ?>';
   var TYPE = '<?= (!empty($type)) ? $type : '' ?>';
-  var HASH = "<?= VERSION ?>";
-  var ACTIVE_GALLERY = false;
-  var BASE64_QUERY_STRING = "";
-  var LOGIN_PAGE = false;
+  var HASH = '<?= $func->generateHash() ?>';
+  var ACTIVE_GALLERY = <?= (!empty($flagGallery) && !empty($gallery)) ? 'true' : 'false' ?>;
+  var BASE64_QUERY_STRING = '<?= base64_encode($_SERVER['QUERY_STRING']) ?>';
+  var LOGIN_PAGE = <?= (empty($_SESSION[$loginAdmin]['active'])) ? 'true' : 'false' ?>;
   var MAX_DATE = '<?= date("Y/m/d", time()) ?>';
   var CHARTS = <?= (!empty($charts)) ? json_encode($charts) : '{}' ?>;
-  var ADD_OR_EDIT_PERMISSIONS = false;
-  var IMPORT_IMAGE_EXCELL = false;
+  var ADD_OR_EDIT_PERMISSIONS = <?= (!empty($com) && $com == 'user' && !empty($act) && in_array($act, array('add_permission_group', 'edit_permission_group'))) ? 'true' : 'false' ?>;
+  var IMPORT_IMAGE_EXCELL = <?= (!empty($com) && $com == 'import' && !empty($config['import']['images'])) ? 'true' : 'false' ?>;
   var ORDER_ADVANCED_SEARCH = <?= (!empty($com) && $com == 'order' && !empty($config['order']['search'])) ? 'true' : 'false' ?>;
   var ORDER_MIN_TOTAL = <?= (!empty($minTotal)) ? $minTotal : 1 ?>;
   var ORDER_MAX_TOTAL = <?= (!empty($maxTotal)) ? $maxTotal : 1 ?>;
@@ -42,7 +44,6 @@
     'phanhoithanhcong': '<?= phanhoithanhcong ?>',
     'hethongbiloivuilongthulaisau': '<?= hethongbiloivuilongthulaisau ?>',
     'duongdankhonghople': '<?= duongdankhonghople ?>',
-    'duongdanhople': '<?= duongdanhople ?>',
     'banhaychonitnhat1mucdegui': '<?= banhaychonitnhat1mucdegui ?>',
     'banhaychonitnhat1mucdexoa': '<?= banhaychonitnhat1mucdexoa ?>',
     'albumhientai': '<?= albumhientai ?>',
@@ -63,9 +64,7 @@
     'keovathahinhvaoday': '<?= keovathahinhvaoday ?>',
     'hoac': '<?= hoac ?>',
     'hinhanh': '<?= hinhanh ?>',
-    'tieude': '<?= tieude ?>',
     'chonhinh': '<?= chonhinh ?>',
-    'chon': '<?= chon ?>',
     'chiduocuploadmoilan': '<?= chiduocuploadmoilan ?>',
     'themhinh': '<?= themhinh ?>',
     'vuilongchonhinhanh': '<?= vuilongchonhinhanh ?>',
@@ -77,10 +76,9 @@
     'chihotrotaptinlahinhanhcodinhdang': '<?= chihotrotaptinlahinhanhcodinhdang ?>',
     'cokichthuocqualonvuilonguploadhinhanhcokichthuoctoida': '<?= cokichthuocqualonvuilonguploadhinhanhcokichthuoctoida ?>',
     'nhunghinhanhbanchoncokichthuocqualonvuilongchonnhunghinhanhcokichthuoctoida': '<?= nhunghinhanhbanchoncokichthuocqualonvuilongchonnhunghinhanhcokichthuoctoida ?>',
-    'thongketruycapthang': '<?= thongketruycapthang ?>',
-    'luot': '<?= luot ?>',
   };
 </script>
+
 <?php
 $jsFiles = [
   "js/jquery.min.js",
@@ -107,7 +105,7 @@ $jsFiles = [
   "js/apps.js",
 ];
 foreach ($jsFiles as $file) {
-  echo '<script src="./assets/' . $file . '?v=' . VERSION . '"></script>' . PHP_EOL;
+  echo '<script src="./assets/' . $file . '"></script>' . PHP_EOL;
 }
 ?>
 <script src="<?= $com === 'setting' ? 'monaco/min/vs/loader.js' : 'ckeditor/ckeditor.js' ?>"></script>

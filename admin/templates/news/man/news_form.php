@@ -16,6 +16,7 @@ if ((isset($config['news'][$type]['tags']) && $config['news'][$type]['tags'] == 
   $colLeft = "col-12";
   $colRight = "d-none";
 }
+$linkMan = "index.php?com=news&act=man&type=" . $type;
 ?>
 <section class="content-header text-sm">
   <div class="container-fluid">
@@ -90,7 +91,7 @@ if ((isset($config['news'][$type]['tags']) && $config['news'][$type]['tags'] == 
                           class="form-control for-seo text-sm"
                           name="data[name<?= $k ?>]" id="name<?= $k ?>"
                           placeholder="<?= tieude ?> (<?= $k ?>)"
-                          value="<?= $_POST['name' . $k] ?? ($result['name' . $k] ?? '') ?>"
+                          value="<?= $_POST['name' . $k] ?? ($item['name' . $k] ?? '') ?>"
                           <?= ($k == $lang) ? 'required' : '' ?> />
                       </div>
 
@@ -98,7 +99,7 @@ if ((isset($config['news'][$type]['tags']) && $config['news'][$type]['tags'] == 
                       <?php if (!empty($config['news'][$type]['desc_cke']) || !empty($config['news'][$type]['desc'])): ?>
                         <div class="form-group">
                           <label for="desc<?= $k ?>"><?= mota ?> (<?= $k ?>):</label>
-                          <textarea rows="4" class="form-control for-seo text-sm <?= !empty($config['news'][$type]['desc_cke']) ? 'form-control-ckeditor' : '' ?>" name="data[desc<?= $k ?>]" id="desc<?= $k ?>" placeholder="<?= mota ?> (<?= $k ?>)"><?= $_POST['desc' . $k] ?? ($result['desc' . $k] ?? '') ?></textarea>
+                          <textarea rows="4" class="form-control for-seo text-sm <?= !empty($config['news'][$type]['desc_cke']) ? 'form-control-ckeditor' : '' ?>" name="data[desc<?= $k ?>]" id="desc<?= $k ?>" placeholder="<?= mota ?> (<?= $k ?>)"><?= $_POST['desc' . $k] ?? ($item['desc' . $k] ?? '') ?></textarea>
                         </div>
                       <?php endif; ?>
 
@@ -106,7 +107,7 @@ if ((isset($config['news'][$type]['tags']) && $config['news'][$type]['tags'] == 
                       <?php if (!empty($config['news'][$type]['content_cke']) || !empty($config['news'][$type]['content'])): ?>
                         <div class="form-group">
                           <label for="content<?= $k ?>"><?= mota ?> (<?= $k ?>):</label>
-                          <textarea rows="4" class="form-control for-seo text-sm <?= !empty($config['news'][$type]['content_cke']) ? 'form-control-ckeditor' : '' ?>" name="data[content<?= $k ?>]" id="content<?= $k ?>" placeholder="<?= mota ?> (<?= $k ?>)"><?= $_POST['content' . $k] ?? ($result['content' . $k] ?? '') ?></textarea>
+                          <textarea rows="4" class="form-control for-seo text-sm <?= !empty($config['news'][$type]['content_cke']) ? 'form-control-ckeditor' : '' ?>" name="data[content<?= $k ?>]" id="content<?= $k ?>" placeholder="<?= mota ?> (<?= $k ?>)"><?= $_POST['content' . $k] ?? ($item['content' . $k] ?? '') ?></textarea>
                         </div>
                       <?php endif; ?>
                     </div>
@@ -175,7 +176,7 @@ if ((isset($config['news'][$type]['tags']) && $config['news'][$type]['tags'] == 
             <div class="card-body">
               <?php
               $photoDetail = array();
-              $photoDetail['image'] = (!empty($result['file']) && $act != 'copy') ? $result['file'] : '';
+              $photoDetail['image'] = (!empty($item['file']) && $act != 'copy') ? $item['file'] : '';
               $photoDetail['dimension'] = "Width: " . $config['news'][$type]['width'] . " px - Height: " . $config['news'][$type]['height'] . " px (" . $config['news'][$type]['img_type'] . ")";
               include TEMPLATE . LAYOUT . "image.php"; ?>
             </div>
@@ -193,30 +194,24 @@ if ((isset($config['news'][$type]['tags']) && $config['news'][$type]['tags'] == 
       </div>
       <div class="card-body">
         <div class="form-group">
-          <?php foreach ($config['news'][$type]['check'] as $check => $label): ?>
-            <div class="form-group d-inline-block mb-2 mr-5">
-              <label for="<?= $check ?>-checkbox" class="d-inline-block align-middle mb-0 mr-3 form-label"><?= defined($check) ? constant($check) : $check ?>:</label>
-              <label class="switch switch-success">
-                <input
-                  type="checkbox"
-                  name="data[status][<?= $check ?>]"
-                  class="switch-input custom-control-input"
-                  id="<?= $check ?>-checkbox"
-                  <?= $func->is_checked($check, $result['status'] ?? '', $id ?? '') ?>>
-              </label>
+          <?php
+            $status_array = !empty($item['status']) ? explode(',', $item['status']) : [];
+            if (!empty($config['news'][$type]['check'])) {
+              foreach ($config['news'][$type]['check'] as $key => $value) {
+                echo $func->is_checked($key, $value, $status_array, $item['id'] ?? null);
+              }
+            }
+            ?>
             </div>
-          <?php endforeach; ?>
-        </div>
-        <div class="form-group">
-          <label for="numb" class="d-inline-block align-middle mb-0 mr-2"><?= sothutu ?>:</label>
-          <input type="number" class="form-control form-control-mini d-inline-block align-middle text-sm" min="0"
-            name="data[numb]" id="numb" placeholder="Số thứ tự" value="<?= $_POST['numb'] ?? !empty($id) ? $result['numb'] : '1' ?>" />
+            <div class="form-group">
+              <label for="numb" class="d-inline-block align-middle mb-0 mr-2"><?= sothutu ?>:</label>
+              <input type="number" class="form-control form-control-mini d-inline-block align-middle text-sm" min="0"
+                name="data[numb]" id="numb" placeholder="Số thứ tự" value="<?= $_POST['numb'] ?? !empty($id) ? $item['numb'] : '1' ?>" />
+            </div>
         </div>
       </div>
-    </div>
-    <?php if (!empty($config['news'][$type]['seo'])): ?>
-      <?php include TEMPLATE . LAYOUT . 'seo.php'; ?>
-    <?php endif; ?>
-    <input type="hidden" name="data[type]" value="<?= $type ?>">
+      <?php if (!empty($config['news'][$type]['seo'])): ?>
+        <?php include TEMPLATE . LAYOUT . 'seo.php'; ?>
+      <?php endif; ?>
   </form>
 </section>
